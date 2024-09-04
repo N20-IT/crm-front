@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import { getCurrentUser, signOut, fetchAuthSession } from '@aws-amplify/auth';
-import SignIn from './SignIn'; // Ensure SignIn handles sign-in with @aws-amplify/auth
-import './styles.css';
-import { Amplify } from 'aws-amplify';
-import awsExports from './aws-exports';
+import React, { useState, useEffect } from "react";
+import { getCurrentUser, signOut, fetchAuthSession } from "@aws-amplify/auth";
+import SignIn from "./SignIn"; // Ensure SignIn handles sign-in with @aws-amplify/auth
+import "./styles.css";
+import { Amplify } from "aws-amplify";
+import awsExports from "./aws-exports";
 Amplify.configure(awsExports);
 
 function App() {
@@ -18,7 +18,7 @@ function App() {
       const currentUser = await getCurrentUser();
       setUser(currentUser);
     } catch (error) {
-      console.error('Error checking current user:', error);
+      console.error("Error checking current user:", error);
       setUser(null);
     }
   };
@@ -28,20 +28,19 @@ function App() {
       await signOut();
       setUser(null);
     } catch (error) {
-      console.error('Error signing out:', error);
+      console.error("Error signing out:", error);
     }
   };
 
   const handleLogJwtToken = async () => {
     try {
       const session = await fetchAuthSession();
-      console.log('ID Token:', session.tokens.idToken.toString()); // Log the encoded ID token
-      console.log('Access Token BUT ITS ALREADY DECODED, I WANT TO ENCODE IT:', session.tokens.accessToken.toString()); // Log the encoded Access token
+      console.log(session.tokens.accessToken.toString()); // Log the encoded Access token
     } catch (error) {
-      console.error('Error fetching auth session:', error);
+      console.error("Error fetching auth session:", error);
     }
   };
-  
+
   return (
     <div className="App">
       {user ? (
