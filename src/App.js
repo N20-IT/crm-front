@@ -1,58 +1,20 @@
-import React, { useState, useEffect } from "react";
-import { getCurrentUser, signOut, fetchAuthSession } from "@aws-amplify/auth";
-import SignIn from "./SignIn"; // Ensure SignIn handles sign-in with @aws-amplify/auth
-import "./styles.css";
-import { Amplify } from "aws-amplify";
-import awsExports from "./aws-exports";
-Amplify.configure(awsExports);
-
+import React from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import "./styles/custom.css";
+import SignIn from "./SignIn";
+import App2 from "./App2";
+import HomePage from "./pages/HomePage";
+import LoginPage from "./pages/LoginPage";
 function App() {
-  const [user, setUser] = useState(null);
-
-  useEffect(() => {
-    checkCurrentUser();
-  }, []);
-
-  const checkCurrentUser = async () => {
-    try {
-      const currentUser = await getCurrentUser();
-      setUser(currentUser);
-    } catch (error) {
-      console.error("Error checking current user:", error);
-      setUser(null);
-    }
-  };
-
-  const handleSignOut = async () => {
-    try {
-      await signOut();
-      setUser(null);
-    } catch (error) {
-      console.error("Error signing out:", error);
-    }
-  };
-
-  const handleLogJwtToken = async () => {
-    try {
-      const session = await fetchAuthSession();
-      console.log(session.tokens.accessToken.toString()); // Log the encoded Access token
-    } catch (error) {
-      console.error("Error fetching auth session:", error);
-    }
-  };
-
   return (
-    <div className="App">
-      {user ? (
-        <>
-          <h1>Welcome, {user.username}</h1>
-          <button onClick={handleSignOut}>Log Out</button>
-          <button onClick={handleLogJwtToken}>Log JWT Token</button>
-        </>
-      ) : (
-        <SignIn onSignIn={setUser} />
-      )}
-    </div>
+    <Router>
+      <Routes>
+        <Route path="/homepage" element={<HomePage />} />
+        <Route path="/" element={<App2 />} />
+        <Route path="/signin" element={<SignIn />} />
+        <Route path="/login" element={<LoginPage />} />
+      </Routes>
+    </Router>
   );
 }
 
