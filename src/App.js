@@ -12,7 +12,6 @@ function App() {
 
   useEffect(() => {
     isAuthenticated ? navigate("/homepage") : navigate("/login");
-    console.log(isAuthenticated);
   }, [isAuthenticated, navigate]);
   return (
     <Routes>
