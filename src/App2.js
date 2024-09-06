@@ -2,9 +2,9 @@ import React, { useState, useEffect } from "react";
 import { getCurrentUser, signOut, fetchAuthSession } from "@aws-amplify/auth";
 import SignIn from "./SignIn"; // Ensure SignIn handles sign-in with @aws-amplify/auth
 import "./styles.css";
-// import { Amplify } from "aws-amplify";
-// import awsExports from "./aws-exports";
-// Amplify.configure(awsExports);
+import { Amplify } from "aws-amplify";
+import awsExports from "./aws-exports";
+Amplify.configure(awsExports);
 
 function App2() {
   const [user, setUser] = useState(null);
