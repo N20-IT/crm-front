@@ -10,9 +10,9 @@ function App() {
   const navigate = useNavigate();
   const isAuthenticated = useAuth();
 
-  useEffect(() => {
-    isAuthenticated ? navigate("/homepage") : navigate("/login");
-  }, [isAuthenticated, navigate]);
+  // useEffect(() => {
+  //   isAuthenticated ? navigate("/homepage") : navigate("/login");
+  // }, [isAuthenticated, navigate]);
   return (
     <Routes>
       <Route path="/homepage" element={<HomePage />} />
