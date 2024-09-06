@@ -1,7 +1,6 @@
 import React from "react";
 import { useLogout } from "../utils/auth";
-import { Button } from "@aws-amplify/ui-react";
-//TODO
+import { Button } from "@mui/material"; //TODO
 function HomePage() {
   return (
     <div>
