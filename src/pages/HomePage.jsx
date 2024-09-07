@@ -1,11 +1,17 @@
 import React from "react";
 import { useLogout } from "../utils/auth";
-import { Button } from "@mui/material"; //TODO
+import { Button } from "@mui/material";
+//TODO
 function HomePage() {
   return (
     <div>
       <h1>Hello</h1>
-      <Button onClick={useLogout()}>wyloguj sie</Button>
+      <Button
+        onClick={useLogout()}
+        sx={{ backgroundColor: "black", color: "white", borderRadius: "16px" }}
+      >
+        wyloguj sie
+      </Button>
     </div>
   );
 }

@@ -1,4 +1,6 @@
 import { useCookies } from "react-cookie";
+import { signOut } from "@aws-amplify/auth";
+import { useNavigate } from "react-router-dom";
 
 export const cookiesEnabled = () => {
   try {
@@ -11,6 +13,14 @@ export const cookiesEnabled = () => {
   }
 };
 
+const handleSignOut = async () => {
+  try {
+    await signOut();
+  } catch (error) {
+    console.log("Error signing out:", error);
+  }
+};
+
 export const useAuth = () => {
   const [cookies] = useCookies(["authToken"]);
   return cookiesEnabled()
@@ -20,21 +30,27 @@ export const useAuth = () => {
 
 export const useLogin = () => {
   const [, setCookie] = useCookies(["authToken"]);
+  const navigate = useNavigate();
   const login = (token) => {
     cookiesEnabled()
       ? setCookie("authToken", token, { path: "/", maxAge: 60 * 60 * 24 * 7 })
       : saveTokenInSessionStorage(token);
   };
+  if (useAuth()) navigate("/homepage");
+
   return login;
 };
 
 export const useLogout = () => {
   const [, , removeCookie] = useCookies(["authToken"]);
+  const navigate = useNavigate();
   const logout = () => {
     cookiesEnabled()
       ? removeCookie("authToken", { path: "/" })
       : removeTokenFromSessionStorage();
   };
+  handleSignOut();
+  if (!useAuth()) navigate("/");
   return logout;
 };
 
