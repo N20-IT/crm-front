@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { Routes, Route, useNavigate } from "react-router-dom";
 import "./styles/custom.css";
 import { useAuth } from "./utils/auth";
@@ -16,9 +16,10 @@ function App() {
   return (
     <Routes>
       <Route path="/homepage" element={<HomePage />} />
-      <Route path="/" element={<App2 />} />
+      <Route path="/" element={<LoginPage />} />
+      <Route path="/app" element={<App2 />} />
       <Route path="/signin" element={<SignIn />} />
-      <Route path="/login" element={<LoginPage />} />
+      {/* <Route path="/login" element={<LoginPage />} /> */}
     </Routes>
   );
 }
