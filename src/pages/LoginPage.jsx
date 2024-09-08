@@ -6,8 +6,6 @@ import {
   OutlinedInput,
   InputAdornment,
   IconButton,
-  Alert,
-  Snackbar,
 } from "@mui/material";
 import React, { useState } from "react";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
@@ -15,14 +13,16 @@ import { signIn, fetchAuthSession } from "@aws-amplify/auth";
 import { Amplify } from "aws-amplify";
 import awsExports from "../aws-exports";
 import { useLogin } from "../utils/auth";
+import Alerts from "../components/Alerts";
 Amplify.configure(awsExports);
 
 function LoginPage() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [error, setError] = useState("");
-  const [open, setOpen] = useState(false);
+  const [alertMessage, setAlertMessage] = useState("");
+  const [alertSeverity, setAlertSeverity] = useState("info");
+  const [alertOpen, setAlertOpen] = useState(false);
   const login = useLogin();
 
   const handleLogin = async (event) => {
@@ -32,12 +32,11 @@ function LoginPage() {
         username: username,
         password: password,
       });
-      setError("");
-      setOpen(false);
       login(await handleLogJwtToken());
     } catch (error) {
-      setError(error.message || "An error occurred during sign in");
-      setOpen(true);
+      setAlertOpen(true);
+      setAlertMessage(error.message || "An error occurred during sign in");
+      setAlertSeverity("error");
     }
   };
 
@@ -46,22 +45,15 @@ function LoginPage() {
       const session = await fetchAuthSession();
       return session.tokens.accessToken.toString();
     } catch (error) {
-      setError("Error fetching auth session:", error);
-      setOpen(true);
+      setAlertOpen(true);
+      setAlertMessage("Error fetching auth session:", error);
+      setAlertSeverity("error");
     }
   };
-
-  const handleClose = (event, reason) => {
-    if (reason === "clickaway") {
-      return;
-    }
-    setOpen(false);
-  };
-
   const handleForgottenPassword = () => {
-    setError("Zapomnialem hasla");
-    setOpen(true);
-    console.log(username, password);
+    setAlertMessage("Forgotten password!");
+    setAlertSeverity("info");
+    setAlertOpen(true);
   };
 
   const handleClickShowPassword = () => setShowPassword(!showPassword);
@@ -195,23 +187,12 @@ function LoginPage() {
           Zapomniałem hasła
         </Button>
       </div>
-      {error && (
-        <Snackbar
-          open={open}
-          autoHideDuration={6000}
-          onClose={handleClose}
-          anchorOrigin={{ vertical: "top", horizontal: "center" }}
-        >
-          <Alert
-            onClose={handleClose}
-            variant="filled"
-            severity="error"
-            sx={{ width: "100%", fontSize: "20px", fontFamily: "Poppins" }}
-          >
-            {error}
-          </Alert>
-        </Snackbar>
-      )}
+      <Alerts
+        message={alertMessage}
+        severity={alertSeverity}
+        open={alertOpen}
+        onClose={() => setAlertOpen(false)}
+      />
     </div>
   );
 }
