@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Routes, Route, useNavigate } from "react-router-dom";
 import "./styles/custom.css";
 import { useAuth } from "./utils/auth";
@@ -11,7 +11,7 @@ function App() {
   const isAuthenticated = useAuth();
 
   // useEffect(() => {
-  //   isAuthenticated ? navigate("/homepage") : navigate("/login");
+  //   isAuthenticated ? navigate("/homepage") : navigate("/");
   // }, [isAuthenticated, navigate]);
   return (
     <Routes>
@@ -19,7 +19,6 @@ function App() {
       <Route path="/" element={<LoginPage />} />
       <Route path="/app" element={<App2 />} />
       <Route path="/signin" element={<SignIn />} />
-      {/* <Route path="/login" element={<LoginPage />} /> */}
     </Routes>
   );
 }
