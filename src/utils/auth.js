@@ -28,6 +28,11 @@ export const useAuth = () => {
     : !!getTokenFromSessionStorage();
 };
 
+export const useReadCookie = () => {
+  const [cookies] = useCookies(["authToken"]);
+  return cookiesEnabled() ? cookies.authToken : getTokenFromSessionStorage();
+};
+
 export const useLogin = () => {
   const [, setCookie] = useCookies(["authToken"]);
   const navigate = useNavigate();
