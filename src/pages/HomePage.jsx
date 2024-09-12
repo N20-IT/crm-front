@@ -25,7 +25,6 @@ function HomePage() {
           },
         });
         setData(response.data);
-        setTimeout(5000);
         setLoading(false);
       } catch (error) {
         setAlertOpen(true);
