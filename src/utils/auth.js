@@ -6,7 +6,7 @@ export const cookiesEnabled = () => {
   try {
     document.cookie = "testcookie=1";
     const result = document.cookie.indexOf("testcookie") !== -1;
-    document.cookie = "testcookie=1; expires=Thu, 01 Jan 1970 00:00:00 GMT"; // usuwamy testowe ciasteczko
+    document.cookie = "testcookie=1; expires=Thu, 01 Jan 1970 00:00:00 GMT";
     return result;
   } catch {
     return false;
@@ -38,7 +38,7 @@ export const useLogin = () => {
   const navigate = useNavigate();
   const login = (token) => {
     cookiesEnabled()
-      ? setCookie("authToken", token, { path: "/", maxAge: 60 * 60 * 24 * 7 })
+      ? setCookie("authToken", token, { path: "/", maxAge: 60 * 60 })
       : saveTokenInSessionStorage(token);
   };
   if (useAuth()) navigate("/homepage");
