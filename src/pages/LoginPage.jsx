@@ -9,12 +9,13 @@ import {
   Alert,
   Snackbar,
 } from "@mui/material";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { signIn, fetchAuthSession } from "@aws-amplify/auth";
 import { Amplify } from "aws-amplify";
 import awsExports from "../aws-exports";
-import { useLogin } from "../utils/auth";
+import { useLogin, useAuth } from "../utils/auth";
+import { useNavigate } from "react-router-dom";
 Amplify.configure(awsExports);
 
 function LoginPage() {
@@ -23,7 +24,13 @@ function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const [open, setOpen] = useState(false);
+  const navigate = useNavigate();
+  const isAuthenticated = useAuth();
   const login = useLogin();
+
+  useEffect(() => {
+    if (isAuthenticated) navigate("/homepage");
+  }, [isAuthenticated, navigate]);
 
   const handleLogin = async (event) => {
     event.preventDefault();
