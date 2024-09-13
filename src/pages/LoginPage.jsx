@@ -7,23 +7,29 @@ import {
   InputAdornment,
   IconButton,
 } from "@mui/material";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { signIn, fetchAuthSession } from "@aws-amplify/auth";
 import { Amplify } from "aws-amplify";
 import awsExports from "../aws-exports";
-import { useLogin } from "../utils/auth";
-import Alerts from "../components/Alerts";
+import { useLogin, useAuth } from "../utils/auth";
+import { useNavigate } from "react-router-dom";
+
 Amplify.configure(awsExports);
 
 function LoginPage() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [alertMessage, setAlertMessage] = useState("");
-  const [alertSeverity, setAlertSeverity] = useState("info");
-  const [alertOpen, setAlertOpen] = useState(false);
+  const [error, setError] = useState("");
+  const [open, setOpen] = useState(false);
+  const navigate = useNavigate();
+  const isAuthenticated = useAuth();
   const login = useLogin();
+
+  useEffect(() => {
+    if (isAuthenticated) navigate("/homepage");
+  }, [isAuthenticated, navigate]);
 
   const handleLogin = async (event) => {
     event.preventDefault();
