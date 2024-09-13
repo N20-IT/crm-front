@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../utils/auth";
+import Sidebar from "../components/Sidebar";
 
 //TODO
 function OffersPage() {
@@ -11,7 +12,8 @@ function OffersPage() {
     if (!isAuthenticated) navigate("/");
   }, [isAuthenticated, navigate]);
   return (
-    <div className=" flex items-center justify-center h-screen">
+    <div className=" flex items-center justify-center h-screen ml-48">
+      <Sidebar />
       <h1 className=" font-bold text-5xl">Oferty</h1>
     </div>
   );

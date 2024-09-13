@@ -4,6 +4,7 @@ import { Button, Skeleton, List, ListItem } from "@mui/material";
 import Alerts from "../components/Alerts";
 import { useReadCookie } from "../utils/auth";
 import axios from "axios";
+import SideBar from "../components/Sidebar";
 //TODO
 function HomePage() {
   const [data, setData] = useState(null);
@@ -36,7 +37,8 @@ function HomePage() {
   }, []);
 
   return (
-    <div>
+    <div className="flex flex-row ml-48">
+      <SideBar />
       <h1>Hello</h1>
       <Button
         onClick={logout}
