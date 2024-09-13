@@ -41,7 +41,7 @@ function LoginPage() {
       login(await handleLogJwtToken());
     } catch (error) {
       setAlertOpen(true);
-      setAlertMessage(error.message || "An error occurred during sign in");
+      setAlertMessage(`{$error.message}  An error occurred during sign in`);
       setAlertSeverity("error");
     }
   };
@@ -49,10 +49,10 @@ function LoginPage() {
   const handleLogJwtToken = async () => {
     try {
       const session = await fetchAuthSession();
-      return session.tokens.accessToken.toString();
+      return session.tokens.idToken.toString();
     } catch (error) {
       setAlertOpen(true);
-      setAlertMessage("Error fetching auth session:", error);
+      setAlertMessage(`Error fetching auth session:, {$error}`);
       setAlertSeverity("error");
     }
   };
@@ -180,6 +180,7 @@ function LoginPage() {
         <Button
           variant="text"
           sx={{
+            cursor: "pointer",
             color: "#272F3E",
             textDecoration: "underline",
             height: "30px",
