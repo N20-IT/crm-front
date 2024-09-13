@@ -4,7 +4,6 @@ import { Button, Skeleton, List, ListItem } from "@mui/material";
 import Alerts from "../components/Alerts";
 import { useReadCookie } from "../utils/auth";
 import axios from "axios";
-import { waitFor } from "@testing-library/react";
 //TODO
 function HomePage() {
   const [data, setData] = useState(null);
