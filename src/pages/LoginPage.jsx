@@ -6,6 +6,8 @@ import {
   OutlinedInput,
   InputAdornment,
   IconButton,
+  Alert,
+  Snackbar,
 } from "@mui/material";
 import React, { useState, useEffect } from "react";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
@@ -14,7 +16,6 @@ import { Amplify } from "aws-amplify";
 import awsExports from "../aws-exports";
 import { useLogin, useAuth } from "../utils/auth";
 import { useNavigate } from "react-router-dom";
-
 Amplify.configure(awsExports);
 
 function LoginPage() {
@@ -38,28 +39,36 @@ function LoginPage() {
         username: username,
         password: password,
       });
+      setError("");
+      setOpen(false);
       login(await handleLogJwtToken());
     } catch (error) {
-      setAlertOpen(true);
-      setAlertMessage(`{$error.message}  An error occurred during sign in`);
-      setAlertSeverity("error");
+      setError(error.message || "An error occurred during sign in");
+      setOpen(true);
     }
   };
 
   const handleLogJwtToken = async () => {
     try {
       const session = await fetchAuthSession();
-      return session.tokens.idToken.toString();
+      return session.tokens.accessToken.toString();
     } catch (error) {
-      setAlertOpen(true);
-      setAlertMessage(`Error fetching auth session:, {$error}`);
-      setAlertSeverity("error");
+      setError("Error fetching auth session:", error);
+      setOpen(true);
     }
   };
+
+  const handleClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setOpen(false);
+  };
+
   const handleForgottenPassword = () => {
-    setAlertMessage("Forgotten password!");
-    setAlertSeverity("info");
-    setAlertOpen(true);
+    setError("Zapomnialem hasla");
+    setOpen(true);
+    console.log(username, password);
   };
 
   const handleClickShowPassword = () => setShowPassword(!showPassword);
@@ -180,7 +189,6 @@ function LoginPage() {
         <Button
           variant="text"
           sx={{
-            cursor: "pointer",
             color: "#272F3E",
             textDecoration: "underline",
             height: "30px",
@@ -194,12 +202,23 @@ function LoginPage() {
           Zapomniałem hasła
         </Button>
       </div>
-      <Alerts
-        message={alertMessage}
-        severity={alertSeverity}
-        open={alertOpen}
-        onClose={() => setAlertOpen(false)}
-      />
+      {error && (
+        <Snackbar
+          open={open}
+          autoHideDuration={6000}
+          onClose={handleClose}
+          anchorOrigin={{ vertical: "top", horizontal: "center" }}
+        >
+          <Alert
+            onClose={handleClose}
+            variant="filled"
+            severity="error"
+            sx={{ width: "100%", fontSize: "20px", fontFamily: "Poppins" }}
+          >
+            {error}
+          </Alert>
+        </Snackbar>
+      )}
     </div>
   );
 }
