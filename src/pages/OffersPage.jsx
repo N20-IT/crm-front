@@ -12,7 +12,7 @@ import {
   TablePagination,
   Tooltip,
 } from "@mui/material";
-import { Delete, Edit, Star, Visibility } from "@mui/icons-material";
+import { Delete, Edit, Star, CalendarMonth, Map } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../utils/auth";
 import Sidebar from "../components/Sidebar";
@@ -21,7 +21,7 @@ function OffersPage() {
   const isAuthenticated = useAuth();
   const [selected, setSelected] = useState([]);
   const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
 
   const columns = [
     {
@@ -71,7 +71,7 @@ function OffersPage() {
       metraz: "20m2",
       cena: "200000 zł",
       telefon: "123 456 789",
-      komentarz: "fsdf",
+      komentarz: "fsddff",
       status: "aktywna",
     },
     {
@@ -265,6 +265,12 @@ function OffersPage() {
                   <Checkbox
                     checked={selected.includes(row.id)}
                     onChange={() => handleSelect(row.id)}
+                    sx={{
+                      color: "#272F3E",
+                      "&.Mui-checked": {
+                        color: "#272F3E",
+                      },
+                    }}
                   />
                 </TableCell>
                 <TableCell style={{ textAlign: "center" }}>
@@ -311,9 +317,14 @@ function OffersPage() {
                       <Star />
                     </IconButton>
                   </Tooltip>
-                  <Tooltip title="3">
+                  <Tooltip title="Dodaj do kalendarza">
                     <IconButton>
-                      <Visibility />
+                      <CalendarMonth />
+                    </IconButton>
+                  </Tooltip>
+                  <Tooltip title="Pokaż na mapie">
+                    <IconButton>
+                      <Map />
                     </IconButton>
                   </Tooltip>
                 </TableCell>
