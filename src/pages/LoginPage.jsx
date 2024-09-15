@@ -69,6 +69,7 @@ function LoginPage() {
     setError("Zapomnialem hasla");
     setOpen(true);
     console.log(username, password);
+    navigate('/zapomniane-haslo');
   };
 
   const handleClickShowPassword = () => setShowPassword(!showPassword);
