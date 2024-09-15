@@ -9,7 +9,8 @@ import {
   Paper,
   IconButton,
   Checkbox,
-  Pagination,
+  TablePagination,
+  Tooltip,
 } from "@mui/material";
 import { Delete, Edit, Star, Visibility } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
@@ -19,8 +20,8 @@ function OffersPage() {
   const navigate = useNavigate();
   const isAuthenticated = useAuth();
   const [selected, setSelected] = useState([]);
-  const [page, setPage] = useState(1);
-  const rowsPerPage = 5;
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
 
   const columns = [
     {
@@ -119,7 +120,62 @@ function OffersPage() {
     },
     {
       id: 6,
-      ulica: "Ulica 1",
+      ulica: "Ulica 6",
+      dzielnica: "dzielnica 1",
+      pokoje: 2,
+      metraz: "20m2",
+      cena: "200000 zł",
+      telefon: "123 456 789",
+      komentarz: "fdf",
+      status: "aktywna",
+    },
+    {
+      id: 7,
+      ulica: "Ulica 7",
+      dzielnica: "dzielnica 1",
+      pokoje: 2,
+      metraz: "20m2",
+      cena: "200000 zł",
+      telefon: "123 456 789",
+      komentarz: "fdf",
+      status: "aktywna",
+    },
+    {
+      id: 8,
+      ulica: "Ulica 8",
+      dzielnica: "dzielnica 1",
+      pokoje: 2,
+      metraz: "20m2",
+      cena: "200000 zł",
+      telefon: "123 456 789",
+      komentarz: "fdf",
+      status: "aktywna",
+    },
+    {
+      id: 9,
+      ulica: "Ulica 8",
+      dzielnica: "dzielnica 1",
+      pokoje: 2,
+      metraz: "20m2",
+      cena: "200000 zł",
+      telefon: "123 456 789",
+      komentarz: "fdf",
+      status: "aktywna",
+    },
+    {
+      id: 10,
+      ulica: "Ulica 8",
+      dzielnica: "dzielnica 1",
+      pokoje: 2,
+      metraz: "20m2",
+      cena: "200000 zł",
+      telefon: "123 456 789",
+      komentarz: "fdf",
+      status: "aktywna",
+    },
+    {
+      id: 11,
+      ulica: "Ulica 8",
       dzielnica: "dzielnica 1",
       pokoje: 2,
       metraz: "20m2",
@@ -145,13 +201,18 @@ function OffersPage() {
     if (!isAuthenticated) navigate("/");
   }, [isAuthenticated, navigate]);
 
-  const handleChangePage = (event, value) => {
-    setPage(value);
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
   };
 
   const paginatedRows = rows.slice(
-    (page - 1) * rowsPerPage,
-    page * rowsPerPage
+    page * rowsPerPage,
+    page * rowsPerPage + rowsPerPage
   );
 
   return (
@@ -235,30 +296,43 @@ function OffersPage() {
                     textAlign: "center",
                   }}
                 >
-                  <IconButton>
-                    <Delete />
-                  </IconButton>
-                  <IconButton>
-                    <Edit />
-                  </IconButton>
-                  <IconButton>
-                    <Star />
-                  </IconButton>
-                  <IconButton>
-                    <Visibility />
-                  </IconButton>
+                  <Tooltip title="Usuń">
+                    <IconButton>
+                      <Delete />
+                    </IconButton>
+                  </Tooltip>
+                  <Tooltip title="Edytuj">
+                    <IconButton>
+                      <Edit />
+                    </IconButton>
+                  </Tooltip>
+                  <Tooltip title="Dodaj do ciekawych ofert">
+                    <IconButton>
+                      <Star />
+                    </IconButton>
+                  </Tooltip>
+                  <Tooltip title="3">
+                    <IconButton>
+                      <Visibility />
+                    </IconButton>
+                  </Tooltip>
                 </TableCell>
               </TableRow>
             ))}
           </TableBody>
         </Table>
       </TableContainer>
-      <Pagination
-        count={Math.ceil(rows.length / rowsPerPage)}
+      <TablePagination
+        component="div"
+        count={rows.length}
         page={page}
-        onChange={handleChangePage}
-        shape="rounded"
-        style={{ marginTop: "20px", alignSelf: "center" }}
+        onPageChange={handleChangePage}
+        rowsPerPage={rowsPerPage}
+        onRowsPerPageChange={handleChangeRowsPerPage}
+        labelRowsPerPage="Wiersze na stronę"
+        showFirstButton
+        showLastButton
+        sx={{ width: "95%" }}
       />
     </div>
   );
