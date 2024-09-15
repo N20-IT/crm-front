@@ -9,6 +9,7 @@ import {
   Paper,
   IconButton,
   Checkbox,
+  Pagination,
 } from "@mui/material";
 import { Delete, Edit, Star, Visibility } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
@@ -18,6 +19,8 @@ function OffersPage() {
   const navigate = useNavigate();
   const isAuthenticated = useAuth();
   const [selected, setSelected] = useState([]);
+  const [page, setPage] = useState(1);
+  const rowsPerPage = 5;
 
   const columns = [
     {
@@ -92,6 +95,39 @@ function OffersPage() {
       komentarz: "fdf",
       status: "aktywna",
     },
+    {
+      id: 4,
+      ulica: "Ulica 1",
+      dzielnica: "dzielnica 1",
+      pokoje: 2,
+      metraz: "20m2",
+      cena: "200000 zł",
+      telefon: "123 456 789",
+      komentarz: "fdf",
+      status: "aktywna",
+    },
+    {
+      id: 5,
+      ulica: "Ulica 1",
+      dzielnica: "dzielnica 1",
+      pokoje: 2,
+      metraz: "20m2",
+      cena: "200000 zł",
+      telefon: "123 456 789",
+      komentarz: "fdf",
+      status: "aktywna",
+    },
+    {
+      id: 6,
+      ulica: "Ulica 1",
+      dzielnica: "dzielnica 1",
+      pokoje: 2,
+      metraz: "20m2",
+      cena: "200000 zł",
+      telefon: "123 456 789",
+      komentarz: "fdf",
+      status: "aktywna",
+    },
   ];
 
   const handleSelect = (id) => {
@@ -108,6 +144,15 @@ function OffersPage() {
   useEffect(() => {
     if (!isAuthenticated) navigate("/");
   }, [isAuthenticated, navigate]);
+
+  const handleChangePage = (event, value) => {
+    setPage(value);
+  };
+
+  const paginatedRows = rows.slice(
+    (page - 1) * rowsPerPage,
+    page * rowsPerPage
+  );
 
   return (
     <div className=" flex items-start justify-start h-screen ml-48 flex-col">
@@ -153,7 +198,7 @@ function OffersPage() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {rows.map((row) => (
+            {paginatedRows.map((row) => (
               <TableRow key={row.id}>
                 <TableCell style={{ textAlign: "center" }}>
                   <Checkbox
@@ -187,8 +232,7 @@ function OffersPage() {
                 </TableCell>
                 <TableCell
                   style={{
-                    display: "flex",
-                    justifyContent: "space-evenly",
+                    textAlign: "center",
                   }}
                 >
                   <IconButton>
@@ -209,6 +253,13 @@ function OffersPage() {
           </TableBody>
         </Table>
       </TableContainer>
+      <Pagination
+        count={Math.ceil(rows.length / rowsPerPage)}
+        page={page}
+        onChange={handleChangePage}
+        shape="rounded"
+        style={{ marginTop: "20px", alignSelf: "center" }}
+      />
     </div>
   );
 }
