@@ -31,7 +31,9 @@ function TableControls({ selectedCount }) {
         spacing={2}
         alignItems="center"
       >
-        <Typography>Zaznaczono: {selectedCount}</Typography>
+        <Typography style={{ fontFamily: "Poppins" }}>
+          Zaznaczono: {selectedCount}
+        </Typography>
 
         <FormControl
           sx={{
@@ -88,7 +90,11 @@ function TableControls({ selectedCount }) {
 
         <Button
           variant="contained"
-          sx={{ height: "100%", backgroundColor: "#FC8721" }}
+          sx={{
+            height: "100%",
+            backgroundColor: "#FC8721",
+            fontFamily: "Poppins",
+          }}
         >
           Dodaj ofertę
         </Button>

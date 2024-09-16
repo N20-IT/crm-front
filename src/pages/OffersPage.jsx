@@ -261,6 +261,7 @@ function OffersPage() {
                   style={{
                     color: "white",
                     textAlign: "center",
+                    fontFamily: "Poppins",
                   }}
                 >
                   {column.label}
@@ -301,6 +302,7 @@ function OffersPage() {
                     textAlign: "center",
                     padding: "0px",
                     maxHeight: "60px",
+                    fontFamily: "Poppins",
                   }}
                 >
                   {row.ulica}
@@ -310,6 +312,7 @@ function OffersPage() {
                     textAlign: "center",
                     padding: "0px",
                     maxHeight: "60px",
+                    fontFamily: "Poppins",
                   }}
                 >
                   {row.dzielnica}
@@ -319,6 +322,7 @@ function OffersPage() {
                     textAlign: "center",
                     padding: "0px",
                     maxHeight: "60px",
+                    fontFamily: "Poppins",
                   }}
                 >
                   {row.pokoje}
@@ -328,6 +332,7 @@ function OffersPage() {
                     textAlign: "center",
                     padding: "0px",
                     maxHeight: "60px",
+                    fontFamily: "Poppins",
                   }}
                 >
                   {row.metraz}
@@ -337,6 +342,7 @@ function OffersPage() {
                     textAlign: "center",
                     padding: "0px",
                     maxHeight: "60px",
+                    fontFamily: "Poppins",
                   }}
                 >
                   {row.cena}
@@ -346,6 +352,7 @@ function OffersPage() {
                     textAlign: "center",
                     padding: "0px",
                     maxHeight: "60px",
+                    fontFamily: "Poppins",
                   }}
                 >
                   {row.telefon}
@@ -355,6 +362,7 @@ function OffersPage() {
                     textAlign: "center",
                     padding: "0px",
                     maxHeight: "60px",
+                    fontFamily: "Poppins",
                   }}
                 >
                   {row.komentarz}
@@ -364,6 +372,7 @@ function OffersPage() {
                     textAlign: "center",
                     padding: "0px",
                     maxHeight: "60px",
+                    fontFamily: "Poppins",
                   }}
                 >
                   {row.status}
@@ -373,6 +382,7 @@ function OffersPage() {
                     textAlign: "center",
                     maxHeight: "60px",
                     padding: "0px",
+                    fontFamily: "Poppins",
                   }}
                 >
                   <Tooltip title="Usuń">
