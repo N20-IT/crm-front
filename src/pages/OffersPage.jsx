@@ -14,15 +14,22 @@ import {
 } from "@mui/material";
 import { Delete, Edit, Star, CalendarMonth, Map } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../utils/auth";
+import { useAuth, useReadCookie } from "../utils/auth";
+import axios from "axios";
 import Sidebar from "../components/Sidebar";
 import TableControls from "../components/TableControls";
+import Alerts from "../components/Alerts";
 function OffersPage() {
   const navigate = useNavigate();
+  const token = useReadCookie();
   const isAuthenticated = useAuth();
   const [selected, setSelected] = useState([]);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [rows, setRows] = useState([]);
+  const [alertMessage, setAlertMessage] = useState("");
+  const [alertSeverity, setAlertSeverity] = useState("");
+  const [alertOpen, setAlertOpen] = useState(false);
 
   const columns = [
     {
@@ -63,129 +70,26 @@ function OffersPage() {
     },
   ];
 
-  const rows = [
-    {
-      id: 1,
-      ulica: "Ulica 1",
-      dzielnica: "dzielnica 1",
-      pokoje: 2,
-      metraz: "20m2",
-      cena: "200000 zł",
-      telefon: "123 456 789",
-      komentarz: "fsddff",
-      status: "aktywna",
-    },
-    {
-      id: 2,
-      ulica: "Ulica 1",
-      dzielnica: "dzielnica 1",
-      pokoje: 2,
-      metraz: "20m2",
-      cena: "200000 zł",
-      telefon: "123 456 789",
-      komentarz: "fdf",
-      status: "aktywna",
-    },
-    {
-      id: 3,
-      ulica: "Ulica 1",
-      dzielnica: "dzielnica 1",
-      pokoje: 2,
-      metraz: "20m2",
-      cena: "200000 zł",
-      telefon: "123 456 789",
-      komentarz: "fdf",
-      status: "aktywna",
-    },
-    {
-      id: 4,
-      ulica: "Ulica 1",
-      dzielnica: "dzielnica 1",
-      pokoje: 2,
-      metraz: "20m2",
-      cena: "200000 zł",
-      telefon: "123 456 789",
-      komentarz: "fdf",
-      status: "aktywna",
-    },
-    {
-      id: 5,
-      ulica: "Ulica 1",
-      dzielnica: "dzielnica 1",
-      pokoje: 2,
-      metraz: "20m2",
-      cena: "200000 zł",
-      telefon: "123 456 789",
-      komentarz: "fdf",
-      status: "aktywna",
-    },
-    {
-      id: 6,
-      ulica: "Ulica 6",
-      dzielnica: "dzielnica 1",
-      pokoje: 2,
-      metraz: "20m2",
-      cena: "200000 zł",
-      telefon: "123 456 789",
-      komentarz: "fdf",
-      status: "aktywna",
-    },
-    {
-      id: 7,
-      ulica: "Ulica 7",
-      dzielnica: "dzielnica 1",
-      pokoje: 2,
-      metraz: "20m2",
-      cena: "200000 zł",
-      telefon: "123 456 789",
-      komentarz: "fdf",
-      status: "aktywna",
-    },
-    {
-      id: 8,
-      ulica: "Ulica 8",
-      dzielnica: "dzielnica 1",
-      pokoje: 2,
-      metraz: "20m2",
-      cena: "200000 zł",
-      telefon: "123 456 789",
-      komentarz: "fdf",
-      status: "aktywna",
-    },
-    {
-      id: 9,
-      ulica: "Ulica 8",
-      dzielnica: "dzielnica 1",
-      pokoje: 2,
-      metraz: "20m2",
-      cena: "200000 zł",
-      telefon: "123 456 789",
-      komentarz: "fdf",
-      status: "aktywna",
-    },
-    {
-      id: 10,
-      ulica: "Ulica 8",
-      dzielnica: "dzielnica 1",
-      pokoje: 2,
-      metraz: "20m2",
-      cena: "200000 zł",
-      telefon: "123 456 789",
-      komentarz: "fdf",
-      status: "aktywna",
-    },
-    {
-      id: 11,
-      ulica: "Ulica 8",
-      dzielnica: "dzielnica 1",
-      pokoje: 2,
-      metraz: "20m2",
-      cena: "200000 zł",
-      telefon: "123 456 789",
-      komentarz: "fdf",
-      status: "aktywna",
-    },
-  ];
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get("/listings", {
+          headers: {
+            accept: "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        setRows(response.data);
+        // setLoading(false);
+      } catch (error) {
+        setAlertOpen(true);
+        setAlertMessage(error.message);
+        setAlertSeverity("error");
+        // setLoading(false);
+      }
+    };
+    fetchData();
+  }, []);
 
   const handleSelect = (id) => {
     if (selected.includes(id))
@@ -274,7 +178,7 @@ function OffersPage() {
               <TableRow
                 key={row.id}
                 style={{
-                  "& .MuiTableRow-root": {
+                  "& .MuiTableRowRoot": {
                     maxHeight: "60px",
                   },
                 }}
@@ -325,7 +229,7 @@ function OffersPage() {
                     fontFamily: "Poppins",
                   }}
                 >
-                  {row.pokoje}
+                  {row.iloscPokoi}
                 </TableCell>
                 <TableCell
                   style={{
@@ -355,7 +259,7 @@ function OffersPage() {
                     fontFamily: "Poppins",
                   }}
                 >
-                  {row.telefon}
+                  {row.telefonDoWlasciciela}
                 </TableCell>
                 <TableCell
                   style={{
@@ -427,6 +331,12 @@ function OffersPage() {
         showFirstButton
         showLastButton
         sx={{ width: "95%" }}
+      />
+      <Alerts
+        message={alertMessage}
+        severity={alertSeverity}
+        open={alertOpen}
+        onClose={() => setAlertOpen(false)}
       />
     </div>
   );
