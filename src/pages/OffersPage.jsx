@@ -16,6 +16,7 @@ import { Delete, Edit, Star, CalendarMonth, Map } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../utils/auth";
 import Sidebar from "../components/Sidebar";
+import TableControls from "../components/TableControls";
 function OffersPage() {
   const navigate = useNavigate();
   const isAuthenticated = useAuth();
@@ -218,12 +219,21 @@ function OffersPage() {
   return (
     <div className=" flex items-start justify-start h-screen ml-48 flex-col">
       <Sidebar />
-      <h1 className=" font-bold text-5xl">Oferty</h1>
+      <h1 className=" font-bold text-5xl font-poppins ml-9 mt-6 mb-4">
+        Oferty
+      </h1>
       <TableContainer
         component={Paper}
         elevation={8}
-        style={{ width: "95%", alignSelf: "center", borderRadius: "10px" }}
+        style={{
+          width: "95%",
+          alignSelf: "center",
+          borderRadius: "10px",
+          maxHeight: "795px",
+        }}
       >
+        <TableControls selectedCount={selected.length} />
+
         <Table>
           <TableHead style={{ backgroundColor: "#272F3E" }}>
             <TableRow>
@@ -260,8 +270,21 @@ function OffersPage() {
           </TableHead>
           <TableBody>
             {paginatedRows.map((row) => (
-              <TableRow key={row.id}>
-                <TableCell style={{ textAlign: "center" }}>
+              <TableRow
+                key={row.id}
+                style={{
+                  "& .MuiTableRow-root": {
+                    maxHeight: "60px",
+                  },
+                }}
+              >
+                <TableCell
+                  style={{
+                    textAlign: "center",
+                    padding: "5px",
+                    maxHeight: "60px",
+                  }}
+                >
                   <Checkbox
                     checked={selected.includes(row.id)}
                     onChange={() => handleSelect(row.id)}
@@ -273,33 +296,83 @@ function OffersPage() {
                     }}
                   />
                 </TableCell>
-                <TableCell style={{ textAlign: "center" }}>
+                <TableCell
+                  style={{
+                    textAlign: "center",
+                    padding: "0px",
+                    maxHeight: "60px",
+                  }}
+                >
                   {row.ulica}
                 </TableCell>
-                <TableCell style={{ textAlign: "center" }}>
+                <TableCell
+                  style={{
+                    textAlign: "center",
+                    padding: "0px",
+                    maxHeight: "60px",
+                  }}
+                >
                   {row.dzielnica}
                 </TableCell>
-                <TableCell style={{ textAlign: "center" }}>
+                <TableCell
+                  style={{
+                    textAlign: "center",
+                    padding: "0px",
+                    maxHeight: "60px",
+                  }}
+                >
                   {row.pokoje}
                 </TableCell>
-                <TableCell style={{ textAlign: "center" }}>
+                <TableCell
+                  style={{
+                    textAlign: "center",
+                    padding: "0px",
+                    maxHeight: "60px",
+                  }}
+                >
                   {row.metraz}
                 </TableCell>
-                <TableCell style={{ textAlign: "center" }}>
+                <TableCell
+                  style={{
+                    textAlign: "center",
+                    padding: "0px",
+                    maxHeight: "60px",
+                  }}
+                >
                   {row.cena}
                 </TableCell>
-                <TableCell style={{ textAlign: "center" }}>
+                <TableCell
+                  style={{
+                    textAlign: "center",
+                    padding: "0px",
+                    maxHeight: "60px",
+                  }}
+                >
                   {row.telefon}
                 </TableCell>
-                <TableCell style={{ textAlign: "center" }}>
+                <TableCell
+                  style={{
+                    textAlign: "center",
+                    padding: "0px",
+                    maxHeight: "60px",
+                  }}
+                >
                   {row.komentarz}
                 </TableCell>
-                <TableCell style={{ textAlign: "center" }}>
+                <TableCell
+                  style={{
+                    textAlign: "center",
+                    padding: "0px",
+                    maxHeight: "60px",
+                  }}
+                >
                   {row.status}
                 </TableCell>
                 <TableCell
                   style={{
                     textAlign: "center",
+                    maxHeight: "60px",
+                    padding: "0px",
                   }}
                 >
                   <Tooltip title="Usuń">
