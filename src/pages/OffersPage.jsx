@@ -11,6 +11,7 @@ import {
   Checkbox,
   TablePagination,
   Tooltip,
+  Skeleton,
 } from "@mui/material";
 import { Delete, Edit, Star, CalendarMonth, Map } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
@@ -30,7 +31,7 @@ function OffersPage() {
   const [alertMessage, setAlertMessage] = useState("");
   const [alertSeverity, setAlertSeverity] = useState("");
   const [alertOpen, setAlertOpen] = useState(false);
-
+  const [loading, setLoading] = useState(true);
   const columns = [
     {
       id: "ulica",
@@ -68,6 +69,9 @@ function OffersPage() {
       id: "narzedzia",
       label: "Narzędzia",
     },
+    {
+      id: "checkbox",
+    },
   ];
 
   useEffect(() => {
@@ -80,12 +84,12 @@ function OffersPage() {
           },
         });
         setRows(response.data);
-        // setLoading(false);
       } catch (error) {
         setAlertOpen(true);
         setAlertMessage(error.message);
         setAlertSeverity("error");
-        // setLoading(false);
+      } finally {
+        setLoading(false);
       }
     };
     fetchData();
@@ -166,6 +170,7 @@ function OffersPage() {
                     color: "white",
                     textAlign: "center",
                     fontFamily: "Poppins",
+                    minWidth: "10%",
                   }}
                 >
                   {column.label}
@@ -174,149 +179,167 @@ function OffersPage() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {paginatedRows.map((row) => (
-              <TableRow
-                key={row.id}
-                style={{
-                  "& .MuiTableRowRoot": {
-                    maxHeight: "60px",
-                  },
-                }}
-              >
-                <TableCell
-                  style={{
-                    textAlign: "center",
-                    padding: "5px",
-                    maxHeight: "60px",
-                  }}
-                >
-                  <Checkbox
-                    checked={selected.includes(row.id)}
-                    onChange={() => handleSelect(row.id)}
-                    sx={{
-                      color: "#272F3E",
-                      "&.Mui-checked": {
-                        color: "#272F3E",
+            {loading
+              ? [...Array(rowsPerPage)].map((_, index) => (
+                  <TableRow key={index}>
+                    {columns.map((column) => (
+                      <TableCell key={column.id}>
+                        <Skeleton variant="rounded" width="100%" height={16} />
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                ))
+              : paginatedRows.map((row) => (
+                  <TableRow
+                    key={row.id}
+                    style={{
+                      "& .MuiTableRowRoot": {
+                        maxHeight: "60px",
                       },
                     }}
-                  />
-                </TableCell>
-                <TableCell
-                  style={{
-                    textAlign: "center",
-                    padding: "0px",
-                    maxHeight: "60px",
-                    fontFamily: "Poppins",
-                  }}
-                >
-                  {row.ulica}
-                </TableCell>
-                <TableCell
-                  style={{
-                    textAlign: "center",
-                    padding: "0px",
-                    maxHeight: "60px",
-                    fontFamily: "Poppins",
-                  }}
-                >
-                  {row.dzielnica}
-                </TableCell>
-                <TableCell
-                  style={{
-                    textAlign: "center",
-                    padding: "0px",
-                    maxHeight: "60px",
-                    fontFamily: "Poppins",
-                  }}
-                >
-                  {row.iloscPokoi}
-                </TableCell>
-                <TableCell
-                  style={{
-                    textAlign: "center",
-                    padding: "0px",
-                    maxHeight: "60px",
-                    fontFamily: "Poppins",
-                  }}
-                >
-                  {row.metraz}
-                </TableCell>
-                <TableCell
-                  style={{
-                    textAlign: "center",
-                    padding: "0px",
-                    maxHeight: "60px",
-                    fontFamily: "Poppins",
-                  }}
-                >
-                  {row.cena}
-                </TableCell>
-                <TableCell
-                  style={{
-                    textAlign: "center",
-                    padding: "0px",
-                    maxHeight: "60px",
-                    fontFamily: "Poppins",
-                  }}
-                >
-                  {row.telefonDoWlasciciela}
-                </TableCell>
-                <TableCell
-                  style={{
-                    textAlign: "center",
-                    padding: "0px",
-                    maxHeight: "60px",
-                    fontFamily: "Poppins",
-                  }}
-                >
-                  {row.komentarz}
-                </TableCell>
-                <TableCell
-                  style={{
-                    textAlign: "center",
-                    padding: "0px",
-                    maxHeight: "60px",
-                    fontFamily: "Poppins",
-                  }}
-                >
-                  {row.status}
-                </TableCell>
-                <TableCell
-                  style={{
-                    textAlign: "center",
-                    maxHeight: "60px",
-                    padding: "0px",
-                    fontFamily: "Poppins",
-                  }}
-                >
-                  <Tooltip title="Usuń">
-                    <IconButton>
-                      <Delete />
-                    </IconButton>
-                  </Tooltip>
-                  <Tooltip title="Edytuj">
-                    <IconButton>
-                      <Edit />
-                    </IconButton>
-                  </Tooltip>
-                  <Tooltip title="Dodaj do ciekawych ofert">
-                    <IconButton>
-                      <Star />
-                    </IconButton>
-                  </Tooltip>
-                  <Tooltip title="Dodaj do kalendarza">
-                    <IconButton>
-                      <CalendarMonth />
-                    </IconButton>
-                  </Tooltip>
-                  <Tooltip title="Pokaż na mapie">
-                    <IconButton>
-                      <Map />
-                    </IconButton>
-                  </Tooltip>
-                </TableCell>
-              </TableRow>
-            ))}
+                  >
+                    <TableCell
+                      style={{
+                        textAlign: "center",
+                        padding: "5px",
+                        maxHeight: "60px",
+                      }}
+                    >
+                      <Checkbox
+                        checked={selected.includes(row.id)}
+                        onChange={() => handleSelect(row.id)}
+                        sx={{
+                          color: "#272F3E",
+                          "&.Mui-checked": {
+                            color: "#272F3E",
+                          },
+                        }}
+                      />
+                    </TableCell>
+                    <TableCell
+                      style={{
+                        textAlign: "center",
+                        padding: "0px",
+                        maxHeight: "60px",
+                        fontFamily: "Poppins",
+                        width: "10%",
+                      }}
+                    >
+                      {row.ulica}
+                    </TableCell>
+                    <TableCell
+                      style={{
+                        textAlign: "center",
+                        padding: "0px",
+                        maxHeight: "60px",
+                        fontFamily: "Poppins",
+                        width: "10%",
+                      }}
+                    >
+                      {row.dzielnica}
+                    </TableCell>
+                    <TableCell
+                      style={{
+                        textAlign: "center",
+                        padding: "0px",
+                        maxHeight: "60px",
+                        fontFamily: "Poppins",
+                        width: "10%",
+                      }}
+                    >
+                      {row.iloscPokoi}
+                    </TableCell>
+                    <TableCell
+                      style={{
+                        textAlign: "center",
+                        padding: "0px",
+                        maxHeight: "60px",
+                        fontFamily: "Poppins",
+                        width: "10%",
+                      }}
+                    >
+                      {row.metraz}
+                    </TableCell>
+                    <TableCell
+                      style={{
+                        textAlign: "center",
+                        padding: "0px",
+                        maxHeight: "60px",
+                        fontFamily: "Poppins",
+                        width: "10%",
+                      }}
+                    >
+                      {row.cena}
+                    </TableCell>
+                    <TableCell
+                      style={{
+                        textAlign: "center",
+                        padding: "0px",
+                        maxHeight: "60px",
+                        fontFamily: "Poppins",
+                        width: "10%",
+                      }}
+                    >
+                      {row.telefonDoWlasciciela}
+                    </TableCell>
+                    <TableCell
+                      style={{
+                        textAlign: "center",
+                        padding: "0px",
+                        maxHeight: "60px",
+                        fontFamily: "Poppins",
+                        width: "10%",
+                      }}
+                    >
+                      {row.komentarz}
+                    </TableCell>
+                    <TableCell
+                      style={{
+                        textAlign: "center",
+                        padding: "0px",
+                        maxHeight: "60px",
+                        fontFamily: "Poppins",
+                        width: "10%",
+                      }}
+                    >
+                      {row.status}
+                    </TableCell>
+                    <TableCell
+                      style={{
+                        textAlign: "center",
+                        maxHeight: "60px",
+                        padding: "0px",
+                        fontFamily: "Poppins",
+                      }}
+                    >
+                      <Tooltip title="Usuń">
+                        <IconButton>
+                          <Delete />
+                        </IconButton>
+                      </Tooltip>
+                      <Tooltip title="Edytuj">
+                        <IconButton>
+                          <Edit />
+                        </IconButton>
+                      </Tooltip>
+                      <Tooltip title="Dodaj do ciekawych ofert">
+                        <IconButton>
+                          <Star />
+                        </IconButton>
+                      </Tooltip>
+                      <Tooltip title="Dodaj do kalendarza">
+                        <IconButton>
+                          <CalendarMonth />
+                        </IconButton>
+                      </Tooltip>
+                      <Tooltip title="Pokaż na mapie">
+                        <IconButton>
+                          <Map />
+                        </IconButton>
+                      </Tooltip>
+                    </TableCell>
+                  </TableRow>
+                ))}
           </TableBody>
         </Table>
       </TableContainer>
