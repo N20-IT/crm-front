@@ -160,14 +160,11 @@ function OffersPage() {
       });
       await fetchData();
       handleAddOfferClick();
-      // console.log("Oferta zapisana:", response.data);
-      // Dodaj logikę np. odświeżenia tabeli z ofertami
     } catch (error) {
       setAlertOpen(true);
       setAlertMessage(error.message);
       setAlertSeverity("error");
       console.error("Błąd podczas zapisywania oferty:", error);
-      // Dodaj logikę wyświetlania błędu, np. w formie alertu
     }
   };
 
@@ -248,6 +245,7 @@ function OffersPage() {
                       },
                     }}
                   >
+                    {console.log(row)}
                     <TableCell
                       style={{
                         textAlign: "center",
@@ -275,7 +273,7 @@ function OffersPage() {
                         width: "7.2%",
                       }}
                     >
-                      {row.ulica}
+                      {row.adres?.ulica || "Brak danych"}
                     </TableCell>
                     <TableCell
                       style={{
@@ -286,7 +284,7 @@ function OffersPage() {
                         width: "7.2%",
                       }}
                     >
-                      {row.dzielnica}
+                      {row.adres?.dzielnica || "Brak danych"}
                     </TableCell>
                     <TableCell
                       style={{
@@ -297,7 +295,7 @@ function OffersPage() {
                         width: "7.2%",
                       }}
                     >
-                      {row.miasto}
+                      {row.adres?.miasto || "Brak danych"}
                     </TableCell>
                     <TableCell
                       style={{
@@ -308,7 +306,7 @@ function OffersPage() {
                         width: "7.2%",
                       }}
                     >
-                      {row.nrDomu}
+                      {row.adres?.numerDomu || "Brak danych"}
                     </TableCell>
                     <TableCell
                       style={{
@@ -319,7 +317,7 @@ function OffersPage() {
                         width: "7.2%",
                       }}
                     >
-                      {row.nrMieszkania}
+                      {row.adres?.numerMieszkania || "Brak danych"}
                     </TableCell>
                     <TableCell
                       style={{
@@ -363,7 +361,7 @@ function OffersPage() {
                         width: "7.2%",
                       }}
                     >
-                      {row.telefonDoWlasciciela}
+                      {row.telefonWlasciciela}
                     </TableCell>
                     <TableCell
                       style={{
