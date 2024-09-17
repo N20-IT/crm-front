@@ -191,7 +191,7 @@ function OffersPage() {
                 ))
               : paginatedRows.map((row) => (
                   <TableRow
-                    key={row.id}
+                    key={row._id}
                     style={{
                       "& .MuiTableRowRoot": {
                         maxHeight: "60px",
