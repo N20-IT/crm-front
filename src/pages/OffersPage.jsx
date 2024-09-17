@@ -154,7 +154,7 @@ function OffersPage() {
     try {
       const response = await axios.post("/listings", offerData, {
         headers: {
-          Authorization: `Bearer ${token}`, // Upewnij się, że masz token
+          Authorization: `Bearer ${token}`,
         },
       });
       await fetchData();
@@ -163,7 +163,25 @@ function OffersPage() {
       setAlertOpen(true);
       setAlertMessage(error.message);
       setAlertSeverity("error");
-      console.error("Błąd podczas zapisywania oferty:", error);
+    }
+  };
+
+  const handleDeleteOffer = async (offerId) => {
+    try {
+      const response = await axios.delete("/listings", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        data: { ids: offerId },
+      });
+      setAlertOpen(true);
+      setAlertMessage("Ofertę usunięto pomyślnie");
+      setAlertSeverity("success");
+      await fetchData();
+    } catch (error) {
+      setAlertOpen(true);
+      setAlertMessage("Błąd podczas usuwania ofert: " + error.message);
+      setAlertSeverity("error");
     }
   };
 
@@ -392,7 +410,9 @@ function OffersPage() {
                       }}
                     >
                       <Tooltip title="Usuń">
-                        <IconButton>
+                        <IconButton
+                          onClick={() => handleDeleteOffer([row._id])}
+                        >
                           <Delete />
                         </IconButton>
                       </Tooltip>
