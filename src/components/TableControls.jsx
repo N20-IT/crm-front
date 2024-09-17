@@ -6,13 +6,22 @@ import {
   InputLabel,
   FormControl,
   Button,
-  Typography,
   Box,
   Stack,
+  Menu,
 } from "@mui/material";
-
+import { Delete, Star } from "@mui/icons-material";
+import { KeyboardArrowDown } from "@mui/icons-material";
 function TableControls({ selectedCount }) {
   const [searchValue, setSearchValue] = useState("");
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const open = Boolean(anchorEl);
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
 
   const handleSearchChange = (e) => {
     setSearchValue(e.target.value);
@@ -31,10 +40,41 @@ function TableControls({ selectedCount }) {
         spacing={2}
         alignItems="center"
       >
-        <Typography style={{ fontFamily: "Poppins" }}>
-          Zaznaczono: {selectedCount}
-        </Typography>
-
+        <Button
+          aria-controls={open ? "basic-menu" : undefined}
+          aria-haspopup="true"
+          aria-expanded={open ? "true" : undefined}
+          onClick={handleClick}
+          variant="outlined"
+          endIcon={<KeyboardArrowDown />}
+          sx={{
+            color: "#6D727F",
+            fontFamily: "Poppins",
+            borderColor: "black",
+            width: "180px",
+            height: "56px",
+          }}
+        >
+          Zaznaczono {selectedCount}
+        </Button>
+        <Menu
+          id="basic-menu"
+          anchorEl={anchorEl}
+          open={open}
+          onClose={handleClose}
+          MenuListProps={{
+            "aria-labelledby": "basic-button",
+          }}
+        >
+          <MenuItem>
+            <Delete />
+            Usuń
+          </MenuItem>
+          <MenuItem>
+            <Star />
+            Dodaj do ciekawych ofert
+          </MenuItem>
+        </Menu>
         <FormControl
           sx={{
             "& .Mui-focused": {
