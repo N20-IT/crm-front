@@ -12,7 +12,7 @@ import {
 } from "@mui/material";
 import { Delete, Star } from "@mui/icons-material";
 import { KeyboardArrowDown } from "@mui/icons-material";
-function TableControls({ selectedCount }) {
+function TableControls({ selectedCount, onAddOfferClick }) {
   const [searchValue, setSearchValue] = useState("");
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
@@ -112,17 +112,26 @@ function TableControls({ selectedCount }) {
           onChange={handleSearchChange}
           sx={{
             flex: 1,
-            "& .Mui-focused": {
-              color: "#6D727F",
-              borderColor: "#6D727F",
+            "& .MuiOutlinedInput-root": {
+              fontFamily: "Poppins",
             },
-            "& .Mui-focused .MuiOutlinedInput-notchedOutline": {
-              borderColor: "#6D727F",
+            "& .MuiFormLabel-root": {
+              fontFamily: "Poppins",
+              color: "#535968",
+            },
+            "& .MuiInputLabel-root.Mui-focused": {
+              color: "#535968",
             },
             "& .MuiOutlinedInput-notchedOutline": {
-              borderColor: "#6D727F",
+              borderColor: "#535968",
             },
-            "& :hover .MuiOutlinedInput-notchedOutline": {
+            "&:hover .MuiOutlinedInput-notchedOutline": {
+              borderColor: "#535968",
+            },
+            "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+              borderColor: "#535968",
+            },
+            "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline": {
               borderColor: "#535968",
             },
           }}
@@ -135,6 +144,7 @@ function TableControls({ selectedCount }) {
             backgroundColor: "#FC8721",
             fontFamily: "Poppins",
           }}
+          onClick={onAddOfferClick}
         >
           Dodaj ofertę
         </Button>

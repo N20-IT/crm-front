@@ -13,13 +13,21 @@ import {
   Tooltip,
   Skeleton,
 } from "@mui/material";
-import { Delete, Edit, Star, CalendarMonth, Map } from "@mui/icons-material";
+import {
+  Delete,
+  Edit,
+  Star,
+  CalendarMonth,
+  Map,
+  AssignmentInd,
+} from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import { useAuth, useReadCookie } from "../utils/auth";
 import axios from "axios";
 import Sidebar from "../components/Sidebar";
 import TableControls from "../components/TableControls";
 import Alerts from "../components/Alerts";
+import AddOfferPanel from "../components/AddOfferPanel";
 function OffersPage() {
   const navigate = useNavigate();
   const token = useReadCookie();
@@ -32,6 +40,7 @@ function OffersPage() {
   const [alertSeverity, setAlertSeverity] = useState("");
   const [alertOpen, setAlertOpen] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [isAddOfferPanelOpen, setAddOfferPanelOpen] = useState(false);
   const columns = [
     {
       id: "ulica",
@@ -42,8 +51,20 @@ function OffersPage() {
       label: "Dzielnica",
     },
     {
-      id: "pokoje",
-      label: "Ilość pokoi",
+      id: "miasto",
+      label: "Miasto",
+    },
+    {
+      id: "nrDomu",
+      label: "Numer Domu",
+    },
+    {
+      id: "nrMieszkania",
+      label: "Numer Mieszkania",
+    },
+    {
+      id: "iloscPokoi",
+      label: "Ilość pokoi / dom ",
     },
     {
       id: "metraz",
@@ -54,12 +75,12 @@ function OffersPage() {
       label: "Cena",
     },
     {
-      id: "telefon",
+      id: "telefonDoWlasciciela",
       label: "Telefon",
     },
     {
-      id: "komentarz",
-      label: "Komentarz",
+      id: "uwagi",
+      label: "Uwagi",
     },
     {
       id: "status",
@@ -74,24 +95,26 @@ function OffersPage() {
     },
   ];
 
+  const fetchData = async () => {
+    try {
+      const response = await axios.get("/listings", {
+        headers: {
+          accept: "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      setRows(response.data);
+      console.log(response.data);
+    } catch (error) {
+      setAlertOpen(true);
+      setAlertMessage(error.message);
+      setAlertSeverity("error");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get("/listings", {
-          headers: {
-            accept: "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        setRows(response.data);
-      } catch (error) {
-        setAlertOpen(true);
-        setAlertMessage(error.message);
-        setAlertSeverity("error");
-      } finally {
-        setLoading(false);
-      }
-    };
     fetchData();
   }, []);
 
@@ -124,6 +147,30 @@ function OffersPage() {
     page * rowsPerPage + rowsPerPage
   );
 
+  const handleAddOfferClick = () => {
+    setAddOfferPanelOpen(!isAddOfferPanelOpen);
+  };
+
+  const handleSaveOffer = async (offerData) => {
+    try {
+      const response = await axios.post("/listings", offerData, {
+        headers: {
+          Authorization: `Bearer ${token}`, // Upewnij się, że masz token
+        },
+      });
+      await fetchData();
+      handleAddOfferClick();
+      // console.log("Oferta zapisana:", response.data);
+      // Dodaj logikę np. odświeżenia tabeli z ofertami
+    } catch (error) {
+      setAlertOpen(true);
+      setAlertMessage(error.message);
+      setAlertSeverity("error");
+      console.error("Błąd podczas zapisywania oferty:", error);
+      // Dodaj logikę wyświetlania błędu, np. w formie alertu
+    }
+  };
+
   return (
     <div className=" flex items-start justify-start h-screen ml-48 flex-col">
       <Sidebar />
@@ -140,7 +187,10 @@ function OffersPage() {
           maxHeight: "795px",
         }}
       >
-        <TableControls selectedCount={selected.length} />
+        <TableControls
+          selectedCount={selected.length}
+          onAddOfferClick={handleAddOfferClick}
+        />
 
         <Table>
           <TableHead style={{ backgroundColor: "#272F3E" }}>
@@ -170,7 +220,7 @@ function OffersPage() {
                     color: "white",
                     textAlign: "center",
                     fontFamily: "Poppins",
-                    minWidth: "10%",
+                    minWidth: "8%",
                   }}
                 >
                   {column.label}
@@ -222,7 +272,7 @@ function OffersPage() {
                         padding: "0px",
                         maxHeight: "60px",
                         fontFamily: "Poppins",
-                        width: "10%",
+                        width: "7.2%",
                       }}
                     >
                       {row.ulica}
@@ -233,7 +283,7 @@ function OffersPage() {
                         padding: "0px",
                         maxHeight: "60px",
                         fontFamily: "Poppins",
-                        width: "10%",
+                        width: "7.2%",
                       }}
                     >
                       {row.dzielnica}
@@ -244,7 +294,40 @@ function OffersPage() {
                         padding: "0px",
                         maxHeight: "60px",
                         fontFamily: "Poppins",
-                        width: "10%",
+                        width: "7.2%",
+                      }}
+                    >
+                      {row.miasto}
+                    </TableCell>
+                    <TableCell
+                      style={{
+                        textAlign: "center",
+                        padding: "0px",
+                        maxHeight: "60px",
+                        fontFamily: "Poppins",
+                        width: "7.2%",
+                      }}
+                    >
+                      {row.nrDomu}
+                    </TableCell>
+                    <TableCell
+                      style={{
+                        textAlign: "center",
+                        padding: "0px",
+                        maxHeight: "60px",
+                        fontFamily: "Poppins",
+                        width: "7.2%",
+                      }}
+                    >
+                      {row.nrMieszkania}
+                    </TableCell>
+                    <TableCell
+                      style={{
+                        textAlign: "center",
+                        padding: "0px",
+                        maxHeight: "60px",
+                        fontFamily: "Poppins",
+                        width: "7.2%",
                       }}
                     >
                       {row.iloscPokoi}
@@ -255,7 +338,7 @@ function OffersPage() {
                         padding: "0px",
                         maxHeight: "60px",
                         fontFamily: "Poppins",
-                        width: "10%",
+                        width: "7.2%",
                       }}
                     >
                       {row.metraz}
@@ -266,7 +349,7 @@ function OffersPage() {
                         padding: "0px",
                         maxHeight: "60px",
                         fontFamily: "Poppins",
-                        width: "10%",
+                        width: "7.2%",
                       }}
                     >
                       {row.cena}
@@ -277,7 +360,7 @@ function OffersPage() {
                         padding: "0px",
                         maxHeight: "60px",
                         fontFamily: "Poppins",
-                        width: "10%",
+                        width: "7.2%",
                       }}
                     >
                       {row.telefonDoWlasciciela}
@@ -288,7 +371,7 @@ function OffersPage() {
                         padding: "0px",
                         maxHeight: "60px",
                         fontFamily: "Poppins",
-                        width: "10%",
+                        width: "7.2%",
                       }}
                     >
                       {row.komentarz}
@@ -299,7 +382,7 @@ function OffersPage() {
                         padding: "0px",
                         maxHeight: "60px",
                         fontFamily: "Poppins",
-                        width: "10%",
+                        width: "7.2%",
                       }}
                     >
                       {row.status}
@@ -337,6 +420,11 @@ function OffersPage() {
                           <Map />
                         </IconButton>
                       </Tooltip>
+                      <Tooltip title="Przypisz ofertę">
+                        <IconButton>
+                          <AssignmentInd />
+                        </IconButton>
+                      </Tooltip>
                     </TableCell>
                   </TableRow>
                 ))}
@@ -361,6 +449,12 @@ function OffersPage() {
         open={alertOpen}
         onClose={() => setAlertOpen(false)}
       />
+      {isAddOfferPanelOpen && (
+        <AddOfferPanel
+          onSave={handleSaveOffer}
+          onCancel={handleAddOfferClick}
+        />
+      )}
     </div>
   );
 }
