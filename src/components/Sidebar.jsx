@@ -1,9 +1,17 @@
 import React from "react";
-import { LocalOffer, Group, Star } from "@mui/icons-material";
+import {
+  LocalOffer,
+  Group,
+  Star,
+  Groups,
+  Description,
+} from "@mui/icons-material";
 import { Link, useLocation } from "react-router-dom";
+import { GetUserRoleFromToken } from "../utils/decodeToken";
 
 const Sidebar = () => {
   const location = useLocation();
+  const userRole = GetUserRoleFromToken();
 
   const getLinkClass = (path) => {
     return location.pathname === path ? "bg-orange" : "hover:bg-dark-blue";
@@ -56,6 +64,36 @@ const Sidebar = () => {
               <span>Ciek. oferty</span>
             </Link>
           </li>
+          {userRole === "admin" && (
+            <>
+              <li
+                className={`w-full h-14 flex justify-start items-center ${getLinkClass(
+                  "/uzytkownicy"
+                )}`}
+              >
+                <Link
+                  to="/uzytkownicy"
+                  className="flex items-center justify-start text-xl ml-4 w-full h-full"
+                >
+                  <Groups sx={{ marginRight: "6px" }} />
+                  <span>Uzytkownicy</span>
+                </Link>
+              </li>
+              <li
+                className={`w-full h-14 flex justify-start items-center ${getLinkClass(
+                  "/logi"
+                )}`}
+              >
+                <Link
+                  to="/logi"
+                  className="flex items-center justify-start text-xl ml-4 w-full h-full"
+                >
+                  <Description sx={{ marginRight: "6px" }} />
+                  <span>Logi</span>
+                </Link>
+              </li>
+            </>
+          )}
         </ul>
       </nav>
     </aside>
