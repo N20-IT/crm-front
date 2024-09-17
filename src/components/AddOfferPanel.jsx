@@ -11,27 +11,45 @@ import CustomTextField from "./CustomTextField";
 
 function AddOfferPanel({ onSave, onCancel }) {
   const [formData, setFormData] = useState({
-    ulica: "",
-    dzielnica: "",
-    miasto: "",
-    nrDomu: "",
-    nrMieszkania: "",
+    adres: {
+      ulica: "",
+      dzielnica: "",
+      miasto: "",
+      numerDomu: "",
+      numerMieszkania: "",
+    },
     iloscPokoi: "",
     metraz: "",
     cena: "",
-    telefonDoWlasciciela: "",
+    telefonWlasciciela: "",
     komentarz: "",
-    status: "",
+    // status: "",
     agent: "",
   });
 
   const names = ["Damian Kaniski", "Wiktoria Grawska", "Paweł Sztak"];
 
   const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
+    const { name, value } = e.target;
+
+    if (
+      ["ulica", "dzielnica", "miasto", "numerDomu", "numerMieszkania"].includes(
+        name
+      )
+    ) {
+      setFormData((prevState) => ({
+        ...prevState,
+        adres: {
+          ...prevState.adres,
+          [name]: value,
+        },
+      }));
+    } else {
+      setFormData({
+        ...formData,
+        [name]: value,
+      });
+    }
   };
 
   const handleSave = async () => {
@@ -53,7 +71,7 @@ function AddOfferPanel({ onSave, onCancel }) {
             <CustomTextField
               label="Ulica"
               name="ulica"
-              value={formData.ulica}
+              value={formData.adres.ulica}
               onChange={handleChange}
               variant="outlined"
               fullWidth
@@ -65,7 +83,7 @@ function AddOfferPanel({ onSave, onCancel }) {
               <CustomTextField
                 label="Dzielnica"
                 name="dzielnica"
-                value={formData.dzielnica}
+                value={formData.adres.dzielnica}
                 onChange={handleChange}
                 variant="outlined"
                 fullWidth
@@ -76,7 +94,7 @@ function AddOfferPanel({ onSave, onCancel }) {
               <CustomTextField
                 label="Miasto"
                 name="miasto"
-                value={formData.miasto}
+                value={formData.adres.miasto}
                 onChange={handleChange}
                 variant="outlined"
                 fullWidth
@@ -89,8 +107,8 @@ function AddOfferPanel({ onSave, onCancel }) {
             <div className="w-full">
               <CustomTextField
                 label="Numer Domu"
-                name="nrDomu"
-                value={formData.nrDomu}
+                name="numerDomu"
+                value={formData.adres.numerDomu}
                 onChange={handleChange}
                 variant="outlined"
                 fullWidth
@@ -100,8 +118,8 @@ function AddOfferPanel({ onSave, onCancel }) {
             <div className="w-full">
               <CustomTextField
                 label="Numer Mieszkania"
-                name="nrMieszkania"
-                value={formData.nrMieszkania}
+                name="numerMieszkania"
+                value={formData.adres.numerMieszkania}
                 onChange={handleChange}
                 variant="outlined"
                 fullWidth
@@ -147,8 +165,8 @@ function AddOfferPanel({ onSave, onCancel }) {
           <div>
             <CustomTextField
               label="Telefon do właściciela"
-              name="telefonDoWlasciciela"
-              value={formData.telefonDoWlasciciela}
+              name="telefonWlasciciela"
+              value={formData.telefonWlasciciela}
               onChange={handleChange}
               variant="outlined"
               fullWidth

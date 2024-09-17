@@ -104,7 +104,6 @@ function OffersPage() {
         },
       });
       setRows(response.data);
-      console.log(response.data);
     } catch (error) {
       setAlertOpen(true);
       setAlertMessage(error.message);
@@ -245,7 +244,6 @@ function OffersPage() {
                       },
                     }}
                   >
-                    {console.log(row)}
                     <TableCell
                       style={{
                         textAlign: "center",
