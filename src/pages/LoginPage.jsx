@@ -51,7 +51,7 @@ function LoginPage() {
   const handleLogJwtToken = async () => {
     try {
       const session = await fetchAuthSession();
-      return session.tokens.accessToken.toString();
+      return session.tokens.idToken.toString();
     } catch (error) {
       setError("Error fetching auth session:", error);
       setOpen(true);
