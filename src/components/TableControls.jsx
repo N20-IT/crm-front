@@ -77,17 +77,20 @@ function TableControls({ selectedCount, onAddOfferClick }) {
         </Menu>
         <FormControl
           sx={{
-            "& .Mui-focused": {
-              color: "#6D727F",
-              borderColor: "#6D727F",
-            },
-            "& .Mui-focused .MuiOutlinedInput-notchedOutline": {
-              borderColor: "#6D727F",
+            "& .MuiFormLabel-root": {
+              fontFamily: "Poppins",
+              color: "#535968",
             },
             "& .MuiOutlinedInput-notchedOutline": {
-              borderColor: "#6D727F",
+              borderColor: "#535968",
             },
-            "& :hover .MuiOutlinedInput-notchedOutline": {
+            "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+              borderColor: "#535968",
+            },
+            "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+              borderColor: "#535968",
+            },
+            "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline": {
               borderColor: "#535968",
             },
           }}
