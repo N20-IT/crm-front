@@ -28,6 +28,7 @@ import Sidebar from "../components/Sidebar";
 import TableControls from "../components/TableControls";
 import Alerts from "../components/Alerts";
 import AddOfferPanel from "../components/AddOfferPanel";
+import ConfirmDeleteDialog from "../components/ConfirmDeleteDialog";
 function OffersPage() {
   const navigate = useNavigate();
   const token = useReadCookie();
@@ -41,6 +42,9 @@ function OffersPage() {
   const [alertOpen, setAlertOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   const [isAddOfferPanelOpen, setAddOfferPanelOpen] = useState(false);
+  const [openDialog, setOpenDialog] = useState(false);
+  const [offerIdToDelete, setOfferIdToDelete] = useState(null);
+
   const columns = [
     {
       id: "ulica",
@@ -184,6 +188,20 @@ function OffersPage() {
       setAlertSeverity("error");
     }
   };
+
+  const handleConfirmDelete = async () => {
+    if (offerIdToDelete) {
+      await handleDeleteOffer(offerIdToDelete);
+      setOfferIdToDelete(null);
+    }
+    setOpenDialog(false);
+  };
+
+  const handleDeleteOfferClick = (offerId) => {
+    setOfferIdToDelete(offerId);
+    setOpenDialog(true);
+  };
+  const handleOpenCloseDialog = () => setOpenDialog(!openDialog);
 
   return (
     <div className=" flex items-start justify-start h-screen ml-48 flex-col">
@@ -411,7 +429,7 @@ function OffersPage() {
                     >
                       <Tooltip title="Usuń">
                         <IconButton
-                          onClick={() => handleDeleteOffer([row._id])}
+                          onClick={() => handleDeleteOfferClick([row._id])}
                         >
                           <Delete />
                         </IconButton>
@@ -471,6 +489,11 @@ function OffersPage() {
           onCancel={handleAddOfferClick}
         />
       )}
+      <ConfirmDeleteDialog
+        open={openDialog}
+        onClose={handleOpenCloseDialog}
+        onConfirm={handleConfirmDelete}
+      />
     </div>
   );
 }
