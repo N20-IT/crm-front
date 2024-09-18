@@ -29,6 +29,7 @@ import TableControls from "../components/TableControls";
 import Alerts from "../components/Alerts";
 import AddOfferPanel from "../components/AddOfferPanel";
 import ConfirmDeleteDialog from "../components/ConfirmDeleteDialog";
+import EditOfferPanel from "../components/EditOfferPanel";
 function OffersPage() {
   const navigate = useNavigate();
   const token = useReadCookie();
@@ -44,6 +45,8 @@ function OffersPage() {
   const [isAddOfferPanelOpen, setAddOfferPanelOpen] = useState(false);
   const [openDialog, setOpenDialog] = useState(false);
   const [offerIdToDelete, setOfferIdToDelete] = useState(null);
+  const [isEditOfferPanelOpen, setEditOfferPanelOpen] = useState(false);
+  const [editOfferData, setEditOfferData] = useState(null);
 
   const columns = [
     {
@@ -202,6 +205,34 @@ function OffersPage() {
     setOpenDialog(true);
   };
   const handleOpenCloseDialog = () => setOpenDialog(!openDialog);
+
+  const handleEditClick = (offer) => {
+    setEditOfferData(offer);
+    setEditOfferPanelOpen(true);
+  };
+
+  const handleSaveEditedOffer = async (updatedOfferData) => {
+    try {
+      const response = await axios.put(
+        `listings/${updatedOfferData._id}`,
+        updatedOfferData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      setAlertOpen(true);
+      setAlertMessage("Zaktualizowano pomyślnie");
+      setAlertSeverity("success");
+      setEditOfferPanelOpen(false);
+      await fetchData();
+    } catch (error) {
+      setAlertOpen(true);
+      setAlertMessage("Błąd podczas aktualizowania oferty: " + error.message);
+      setAlertSeverity("error");
+    }
+  };
 
   return (
     <div className=" flex items-start justify-start h-screen ml-48 flex-col">
@@ -435,7 +466,7 @@ function OffersPage() {
                         </IconButton>
                       </Tooltip>
                       <Tooltip title="Edytuj">
-                        <IconButton>
+                        <IconButton onClick={() => handleEditClick(row)}>
                           <Edit />
                         </IconButton>
                       </Tooltip>
@@ -494,6 +525,13 @@ function OffersPage() {
         onClose={handleOpenCloseDialog}
         onConfirm={handleConfirmDelete}
       />
+      {isEditOfferPanelOpen && (
+        <EditOfferPanel
+          offerData={editOfferData}
+          onSave={handleSaveEditedOffer}
+          onCancel={() => setEditOfferPanelOpen(false)}
+        />
+      )}
     </div>
   );
 }
