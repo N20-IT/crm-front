@@ -132,7 +132,7 @@ function OffersPage() {
 
   const handleSelectAll = () => {
     if (selected.length === rows.length) setSelected([]);
-    else setSelected(rows.map((row) => row.id));
+    else setSelected(rows.map((row) => row._id));
   };
 
   useEffect(() => {
