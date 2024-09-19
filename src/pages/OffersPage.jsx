@@ -164,6 +164,9 @@ function OffersPage() {
           Authorization: `Bearer ${token}`,
         },
       });
+      setAlertOpen(true);
+      setAlertMessage("Dodano ofertę pomyślnie");
+      setAlertSeverity("success");
       await fetchData();
       handleAddOfferClick();
     } catch (error) {
@@ -338,7 +341,7 @@ function OffersPage() {
                         width: "7.2%",
                       }}
                     >
-                      {row.adres?.ulica || "Brak danych"}
+                      {row.adres.ulica}
                     </TableCell>
                     <TableCell
                       style={{
@@ -349,7 +352,7 @@ function OffersPage() {
                         width: "7.2%",
                       }}
                     >
-                      {row.adres?.dzielnica || "Brak danych"}
+                      {row.adres.dzielnica}
                     </TableCell>
                     <TableCell
                       style={{
@@ -360,7 +363,7 @@ function OffersPage() {
                         width: "7.2%",
                       }}
                     >
-                      {row.adres?.miasto || "Brak danych"}
+                      {row.adres.miasto}
                     </TableCell>
                     <TableCell
                       style={{
@@ -371,7 +374,7 @@ function OffersPage() {
                         width: "7.2%",
                       }}
                     >
-                      {row.adres?.numerDomu || "Brak danych"}
+                      {row.adres.numerDomu}
                     </TableCell>
                     <TableCell
                       style={{
@@ -382,7 +385,7 @@ function OffersPage() {
                         width: "7.2%",
                       }}
                     >
-                      {row.adres?.numerMieszkania || "Brak danych"}
+                      {row.adres.numerMieszkania}
                     </TableCell>
                     <TableCell
                       style={{
