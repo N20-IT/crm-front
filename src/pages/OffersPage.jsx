@@ -322,8 +322,8 @@ function OffersPage() {
                       }}
                     >
                       <Checkbox
-                        checked={selected.includes(row.id)}
-                        onChange={() => handleSelect(row.id)}
+                        checked={selected.includes(row._id)}
+                        onChange={() => handleSelect(row._id)}
                         sx={{
                           color: "#272F3E",
                           "&.Mui-checked": {
