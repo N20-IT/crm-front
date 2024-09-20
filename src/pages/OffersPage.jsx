@@ -132,11 +132,11 @@ function OffersPage() {
           Authorization: `Bearer ${token}`,
         },
       });
+      handleAddOfferClick();
+      await fetchData();
       setAlertOpen(true);
       setAlertMessage("Dodano ofertę pomyślnie");
       setAlertSeverity("success");
-      await fetchData();
-      handleAddOfferClick();
     } catch (error) {
       setAlertOpen(true);
       setAlertMessage(error.message);
@@ -153,7 +153,7 @@ function OffersPage() {
         data: { ids: offerId },
       });
       setAlertOpen(true);
-      setAlertMessage("Ofertę usunięto pomyślnie");
+      setAlertMessage(response.data.message);
       setAlertSeverity("success");
       await fetchData();
     } catch (error) {

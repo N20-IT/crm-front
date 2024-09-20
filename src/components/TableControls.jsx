@@ -70,7 +70,12 @@ function TableControls({
             "aria-labelledby": "basic-button",
           }}
         >
-          <MenuItem onClick={deleteMultipleOffersClick}>
+          <MenuItem
+            onClick={() => {
+              deleteMultipleOffersClick();
+              handleClose();
+            }}
+          >
             <Delete />
             Usuń
           </MenuItem>
