@@ -102,6 +102,11 @@ function OffersPage() {
     },
   ];
 
+  useEffect(() => {
+    fetchData();
+    if (!isAuthenticated) navigate("/");
+  }, [isAuthenticated, navigate]);
+
   const fetchData = async () => {
     try {
       const response = await axios.get("/listings", {
@@ -118,43 +123,6 @@ function OffersPage() {
     } finally {
       setLoading(false);
     }
-  };
-
-  useEffect(() => {
-    fetchData();
-  }, []);
-
-  const handleSelect = (id) => {
-    if (selected.includes(id))
-      setSelected(selected.filter((itemId) => itemId !== id));
-    else setSelected([...selected, id]);
-  };
-
-  const handleSelectAll = () => {
-    if (selected.length === rows.length) setSelected([]);
-    else setSelected(rows.map((row) => row._id));
-  };
-
-  useEffect(() => {
-    if (!isAuthenticated) navigate("/");
-  }, [isAuthenticated, navigate]);
-
-  const handleChangePage = (event, newPage) => {
-    setPage(newPage);
-  };
-
-  const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(parseInt(event.target.value, 10));
-    setPage(0);
-  };
-
-  const paginatedRows = rows.slice(
-    page * rowsPerPage,
-    page * rowsPerPage + rowsPerPage
-  );
-
-  const handleAddOfferClick = () => {
-    setAddOfferPanelOpen(!isAddOfferPanelOpen);
   };
 
   const handleSaveOffer = async (offerData) => {
@@ -195,25 +163,6 @@ function OffersPage() {
     }
   };
 
-  const handleConfirmDelete = async () => {
-    if (offerIdToDelete) {
-      await handleDeleteOffer(offerIdToDelete);
-      setOfferIdToDelete(null);
-    }
-    setOpenDialog(false);
-  };
-
-  const handleDeleteOfferClick = (offerId) => {
-    setOfferIdToDelete(offerId);
-    setOpenDialog(true);
-  };
-  const handleOpenCloseDialog = () => setOpenDialog(!openDialog);
-
-  const handleEditClick = (offer) => {
-    setEditOfferData(offer);
-    setEditOfferPanelOpen(true);
-  };
-
   const handleSaveEditedOffer = async (updatedOfferData) => {
     try {
       const response = await axios.put(
@@ -237,6 +186,61 @@ function OffersPage() {
     }
   };
 
+  const handleSelect = (id) => {
+    if (selected.includes(id))
+      setSelected(selected.filter((itemId) => itemId !== id));
+    else setSelected([...selected, id]);
+  };
+
+  const handleSelectAll = () => {
+    if (selected.length === rows.length) setSelected([]);
+    else setSelected(rows.map((row) => row._id));
+  };
+
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
+
+  const paginatedRows = rows.slice(
+    page * rowsPerPage,
+    page * rowsPerPage + rowsPerPage
+  );
+
+  const handleAddOfferClick = () => {
+    setAddOfferPanelOpen(!isAddOfferPanelOpen);
+  };
+
+  const handleConfirmDelete = async () => {
+    if (offerIdToDelete) {
+      await handleDeleteOffer(offerIdToDelete);
+      setOfferIdToDelete(null);
+    }
+    setOpenDialog(false);
+  };
+
+  const handleDeleteOfferClick = (offerId) => {
+    setOfferIdToDelete(offerId);
+    setOpenDialog(true);
+  };
+  const handleOpenCloseDialog = () => setOpenDialog(!openDialog);
+
+  const handleEditClick = (offer) => {
+    setEditOfferData(offer);
+    setEditOfferPanelOpen(true);
+  };
+
+  const handleDeleteMiltipleOffers = () => {
+    if (selected.length > 0) {
+      setOfferIdToDelete(selected);
+      setOpenDialog(true);
+    }
+  };
+
   return (
     <div className=" flex items-start justify-start h-screen ml-48 flex-col">
       <Sidebar />
@@ -256,6 +260,7 @@ function OffersPage() {
         <TableControls
           selectedCount={selected.length}
           onAddOfferClick={handleAddOfferClick}
+          deleteMultipleOffersClick={handleDeleteMiltipleOffers}
         />
 
         <Table>

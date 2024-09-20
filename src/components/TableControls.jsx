@@ -12,7 +12,11 @@ import {
 } from "@mui/material";
 import { Delete, Star } from "@mui/icons-material";
 import { KeyboardArrowDown } from "@mui/icons-material";
-function TableControls({ selectedCount, onAddOfferClick }) {
+function TableControls({
+  selectedCount,
+  onAddOfferClick,
+  deleteMultipleOffersClick,
+}) {
   const [searchValue, setSearchValue] = useState("");
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
@@ -66,7 +70,7 @@ function TableControls({ selectedCount, onAddOfferClick }) {
             "aria-labelledby": "basic-button",
           }}
         >
-          <MenuItem>
+          <MenuItem onClick={deleteMultipleOffersClick}>
             <Delete />
             Usuń
           </MenuItem>
