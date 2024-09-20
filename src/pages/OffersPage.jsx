@@ -28,6 +28,8 @@ import Sidebar from "../components/Sidebar";
 import TableControls from "../components/TableControls";
 import Alerts from "../components/Alerts";
 import AddOfferPanel from "../components/AddOfferPanel";
+import ConfirmDeleteDialog from "../components/ConfirmDeleteDialog";
+import EditOfferPanel from "../components/EditOfferPanel";
 function OffersPage() {
   const navigate = useNavigate();
   const token = useReadCookie();
@@ -41,6 +43,11 @@ function OffersPage() {
   const [alertOpen, setAlertOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   const [isAddOfferPanelOpen, setAddOfferPanelOpen] = useState(false);
+  const [openDialog, setOpenDialog] = useState(false);
+  const [offerIdToDelete, setOfferIdToDelete] = useState(null);
+  const [isEditOfferPanelOpen, setEditOfferPanelOpen] = useState(false);
+  const [editOfferData, setEditOfferData] = useState(null);
+
   const columns = [
     {
       id: "ulica",
@@ -95,6 +102,11 @@ function OffersPage() {
     },
   ];
 
+  useEffect(() => {
+    fetchData();
+    if (!isAuthenticated) navigate("/");
+  }, [isAuthenticated, navigate]);
+
   const fetchData = async () => {
     try {
       const response = await axios.get("/listings", {
@@ -113,9 +125,66 @@ function OffersPage() {
     }
   };
 
-  useEffect(() => {
-    fetchData();
-  }, []);
+  const handleSaveOffer = async (offerData) => {
+    try {
+      const response = await axios.post("/listings", offerData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      handleAddOfferClick();
+      await fetchData();
+      setAlertOpen(true);
+      setAlertMessage("Dodano ofertę pomyślnie");
+      setAlertSeverity("success");
+    } catch (error) {
+      setAlertOpen(true);
+      setAlertMessage(error.message);
+      setAlertSeverity("error");
+    }
+  };
+
+  const handleDeleteOffer = async (offerId) => {
+    try {
+      const response = await axios.delete("/listings", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        data: { ids: offerId },
+      });
+      setAlertOpen(true);
+      setAlertMessage(response.data.message);
+      setAlertSeverity("success");
+      await fetchData();
+    } catch (error) {
+      setAlertOpen(true);
+      setAlertMessage("Błąd podczas usuwania ofert: " + error.message);
+      setAlertSeverity("error");
+    }
+  };
+
+  const handleSaveEditedOffer = async (updatedOfferData) => {
+    try {
+      const response = await axios.put(
+        `listings/${updatedOfferData._id}`,
+        updatedOfferData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      setAlertOpen(true);
+      setAlertMessage("Zaktualizowano pomyślnie");
+      setAlertSeverity("success");
+      setEditOfferPanelOpen(false);
+      await fetchData();
+    } catch (error) {
+      setAlertOpen(true);
+      setAlertMessage("Błąd podczas aktualizowania oferty: " + error.message);
+      setAlertSeverity("error");
+    }
+  };
 
   const handleSelect = (id) => {
     if (selected.includes(id))
@@ -125,12 +194,8 @@ function OffersPage() {
 
   const handleSelectAll = () => {
     if (selected.length === rows.length) setSelected([]);
-    else setSelected(rows.map((row) => row.id));
+    else setSelected(rows.map((row) => row._id));
   };
-
-  useEffect(() => {
-    if (!isAuthenticated) navigate("/");
-  }, [isAuthenticated, navigate]);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -150,38 +215,29 @@ function OffersPage() {
     setAddOfferPanelOpen(!isAddOfferPanelOpen);
   };
 
-  const handleSaveOffer = async (offerData) => {
-    try {
-      const response = await axios.post("/listings", offerData, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      await fetchData();
-      handleAddOfferClick();
-    } catch (error) {
-      setAlertOpen(true);
-      setAlertMessage(error.message);
-      setAlertSeverity("error");
+  const handleConfirmDelete = async () => {
+    if (offerIdToDelete) {
+      await handleDeleteOffer(offerIdToDelete);
+      setOfferIdToDelete(null);
     }
+    setOpenDialog(false);
   };
 
-  const handleDeleteOffer = async (offerId) => {
-    try {
-      const response = await axios.delete("/listings", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-        data: { ids: offerId },
-      });
-      setAlertOpen(true);
-      setAlertMessage("Ofertę usunięto pomyślnie");
-      setAlertSeverity("success");
-      await fetchData();
-    } catch (error) {
-      setAlertOpen(true);
-      setAlertMessage("Błąd podczas usuwania ofert: " + error.message);
-      setAlertSeverity("error");
+  const handleDeleteOfferClick = (offerId) => {
+    setOfferIdToDelete(offerId);
+    setOpenDialog(true);
+  };
+  const handleOpenCloseDialog = () => setOpenDialog(!openDialog);
+
+  const handleEditClick = (offer) => {
+    setEditOfferData(offer);
+    setEditOfferPanelOpen(true);
+  };
+
+  const handleDeleteMiltipleOffers = () => {
+    if (selected.length > 0) {
+      setOfferIdToDelete(selected);
+      setOpenDialog(true);
     }
   };
 
@@ -204,6 +260,7 @@ function OffersPage() {
         <TableControls
           selectedCount={selected.length}
           onAddOfferClick={handleAddOfferClick}
+          deleteMultipleOffersClick={handleDeleteMiltipleOffers}
         />
 
         <Table>
@@ -270,8 +327,8 @@ function OffersPage() {
                       }}
                     >
                       <Checkbox
-                        checked={selected.includes(row.id)}
-                        onChange={() => handleSelect(row.id)}
+                        checked={selected.includes(row._id)}
+                        onChange={() => handleSelect(row._id)}
                         sx={{
                           color: "#272F3E",
                           "&.Mui-checked": {
@@ -289,7 +346,7 @@ function OffersPage() {
                         width: "7.2%",
                       }}
                     >
-                      {row.adres?.ulica || "Brak danych"}
+                      {row.adres.ulica}
                     </TableCell>
                     <TableCell
                       style={{
@@ -300,7 +357,7 @@ function OffersPage() {
                         width: "7.2%",
                       }}
                     >
-                      {row.adres?.dzielnica || "Brak danych"}
+                      {row.adres.dzielnica}
                     </TableCell>
                     <TableCell
                       style={{
@@ -311,7 +368,7 @@ function OffersPage() {
                         width: "7.2%",
                       }}
                     >
-                      {row.adres?.miasto || "Brak danych"}
+                      {row.adres.miasto}
                     </TableCell>
                     <TableCell
                       style={{
@@ -322,7 +379,7 @@ function OffersPage() {
                         width: "7.2%",
                       }}
                     >
-                      {row.adres?.numerDomu || "Brak danych"}
+                      {row.adres.numerDomu}
                     </TableCell>
                     <TableCell
                       style={{
@@ -333,7 +390,7 @@ function OffersPage() {
                         width: "7.2%",
                       }}
                     >
-                      {row.adres?.numerMieszkania || "Brak danych"}
+                      {row.adres.numerMieszkania}
                     </TableCell>
                     <TableCell
                       style={{
@@ -411,13 +468,13 @@ function OffersPage() {
                     >
                       <Tooltip title="Usuń">
                         <IconButton
-                          onClick={() => handleDeleteOffer([row._id])}
+                          onClick={() => handleDeleteOfferClick([row._id])}
                         >
                           <Delete />
                         </IconButton>
                       </Tooltip>
                       <Tooltip title="Edytuj">
-                        <IconButton>
+                        <IconButton onClick={() => handleEditClick(row)}>
                           <Edit />
                         </IconButton>
                       </Tooltip>
@@ -469,6 +526,18 @@ function OffersPage() {
         <AddOfferPanel
           onSave={handleSaveOffer}
           onCancel={handleAddOfferClick}
+        />
+      )}
+      <ConfirmDeleteDialog
+        open={openDialog}
+        onClose={handleOpenCloseDialog}
+        onConfirm={handleConfirmDelete}
+      />
+      {isEditOfferPanelOpen && (
+        <EditOfferPanel
+          offerData={editOfferData}
+          onSave={handleSaveEditedOffer}
+          onCancel={() => setEditOfferPanelOpen(false)}
         />
       )}
     </div>

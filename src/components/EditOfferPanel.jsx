@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Button,
   FormControl,
@@ -9,25 +9,13 @@ import {
 } from "@mui/material";
 import CustomTextField from "./CustomTextField";
 
-function AddOfferPanel({ onSave, onCancel }) {
-  const [formData, setFormData] = useState({
-    adres: {
-      ulica: "",
-      dzielnica: "",
-      miasto: "",
-      numerDomu: "",
-      numerMieszkania: "",
-    },
-    iloscPokoi: "",
-    metraz: "",
-    cena: "",
-    telefonWlasciciela: "",
-    komentarz: "",
-    // status: "",
-    agent: "",
-  });
-
+const EditOfferPanel = ({ offerData, onSave, onCancel }) => {
+  const [formData, setFormData] = useState(offerData);
   const names = ["Damian Kaniski", "Wiktoria Grawska", "Paweł Sztak"];
+
+  useEffect(() => {
+    setFormData(offerData);
+  }, [offerData]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -52,20 +40,14 @@ function AddOfferPanel({ onSave, onCancel }) {
     }
   };
 
-  const handleSave = async () => {
-    try {
-      await onSave(formData);
-    } catch (error) {
-      console.error("Wystąpił błąd podczas zapisywania:", error);
-    }
+  const handleSave = () => {
+    onSave(formData); // Przekaż dane do funkcji zapisującej
   };
 
   return (
     <div className=" fixed inset-0 bg-light-grey bg-opacity-75 flex items-center justify-center z-50">
       <div className="bg-white p-6 rounded-lg shadow-lg w-1/3">
-        <h2 className="text-4xl font-bold mb-4 font-poppins">
-          Dodaj nową ofertę
-        </h2>
+        <h2 className=" text-4xl font-bold mb-4 font-poppins">Edytuj ofertę</h2>
         <form>
           <div className="w-full">
             <CustomTextField
@@ -268,6 +250,6 @@ function AddOfferPanel({ onSave, onCancel }) {
       </div>
     </div>
   );
-}
+};
 
-export default AddOfferPanel;
+export default EditOfferPanel;

@@ -11,7 +11,7 @@ module.exports = {
       white: "#FFFFFF",
     },
     fontFamily: {
-      poppins: ["Poppins", "Arial"],
+      poppins: ["Poppins"],
     },
     extend: {
       maxHeight: {

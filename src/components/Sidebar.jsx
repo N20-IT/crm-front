@@ -76,7 +76,7 @@ const Sidebar = () => {
                   className="flex items-center justify-start text-xl ml-4 w-full h-full"
                 >
                   <Groups sx={{ marginRight: "6px" }} />
-                  <span>Uzytkownicy</span>
+                  <span>Użytkownicy</span>
                 </Link>
               </li>
               <li
