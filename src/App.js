@@ -11,7 +11,7 @@ import InterestingOffersPage from "./pages/InterestingOffersPage";
 import LogsPage from "./pages/LogsPage";
 import UsersPage from "./pages/UsersPage";
 import ForgottenPasswordPage from "./pages/ForgottenPasswordPage";
-import OfferPage from "./pages/OfferPage";
+import OfferDetailsPage from "./pages/OfferDetailsPage";
 function App() {
   return (
     <Routes>
@@ -26,7 +26,7 @@ function App() {
       <Route path="/logi" element={<LogsPage />} />
       <Route path="/uzytkownicy" element={<UsersPage />} />
       <Route path="/zapomniane-haslo" element={<ForgottenPasswordPage />} />
-      <Route path="/konkretna-oferta" element={<OfferPage />} />
+      <Route path="/konkretna-oferta" element={<OfferDetailsPage />} />
     </Routes>
   );
 }
