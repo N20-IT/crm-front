@@ -1,5 +1,23 @@
 import React, { useEffect } from "react";
-import { Container, Typography, Box, Grid2, Paper } from "@mui/material";
+import {
+  Box,
+  Grid2,
+  Typography,
+  Paper,
+  IconButton,
+  Tooltip,
+  Button,
+  Divider,
+  Container,
+} from "@mui/material";
+import {
+  Delete,
+  Edit,
+  Star,
+  CalendarMonth,
+  Map,
+  AssignmentInd,
+} from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../utils/auth";
 import Sidebar from "../components/Sidebar";
@@ -52,50 +70,141 @@ function OfferDetailsPage() {
     if (!isAuthenticated) navigate("/");
   }, [isAuthenticated, navigate]);
   return (
-    <div className="flex flex-col items-start justify-start h-screen ml-48">
+    <div className="flex flex-col items-center h-screen ml-48">
       <Sidebar />
-      <Container>
-        <Typography
-          variant="h4"
-          gutterBottom
-          sx={{ fontWeight: "bold", fontFamily: "Poppins" }}
-        >
-          Szczegóły oferty nr {offer.nrOferty}
-        </Typography>
-
-        <Paper elevation={3} sx={{ padding: 3, marginTop: 2 }}>
-          <Typography variant="h5" gutterBottom sx={{ fontFamily: "Poppins" }}>
-            Podstawowe informacje
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100%",
+          padding: "16px",
+        }}
+      >
+        <Paper elevation={8} className="p-6">
+          <Typography
+            variant="h4"
+            sx={{
+              fontWeight: 700,
+              marginBottom: "16px",
+              fontFamily: "Poppins",
+            }}
+          >
+            Oferta nr {offer.nrOferty}
           </Typography>
-          <Grid2 container spacing={2}>
-            <Grid2 item xs={18}>
+
+          <Grid2 container spacing={3}>
+            <Grid2 item xs={12} md={6}>
+              <Typography
+                variant="h5"
+                sx={{ fontFamily: "Poppins", fontWeight: 600 }}
+              >
+                Informacje o nieruchomości
+              </Typography>
+              <CustomTypography sx={{ marginTop: "8px" }}>
+                <strong>Ulica:</strong> {offer.adres.ulica}
+                {offer.adres.numerDomu}/{offer.adres.numerMieszkania}
+              </CustomTypography>
               <CustomTypography>
-                <strong>Agent:</strong> {offer.agent}
+                <strong>Miasto:</strong> {offer.adres.miasto}
+              </CustomTypography>
+              <CustomTypography>
+                <strong>Dzielnica:</strong> {offer.adres.dzielnica}
+              </CustomTypography>
+              <CustomTypography>
+                <strong>Ilość pokoi:</strong> {offer.iloscPokoi}
               </CustomTypography>
               <CustomTypography>
                 <strong>Metraż:</strong> {offer.metraz} m²
               </CustomTypography>
               <CustomTypography>
-                <strong>Cena:</strong> {offer.cena} PLN
-              </CustomTypography>
-              <CustomTypography>
-                <strong>Stan:</strong> {offer.statusOferty}
+                <strong>Cena:</strong> {offer.cena} zł
               </CustomTypography>
             </Grid2>
-            <Grid2 item xs={12}>
-              <CustomTypography>
-                <strong>Liczba pokoi:</strong> {offer.iloscPokoi}
+
+            <Grid2 item xs={12} md={6}>
+              <Typography
+                variant="h5"
+                sx={{ fontFamily: "Poppins", fontWeight: 600 }}
+              >
+                Agent odpowiedzialny
+              </Typography>
+              <CustomTypography sx={{ marginTop: "8px" }}>
+                <strong>Agent:</strong> {offer.agent}
+              </CustomTypography>
+            </Grid2>
+            <Grid2 item xs={12} md={6}>
+              <Typography
+                variant="h5"
+                sx={{ fontFamily: "Poppins", fontWeight: 600 }}
+              >
+                Dodatkowe informacje
+              </Typography>
+              <CustomTypography sx={{ marginTop: "8px" }}>
+                <strong>Telefon właściciela:</strong>
+                {offer.telefonWlasciciela}
               </CustomTypography>
               <CustomTypography>
-                <strong>Cena za m²:</strong> {offer.zlM2} PLN
+                <strong>Status oferty:</strong> {offer.statusOferty}
               </CustomTypography>
               <CustomTypography>
-                <strong>Telefon właściciela:</strong> {offer.telefonWlasciciela}
+                <strong>Uwagi:</strong> {offer.uwagi}
+              </CustomTypography>
+              <CustomTypography>
+                <strong>Zł/m²:</strong> {offer.zlM2}
+              </CustomTypography>
+            </Grid2>
+            <Grid2 item xs={12} md={6}>
+              <Typography
+                variant="h5"
+                sx={{ fontFamily: "Poppins", fontWeight: 600 }}
+              >
+                Daty kontaktu i zakończenia
+              </Typography>
+              <CustomTypography sx={{ marginTop: "8px" }}>
+                <strong>Data kontaktu:</strong>{" "}
+                {new Date(offer.dataKontaktu).toLocaleDateString()}
+              </CustomTypography>
+              <CustomTypography>
+                <strong>Data zakończenia:</strong>{" "}
+                {new Date(offer.dataZakonczenia).toLocaleDateString()}
               </CustomTypography>
             </Grid2>
           </Grid2>
+          <Box className="flex justify-end mt-6">
+            <Tooltip title="Usuń">
+              <IconButton>
+                <Delete sx={{ fontSize: "30px", color: "#535968" }} />
+              </IconButton>
+            </Tooltip>
+            <Tooltip title="Edytuj">
+              <IconButton>
+                <Edit sx={{ fontSize: "30px", color: "#535968" }} />
+              </IconButton>
+            </Tooltip>
+            <Tooltip title="Dodaj do ciekawych ofert">
+              <IconButton>
+                <Star sx={{ fontSize: "30px", color: "#535968" }} />
+              </IconButton>
+            </Tooltip>
+            <Tooltip title="Dodaj do kalendarza">
+              <IconButton>
+                <CalendarMonth sx={{ fontSize: "30px", color: "#535968" }} />
+              </IconButton>
+            </Tooltip>
+            <Tooltip title="Pokaż na mapie">
+              <IconButton>
+                <Map sx={{ fontSize: "30px", color: "#535968" }} />
+              </IconButton>
+            </Tooltip>
+            <Tooltip title="Przypisz ofertę">
+              <IconButton>
+                <AssignmentInd sx={{ fontSize: "30px", color: "#535968" }} />
+              </IconButton>
+            </Tooltip>
+          </Box>
         </Paper>
-      </Container>
+      </Box>
     </div>
   );
 }
