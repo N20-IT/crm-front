@@ -2,6 +2,7 @@
   "name": "n20",
   "version": "0.1.0",
   "private": true,
+  "proxy": "https://adgr2ko5s4.execute-api.eu-north-1.amazonaws.com/dev",
   "dependencies": {
     "@aws-amplify/auth": "^6.3.17",
     "@aws-amplify/backend": "^1.2.0",
