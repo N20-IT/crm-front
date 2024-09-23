@@ -2,7 +2,6 @@
   "name": "n20",
   "version": "0.1.0",
   "private": true,
-  "proxy": "http://16.170.247.66:3020",
   "dependencies": {
     "@aws-amplify/auth": "^6.3.17",
     "@aws-amplify/backend": "^1.2.0",

@@ -7,7 +7,6 @@ import {
   IconButton,
   Tooltip,
   Divider,
-  CircularProgress,
   Skeleton,
 } from "@mui/material";
 import {
@@ -26,6 +25,8 @@ import CustomTypography from "../components/CustomTypography";
 import Alerts from "../components/Alerts";
 import { useReadCookie } from "../utils/auth";
 import ConfirmDeleteDialog from "../components/ConfirmDeleteDialog";
+import EditOfferPanel from "../components/EditOfferPanel";
+import serverConfig from "../servers.json";
 
 function OfferDetailsPage() {
   const { id } = useParams();
@@ -35,7 +36,9 @@ function OfferDetailsPage() {
   const [alertOpen, setAlertOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   const [openDialog, setOpenDialog] = useState(false);
+  const [isEditOfferPanelOpen, setEditOfferPanelOpen] = useState(false);
   const token = useReadCookie();
+  const backendServer = serverConfig["backend-server"];
 
   const handleEditOffer = () => {
     console.log(offer);
@@ -46,7 +49,7 @@ function OfferDetailsPage() {
 
   const fetchData = async () => {
     try {
-      const response = await axios.get(`/listings/${id}`, {
+      const response = await axios.get(`${backendServer}/listings/${id}`, {
         headers: {
           accept: "application/json",
           Authorization: `Bearer ${token}`,
@@ -64,7 +67,7 @@ function OfferDetailsPage() {
 
   const handleDeleteOffer = async () => {
     try {
-      const response = await axios.delete("/listings", {
+      const response = await axios.delete(`${backendServer}/listings`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -88,6 +91,10 @@ function OfferDetailsPage() {
     setOpenDialog(true);
   };
   const handleOpenCloseDialog = () => setOpenDialog(!openDialog);
+
+  const handleEditClick = () => {
+    setEditOfferPanelOpen(true);
+  };
 
   useEffect(() => {
     fetchData();
@@ -118,7 +125,7 @@ function OfferDetailsPage() {
           </Typography>
           <Divider sx={{ marginBottom: "24px" }} />
           {loading ? (
-            <Grid2 container spacing={3} flexWrap={"nowrap"}>
+            <Grid2 container spacing={10} flexWrap={"nowrap"}>
               <Grid2 item xs={12} md={6}>
                 <Skeleton
                   variant="rounded"
@@ -156,7 +163,7 @@ function OfferDetailsPage() {
               </Grid2>
             </Grid2>
           ) : (
-            <Grid2 container spacing={3} flexWrap={"nowrap"}>
+            <Grid2 container spacing={10} flexWrap={"nowrap"}>
               <Grid2 item xs={12} md={6}>
                 <Typography
                   variant="h5"
@@ -225,12 +232,16 @@ function OfferDetailsPage() {
                   Daty kontaktu i zakończenia
                 </Typography>
                 <CustomTypography sx={{ marginTop: "8px" }}>
-                  <strong>Data kontaktu:</strong>{" "}
-                  {new Date(offer.dataKontaktu).toLocaleDateString()}
+                  <strong>Data kontaktu:</strong>
+                  {offer.dataKontraktu
+                    ? new Date(offer.dataKontaktu).toLocaleDateString()
+                    : "Brak danych"}
                 </CustomTypography>
                 <CustomTypography>
-                  <strong>Data zakończenia:</strong>{" "}
-                  {new Date(offer.dataZakonczenia).toLocaleDateString()}
+                  <strong>Data zakończenia:</strong>
+                  {offer.dataZakonczenia
+                    ? new Date(offer.dataZakonczenia).toLocaleDateString()
+                    : "Brak danych"}
                 </CustomTypography>
               </Grid2>
             </Grid2>
