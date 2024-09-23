@@ -20,6 +20,7 @@ import {
   CalendarMonth,
   Map,
   AssignmentInd,
+  Info,
 } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import { useAuth, useReadCookie } from "../utils/auth";
@@ -184,6 +185,10 @@ function OffersPage() {
       setAlertMessage("Błąd podczas aktualizowania oferty: " + error.message);
       setAlertSeverity("error");
     }
+  };
+
+  const handleGoToOfferDetailsPage = (offerId) => {
+    navigate(`/oferta/${offerId}`);
   };
 
   const handleSelect = (id) => {
@@ -469,33 +474,45 @@ function OffersPage() {
                       <Tooltip title="Usuń">
                         <IconButton
                           onClick={() => handleDeleteOfferClick([row._id])}
+                          sx={{ padding: "4px" }}
                         >
                           <Delete />
                         </IconButton>
                       </Tooltip>
                       <Tooltip title="Edytuj">
-                        <IconButton onClick={() => handleEditClick(row)}>
+                        <IconButton
+                          onClick={() => handleEditClick(row)}
+                          sx={{ padding: "4px" }}
+                        >
                           <Edit />
                         </IconButton>
                       </Tooltip>
                       <Tooltip title="Dodaj do ciekawych ofert">
-                        <IconButton>
+                        <IconButton sx={{ padding: "4px" }}>
                           <Star />
                         </IconButton>
                       </Tooltip>
                       <Tooltip title="Dodaj do kalendarza">
-                        <IconButton>
+                        <IconButton sx={{ padding: "4px" }}>
                           <CalendarMonth />
                         </IconButton>
                       </Tooltip>
                       <Tooltip title="Pokaż na mapie">
-                        <IconButton>
+                        <IconButton sx={{ padding: "4px" }}>
                           <Map />
                         </IconButton>
                       </Tooltip>
                       <Tooltip title="Przypisz ofertę">
-                        <IconButton>
+                        <IconButton sx={{ padding: "4px" }}>
                           <AssignmentInd />
+                        </IconButton>
+                      </Tooltip>
+                      <Tooltip title="Szczegóły oferty">
+                        <IconButton
+                          sx={{ padding: "4px" }}
+                          onClick={() => handleGoToOfferDetailsPage(row._id)}
+                        >
+                          <Info />
                         </IconButton>
                       </Tooltip>
                     </TableCell>
