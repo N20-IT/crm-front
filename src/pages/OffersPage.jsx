@@ -112,12 +112,15 @@ function OffersPage() {
 
   const fetchData = async () => {
     try {
-      const response = await axios.get(`/listings`, {
-        headers: {
-          accept: "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await axios.get(
+        `https://adgr2ko5s4.execute-api.eu-north-1.amazonaws.com/dev/listings`,
+        {
+          headers: {
+            accept: "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       setRows(response.data);
     } catch (error) {
       setAlertOpen(true);
@@ -130,11 +133,15 @@ function OffersPage() {
 
   const handleSaveOffer = async (offerData) => {
     try {
-      const response = await axios.post(`/listings`, offerData, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await axios.post(
+        `https://adgr2ko5s4.execute-api.eu-north-1.amazonaws.com/dev/listings`,
+        offerData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       handleAddOfferClick();
       await fetchData();
       setAlertOpen(true);
@@ -149,12 +156,15 @@ function OffersPage() {
 
   const handleDeleteOffer = async (offerId) => {
     try {
-      const response = await axios.delete(`/listings`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-        data: { ids: offerId },
-      });
+      const response = await axios.delete(
+        `https://adgr2ko5s4.execute-api.eu-north-1.amazonaws.com/dev/listings`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          data: { ids: offerId },
+        }
+      );
       setAlertOpen(true);
       setAlertMessage(response.data.message);
       setAlertSeverity("success");
