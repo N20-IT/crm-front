@@ -50,6 +50,7 @@ function OffersPage() {
   const [offerIdToDelete, setOfferIdToDelete] = useState(null);
   const [isEditOfferPanelOpen, setEditOfferPanelOpen] = useState(false);
   const [editOfferData, setEditOfferData] = useState(null);
+  const backendServer = serverConfig["backend-server"];
 
   const columns = [
     {
@@ -116,15 +117,12 @@ function OffersPage() {
 
   const fetchData = async () => {
     try {
-      const response = await axios.get(
-        `https://adgr2ko5s4.execute-api.eu-north-1.amazonaws.com/dev/listings`,
-        {
-          headers: {
-            accept: "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const response = await axios.get(`${backendServer}/listings`, {
+        headers: {
+          accept: "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
       setRows(response.data);
     } catch (error) {
       setAlertOpen(true);
@@ -138,7 +136,7 @@ function OffersPage() {
   const handleSaveOffer = async (offerData) => {
     try {
       const response = await axios.post(
-        `https://adgr2ko5s4.execute-api.eu-north-1.amazonaws.com/dev/listings`,
+        `${backendServer}/listings`,
         offerData,
         {
           headers: {
@@ -160,15 +158,12 @@ function OffersPage() {
 
   const handleDeleteOffer = async (offerId) => {
     try {
-      const response = await axios.delete(
-        `https://adgr2ko5s4.execute-api.eu-north-1.amazonaws.com/dev/listings`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-          data: { ids: offerId },
-        }
-      );
+      const response = await axios.delete(`${backendServer}/listings`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        data: { ids: offerId },
+      });
       setAlertOpen(true);
       setAlertMessage(response.data.message);
       setAlertSeverity("success");
@@ -183,7 +178,7 @@ function OffersPage() {
   const handleSaveEditedOffer = async (updatedOfferData) => {
     try {
       const response = await axios.put(
-        `listings/${updatedOfferData._id}`,
+        `${backendServer}/listings/${updatedOfferData._id}`,
         updatedOfferData,
         {
           headers: {
@@ -501,33 +496,45 @@ function OffersPage() {
                     <Tooltip title="Usuń">
                       <IconButton
                         onClick={() => handleDeleteOfferClick([row._id])}
+                        sx={{ padding: "4px" }}
                       >
                         <Delete />
                       </IconButton>
                     </Tooltip>
                     <Tooltip title="Edytuj">
-                      <IconButton onClick={() => handleEditClick(row)}>
+                      <IconButton
+                        onClick={() => handleEditClick(row)}
+                        sx={{ padding: "4px" }}
+                      >
                         <Edit />
                       </IconButton>
                     </Tooltip>
                     <Tooltip title="Dodaj do ciekawych ofert">
-                      <IconButton>
+                      <IconButton sx={{ padding: "4px" }}>
                         <Star />
                       </IconButton>
                     </Tooltip>
                     <Tooltip title="Dodaj do kalendarza">
-                      <IconButton>
+                      <IconButton sx={{ padding: "4px" }}>
                         <CalendarMonth />
                       </IconButton>
                     </Tooltip>
                     <Tooltip title="Pokaż na mapie">
-                      <IconButton>
+                      <IconButton sx={{ padding: "4px" }}>
                         <Map />
                       </IconButton>
                     </Tooltip>
                     <Tooltip title="Przypisz ofertę">
-                      <IconButton>
+                      <IconButton sx={{ padding: "4px" }}>
                         <AssignmentInd />
+                      </IconButton>
+                    </Tooltip>
+                    <Tooltip title="Szczegóły oferty">
+                      <IconButton
+                        sx={{ padding: "4px" }}
+                        onClick={() => handleGoToOfferDetailsPage(row._id)}
+                      >
+                        <Info />
                       </IconButton>
                     </Tooltip>
                   </TableCell>
