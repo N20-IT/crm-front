@@ -5,6 +5,7 @@ import Alerts from "../components/Alerts";
 import { useReadCookie } from "../utils/auth";
 import axios from "axios";
 import SideBar from "../components/Sidebar";
+import serverConfig from "../servers.json";
 
 //TODO
 function HomePage() {
@@ -15,11 +16,12 @@ function HomePage() {
   const [alertOpen, setAlertOpen] = useState(false);
   const token = useReadCookie();
   const logout = useLogout();
+  const backendServer = serverConfig["backend-server"];
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(`api/listings`, {
+        const response = await axios.get(`${backendServer}/listings`, {
           headers: {
             accept: "application/json",
             Authorization: `Bearer ${token}`,

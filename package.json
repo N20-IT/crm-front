@@ -14,7 +14,6 @@
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
     "axios": "^1.7.7",
-    "http-proxy-middleware": "^3.0.2",
     "jwt-decode": "^4.0.0",
     "os-browserify": "^0.3.0",
     "path-browserify": "^1.0.1",

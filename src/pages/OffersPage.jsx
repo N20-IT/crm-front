@@ -31,6 +31,7 @@ import Alerts from "../components/Alerts";
 import AddOfferPanel from "../components/AddOfferPanel";
 import ConfirmDeleteDialog from "../components/ConfirmDeleteDialog";
 import EditOfferPanel from "../components/EditOfferPanel";
+import serverConfig from "../servers.json";
 
 function OffersPage() {
   const navigate = useNavigate();
@@ -49,6 +50,7 @@ function OffersPage() {
   const [offerIdToDelete, setOfferIdToDelete] = useState(null);
   const [isEditOfferPanelOpen, setEditOfferPanelOpen] = useState(false);
   const [editOfferData, setEditOfferData] = useState(null);
+  const backendServer = serverConfig["backend-server"];
 
   const columns = [
     {
@@ -115,7 +117,7 @@ function OffersPage() {
 
   const fetchData = async () => {
     try {
-      const response = await axios.get(`/api/listings`, {
+      const response = await axios.get(`${backendServer}/listings`, {
         headers: {
           accept: "application/json",
           Authorization: `Bearer ${token}`,
@@ -133,11 +135,15 @@ function OffersPage() {
 
   const handleSaveOffer = async (offerData) => {
     try {
-      const response = await axios.post(`/api/listings`, offerData, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await axios.post(
+        `${backendServer}/listings`,
+        offerData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       handleAddOfferClick();
       await fetchData();
       setAlertOpen(true);
@@ -152,7 +158,7 @@ function OffersPage() {
 
   const handleDeleteOffer = async (offerId) => {
     try {
-      const response = await axios.delete(`/api/listings`, {
+      const response = await axios.delete(`${backendServer}/listings`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -172,7 +178,7 @@ function OffersPage() {
   const handleSaveEditedOffer = async (updatedOfferData) => {
     try {
       const response = await axios.put(
-        `/api/listings/${updatedOfferData._id}`,
+        `${backendServer}/listings/${updatedOfferData._id}`,
         updatedOfferData,
         {
           headers: {

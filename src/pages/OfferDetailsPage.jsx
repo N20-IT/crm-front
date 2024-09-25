@@ -26,6 +26,7 @@ import Alerts from "../components/Alerts";
 import { useReadCookie } from "../utils/auth";
 import ConfirmDeleteDialog from "../components/ConfirmDeleteDialog";
 import EditOfferPanel from "../components/EditOfferPanel";
+import serverConfig from "../servers.json";
 
 function OfferDetailsPage() {
   const { id } = useParams();
@@ -37,6 +38,7 @@ function OfferDetailsPage() {
   const [openDialog, setOpenDialog] = useState(false);
   const [isEditOfferPanelOpen, setEditOfferPanelOpen] = useState(false);
   const token = useReadCookie();
+  const backendServer = serverConfig["backend-server"];
 
   const handleEditOffer = () => {
     console.log(offer);
@@ -47,7 +49,7 @@ function OfferDetailsPage() {
 
   const fetchData = async () => {
     try {
-      const response = await axios.get(`api/listings/${id}`, {
+      const response = await axios.get(`${backendServer}/listings/${id}`, {
         headers: {
           accept: "application/json",
           Authorization: `Bearer ${token}`,
@@ -65,7 +67,7 @@ function OfferDetailsPage() {
 
   const handleDeleteOffer = async () => {
     try {
-      const response = await axios.delete(`api/listings`, {
+      const response = await axios.delete(`${backendServer}/listings`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
