@@ -50,7 +50,6 @@ function OffersPage() {
   const [offerIdToDelete, setOfferIdToDelete] = useState(null);
   const [isEditOfferPanelOpen, setEditOfferPanelOpen] = useState(false);
   const [editOfferData, setEditOfferData] = useState(null);
-  const backendServer = serverConfig["backend-server"];
 
   const columns = [
     {
@@ -86,6 +85,10 @@ function OffersPage() {
       label: "Cena",
     },
     {
+      id: "zlM2",
+      label: "Zł/M2",
+    },
+    {
       id: "telefonDoWlasciciela",
       label: "Telefon",
     },
@@ -113,12 +116,15 @@ function OffersPage() {
 
   const fetchData = async () => {
     try {
-      const response = await axios.get(`${backendServer}/listings`, {
-        headers: {
-          accept: "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await axios.get(
+        `https://adgr2ko5s4.execute-api.eu-north-1.amazonaws.com/dev/listings`,
+        {
+          headers: {
+            accept: "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       setRows(response.data);
     } catch (error) {
       setAlertOpen(true);
@@ -132,7 +138,7 @@ function OffersPage() {
   const handleSaveOffer = async (offerData) => {
     try {
       const response = await axios.post(
-        `${backendServer}/listings`,
+        `https://adgr2ko5s4.execute-api.eu-north-1.amazonaws.com/dev/listings`,
         offerData,
         {
           headers: {
@@ -154,12 +160,15 @@ function OffersPage() {
 
   const handleDeleteOffer = async (offerId) => {
     try {
-      const response = await axios.delete(`${backendServer}/listings`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-        data: { ids: offerId },
-      });
+      const response = await axios.delete(
+        `https://adgr2ko5s4.execute-api.eu-north-1.amazonaws.com/dev/listings`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          data: { ids: offerId },
+        }
+      );
       setAlertOpen(true);
       setAlertMessage(response.data.message);
       setAlertSeverity("success");
@@ -218,10 +227,9 @@ function OffersPage() {
     setPage(0);
   };
 
-  const paginatedRows = rows.slice(
-    page * rowsPerPage,
-    page * rowsPerPage + rowsPerPage
-  );
+  const paginatedRows = Array.isArray(rows)
+    ? rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+    : [];
 
   const handleAddOfferClick = () => {
     setAddOfferPanelOpen(!isAddOfferPanelOpen);
@@ -312,219 +320,229 @@ function OffersPage() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {loading
-              ? [...Array(rowsPerPage)].map((_, index) => (
-                  <TableRow key={index}>
-                    {columns.map((column) => (
-                      <TableCell key={column.id}>
-                        <Skeleton variant="rounded" width="100%" height={16} />
-                      </TableCell>
-                    ))}
-                  </TableRow>
-                ))
-              : paginatedRows.map((row) => (
-                  <TableRow
-                    key={row._id}
+            {loading ? (
+              [...Array(rowsPerPage)].map((_, index) => (
+                <TableRow key={index}>
+                  {columns.map((column) => (
+                    <TableCell key={column.id}>
+                      <Skeleton variant="rounded" width="100%" height={16} />
+                    </TableCell>
+                  ))}
+                </TableRow>
+              ))
+            ) : Array.isArray(paginatedRows) && paginatedRows.length > 0 ? (
+              paginatedRows.map((row) => (
+                <TableRow
+                  key={row._id}
+                  style={{
+                    "& .MuiTableRowRoot": {
+                      maxHeight: "60px",
+                    },
+                  }}
+                >
+                  <TableCell
                     style={{
-                      "& .MuiTableRowRoot": {
-                        maxHeight: "60px",
-                      },
+                      textAlign: "center",
+                      padding: "5px",
+                      maxHeight: "60px",
                     }}
                   >
-                    <TableCell
-                      style={{
-                        textAlign: "center",
-                        padding: "5px",
-                        maxHeight: "60px",
-                      }}
-                    >
-                      <Checkbox
-                        checked={selected.includes(row._id)}
-                        onChange={() => handleSelect(row._id)}
-                        sx={{
+                    <Checkbox
+                      checked={selected.includes(row._id)}
+                      onChange={() => handleSelect(row._id)}
+                      sx={{
+                        color: "#272F3E",
+                        "&.Mui-checked": {
                           color: "#272F3E",
-                          "&.Mui-checked": {
-                            color: "#272F3E",
-                          },
-                        }}
-                      />
-                    </TableCell>
-                    <TableCell
-                      style={{
-                        textAlign: "center",
-                        padding: "0px",
-                        maxHeight: "60px",
-                        fontFamily: "Poppins",
-                        width: "7.2%",
+                        },
                       }}
-                    >
-                      {row.adres.ulica}
-                    </TableCell>
-                    <TableCell
-                      style={{
-                        textAlign: "center",
-                        padding: "0px",
-                        maxHeight: "60px",
-                        fontFamily: "Poppins",
-                        width: "7.2%",
-                      }}
-                    >
-                      {row.adres.dzielnica}
-                    </TableCell>
-                    <TableCell
-                      style={{
-                        textAlign: "center",
-                        padding: "0px",
-                        maxHeight: "60px",
-                        fontFamily: "Poppins",
-                        width: "7.2%",
-                      }}
-                    >
-                      {row.adres.miasto}
-                    </TableCell>
-                    <TableCell
-                      style={{
-                        textAlign: "center",
-                        padding: "0px",
-                        maxHeight: "60px",
-                        fontFamily: "Poppins",
-                        width: "7.2%",
-                      }}
-                    >
-                      {row.adres.numerDomu}
-                    </TableCell>
-                    <TableCell
-                      style={{
-                        textAlign: "center",
-                        padding: "0px",
-                        maxHeight: "60px",
-                        fontFamily: "Poppins",
-                        width: "7.2%",
-                      }}
-                    >
-                      {row.adres.numerMieszkania}
-                    </TableCell>
-                    <TableCell
-                      style={{
-                        textAlign: "center",
-                        padding: "0px",
-                        maxHeight: "60px",
-                        fontFamily: "Poppins",
-                        width: "7.2%",
-                      }}
-                    >
-                      {row.iloscPokoi}
-                    </TableCell>
-                    <TableCell
-                      style={{
-                        textAlign: "center",
-                        padding: "0px",
-                        maxHeight: "60px",
-                        fontFamily: "Poppins",
-                        width: "7.2%",
-                      }}
-                    >
-                      {row.metraz}
-                    </TableCell>
-                    <TableCell
-                      style={{
-                        textAlign: "center",
-                        padding: "0px",
-                        maxHeight: "60px",
-                        fontFamily: "Poppins",
-                        width: "7.2%",
-                      }}
-                    >
-                      {row.cena}
-                    </TableCell>
-                    <TableCell
-                      style={{
-                        textAlign: "center",
-                        padding: "0px",
-                        maxHeight: "60px",
-                        fontFamily: "Poppins",
-                        width: "7.2%",
-                      }}
-                    >
-                      {row.telefonWlasciciela}
-                    </TableCell>
-                    <TableCell
-                      style={{
-                        textAlign: "center",
-                        padding: "0px",
-                        maxHeight: "60px",
-                        fontFamily: "Poppins",
-                        width: "7.2%",
-                      }}
-                    >
-                      {row.komentarz}
-                    </TableCell>
-                    <TableCell
-                      style={{
-                        textAlign: "center",
-                        padding: "0px",
-                        maxHeight: "60px",
-                        fontFamily: "Poppins",
-                        width: "7.2%",
-                      }}
-                    >
-                      {row.status}
-                    </TableCell>
-                    <TableCell
-                      style={{
-                        textAlign: "center",
-                        maxHeight: "60px",
-                        padding: "0px",
-                        fontFamily: "Poppins",
-                      }}
-                    >
-                      <Tooltip title="Usuń">
-                        <IconButton
-                          onClick={() => handleDeleteOfferClick([row._id])}
-                          sx={{ padding: "4px" }}
-                        >
-                          <Delete />
-                        </IconButton>
-                      </Tooltip>
-                      <Tooltip title="Edytuj">
-                        <IconButton
-                          onClick={() => handleEditClick(row)}
-                          sx={{ padding: "4px" }}
-                        >
-                          <Edit />
-                        </IconButton>
-                      </Tooltip>
-                      <Tooltip title="Dodaj do ciekawych ofert">
-                        <IconButton sx={{ padding: "4px" }}>
-                          <Star />
-                        </IconButton>
-                      </Tooltip>
-                      <Tooltip title="Dodaj do kalendarza">
-                        <IconButton sx={{ padding: "4px" }}>
-                          <CalendarMonth />
-                        </IconButton>
-                      </Tooltip>
-                      <Tooltip title="Pokaż na mapie">
-                        <IconButton sx={{ padding: "4px" }}>
-                          <Map />
-                        </IconButton>
-                      </Tooltip>
-                      <Tooltip title="Przypisz ofertę">
-                        <IconButton sx={{ padding: "4px" }}>
-                          <AssignmentInd />
-                        </IconButton>
-                      </Tooltip>
-                      <Tooltip title="Szczegóły oferty">
-                        <IconButton
-                          sx={{ padding: "4px" }}
-                          onClick={() => handleGoToOfferDetailsPage(row._id)}
-                        >
-                          <Info />
-                        </IconButton>
-                      </Tooltip>
-                    </TableCell>
-                  </TableRow>
-                ))}
+                    />
+                  </TableCell>
+                  <TableCell
+                    style={{
+                      textAlign: "center",
+                      padding: "0px",
+                      maxHeight: "60px",
+                      fontFamily: "Poppins",
+                      width: "7.2%",
+                    }}
+                  >
+                    {row.adres.ulica}
+                  </TableCell>
+                  <TableCell
+                    style={{
+                      textAlign: "center",
+                      padding: "0px",
+                      maxHeight: "60px",
+                      fontFamily: "Poppins",
+                      width: "7.2%",
+                    }}
+                  >
+                    {row.adres.dzielnica}
+                  </TableCell>
+                  <TableCell
+                    style={{
+                      textAlign: "center",
+                      padding: "0px",
+                      maxHeight: "60px",
+                      fontFamily: "Poppins",
+                      width: "7.2%",
+                    }}
+                  >
+                    {row.adres.miasto}
+                  </TableCell>
+                  <TableCell
+                    style={{
+                      textAlign: "center",
+                      padding: "0px",
+                      maxHeight: "60px",
+                      fontFamily: "Poppins",
+                      width: "7.2%",
+                    }}
+                  >
+                    {row.adres.numerDomu}
+                  </TableCell>
+                  <TableCell
+                    style={{
+                      textAlign: "center",
+                      padding: "0px",
+                      maxHeight: "60px",
+                      fontFamily: "Poppins",
+                      width: "7.2%",
+                    }}
+                  >
+                    {row.adres.numerMieszkania}
+                  </TableCell>
+                  <TableCell
+                    style={{
+                      textAlign: "center",
+                      padding: "0px",
+                      maxHeight: "60px",
+                      fontFamily: "Poppins",
+                      width: "7.2%",
+                    }}
+                  >
+                    {row.iloscPokoi}
+                  </TableCell>
+                  <TableCell
+                    style={{
+                      textAlign: "center",
+                      padding: "0px",
+                      maxHeight: "60px",
+                      fontFamily: "Poppins",
+                      width: "7.2%",
+                    }}
+                  >
+                    {row.metraz}
+                  </TableCell>
+                  <TableCell
+                    style={{
+                      textAlign: "center",
+                      padding: "0px",
+                      maxHeight: "60px",
+                      fontFamily: "Poppins",
+                      width: "7.2%",
+                    }}
+                  >
+                    {row.cena}
+                  </TableCell>
+                  <TableCell
+                    style={{
+                      textAlign: "center",
+                      padding: "0px",
+                      maxHeight: "60px",
+                      fontFamily: "Poppins",
+                      width: "7.2%",
+                    }}
+                  >
+                    {row.zlM2}
+                  </TableCell>
+                  <TableCell
+                    style={{
+                      textAlign: "center",
+                      padding: "0px",
+                      maxHeight: "60px",
+                      fontFamily: "Poppins",
+                      width: "7.2%",
+                    }}
+                  >
+                    {row.telefonWlasciciela}
+                  </TableCell>
+                  <TableCell
+                    style={{
+                      textAlign: "center",
+                      padding: "0px",
+                      maxHeight: "60px",
+                      fontFamily: "Poppins",
+                      width: "7.2%",
+                    }}
+                  >
+                    {row.komentarz}
+                  </TableCell>
+                  <TableCell
+                    style={{
+                      textAlign: "center",
+                      padding: "0px",
+                      maxHeight: "60px",
+                      fontFamily: "Poppins",
+                      width: "7.2%",
+                    }}
+                  >
+                    {row.status}
+                  </TableCell>
+                  <TableCell
+                    style={{
+                      textAlign: "center",
+                      maxHeight: "60px",
+                      padding: "0px",
+                      fontFamily: "Poppins",
+                    }}
+                  >
+                    <Tooltip title="Usuń">
+                      <IconButton
+                        onClick={() => handleDeleteOfferClick([row._id])}
+                      >
+                        <Delete />
+                      </IconButton>
+                    </Tooltip>
+                    <Tooltip title="Edytuj">
+                      <IconButton onClick={() => handleEditClick(row)}>
+                        <Edit />
+                      </IconButton>
+                    </Tooltip>
+                    <Tooltip title="Dodaj do ciekawych ofert">
+                      <IconButton>
+                        <Star />
+                      </IconButton>
+                    </Tooltip>
+                    <Tooltip title="Dodaj do kalendarza">
+                      <IconButton>
+                        <CalendarMonth />
+                      </IconButton>
+                    </Tooltip>
+                    <Tooltip title="Pokaż na mapie">
+                      <IconButton>
+                        <Map />
+                      </IconButton>
+                    </Tooltip>
+                    <Tooltip title="Przypisz ofertę">
+                      <IconButton>
+                        <AssignmentInd />
+                      </IconButton>
+                    </Tooltip>
+                  </TableCell>
+                </TableRow>
+              ))
+            ) : (
+              <TableRow>
+                <TableCell
+                  colSpan={columns.length}
+                  style={{ textAlign: "center" }}
+                >
+                  Brak danych do wyświetlenia
+                </TableCell>
+              </TableRow>
+            )}
           </TableBody>
         </Table>
       </TableContainer>
