@@ -362,7 +362,7 @@ function OffersPage() {
                       width: "7.2%",
                     }}
                   >
-                    {row.adres.ulica}
+                    {row.adres?.ulica || ""}
                   </TableCell>
                   <TableCell
                     style={{
@@ -373,7 +373,7 @@ function OffersPage() {
                       width: "7.2%",
                     }}
                   >
-                    {row.adres.dzielnica}
+                    {row.adres?.dzielnica || ""}
                   </TableCell>
                   <TableCell
                     style={{
@@ -384,7 +384,7 @@ function OffersPage() {
                       width: "7.2%",
                     }}
                   >
-                    {row.adres.miasto}
+                    {row.adres?.miasto || ""}
                   </TableCell>
                   <TableCell
                     style={{
@@ -395,7 +395,7 @@ function OffersPage() {
                       width: "7.2%",
                     }}
                   >
-                    {row.adres.numerDomu}
+                    {row.adres?.numerDomu || ""}
                   </TableCell>
                   <TableCell
                     style={{
@@ -406,7 +406,7 @@ function OffersPage() {
                       width: "7.2%",
                     }}
                   >
-                    {row.adres.numerMieszkania}
+                    {row.adres?.numerMieszkania || ""}
                   </TableCell>
                   <TableCell
                     style={{
