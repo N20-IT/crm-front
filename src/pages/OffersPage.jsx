@@ -85,6 +85,10 @@ function OffersPage() {
       label: "Cena",
     },
     {
+      id: "zlM2",
+      label: "Zł/M2",
+    },
+    {
       id: "telefonDoWlasciciela",
       label: "Telefon",
     },
@@ -441,6 +445,17 @@ function OffersPage() {
                     }}
                   >
                     {row.cena}
+                  </TableCell>
+                  <TableCell
+                    style={{
+                      textAlign: "center",
+                      padding: "0px",
+                      maxHeight: "60px",
+                      fontFamily: "Poppins",
+                      width: "7.2%",
+                    }}
+                  >
+                    {row.zlM2}
                   </TableCell>
                   <TableCell
                     style={{
