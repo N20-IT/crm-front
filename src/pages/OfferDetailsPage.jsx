@@ -38,6 +38,7 @@ function OfferDetailsPage() {
   const [openDialog, setOpenDialog] = useState(false);
   const [isEditOfferPanelOpen, setEditOfferPanelOpen] = useState(false);
   const token = useReadCookie();
+  const backendServer = serverConfig["backend-server"];
 
   const handleEditOffer = () => {
     console.log(offer);
@@ -48,15 +49,12 @@ function OfferDetailsPage() {
 
   const fetchData = async () => {
     try {
-      const response = await axios.get(
-        `https://adgr2ko5s4.execute-api.eu-north-1.amazonaws.com/dev/listings/${id}`,
-        {
-          headers: {
-            accept: "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const response = await axios.get(`${backendServer}/listings/${id}`, {
+        headers: {
+          accept: "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
       setOffer(response.data);
     } catch (error) {
       setAlertOpen(true);
@@ -69,15 +67,12 @@ function OfferDetailsPage() {
 
   const handleDeleteOffer = async () => {
     try {
-      const response = await axios.delete(
-        `https://adgr2ko5s4.execute-api.eu-north-1.amazonaws.com/dev/listings`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-          data: { ids: [offer._id] },
-        }
-      );
+      const response = await axios.delete(`${backendServer}/listings`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        data: { ids: [offer._id] },
+      });
       setAlertOpen(true);
       setAlertMessage(response.data.message);
       setAlertSeverity("success");
@@ -131,7 +126,7 @@ function OfferDetailsPage() {
           <Divider sx={{ marginBottom: "24px" }} />
           {loading ? (
             <Grid2 container spacing={10} flexWrap={"nowrap"}>
-              <Grid2 item xs={12} md={6}>
+              <Grid2 xs={12} md={6}>
                 <Skeleton
                   variant="rounded"
                   height={238}
@@ -140,7 +135,7 @@ function OfferDetailsPage() {
                 />
               </Grid2>
 
-              <Grid2 item xs={12} md={6}>
+              <Grid2 xs={12} md={6}>
                 <Skeleton
                   variant="rounded"
                   height={238}
@@ -149,7 +144,7 @@ function OfferDetailsPage() {
                 />
               </Grid2>
 
-              <Grid2 item xs={12} md={6}>
+              <Grid2 xs={12} md={6}>
                 <Skeleton
                   variant="rounded"
                   height={238}
@@ -158,7 +153,7 @@ function OfferDetailsPage() {
                 />
               </Grid2>
 
-              <Grid2 item xs={12} md={6}>
+              <Grid2 xs={12} md={6}>
                 <Skeleton
                   variant="rounded"
                   height={238}
@@ -169,7 +164,7 @@ function OfferDetailsPage() {
             </Grid2>
           ) : (
             <Grid2 container spacing={10} flexWrap={"nowrap"}>
-              <Grid2 item xs={12} md={6}>
+              <Grid2 xs={12} md={6}>
                 <Typography
                   variant="h5"
                   sx={{ fontFamily: "Poppins", fontWeight: 600 }}
@@ -177,14 +172,18 @@ function OfferDetailsPage() {
                   Informacje o nieruchomości
                 </Typography>
                 <CustomTypography sx={{ marginTop: "8px" }}>
-                  <strong>Ulica:</strong> {offer.adres.ulica}
-                  {offer.adres.numerDomu}/{offer.adres.numerMieszkania}
+                  <strong>Ulica:</strong> {offer.adres ? offer.adres.ulica : ""}
+                  {offer.adres
+                    ? `${offer.adres.numerDomu}/${offer.adres.numerMieszkania}`
+                    : ""}
                 </CustomTypography>
                 <CustomTypography>
-                  <strong>Miasto:</strong> {offer.adres.miasto}
+                  <strong>Miasto:</strong>{" "}
+                  {offer.adres ? offer.adres.miasto : ""}
                 </CustomTypography>
                 <CustomTypography>
-                  <strong>Dzielnica:</strong> {offer.adres.dzielnica}
+                  <strong>Dzielnica:</strong>{" "}
+                  {offer.adres ? offer.adres.dzielnica : ""}
                 </CustomTypography>
                 <CustomTypography>
                   <strong>Ilość pokoi:</strong> {offer.iloscPokoi}
@@ -197,7 +196,7 @@ function OfferDetailsPage() {
                 </CustomTypography>
               </Grid2>
 
-              <Grid2 item xs={12} md={6}>
+              <Grid2 xs={12} md={6}>
                 <Typography
                   variant="h5"
                   sx={{ fontFamily: "Poppins", fontWeight: 600 }}
@@ -208,7 +207,7 @@ function OfferDetailsPage() {
                   <strong>Agent:</strong> {offer.agent}
                 </CustomTypography>
               </Grid2>
-              <Grid2 item xs={12} md={6}>
+              <Grid2 xs={12} md={6}>
                 <Typography
                   variant="h5"
                   sx={{ fontFamily: "Poppins", fontWeight: 600 }}
@@ -229,7 +228,7 @@ function OfferDetailsPage() {
                   <strong>Zł/m²:</strong> {offer.zlM2}
                 </CustomTypography>
               </Grid2>
-              <Grid2 item xs={12} md={6}>
+              <Grid2 xs={12} md={6}>
                 <Typography
                   variant="h5"
                   sx={{ fontFamily: "Poppins", fontWeight: 600 }}
