@@ -34,9 +34,11 @@ function TableControls({
   return (
     <Box
       sx={{
+        width: "95%",
         padding: "10px",
         backgroundColor: "#f9f9f9",
-        borderRadius: "8px",
+        borderTopLeftRadius: "8px",
+        borderTopRightRadius: "8px",
       }}
     >
       <Stack
@@ -90,10 +92,11 @@ function TableControls({
               fontFamily: "Poppins",
               color: "#535968",
             },
-            "& .MuiOutlinedInput-notchedOutline": {
-              borderColor: "#535968",
+            "& .MuiFormLabel-root.Mui-focused": {
+              fontFamily: "Poppins",
+              color: "#535968",
             },
-            "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+            "& .MuiOutlinedInput-notchedOutline": {
               borderColor: "#535968",
             },
             "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
