@@ -51,6 +51,8 @@ function OffersPage() {
   const [isEditOfferPanelOpen, setEditOfferPanelOpen] = useState(false);
   const [editOfferData, setEditOfferData] = useState(null);
   const backendServer = serverConfig["backend-server"];
+  const [searchQuery, setSearchQuery] = useState("");
+  const [timeoutId, setTimeoutId] = useState(null);
 
   const columns = [
     {
@@ -107,23 +109,29 @@ function OffersPage() {
     },
   ];
 
-  const fetchData = useCallback(async () => {
-    try {
-      const response = await axios.get(`${backendServer}/listings`, {
-        headers: {
-          accept: "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      setRows(response.data);
-    } catch (error) {
-      setAlertOpen(true);
-      setAlertMessage(error.message);
-      setAlertSeverity("error");
-    } finally {
-      setLoading(false);
-    }
-  }, [backendServer, token]);
+  const fetchData = useCallback(
+    async (searchQuery = "") => {
+      try {
+        const response = await axios.get(`${backendServer}/listings`, {
+          headers: {
+            accept: "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          params: {
+            search: searchQuery,
+          },
+        });
+        setRows(response.data);
+      } catch (error) {
+        setAlertOpen(true);
+        setAlertMessage(error.message);
+        setAlertSeverity("error");
+      } finally {
+        setLoading(false);
+      }
+    },
+    [backendServer, token]
+  );
 
   const handleSaveOffer = async (offerData) => {
     try {
@@ -186,11 +194,20 @@ function OffersPage() {
       setAlertSeverity("error");
     }
   };
-
-  useEffect(() => {
-    fetchData();
-    if (!isAuthenticated) navigate("/");
-  }, [fetchData, isAuthenticated, navigate]);
+  const fetchDataWithFilters = async (filters) => {
+    setLoading(true); // Ustawianie stanu ładowania na true
+    try {
+      const response = await axios.get(`${backendServer}/listings`, {
+        params: filters,
+      });
+      setRows(response.data); // Ustawianie danych w stanie
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    } finally {
+      setLoading(false); // Ustawianie stanu ładowania na false
+    }
+    console.log(filters);
+  };
 
   const handleGoToOfferDetailsPage = (offerId) => {
     navigate(`/oferta/${offerId}`);
@@ -250,6 +267,25 @@ function OffersPage() {
     }
   };
 
+  const handleSearchChange = (query) => {
+    setSearchQuery(query);
+    if (timeoutId) clearTimeout(timeoutId);
+    const newTimeoutId =
+      (() => {
+        if (query.length >= 3) {
+          fetchData(query);
+        }
+      },
+      3000);
+
+    setTimeoutId(newTimeoutId);
+  };
+
+  useEffect(() => {
+    fetchData(searchQuery);
+    if (!isAuthenticated) navigate("/");
+  }, [fetchData, isAuthenticated, navigate, searchQuery]);
+
   return (
     <div>
       <div className=" flex items-start justify-start h-screen ml-48 flex-col">
@@ -262,6 +298,8 @@ function OffersPage() {
             selectedCount={selected.length}
             onAddOfferClick={handleAddOfferClick}
             deleteMultipleOffersClick={handleDeleteMiltipleOffers}
+            onSearchChange={handleSearchChange}
+            onFilterApply={fetchDataWithFilters}
           />
         </div>
         <TableContainer
@@ -275,8 +313,8 @@ function OffersPage() {
             maxHeight: "74.765%",
           }}
         >
-          <Table sx={{ position: "relative" }}>
-            <TableHead style={{ backgroundColor: "#272F3E" }}>
+          <Table>
+            <TableHead style={{ backgroundColor: "#272F3E", width: "60px" }}>
               <TableRow>
                 <TableCell
                   padding="checkbox"

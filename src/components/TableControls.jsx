@@ -1,25 +1,32 @@
 import React, { useState } from "react";
 import {
-  TextField,
-  Select,
   MenuItem,
-  InputLabel,
-  FormControl,
   Button,
   Box,
   Stack,
   Menu,
+  Drawer,
+  Typography,
 } from "@mui/material";
 import { Delete, Star } from "@mui/icons-material";
 import { KeyboardArrowDown } from "@mui/icons-material";
+import CustomTextField from "./CustomTextField";
 function TableControls({
   selectedCount,
   onAddOfferClick,
   deleteMultipleOffersClick,
+  onSearchChange,
+  onFilterApply,
 }) {
   const [searchValue, setSearchValue] = useState("");
   const [anchorEl, setAnchorEl] = React.useState(null);
+  const [isFilterPanelOpen, setIsFilterPanelOpen] = useState(false);
+  const [minPrice, setMinPrice] = useState("");
+  const [maxPrice, setMaxPrice] = useState("");
+  const [priceError, setPriceError] = useState(false);
+  const [touched, setTouched] = useState({ minPrice: false, maxPrice: false });
   const open = Boolean(anchorEl);
+
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -29,6 +36,52 @@ function TableControls({
 
   const handleSearchChange = (e) => {
     setSearchValue(e.target.value);
+    onSearchChange(e.target.value);
+  };
+
+  const toggleFilterPanel = () => {
+    setIsFilterPanelOpen(!isFilterPanelOpen);
+    setPriceError(false);
+  };
+
+  const validatePrices = () => {
+    if (
+      minPrice !== "" &&
+      maxPrice !== "" &&
+      Number(minPrice) > Number(maxPrice)
+    ) {
+      setPriceError(true);
+    } else {
+      setPriceError(false);
+    }
+  };
+
+  const handleMinPriceChange = (e) => {
+    setMinPrice(e.target.value);
+  };
+
+  const handleMaxPriceChange = (e) => {
+    setMaxPrice(e.target.value);
+  };
+
+  const handleMinPriceBlur = () => {
+    setTouched({ ...touched, minPrice: true });
+    validatePrices();
+  };
+
+  const handleMaxPriceBlur = () => {
+    setTouched({ ...touched, maxPrice: true });
+    validatePrices();
+  };
+  const handleFilterApply = () => {
+    if (!priceError) {
+      const filters = {};
+      if (minPrice !== "") filters.minPrice = minPrice;
+      if (maxPrice !== "") filters.maxPrice = maxPrice;
+      console.log(filters);
+      onFilterApply(filters);
+      toggleFilterPanel();
+    }
   };
 
   return (
@@ -86,42 +139,20 @@ function TableControls({
             Dodaj do ciekawych ofert
           </MenuItem>
         </Menu>
-        <FormControl
+        <Button
+          variant="outlined"
           sx={{
-            "& .MuiFormLabel-root": {
-              fontFamily: "Poppins",
-              color: "#535968",
-            },
-            "& .MuiFormLabel-root.Mui-focused": {
-              fontFamily: "Poppins",
-              color: "#535968",
-            },
-            "& .MuiOutlinedInput-notchedOutline": {
-              borderColor: "#535968",
-            },
-            "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-              borderColor: "#535968",
-            },
-            "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline": {
-              borderColor: "#535968",
-            },
+            color: "#6D727F",
+            fontFamily: "Poppins",
+            borderColor: "black",
+            width: "180px",
+            height: "56px",
           }}
+          onClick={toggleFilterPanel}
         >
-          <InputLabel id="filter-label">Filtruj</InputLabel>
-          <Select
-            labelId="filter-label"
-            value={""}
-            onChange={() => {}}
-            label="Filtruj"
-            sx={{
-              minWidth: "120px",
-            }}
-          >
-            <MenuItem value={""}>Brak filtra</MenuItem>
-          </Select>
-        </FormControl>
-
-        <TextField
+          Filtruj
+        </Button>
+        <CustomTextField
           label="Szukaj..."
           value={searchValue}
           onChange={handleSearchChange}
@@ -164,6 +195,53 @@ function TableControls({
           Dodaj ofertę
         </Button>
       </Stack>
+
+      <Drawer
+        anchor="right"
+        open={isFilterPanelOpen}
+        onClose={toggleFilterPanel}
+        sx={{
+          "& .MuiDrawer-paper": {
+            width: { xs: "100%", sm: "400px" },
+            padding: "20px",
+            boxSizing: "border-box",
+          },
+        }}
+      >
+        <Typography
+          variant="h4"
+          sx={{ fontFamily: "Poppins", color: "#272F3E" }}
+        >
+          Filter
+        </Typography>
+        <div className="flex justify-end space-x-4 mt-3">
+          <CustomTextField
+            label="Min Cena"
+            value={minPrice}
+            onChange={handleMinPriceChange}
+            onBlur={handleMinPriceBlur}
+            fullWidth
+            type="number"
+            error={priceError && Number(maxPrice) < Number(minPrice)}
+          />
+          <CustomTextField
+            label="Max Cena"
+            value={maxPrice}
+            onChange={handleMaxPriceChange}
+            onBlur={handleMaxPriceBlur}
+            fullWidth
+            error={priceError && Number(maxPrice) < Number(minPrice)}
+            type="number"
+          />
+        </div>
+        <Button
+          variant="contained"
+          sx={{ marginTop: "20px" }}
+          onClick={handleFilterApply}
+        >
+          Zastosuj filtry
+        </Button>
+      </Drawer>
     </Box>
   );
 }

@@ -1,6 +1,6 @@
 import { TextField } from "@mui/material";
 
-const CustomTextField = (props) => (
+const CustomTextField = ({ sx = {}, children, ...rest }) => (
   <TextField
     sx={{
       "& .MuiOutlinedInput-root": {
@@ -28,8 +28,10 @@ const CustomTextField = (props) => (
       "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline": {
         borderColor: "#535968",
       },
+      ...sx,
     }}
-    {...props}
+    {...rest}
+    // {...props}
   />
 );
 
