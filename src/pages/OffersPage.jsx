@@ -134,11 +134,16 @@ function OffersPage() {
 
   const handleSaveOffer = async (offerData) => {
     try {
-      await axios.post(`${backendServer}/listings`, offerData, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await axios.post(
+        `${backendServer}/listings`,
+        offerData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      console.log(response.data);
       handleAddOfferClick();
       await fetchData();
       setAlertOpen(true);
@@ -494,9 +499,19 @@ function OffersPage() {
                         maxHeight: "60px",
                         fontFamily: "Poppins",
                         width: "6.916%",
+                        color:
+                          row.statusOferty === "zajety"
+                            ? "red"
+                            : row.statusOferty === "wolny"
+                            ? "green"
+                            : "black",
                       }}
                     >
-                      {row.status}
+                      {row.statusOferty === "zajety"
+                        ? "Zajęta"
+                        : row.statusOferty === "wolny"
+                        ? "Wolna"
+                        : row.statusOferty}
                     </TableCell>
                     <TableCell
                       style={{
