@@ -67,9 +67,12 @@ function TableControls({
   };
 
   const handleSearchChange = (e) => {
-    setSearchValue(e.target.value);
-    const updatedFilters = { ...filters };
-    onSearchChange(e.target.value, updatedFilters);
+    const value = e.target.value;
+    setSearchValue(value);
+    if (value.length > 2) {
+      const updatedFilters = { ...filters };
+      onSearchChange(value, updatedFilters);
+    }
   };
 
   const toggleFilterPanel = () => {
