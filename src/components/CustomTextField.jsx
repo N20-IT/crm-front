@@ -31,7 +31,6 @@ const CustomTextField = ({ sx = {}, children, ...rest }) => (
       ...sx,
     }}
     {...rest}
-    // {...props}
   />
 );
 
