@@ -51,8 +51,7 @@ function OffersPage() {
   const [isEditOfferPanelOpen, setEditOfferPanelOpen] = useState(false);
   const [editOfferData, setEditOfferData] = useState(null);
   const backendServer = serverConfig["backend-server"];
-  const [searchQuery, setSearchQuery] = useState("");
-  const [timeoutId, setTimeoutId] = useState(null);
+  const [searchQuery] = useState("");
 
   const columns = [
     {
@@ -110,7 +109,8 @@ function OffersPage() {
   ];
 
   const fetchData = useCallback(
-    async (searchQuery = "") => {
+    async (searchQuery = "", filters = {}) => {
+      setLoading(true);
       try {
         const response = await axios.get(`${backendServer}/listings`, {
           headers: {
@@ -119,13 +119,12 @@ function OffersPage() {
           },
           params: {
             search: searchQuery,
+            ...filters,
           },
         });
         setRows(response.data);
       } catch (error) {
-        setAlertOpen(true);
-        setAlertMessage(error.message);
-        setAlertSeverity("error");
+        console.error("Błąd pobierania danych:", error);
       } finally {
         setLoading(false);
       }
@@ -194,20 +193,6 @@ function OffersPage() {
       setAlertSeverity("error");
     }
   };
-  const fetchDataWithFilters = async (filters) => {
-    setLoading(true); // Ustawianie stanu ładowania na true
-    try {
-      const response = await axios.get(`${backendServer}/listings`, {
-        params: filters,
-      });
-      setRows(response.data); // Ustawianie danych w stanie
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    } finally {
-      setLoading(false); // Ustawianie stanu ładowania na false
-    }
-    console.log(filters);
-  };
 
   const handleGoToOfferDetailsPage = (offerId) => {
     navigate(`/oferta/${offerId}`);
@@ -267,18 +252,8 @@ function OffersPage() {
     }
   };
 
-  const handleSearchChange = (query) => {
-    setSearchQuery(query);
-    if (timeoutId) clearTimeout(timeoutId);
-    const newTimeoutId =
-      (() => {
-        if (query.length >= 3) {
-          fetchData(query);
-        }
-      },
-      3000);
-
-    setTimeoutId(newTimeoutId);
+  const handleSearchAndFilter = (searchQuery, filters) => {
+    fetchData(searchQuery, filters);
   };
 
   useEffect(() => {
@@ -298,8 +273,8 @@ function OffersPage() {
             selectedCount={selected.length}
             onAddOfferClick={handleAddOfferClick}
             deleteMultipleOffersClick={handleDeleteMiltipleOffers}
-            onSearchChange={handleSearchChange}
-            onFilterApply={fetchDataWithFilters}
+            onSearchChange={handleSearchAndFilter}
+            onFilterApply={handleSearchAndFilter}
           />
         </div>
         <TableContainer

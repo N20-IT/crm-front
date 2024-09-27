@@ -22,6 +22,7 @@ function TableControls({
   onFilterApply,
 }) {
   const [searchValue, setSearchValue] = useState("");
+  const [filters, setFilters] = useState({});
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [isFilterPanelOpen, setIsFilterPanelOpen] = useState(false);
   const [minPrice, setMinPrice] = useState("");
@@ -66,8 +67,12 @@ function TableControls({
   };
 
   const handleSearchChange = (e) => {
-    setSearchValue(e.target.value);
-    onSearchChange(e.target.value);
+    const value = e.target.value;
+    setSearchValue(value);
+    if (value.length > 2) {
+      const updatedFilters = { ...filters };
+      onSearchChange(value, updatedFilters);
+    }
   };
 
   const toggleFilterPanel = () => {
@@ -195,7 +200,8 @@ function TableControls({
       if (minZlM2 !== "") filters.minZlM2 = minZlM2;
       if (maxZlM2 !== "") filters.maxZlM2 = maxZlM2;
       if (status) filters.status = status;
-      onFilterApply(filters);
+      setFilters(filters);
+      onFilterApply(searchValue, filters);
       toggleFilterPanel();
     }
   };
