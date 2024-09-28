@@ -23,7 +23,7 @@ const ConfirmDeleteDialog = ({ open, onClose, onConfirm }) => {
       </DialogTitle>
       <DialogContent>
         <p className=" text-black font-poppins text-xl mt-3">
-          Czy na pewno chcesz usunąć tę ofertę? Ta operacja jest nieodwracalna.
+          Czy na pewno chcesz usunąć? Ta operacja jest nieodwracalna.
         </p>
       </DialogContent>
       <DialogActions>
