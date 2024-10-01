@@ -1,5 +1,5 @@
 import { Box, Button, Menu, MenuItem, Stack } from "@mui/material";
-import React, { useEffect } from "react";
+import React from "react";
 import { KeyboardArrowDown, Delete } from "@mui/icons-material";
 import CustomTextField from "./CustomTextField";
 
@@ -18,9 +18,6 @@ function TableControlsUsers({
     setAnchorEl(null);
   };
 
-  useEffect(() => {
-    console.log(selectedCount);
-  }, [selectedCount]);
   return (
     <Box
       sx={{
@@ -64,7 +61,7 @@ function TableControlsUsers({
         >
           <MenuItem
             onClick={() => {
-              deleteMultipleUsersClick();
+              // deleteMultipleUsersClick();
               handleClose();
             }}
           >

@@ -134,16 +134,12 @@ function OffersPage() {
 
   const handleSaveOffer = async (offerData) => {
     try {
-      const response = await axios.post(
-        `${backendServer}/listings`,
-        offerData,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      console.log(response.data);
+      await axios.post(`${backendServer}/listings`, offerData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      console.log(offerData);
       handleAddOfferClick();
       await fetchData();
       setAlertOpen(true);

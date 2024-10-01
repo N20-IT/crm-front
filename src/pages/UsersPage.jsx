@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth, useReadCookie } from "../utils/auth";
 import Sidebar from "../components/Sidebar";
@@ -21,6 +21,7 @@ import { Delete } from "@mui/icons-material";
 import TableControlsUsers from "../components/TableControlsUsers";
 import ConfirmDeleteDialog from "../components/ConfirmDeleteDialog";
 import Alerts from "../components/Alerts";
+import AddUserPanel from "../components/AddUserPanel";
 function UsersPage() {
   const navigate = useNavigate();
   const token = useReadCookie();
@@ -30,6 +31,7 @@ function UsersPage() {
   const [alertMessage, setAlertMessage] = useState("");
   const [alertSeverity, setAlertSeverity] = useState("");
   const [alertOpen, setAlertOpen] = useState(false);
+  const [isAddUserPanelOpen, setAddUserPanelOpen] = useState(false);
   const userRole = GetUserRoleFromToken();
   const [userIdToDelete, setUserIdToDelete] = useState(null);
   const backendServer = serverConfig["backend-server"];
@@ -42,7 +44,7 @@ function UsersPage() {
     },
   ];
 
-  const fetchData = async () => {
+  const fetchData = useCallback(async () => {
     try {
       const response = await axios.get(`${backendServer}/list-users`, {
         headers: {
@@ -55,26 +57,23 @@ function UsersPage() {
     } catch (error) {
       console.log(error);
     }
-  };
+  }, [backendServer, token]);
 
   const handleSelectAll = () => {
     if (selected.length === users.length) setSelected([]);
     else setSelected(users.map((user) => user.Email));
-    console.log(selected);
   };
 
   const handleSelect = (id) => {
     if (selected.includes(id))
       setSelected(selected.filter((itemId) => itemId !== id));
     else setSelected([...selected, id]);
-    console.log(selected);
   };
 
   const handleOpenCloseDialog = () => setOpenDialog(!openDialog);
 
   const handleConfirmDelete = async () => {
     if (userIdToDelete) {
-      console.log(userIdToDelete);
       await handleDeleteUser(userIdToDelete);
       setUserIdToDelete(null);
     }
@@ -88,14 +87,15 @@ function UsersPage() {
 
   const handleDeleteUser = async (userId) => {
     try {
-      const response = await axios.delete(`${backendServer}/delete-user`, {
+      await axios.delete(`${backendServer}/delete-user`, {
         headers: {
+          accept: "application/json",
           Authorization: `Bearer ${token}`,
         },
         data: { email: userId },
       });
       setAlertOpen(true);
-      setAlertMessage(response.data.message);
+      setAlertMessage("Pomyślnie usunięto użytkownika");
       setAlertSeverity("success");
       await fetchData();
       setSelected([]);
@@ -106,10 +106,33 @@ function UsersPage() {
     }
   };
 
+  const handleSaveUser = async (userData) => {
+    try {
+      await axios.post(`${backendServer}/create-user`, userData, {
+        headers: {
+          accept: "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      handleAddUserClick();
+      await fetchData();
+      setAlertOpen(true);
+      setAlertMessage("Dodano użytkownika pomyślnie");
+      setAlertSeverity("success");
+    } catch (error) {
+      setAlertOpen(true);
+      setAlertMessage(error.message);
+      setAlertSeverity("error");
+    }
+  };
+
+  const handleAddUserClick = () => {
+    setAddUserPanelOpen(!isAddUserPanelOpen);
+  };
   useEffect(() => {
     if (!isAuthenticated || userRole !== "admin") navigate("/");
     fetchData();
-  }, [isAuthenticated, userRole, navigate]);
+  }, [isAuthenticated, userRole, navigate, fetchData]);
 
   return (
     <div className=" flex items-start justify-start h-screen ml-48 flex-col">
@@ -118,7 +141,10 @@ function UsersPage() {
         Użytkownicy
       </h1>
       <div className="flex justify-center w-full">
-        <TableControlsUsers selectedCount={selected.length} />
+        <TableControlsUsers
+          selectedCount={selected.length}
+          onAddUserClick={handleAddUserClick}
+        />
       </div>
       <TableContainer
         component={Paper}
@@ -169,7 +195,7 @@ function UsersPage() {
           </TableHead>
           <TableBody>
             {users.map((user) => (
-              <TableRow>
+              <TableRow key={user.Email}>
                 <TableCell
                   style={{
                     textAlign: "center",
@@ -220,11 +246,21 @@ function UsersPage() {
           </TableBody>
         </Table>
       </TableContainer>
+
+      <Alerts
+        message={alertMessage}
+        severity={alertSeverity}
+        open={alertOpen}
+        onClose={() => setAlertOpen(false)}
+      />
       <ConfirmDeleteDialog
         open={openDialog}
         onClose={handleOpenCloseDialog}
         onConfirm={handleConfirmDelete}
       />
+      {isAddUserPanelOpen && (
+        <AddUserPanel onSave={handleSaveUser} onCancel={handleAddUserClick} />
+      )}
     </div>
   );
 }
