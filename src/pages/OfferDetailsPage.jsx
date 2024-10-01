@@ -24,7 +24,7 @@ import Sidebar from "../components/Sidebar";
 import CustomTypography from "../components/CustomTypography";
 import Alerts from "../components/Alerts";
 import { useReadCookie } from "../utils/auth";
-import ConfirmDeleteDialog from "../components/ConfirmDeleteDialog";
+import ConfirmDialog from "../components/ConfirmDialog";
 import EditOfferPanel from "../components/EditOfferPanel";
 import serverConfig from "../servers.json";
 
@@ -290,7 +290,7 @@ function OfferDetailsPage() {
         open={alertOpen}
         onClose={() => setAlertOpen(false)}
       />
-      <ConfirmDeleteDialog
+      <ConfirmDialog
         open={openDialog}
         onClose={handleOpenCloseDialog}
         onConfirm={handleConfirmDelete}

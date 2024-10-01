@@ -40,7 +40,7 @@ const EditOfferPanel = ({ offerData, onSave, onCancel, users }) => {
   };
 
   const handleSave = () => {
-    onSave(formData); // Przekaż dane do funkcji zapisującej
+    onSave(formData);
   };
 
   return (
