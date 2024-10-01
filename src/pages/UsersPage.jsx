@@ -21,7 +21,7 @@ import {
 } from "@mui/material";
 import { Delete } from "@mui/icons-material";
 import TableControlsUsers from "../components/TableControlsUsers";
-import ConfirmDeleteDialog from "../components/ConfirmDeleteDialog";
+import ConfirmDialog from "../components/ConfirmDialog";
 import Alerts from "../components/Alerts";
 import AddUserPanel from "../components/AddUserPanel";
 function UsersPage() {
@@ -282,7 +282,7 @@ function UsersPage() {
         open={alertOpen}
         onClose={() => setAlertOpen(false)}
       />
-      <ConfirmDeleteDialog
+      <ConfirmDialog
         open={openDialog}
         onClose={handleOpenCloseDialog}
         onConfirm={handleConfirmDelete}
