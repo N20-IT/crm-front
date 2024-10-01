@@ -23,7 +23,7 @@ function AddOfferPanel({ onSave, onCancel }) {
     cena: "",
     telefonWlasciciela: "",
     komentarz: "",
-    // status: "",
+    statusOferty: "",
     agent: "",
   });
 
@@ -184,19 +184,86 @@ function AddOfferPanel({ onSave, onCancel }) {
               margin="normal"
             />
           </div>
+          <FormControl
+            fullWidth
+            sx={{
+              marginTop: "12px",
+              "& .MuiOutlinedInput-root": {
+                borderRadius: "6px",
+                fontFamily: "Poppins",
+                fontSize: "18px",
+              },
+              "& .MuiFormLabel-root": {
+                fontFamily: "Poppins",
+                fontSize: "18px",
+                color: "#535968",
+              },
+              "& .MuiInputLabel-root.Mui-focused": {
+                color: "#535968",
+              },
+              "& .MuiOutlinedInput-notchedOutline": {
+                borderColor: "#535968",
+              },
+              "&:hover .MuiOutlinedInput-notchedOutline": {
+                borderColor: "#535968",
+              },
+              "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                borderColor: "#535968",
+              },
+              "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                borderColor: "#535968",
+              },
+            }}
+          >
+            <InputLabel>Status</InputLabel>
+            <Select
+              value={formData.statusOferty}
+              onChange={(e) =>
+                handleChange({
+                  target: {
+                    name: "statusOferty",
+                    value: e.target.value,
+                  },
+                })
+              }
+              label="Status"
+            >
+              <MenuItem value="">
+                <em>Brak</em>
+              </MenuItem>
+              <MenuItem value="wolny">Wolny</MenuItem>
+              <MenuItem value="zajety">Zajęty</MenuItem>
+            </Select>
+          </FormControl>
           <div className="w-full mt-4 mb-2">
             <FormControl
               fullWidth
               sx={{
+                marginTop: "12px",
                 "& .MuiOutlinedInput-root": {
-                  borderRadius: "12px",
+                  borderRadius: "6px",
                   fontFamily: "Poppins",
-                  fontSize: "20px",
+                  fontSize: "18px",
                 },
                 "& .MuiFormLabel-root": {
                   fontFamily: "Poppins",
-                  fontSize: "20px",
+                  fontSize: "18px",
                   color: "#535968",
+                },
+                "& .MuiInputLabel-root.Mui-focused": {
+                  color: "#535968",
+                },
+                "& .MuiOutlinedInput-notchedOutline": {
+                  borderColor: "#535968",
+                },
+                "&:hover .MuiOutlinedInput-notchedOutline": {
+                  borderColor: "#535968",
+                },
+                "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                  borderColor: "#535968",
+                },
+                "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                  borderColor: "#535968",
                 },
               }}
             >
