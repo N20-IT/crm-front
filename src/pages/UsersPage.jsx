@@ -17,6 +17,7 @@ import {
   IconButton,
   Checkbox,
   TablePagination,
+  Skeleton,
 } from "@mui/material";
 import { Delete } from "@mui/icons-material";
 import TableControlsUsers from "../components/TableControlsUsers";
@@ -39,6 +40,7 @@ function UsersPage() {
   const [userIdToDelete, setUserIdToDelete] = useState(null);
   const backendServer = serverConfig["backend-server"];
   const [users, setUsers] = useState([]);
+  const [loading, setLoading] = useState(false);
   const columns = [
     { id: "email", label: "Email" },
     {
@@ -48,6 +50,7 @@ function UsersPage() {
   ];
 
   const fetchData = useCallback(async () => {
+    setLoading(true);
     try {
       const response = await axios.get(`${backendServer}/list-users`, {
         headers: {
@@ -59,6 +62,8 @@ function UsersPage() {
       setUsers(usersList);
     } catch (error) {
       console.log(error);
+    } finally {
+      setLoading(false);
     }
   }, [backendServer, token]);
   const handleChangePage = (event, newPage) => {
@@ -203,57 +208,70 @@ function UsersPage() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {users
-              .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-              .map((user) => (
-                <TableRow key={user.Email}>
-                  <TableCell
-                    style={{
-                      textAlign: "center",
-                      padding: "5px",
-                      maxHeight: "60px",
-                    }}
-                  >
-                    <Checkbox
-                      checked={selected.includes(user.Email)}
-                      onChange={() => handleSelect(user.Email)}
-                      sx={{
-                        color: "#272F3E",
-                        "&.Mui-checked": {
-                          color: "#272F3E",
-                        },
-                      }}
-                    />
-                  </TableCell>
-                  <TableCell
-                    key={user.Email}
-                    style={{
-                      textAlign: "center",
-                      fontFamily: "Poppins",
-                      minWidth: "8%",
-                    }}
-                  >
-                    {user.Email}
-                  </TableCell>
-                  <TableCell
-                    style={{
-                      textAlign: "center",
-                      maxHeight: "60px",
-                      padding: "0px",
-                      fontFamily: "Poppins",
-                    }}
-                  >
-                    <Tooltip title="Usuń">
-                      <IconButton
-                        sx={{ padding: "4px" }}
-                        onClick={() => handleDeleteUserClick(user.Email)}
+            {loading
+              ? [...Array(rowsPerPage)].map((_, index) => (
+                  <TableRow key={index}>
+                    <TableCell colSpan={columns.length + 1}>
+                      <Skeleton
+                        variant="rounded"
+                        width="100%"
+                        height={16}
+                        animation="wave"
+                      />
+                    </TableCell>
+                  </TableRow>
+                ))
+              : users
+                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                  .map((user) => (
+                    <TableRow key={user.Email}>
+                      <TableCell
+                        style={{
+                          textAlign: "center",
+                          padding: "5px",
+                          maxHeight: "60px",
+                        }}
                       >
-                        <Delete />
-                      </IconButton>
-                    </Tooltip>
-                  </TableCell>
-                </TableRow>
-              ))}
+                        <Checkbox
+                          checked={selected.includes(user.Email)}
+                          onChange={() => handleSelect(user.Email)}
+                          sx={{
+                            color: "#272F3E",
+                            "&.Mui-checked": {
+                              color: "#272F3E",
+                            },
+                          }}
+                        />
+                      </TableCell>
+                      <TableCell
+                        key={user.Email}
+                        style={{
+                          textAlign: "center",
+                          fontFamily: "Poppins",
+                          minWidth: "8%",
+                        }}
+                      >
+                        {user.Email}
+                      </TableCell>
+                      <TableCell
+                        style={{
+                          textAlign: "center",
+                          maxHeight: "60px",
+                          padding: "0px",
+                          fontFamily: "Poppins",
+                        }}
+                      >
+                        <Tooltip title="Usuń">
+                          <IconButton
+                            sx={{ padding: "4px" }}
+                            onClick={() => handleDeleteUserClick(user.Email)}
+                          >
+                            <Delete />
+                          </IconButton>
+                        </Tooltip>
+                      </TableCell>
+                    </TableRow>
+                  ))}
           </TableBody>
         </Table>
       </TableContainer>
