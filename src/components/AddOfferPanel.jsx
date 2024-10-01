@@ -9,7 +9,7 @@ import {
 } from "@mui/material";
 import CustomTextField from "./CustomTextField";
 
-function AddOfferPanel({ onSave, onCancel }) {
+function AddOfferPanel({ onSave, onCancel, users }) {
   const [formData, setFormData] = useState({
     adres: {
       ulica: "",
@@ -26,8 +26,6 @@ function AddOfferPanel({ onSave, onCancel }) {
     statusOferty: "",
     agent: "",
   });
-
-  const names = ["Damian Kaniski", "Wiktoria Grawska", "Paweł Sztak"];
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -294,9 +292,9 @@ function AddOfferPanel({ onSave, onCancel }) {
                 }
                 fullWidth
               >
-                {names.map((name) => (
-                  <MenuItem key={name} value={name}>
-                    {name}
+                {users.map((user) => (
+                  <MenuItem key={user} value={user}>
+                    {user}
                   </MenuItem>
                 ))}
               </Select>

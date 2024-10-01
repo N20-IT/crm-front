@@ -52,7 +52,7 @@ function OffersPage() {
   const [editOfferData, setEditOfferData] = useState(null);
   const backendServer = serverConfig["backend-server"];
   const [searchQuery] = useState("");
-
+  const [users, setUsers] = useState([]);
   const columns = [
     {
       id: "ulica",
@@ -107,6 +107,22 @@ function OffersPage() {
       label: "Narzędzia",
     },
   ];
+
+  const fetchAgents = useCallback(async () => {
+    try {
+      const response = await axios.get(`${backendServer}/list-users`, {
+        headers: {
+          accept: "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      const usersList = JSON.parse(response.data.body);
+      const emailList = usersList.map((user) => user.Email);
+      setUsers(emailList);
+    } catch (error) {
+      console.log(error);
+    }
+  }, [token, backendServer]);
 
   const fetchData = useCallback(
     async (searchQuery = "", filters = {}) => {
@@ -258,9 +274,10 @@ function OffersPage() {
   };
 
   useEffect(() => {
-    fetchData(searchQuery);
     if (!isAuthenticated) navigate("/");
-  }, [fetchData, isAuthenticated, navigate, searchQuery]);
+    fetchData(searchQuery);
+    fetchAgents();
+  }, [fetchData, isAuthenticated, navigate, searchQuery, fetchAgents]);
 
   return (
     <div>
@@ -276,6 +293,7 @@ function OffersPage() {
             deleteMultipleOffersClick={handleDeleteMiltipleOffers}
             onSearchChange={handleSearchAndFilter}
             onFilterApply={handleSearchAndFilter}
+            users={users}
           />
         </div>
         <TableContainer
@@ -588,6 +606,7 @@ function OffersPage() {
           <AddOfferPanel
             onSave={handleSaveOffer}
             onCancel={handleAddOfferClick}
+            users={users}
           />
         )}
         <ConfirmDeleteDialog
@@ -600,6 +619,7 @@ function OffersPage() {
             offerData={editOfferData}
             onSave={handleSaveEditedOffer}
             onCancel={() => setEditOfferPanelOpen(false)}
+            users={users}
           />
         )}
       </div>
