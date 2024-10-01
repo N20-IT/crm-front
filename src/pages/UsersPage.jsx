@@ -286,6 +286,12 @@ function UsersPage() {
         open={openDialog}
         onClose={handleOpenCloseDialog}
         onConfirm={handleConfirmDelete}
+        dialogTitle={"Potwierdzenie usunięcia"}
+        dialogContent={
+          "Czy na pewno chcesz usunąć tego użytkownika? Ta operacja jest nieodwracalna."
+        }
+        buttonText={"Usuń"}
+        buttonColor={"error"}
       />
       {isAddUserPanelOpen && (
         <AddUserPanel onSave={handleSaveUser} onCancel={handleAddUserClick} />
