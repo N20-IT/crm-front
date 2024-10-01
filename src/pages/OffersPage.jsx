@@ -32,7 +32,7 @@ import AddOfferPanel from "../components/AddOfferPanel";
 import ConfirmDialog from "../components/ConfirmDialog";
 import EditOfferPanel from "../components/EditOfferPanel";
 import serverConfig from "../servers.json";
-import { GetEmailFromToken } from "../utils/decodeToken";
+import { GetEmailFromToken, GetUserRoleFromToken } from "../utils/decodeToken";
 
 function OffersPage() {
   const navigate = useNavigate();
@@ -60,6 +60,7 @@ function OffersPage() {
   const [searchQuery] = useState("");
   const [users, setUsers] = useState([]);
   const email = GetEmailFromToken();
+  const userRole = GetUserRoleFromToken();
 
   const columns = [
     {
@@ -316,9 +317,17 @@ function OffersPage() {
 
   useEffect(() => {
     if (!isAuthenticated) navigate("/");
+    userRole === "admin" ? fetchAgents() : setUsers([email]);
     fetchData(searchQuery);
-    fetchAgents();
-  }, [fetchData, isAuthenticated, navigate, searchQuery, fetchAgents]);
+  }, [
+    fetchData,
+    isAuthenticated,
+    navigate,
+    searchQuery,
+    fetchAgents,
+    email,
+    userRole,
+  ]);
 
   return (
     <div>
