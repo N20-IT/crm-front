@@ -108,6 +108,10 @@ function OffersPage() {
       label: "Uwagi",
     },
     {
+      id: "agent",
+      label: "Agent",
+    },
+    {
       id: "status",
       label: "Status",
     },
@@ -333,7 +337,7 @@ function OffersPage() {
     <div>
       <div className=" flex items-start justify-start h-screen ml-48 flex-col">
         <Sidebar />
-        <h1 className=" font-bold text-5xl font-poppins ml-9 mt-6 mb-4">
+        <h1 className=" font-bold text-5xl font-poppins ml-6 mt-6 mb-4">
           Oferty
         </h1>
         <div className="flex justify-center w-full">
@@ -350,7 +354,7 @@ function OffersPage() {
           component={Paper}
           elevation={8}
           style={{
-            width: "95%",
+            width: "100%",
             alignSelf: "center",
             borderBottomLeftRadius: "8px",
             borderBottomRightRadius: "8px",
@@ -385,7 +389,7 @@ function OffersPage() {
                       color: "white",
                       textAlign: "center",
                       fontFamily: "Poppins",
-                      minWidth: "8%",
+                      // minWidth: "8%",
                     }}
                   >
                     {column.label}
@@ -415,6 +419,7 @@ function OffersPage() {
                       "& .MuiTableRowRoot": {
                         maxHeight: "60px",
                       },
+                      width: "100%",
                     }}
                   >
                     <TableCell
@@ -441,7 +446,6 @@ function OffersPage() {
                         padding: "0px",
                         maxHeight: "60px",
                         fontFamily: "Poppins",
-                        width: "6.916%",
                       }}
                     >
                       {row.adres?.ulica || ""}
@@ -452,7 +456,6 @@ function OffersPage() {
                         padding: "0px",
                         maxHeight: "60px",
                         fontFamily: "Poppins",
-                        width: "6.916%",
                       }}
                     >
                       {row.adres?.dzielnica || ""}
@@ -463,7 +466,6 @@ function OffersPage() {
                         padding: "0px",
                         maxHeight: "60px",
                         fontFamily: "Poppins",
-                        width: "6.916%",
                       }}
                     >
                       {row.adres?.miasto || ""}
@@ -474,7 +476,6 @@ function OffersPage() {
                         padding: "0px",
                         maxHeight: "60px",
                         fontFamily: "Poppins",
-                        width: "6.916%",
                       }}
                     >
                       {row.adres?.numerDomu || ""}
@@ -485,7 +486,6 @@ function OffersPage() {
                         padding: "0px",
                         maxHeight: "60px",
                         fontFamily: "Poppins",
-                        width: "6.916%",
                       }}
                     >
                       {row.adres?.numerMieszkania || ""}
@@ -496,7 +496,6 @@ function OffersPage() {
                         padding: "0px",
                         maxHeight: "60px",
                         fontFamily: "Poppins",
-                        width: "6.916%",
                       }}
                     >
                       {row.iloscPokoi}
@@ -507,7 +506,6 @@ function OffersPage() {
                         padding: "0px",
                         maxHeight: "60px",
                         fontFamily: "Poppins",
-                        width: "6.916%",
                       }}
                     >
                       {row.metraz}
@@ -518,7 +516,6 @@ function OffersPage() {
                         padding: "0px",
                         maxHeight: "60px",
                         fontFamily: "Poppins",
-                        width: "6.916%",
                       }}
                     >
                       {row.cena}
@@ -529,7 +526,6 @@ function OffersPage() {
                         padding: "0px",
                         maxHeight: "60px",
                         fontFamily: "Poppins",
-                        width: "6.916%",
                       }}
                     >
                       {row.zlM2}
@@ -540,7 +536,6 @@ function OffersPage() {
                         padding: "0px",
                         maxHeight: "60px",
                         fontFamily: "Poppins",
-                        width: "6.916%",
                       }}
                     >
                       {row.telefonWlasciciela}
@@ -551,10 +546,19 @@ function OffersPage() {
                         padding: "0px",
                         maxHeight: "60px",
                         fontFamily: "Poppins",
-                        width: "6.916%",
                       }}
                     >
                       {row.komentarz}
+                    </TableCell>
+                    <TableCell
+                      style={{
+                        textAlign: "center",
+                        padding: "0px",
+                        maxHeight: "60px",
+                        fontFamily: "Poppins",
+                      }}
+                    >
+                      <strong>{row.agent}</strong>
                     </TableCell>
                     <TableCell
                       style={{
@@ -567,15 +571,17 @@ function OffersPage() {
                           row.statusOferty === "zajety"
                             ? "red"
                             : row.statusOferty === "wolny"
-                            ? "green"
+                            ? "#5bba6f"
                             : "black",
                       }}
                     >
-                      {row.statusOferty === "zajety"
-                        ? "Zajęta"
-                        : row.statusOferty === "wolny"
-                        ? "Wolna"
-                        : row.statusOferty}
+                      {row.statusOferty === "zajety" ? (
+                        <strong>Zajęta</strong>
+                      ) : row.statusOferty === "wolny" ? (
+                        <strong>Wolna</strong>
+                      ) : (
+                        <strong>{row.statusOferty}</strong>
+                      )}
                     </TableCell>
                     <TableCell
                       style={{
