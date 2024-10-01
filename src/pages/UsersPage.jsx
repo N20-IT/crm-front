@@ -151,7 +151,7 @@ function UsersPage() {
   return (
     <div className=" flex items-start justify-start h-screen ml-48 flex-col">
       <Sidebar />
-      <h1 className=" font-bold text-5xl font-poppins ml-9 mt-6 mb-4">
+      <h1 className=" font-bold text-5xl font-poppins ml-6 mt-6 mb-4">
         Użytkownicy
       </h1>
       <div className="flex justify-center w-full">
@@ -164,7 +164,7 @@ function UsersPage() {
         component={Paper}
         elevation={8}
         style={{
-          width: "95%",
+          width: "100%",
           alignSelf: "center",
           borderBottomLeftRadius: "8px",
           borderBottomRightRadius: "8px",

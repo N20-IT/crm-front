@@ -209,7 +209,7 @@ function TableControls({
   return (
     <Box
       sx={{
-        width: "95%",
+        width: "100%",
         padding: "10px",
         backgroundColor: "#f9f9f9",
         borderTopLeftRadius: "8px",
