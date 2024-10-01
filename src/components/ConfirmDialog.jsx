@@ -6,7 +6,15 @@ import {
   DialogTitle,
   Button,
 } from "@mui/material";
-const ConfirmDeleteDialog = ({ open, onClose, onConfirm }) => {
+const ConfirmDialog = ({
+  open,
+  onClose,
+  onConfirm,
+  dialogTitle,
+  dialogContent,
+  buttonText,
+  buttonColor,
+}) => {
   return (
     <Dialog
       open={open}
@@ -19,12 +27,10 @@ const ConfirmDeleteDialog = ({ open, onClose, onConfirm }) => {
         className=" bg-orange text-white"
         sx={{ fontFamily: ["Poppins"], fontSize: "24px", borderRadius: "10px" }}
       >
-        Potwierdzenie usunięcia
+        {dialogTitle}
       </DialogTitle>
       <DialogContent>
-        <p className=" text-black font-poppins text-xl mt-3">
-          Czy na pewno chcesz usunąć tę ofertę? Ta operacja jest nieodwracalna.
-        </p>
+        <p className=" text-black font-poppins text-xl mt-3">{dialogContent}</p>
       </DialogContent>
       <DialogActions>
         <Button
@@ -43,7 +49,7 @@ const ConfirmDeleteDialog = ({ open, onClose, onConfirm }) => {
         <Button
           onClick={onConfirm}
           variant="contained"
-          color="error"
+          color={buttonColor}
           sx={{
             color: "white",
             fontFamily: ["Poppins"],
@@ -51,11 +57,11 @@ const ConfirmDeleteDialog = ({ open, onClose, onConfirm }) => {
             width: "105px",
           }}
         >
-          Usuń
+          {buttonText}
         </Button>
       </DialogActions>
     </Dialog>
   );
 };
 
-export default ConfirmDeleteDialog;
+export default ConfirmDialog;

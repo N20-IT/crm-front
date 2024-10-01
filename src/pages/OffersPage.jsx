@@ -29,9 +29,10 @@ import Sidebar from "../components/Sidebar";
 import TableControls from "../components/TableControls";
 import Alerts from "../components/Alerts";
 import AddOfferPanel from "../components/AddOfferPanel";
-import ConfirmDeleteDialog from "../components/ConfirmDeleteDialog";
+import ConfirmDialog from "../components/ConfirmDialog";
 import EditOfferPanel from "../components/EditOfferPanel";
 import serverConfig from "../servers.json";
+import { GetEmailFromToken } from "../utils/decodeToken";
 
 function OffersPage() {
   const navigate = useNavigate();
@@ -46,12 +47,19 @@ function OffersPage() {
   const [alertOpen, setAlertOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   const [isAddOfferPanelOpen, setAddOfferPanelOpen] = useState(false);
-  const [openDialog, setOpenDialog] = useState(false);
+  const [openDialogDelete, setopenDialogDelete] = useState(false);
+  const [
+    openDialogConfirmOfferAssignment,
+    setOpenDialogConfirmOfferAssignment,
+  ] = useState(false);
   const [offerIdToDelete, setOfferIdToDelete] = useState(null);
+  const [offerIdToUpdateAgent, setOfferIdToUpdateAgent] = useState(null);
   const [isEditOfferPanelOpen, setEditOfferPanelOpen] = useState(false);
   const [editOfferData, setEditOfferData] = useState(null);
   const backendServer = serverConfig["backend-server"];
   const [searchQuery] = useState("");
+  const [users, setUsers] = useState([]);
+  const email = GetEmailFromToken();
 
   const columns = [
     {
@@ -108,6 +116,22 @@ function OffersPage() {
     },
   ];
 
+  const fetchAgents = useCallback(async () => {
+    try {
+      const response = await axios.get(`${backendServer}/list-users`, {
+        headers: {
+          accept: "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      const usersList = JSON.parse(response.data.body);
+      const emailList = usersList.map((user) => user.Email);
+      setUsers(emailList);
+    } catch (error) {
+      console.log(error);
+    }
+  }, [token, backendServer]);
+
   const fetchData = useCallback(
     async (searchQuery = "", filters = {}) => {
       setLoading(true);
@@ -134,16 +158,12 @@ function OffersPage() {
 
   const handleSaveOffer = async (offerData) => {
     try {
-      const response = await axios.post(
-        `${backendServer}/listings`,
-        offerData,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      console.log(response.data);
+      await axios.post(`${backendServer}/listings`, offerData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      console.log(offerData);
       handleAddOfferClick();
       await fetchData();
       setAlertOpen(true);
@@ -199,6 +219,31 @@ function OffersPage() {
     }
   };
 
+  const handleConfirmOfferAssignment = async () => {
+    try {
+      const updatedData = { agent: email };
+      await axios.put(
+        `${backendServer}/listings/${offerIdToUpdateAgent}`,
+        updatedData,
+        {
+          headers: {
+            accept: "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      setAlertOpen(true);
+      setAlertMessage("Pomyślnie zaktualizowano ofertę");
+      setAlertSeverity("success");
+      setOpenDialogConfirmOfferAssignment(false);
+      await fetchData();
+    } catch (error) {
+      setAlertOpen(true);
+      setAlertMessage("Błąd podczas aktualizowania oferty: " + error.message);
+      setAlertSeverity("error");
+    }
+  };
+
   const handleGoToOfferDetailsPage = (offerId) => {
     navigate(`/oferta/${offerId}`);
   };
@@ -236,14 +281,22 @@ function OffersPage() {
       await handleDeleteOffer(offerIdToDelete);
       setOfferIdToDelete(null);
     }
-    setOpenDialog(false);
+    setopenDialogDelete(false);
   };
 
   const handleDeleteOfferClick = (offerId) => {
     setOfferIdToDelete(offerId);
-    setOpenDialog(true);
+    setopenDialogDelete(true);
   };
-  const handleOpenCloseDialog = () => setOpenDialog(!openDialog);
+
+  const handleUpdateOfferAgentClick = (offerId) => {
+    setOfferIdToUpdateAgent(offerId);
+    handleOpenCloseDialogConfirmOfferAssignment(true);
+  };
+
+  const handleOpenCloseDialog = () => setopenDialogDelete(!openDialogDelete);
+  const handleOpenCloseDialogConfirmOfferAssignment = () =>
+    setOpenDialogConfirmOfferAssignment(!openDialogConfirmOfferAssignment);
 
   const handleEditClick = (offer) => {
     setEditOfferData(offer);
@@ -253,7 +306,7 @@ function OffersPage() {
   const handleDeleteMiltipleOffers = () => {
     if (selected.length > 0) {
       setOfferIdToDelete(selected);
-      setOpenDialog(true);
+      setopenDialogDelete(true);
     }
   };
 
@@ -262,9 +315,10 @@ function OffersPage() {
   };
 
   useEffect(() => {
-    fetchData(searchQuery);
     if (!isAuthenticated) navigate("/");
-  }, [fetchData, isAuthenticated, navigate, searchQuery]);
+    fetchData(searchQuery);
+    fetchAgents();
+  }, [fetchData, isAuthenticated, navigate, searchQuery, fetchAgents]);
 
   return (
     <div>
@@ -280,6 +334,7 @@ function OffersPage() {
             deleteMultipleOffersClick={handleDeleteMiltipleOffers}
             onSearchChange={handleSearchAndFilter}
             onFilterApply={handleSearchAndFilter}
+            users={users}
           />
         </div>
         <TableContainer
@@ -553,7 +608,10 @@ function OffersPage() {
                         </IconButton>
                       </Tooltip>
                       <Tooltip title="Przypisz ofertę">
-                        <IconButton sx={{ padding: "4px" }}>
+                        <IconButton
+                          onClick={() => handleUpdateOfferAgentClick(row._id)}
+                          sx={{ padding: "4px" }}
+                        >
                           <AssignmentInd />
                         </IconButton>
                       </Tooltip>
@@ -592,18 +650,35 @@ function OffersPage() {
           <AddOfferPanel
             onSave={handleSaveOffer}
             onCancel={handleAddOfferClick}
+            users={users}
           />
         )}
-        <ConfirmDeleteDialog
-          open={openDialog}
+        <ConfirmDialog
+          open={openDialogDelete}
           onClose={handleOpenCloseDialog}
           onConfirm={handleConfirmDelete}
+          dialogTitle={"Potwierdzenie usunięcia"}
+          dialogContent={
+            "Czy na pewno chcesz usunąć? Ta operacja jest nieodwracalna."
+          }
+          buttonText={"Usuń"}
+          buttonColor={"error"}
+        />
+        <ConfirmDialog
+          open={openDialogConfirmOfferAssignment}
+          onClose={handleOpenCloseDialogConfirmOfferAssignment}
+          onConfirm={handleConfirmOfferAssignment}
+          dialogTitle={"Potwierdzenie przypisania oferty"}
+          dialogContent={"Czy na pewno chcesz przypisać sobie ofertę?"}
+          buttonText={"Potwierdź"}
+          buttonColor={"warning"}
         />
         {isEditOfferPanelOpen && (
           <EditOfferPanel
             offerData={editOfferData}
             onSave={handleSaveEditedOffer}
             onCancel={() => setEditOfferPanelOpen(false)}
+            users={users}
           />
         )}
       </div>

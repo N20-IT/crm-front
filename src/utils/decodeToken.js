@@ -11,3 +11,14 @@ export const GetUserRoleFromToken = () => {
     return null;
   }
 };
+
+export const GetEmailFromToken = () => {
+  const token = useReadCookie();
+  try {
+    const decodedToken = jwtDecode(token);
+    return decodedToken["email"];
+  } catch (error) {
+    console.error("Błąd dekodowania tokena:", error.message);
+    return null;
+  }
+};

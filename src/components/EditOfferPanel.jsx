@@ -9,9 +9,8 @@ import {
 } from "@mui/material";
 import CustomTextField from "./CustomTextField";
 
-const EditOfferPanel = ({ offerData, onSave, onCancel }) => {
+const EditOfferPanel = ({ offerData, onSave, onCancel, users }) => {
   const [formData, setFormData] = useState(offerData);
-  const names = ["Damian Kaniski", "Wiktoria Grawska", "Paweł Sztak"];
 
   useEffect(() => {
     setFormData(offerData);
@@ -41,7 +40,7 @@ const EditOfferPanel = ({ offerData, onSave, onCancel }) => {
   };
 
   const handleSave = () => {
-    onSave(formData); // Przekaż dane do funkcji zapisującej
+    onSave(formData);
   };
 
   return (
@@ -275,9 +274,9 @@ const EditOfferPanel = ({ offerData, onSave, onCancel }) => {
                 }
                 fullWidth
               >
-                {names.map((name) => (
-                  <MenuItem key={name} value={name}>
-                    {name}
+                {users.map((user) => (
+                  <MenuItem key={user} value={user}>
+                    {user}
                   </MenuItem>
                 ))}
               </Select>

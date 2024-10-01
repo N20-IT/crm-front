@@ -38,7 +38,7 @@ export const useLogin = () => {
   const navigate = useNavigate();
   const login = (token) => {
     cookiesEnabled()
-      ? setCookie("authToken", token, { path: "/", maxAge: 60 * 60 * 24 * 7 })
+      ? setCookie("authToken", token, { path: "/", maxAge: 60 * 60 })
       : saveTokenInSessionStorage(token);
   };
   if (useAuth()) navigate("/homepage");
