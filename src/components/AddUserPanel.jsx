@@ -5,6 +5,8 @@ import CustomTextField from "./CustomTextField";
 function AddUserPanel({ onSave, onCancel }) {
   const [formData, setFormData] = useState({
     email: "",
+    name: "",
+    family_name: "",
   });
 
   const handleChange = (e) => {
@@ -35,6 +37,24 @@ function AddUserPanel({ onSave, onCancel }) {
               label="Email"
               name="email"
               value={formData.email}
+              onChange={handleChange}
+              variant="outlined"
+              fullWidth
+              margin="normal"
+            />
+            <CustomTextField
+              label="Imię"
+              name="name"
+              value={formData.name}
+              onChange={handleChange}
+              variant="outlined"
+              fullWidth
+              margin="normal"
+            />
+            <CustomTextField
+              label="Nazwisko"
+              name="family_name"
+              value={formData.family_name}
               onChange={handleChange}
               variant="outlined"
               fullWidth
