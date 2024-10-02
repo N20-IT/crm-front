@@ -275,8 +275,8 @@ const EditOfferPanel = ({ offerData, onSave, onCancel, users }) => {
                 fullWidth
               >
                 {users.map((user) => (
-                  <MenuItem key={user} value={user}>
-                    {user}
+                  <MenuItem key={user.email} value={user.displayName}>
+                    {user.displayName}
                   </MenuItem>
                 ))}
               </Select>

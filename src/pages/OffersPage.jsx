@@ -130,7 +130,13 @@ function OffersPage() {
         },
       });
       const usersList = JSON.parse(response.data.body);
-      const emailList = usersList.map((user) => user.Email);
+      const emailList = usersList.map((user) => ({
+        email: user.Email,
+        displayName:
+          user.Name && user.FamilyName
+            ? `${user.Name} ${user.FamilyName}`
+            : user.Email,
+      }));
       setUsers(emailList);
     } catch (error) {
       console.log(error);
@@ -321,7 +327,9 @@ function OffersPage() {
 
   useEffect(() => {
     if (!isAuthenticated) navigate("/");
-    userRole === "admin" ? fetchAgents() : setUsers([email]);
+    userRole === "admin"
+      ? fetchAgents()
+      : setUsers([{ email: email, displayName: email }]);
     fetchData(searchQuery);
   }, [
     fetchData,

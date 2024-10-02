@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Button,
   FormControl,
@@ -57,6 +57,10 @@ function AddOfferPanel({ onSave, onCancel, users }) {
       console.error("Wystąpił błąd podczas zapisywania:", error);
     }
   };
+
+  useEffect(() => {
+    console.log(users);
+  });
 
   return (
     <div className=" fixed inset-0 bg-light-grey bg-opacity-75 flex items-center justify-center z-50">
@@ -296,8 +300,8 @@ function AddOfferPanel({ onSave, onCancel, users }) {
                 fullWidth
               >
                 {users.map((user) => (
-                  <MenuItem key={user} value={user}>
-                    {user}
+                  <MenuItem key={user.email} value={user.displayName}>
+                    {user.displayName}
                   </MenuItem>
                 ))}
               </Select>
