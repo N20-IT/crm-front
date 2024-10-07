@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Button,
   FormControl,
@@ -57,6 +57,10 @@ function AddOfferPanel({ onSave, onCancel, users }) {
       console.error("Wystąpił błąd podczas zapisywania:", error);
     }
   };
+
+  useEffect(() => {
+    console.log(users);
+  });
 
   return (
     <div className=" fixed inset-0 bg-light-grey bg-opacity-75 flex items-center justify-center z-50">
@@ -182,62 +186,65 @@ function AddOfferPanel({ onSave, onCancel, users }) {
               margin="normal"
             />
           </div>
-          <FormControl
-            fullWidth
-            sx={{
-              marginTop: "12px",
-              "& .MuiOutlinedInput-root": {
-                borderRadius: "6px",
-                fontFamily: "Poppins",
-                fontSize: "18px",
-              },
-              "& .MuiFormLabel-root": {
-                fontFamily: "Poppins",
-                fontSize: "18px",
-                color: "#535968",
-              },
-              "& .MuiInputLabel-root.Mui-focused": {
-                color: "#535968",
-              },
-              "& .MuiOutlinedInput-notchedOutline": {
-                borderColor: "#535968",
-              },
-              "&:hover .MuiOutlinedInput-notchedOutline": {
-                borderColor: "#535968",
-              },
-              "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                borderColor: "#535968",
-              },
-              "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                borderColor: "#535968",
-              },
-            }}
-          >
-            <InputLabel>Status</InputLabel>
-            <Select
-              value={formData.statusOferty}
-              onChange={(e) =>
-                handleChange({
-                  target: {
-                    name: "statusOferty",
-                    value: e.target.value,
-                  },
-                })
-              }
-              label="Status"
-            >
-              <MenuItem value="">
-                <em>Brak</em>
-              </MenuItem>
-              <MenuItem value="wolny">Wolny</MenuItem>
-              <MenuItem value="zajety">Zajęty</MenuItem>
-            </Select>
-          </FormControl>
-          <div className="w-full mt-4 mb-2">
+          <div className="flex justify-end space-x-4">
             <FormControl
               fullWidth
+              margin="normal"
               sx={{
-                marginTop: "12px",
+                "& .MuiOutlinedInput-root": {
+                  borderRadius: "6px",
+                  fontFamily: "Poppins",
+                  fontSize: "18px",
+                },
+                "& .MuiFormLabel-root": {
+                  fontFamily: "Poppins",
+                  fontSize: "18px",
+                  color: "#535968",
+                },
+                "& .MuiInputLabel-root.Mui-focused": {
+                  color: "#535968",
+                },
+                "& .MuiOutlinedInput-notchedOutline": {
+                  borderColor: "#535968",
+                },
+                "&:hover .MuiOutlinedInput-notchedOutline": {
+                  borderColor: "#535968",
+                },
+                "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                  borderColor: "#535968",
+                },
+                "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                  borderColor: "#535968",
+                },
+              }}
+            >
+              <InputLabel>Status</InputLabel>
+              <Select
+                value={formData.statusOferty}
+                onChange={(e) =>
+                  handleChange({
+                    target: {
+                      name: "statusOferty",
+                      value: e.target.value,
+                    },
+                  })
+                }
+                label="Status"
+              >
+                <MenuItem value="">
+                  <em>Brak</em>
+                </MenuItem>
+                <MenuItem value="wolny">Wolny</MenuItem>
+                <MenuItem value="zajety">Zajęty</MenuItem>
+              </Select>
+            </FormControl>
+          </div>
+
+          <div className="flex justify-end space-x-4">
+            <FormControl
+              margin="normal"
+              fullWidth
+              sx={{
                 "& .MuiOutlinedInput-root": {
                   borderRadius: "6px",
                   fontFamily: "Poppins",
@@ -293,8 +300,8 @@ function AddOfferPanel({ onSave, onCancel, users }) {
                 fullWidth
               >
                 {users.map((user) => (
-                  <MenuItem key={user} value={user}>
-                    {user}
+                  <MenuItem key={user.email} value={user.displayName}>
+                    {user.displayName}
                   </MenuItem>
                 ))}
               </Select>
