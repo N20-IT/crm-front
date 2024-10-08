@@ -72,6 +72,9 @@ function TableControls({
     if (value.length > 2) {
       const updatedFilters = { ...filters };
       onSearchChange(value, updatedFilters);
+    } else if (value.length === 0) {
+      const updatedFilters = { ...filters };
+      onSearchChange(value, updatedFilters);
     }
   };
 
