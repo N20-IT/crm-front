@@ -187,7 +187,6 @@ function TableControls({
   };
   const handleFilterApply = () => {
     if (!priceError && !zlM2Error && !iloscPokoiError && !metrazError) {
-      const filters = {};
       if (ulica) filters.ulica = ulica;
       if (dzielnica) filters.dzielnica = dzielnica;
       if (miasto) filters.miasto = miasto;
@@ -205,7 +204,24 @@ function TableControls({
       toggleFilterPanel();
     }
   };
-
+  const clearFilters = () => {
+    setMinPrice("");
+    setMaxPrice("");
+    setDzielnica("");
+    setMiasto("");
+    setMinIloscPokoi("");
+    setMaxIloscPokoi("");
+    setMinMetraz("");
+    setMaxMetraz("");
+    setUlica("");
+    setMinZlM2("");
+    setMaxZlM2("");
+    setStatus("");
+    setFilters({});
+    setSearchValue("");
+    onFilterApply("", {});
+    toggleFilterPanel();
+  };
   return (
     <Box
       sx={{
@@ -462,8 +478,8 @@ function TableControls({
             <MenuItem value="">
               <em>Brak</em>
             </MenuItem>
-            <MenuItem value="wolny">Wolny</MenuItem>
-            <MenuItem value="zajety">Zajęty</MenuItem>
+            <MenuItem value="Wolny">Wolny</MenuItem>
+            <MenuItem value="Zajety">Zajęty</MenuItem>
           </Select>
         </FormControl>
         <Button
@@ -479,6 +495,20 @@ function TableControls({
           onClick={handleFilterApply}
         >
           Zastosuj filtry
+        </Button>
+        <Button
+          variant="outlined"
+          onClick={clearFilters}
+          sx={{
+            marginTop: "25px",
+            fontFamily: "Poppins",
+            height: "56px",
+            fontSize: "18px",
+            backgroundColor: "#6D727F",
+            color: "white",
+          }}
+        >
+          Wyczyść filtry
         </Button>
       </Drawer>
     </Box>
