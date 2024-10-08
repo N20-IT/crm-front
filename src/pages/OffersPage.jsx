@@ -680,20 +680,14 @@ function OffersPage() {
                         fontFamily: "Poppins",
                         width: "6.916%",
                         color:
-                          row.statusOferty === "zajety"
+                          row.statusOferty === "Zajety"
                             ? "red"
-                            : row.statusOferty === "wolny"
-                            ? "#5bba6f"
+                            : row.statusOferty === "Wolny"
+                            ? "#5BBF8C"
                             : "black",
                       }}
                     >
-                      {row.statusOferty === "zajety" ? (
-                        <strong>Zajęta</strong>
-                      ) : row.statusOferty === "wolny" ? (
-                        <strong>Wolna</strong>
-                      ) : (
-                        <strong>{row.statusOferty}</strong>
-                      )}
+                      <strong>{row.statusOferty}</strong>
                     </TableCell>
                     <TableCell
                       style={{
