@@ -117,6 +117,11 @@ function OffersPage() {
       sortable: false,
     },
     {
+      id: "daneWlasciciela",
+      label: "Dane właściciela",
+      sortable: false,
+    },
+    {
       id: "komentarz",
       label: "Komentarz",
       sortable: false,
@@ -636,6 +641,16 @@ function OffersPage() {
                       }}
                     >
                       {row.telefonWlasciciela}
+                    </TableCell>
+                    <TableCell
+                      style={{
+                        textAlign: "center",
+                        padding: "0px",
+                        maxHeight: "60px",
+                        fontFamily: "Poppins",
+                      }}
+                    >
+                      {row.daneWlasciciela}
                     </TableCell>
                     <TableCell
                       style={{
