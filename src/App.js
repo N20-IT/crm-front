@@ -1,8 +1,6 @@
 import React from "react";
 import { Routes, Route } from "react-router-dom";
 import "./styles/custom.css";
-import SignIn from "./SignIn";
-import App2 from "./App2";
 import HomePage from "./pages/HomePage";
 import LoginPage from "./pages/LoginPage";
 import OffersPage from "./pages/OffersPage";
@@ -18,8 +16,6 @@ function App() {
       <Route path="/homepage" element={<HomePage />} />
       <Route path="/" element={<LoginPage />} />
       <Route path="/login" element={<LoginPage />} />
-      <Route path="/app" element={<App2 />} />
-      <Route path="/signin" element={<SignIn />} />
       <Route path="/oferty" element={<OffersPage />} />
       <Route path="/klienci" element={<ClientsPage />} />
       <Route path="/ciekawe-oferty" element={<InterestingOffersPage />} />
