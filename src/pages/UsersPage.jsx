@@ -43,6 +43,8 @@ function UsersPage() {
   const [loading, setLoading] = useState(false);
   const columns = [
     { id: "email", label: "Email" },
+    { id: "name", label: "Imię" },
+    { id: "family_name", label: "Nazwisko" },
     {
       id: "narzedzia",
       label: "Narzędzia",
@@ -252,6 +254,26 @@ function UsersPage() {
                         }}
                       >
                         {user.Email}
+                      </TableCell>
+                      <TableCell
+                        key={user.Name}
+                        style={{
+                          textAlign: "center",
+                          fontFamily: "Poppins",
+                          minWidth: "8%",
+                        }}
+                      >
+                        {user.Name}
+                      </TableCell>
+                      <TableCell
+                        key={user.FamilyName}
+                        style={{
+                          textAlign: "center",
+                          fontFamily: "Poppins",
+                          minWidth: "8%",
+                        }}
+                      >
+                        {user.FamilyName}
                       </TableCell>
                       <TableCell
                         style={{
