@@ -117,8 +117,8 @@ function OffersPage() {
       sortable: false,
     },
     {
-      id: "uwagi",
-      label: "Uwagi",
+      id: "komentarz",
+      label: "Komentarz",
       sortable: false,
     },
     {
