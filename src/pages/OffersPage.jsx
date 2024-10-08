@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useMemo } from "react";
 import {
   Table,
   TableBody,
@@ -12,6 +12,7 @@ import {
   TablePagination,
   Tooltip,
   Skeleton,
+  TableSortLabel,
 } from "@mui/material";
 import {
   Delete,
@@ -61,63 +62,85 @@ function OffersPage() {
   const [users, setUsers] = useState([]);
   const email = GetEmailFromToken();
   const userRole = GetUserRoleFromToken();
+  const [order, setOrder] = useState("asc");
+  const [orderBy, setOrderBy] = useState("");
 
   const columns = [
     {
       id: "ulica",
       label: "Ulica",
+      sortable: true,
     },
     {
       id: "dzielnica",
       label: "Dzielnica",
+      sortable: true,
     },
     {
       id: "miasto",
       label: "Miasto",
+      sortable: true,
     },
     {
-      id: "nrDomu",
+      id: "numerDomu",
       label: "Numer Domu",
+      sortable: false,
     },
     {
-      id: "nrMieszkania",
+      id: "numerMieszkania",
       label: "Numer Mieszkania",
+      sortable: false,
     },
     {
       id: "iloscPokoi",
       label: "Ilość pokoi / dom ",
+      sortable: true,
     },
     {
       id: "metraz",
       label: "Metraż",
+      sortable: true,
     },
     {
       id: "cena",
       label: "Cena",
+      sortable: true,
     },
     {
       id: "zlM2",
       label: "Zł/M2",
+      sortable: true,
     },
     {
       id: "telefonDoWlasciciela",
       label: "Telefon",
+      sortable: false,
     },
     {
-      id: "uwagi",
-      label: "Uwagi",
+      id: "daneWlasciciela",
+      label: "Dane właściciela",
+      sortable: false,
+    },
+    {
+      id: "komentarz",
+      label: "Komentarz",
+      sortable: false,
     },
     {
       id: "agent",
       label: "Agent",
+      sortable: false,
     },
     {
       id: "status",
       label: "Status",
+      sortable: false,
     },
+    { id: "dataUtworzenia", label: "Data Utworzenia", sortable: true },
     {
       id: "narzedzia",
       label: "Narzędzia",
+      sortable: false,
     },
   ];
 
@@ -152,6 +175,7 @@ function OffersPage() {
           },
         });
         setRows(response.data);
+        console.log(response.data);
       } catch (error) {
         console.error("Błąd pobierania danych:", error);
       } finally {
@@ -168,7 +192,6 @@ function OffersPage() {
           Authorization: `Bearer ${token}`,
         },
       });
-      console.log(offerData);
       handleAddOfferClick();
       await fetchData();
       setAlertOpen(true);
@@ -273,10 +296,6 @@ function OffersPage() {
     setPage(0);
   };
 
-  const paginatedRows = Array.isArray(rows)
-    ? rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-    : [];
-
   const handleAddOfferClick = () => {
     setAddOfferPanelOpen(!isAddOfferPanelOpen);
   };
@@ -318,6 +337,71 @@ function OffersPage() {
   const handleSearchAndFilter = (searchQuery, filters) => {
     fetchData(searchQuery, filters);
   };
+
+  const handleSortRequest = (columnId) => {
+    const isAsc = orderBy === columnId && order === "asc";
+    setOrder(isAsc ? "desc" : "asc");
+    setOrderBy(columnId);
+  };
+
+  const sortedRows = useMemo(() => {
+    const column = columns.find((col) => col.id === orderBy);
+
+    if (!column || !column.sortable) {
+      return rows;
+    }
+    return [...rows].sort((a, b) => {
+      if (orderBy) {
+        let aValue = a[orderBy] ?? "";
+        let bValue = b[orderBy] ?? "";
+
+        if (
+          orderBy === "ulica" ||
+          orderBy === "dzielnica" ||
+          orderBy === "miasto" ||
+          orderBy === "numerDomu" ||
+          orderBy === "numerMieszkania"
+        ) {
+          aValue = a.adres ? a.adres[orderBy] : "";
+          bValue = b.adres ? b.adres[orderBy] : "";
+        }
+
+        if (
+          aValue === undefined ||
+          aValue === null ||
+          aValue === "" ||
+          aValue === " " ||
+          aValue === "???" ||
+          aValue === "????"
+        )
+          return 1;
+        if (
+          bValue === undefined ||
+          bValue === null ||
+          bValue === "" ||
+          bValue === " " ||
+          bValue === "???" ||
+          bValue === "????"
+        )
+          return -1;
+
+        if (typeof aValue === "number" && typeof bValue === "number") {
+          return order === "asc" ? aValue - bValue : bValue - aValue;
+        }
+
+        return order === "asc"
+          ? aValue.toString().localeCompare(bValue.toString())
+          : bValue.toString().localeCompare(aValue.toString());
+      }
+      return rows;
+    });
+  }, [rows, order, orderBy]);
+
+  const paginatedRows = useMemo(() => {
+    return Array.isArray(sortedRows)
+      ? sortedRows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+      : [];
+  }, [sortedRows, page, rowsPerPage]);
 
   useEffect(() => {
     if (!isAuthenticated) navigate("/");
@@ -362,7 +446,14 @@ function OffersPage() {
           }}
         >
           <Table>
-            <TableHead style={{ backgroundColor: "#272F3E", width: "60px" }}>
+            <TableHead
+              style={{
+                backgroundColor: "#272F3E",
+                position: "sticky",
+                top: 0,
+                zIndex: 1,
+              }}
+            >
               <TableRow>
                 <TableCell
                   padding="checkbox"
@@ -389,10 +480,21 @@ function OffersPage() {
                       color: "white",
                       textAlign: "center",
                       fontFamily: "Poppins",
-                      // minWidth: "8%",
                     }}
+                    sortDirection={orderBy === column.id ? order : false}
                   >
-                    {column.label}
+                    {column.sortable ? (
+                      <TableSortLabel
+                        active={orderBy === column.id}
+                        direction={orderBy === column.id ? order : "asc"}
+                        onClick={() => handleSortRequest(column.id)}
+                        style={{ color: "white" }}
+                      >
+                        {column.label}
+                      </TableSortLabel>
+                    ) : (
+                      column.label
+                    )}
                   </TableCell>
                 ))}
               </TableRow>
@@ -548,6 +650,16 @@ function OffersPage() {
                         fontFamily: "Poppins",
                       }}
                     >
+                      {row.daneWlasciciela}
+                    </TableCell>
+                    <TableCell
+                      style={{
+                        textAlign: "center",
+                        padding: "0px",
+                        maxHeight: "60px",
+                        fontFamily: "Poppins",
+                      }}
+                    >
                       {row.komentarz}
                     </TableCell>
                     <TableCell
@@ -568,20 +680,24 @@ function OffersPage() {
                         fontFamily: "Poppins",
                         width: "6.916%",
                         color:
-                          row.statusOferty === "zajety"
+                          row.statusOferty === "Zajety"
                             ? "red"
-                            : row.statusOferty === "wolny"
-                            ? "#5bba6f"
+                            : row.statusOferty === "Wolny"
+                            ? "#5BBF8C"
                             : "black",
                       }}
                     >
-                      {row.statusOferty === "zajety" ? (
-                        <strong>Zajęta</strong>
-                      ) : row.statusOferty === "wolny" ? (
-                        <strong>Wolna</strong>
-                      ) : (
-                        <strong>{row.statusOferty}</strong>
-                      )}
+                      <strong>{row.statusOferty}</strong>
+                    </TableCell>
+                    <TableCell
+                      style={{
+                        textAlign: "center",
+                        padding: "0px",
+                        maxHeight: "60px",
+                        fontFamily: "Poppins",
+                      }}
+                    >
+                      {row.dataUtworzenia}
                     </TableCell>
                     <TableCell
                       style={{
