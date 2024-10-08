@@ -185,7 +185,6 @@ function OffersPage() {
           Authorization: `Bearer ${token}`,
         },
       });
-      console.log(offerData);
       handleAddOfferClick();
       await fetchData();
       setAlertOpen(true);
@@ -274,8 +273,6 @@ function OffersPage() {
     if (selected.includes(id))
       setSelected(selected.filter((itemId) => itemId !== id));
     else setSelected([...selected, id]);
-
-    console.log(rows);
   };
 
   const handleSelectAll = () => {
