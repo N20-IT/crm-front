@@ -439,7 +439,14 @@ function OffersPage() {
           }}
         >
           <Table>
-            <TableHead style={{ backgroundColor: "#272F3E", width: "60px" }}>
+            <TableHead
+              style={{
+                backgroundColor: "#272F3E",
+                position: "sticky",
+                top: 0,
+                zIndex: 1,
+              }}
+            >
               <TableRow>
                 <TableCell
                   padding="checkbox"
