@@ -131,6 +131,7 @@ function OffersPage() {
       label: "Status",
       sortable: false,
     },
+    { id: "dataUtworzenia", label: "Data Utworzenia", sortable: true },
     {
       id: "narzedzia",
       label: "Narzędzia",
@@ -169,6 +170,7 @@ function OffersPage() {
           },
         });
         setRows(response.data);
+        console.log(response.data);
       } catch (error) {
         console.error("Błąd pobierania danych:", error);
       } finally {
@@ -677,6 +679,16 @@ function OffersPage() {
                       ) : (
                         <strong>{row.statusOferty}</strong>
                       )}
+                    </TableCell>
+                    <TableCell
+                      style={{
+                        textAlign: "center",
+                        padding: "0px",
+                        maxHeight: "60px",
+                        fontFamily: "Poppins",
+                      }}
+                    >
+                      {row.dataUtworzenia}
                     </TableCell>
                     <TableCell
                       style={{
