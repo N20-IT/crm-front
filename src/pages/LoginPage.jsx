@@ -34,36 +34,36 @@ function LoginPage() {
 
   const LambdaConnection = (email, attribute, apiUrl) => {
     var raw = JSON.stringify({
-      "email": email,
-      "attribute": attribute
+      email: email,
+      attribute: attribute,
     });
     var requestOptions = {
-      method: 'POST',
+      method: "POST",
       headers: { "Content-Type": "application/json" },
       body: raw,
-      redirect: 'follow'
+      redirect: "follow",
     };
-  
-    console.log('Calling Lambda: ', apiUrl);
+
+    console.log("Calling Lambda: ", apiUrl);
 
     return fetch(apiUrl, requestOptions)
-      .then(response => response.json())
-      .then(result => {
-        console.log('Attribute checked: ', result);
-        
-        let cleanedBody = result.body.replace(/"/g, '');
+      .then((response) => response.json())
+      .then((result) => {
+        console.log("Attribute checked: ", result);
 
-        if (cleanedBody === 'true') {
+        let cleanedBody = result.body.replace(/"/g, "");
+
+        if (cleanedBody === "true") {
           return true;
         }
 
         return false; // Return the entire result if it's not 'true'
       })
-      .catch(error => {
-        console.log('error', error);
+      .catch((error) => {
+        console.log("error", error);
         throw error; // It's good practice to re-throw the error so it can be handled further up the chain if needed
       });
-  };  
+  };
 
   const handleLogin = async (event) => {
     event.preventDefault();
@@ -73,14 +73,19 @@ function LoginPage() {
         password: password,
       });
 
-      const attribute = 'custom:forceResetPass';
-      const url = 'https://adgr2ko5s4.execute-api.eu-north-1.amazonaws.com/dev/check-attribute';
-      
-      const requirePasswordChange = await LambdaConnection(username, attribute, url);
+      const attribute = "custom:forceResetPass";
+      const url =
+        "https://adgr2ko5s4.execute-api.eu-north-1.amazonaws.com/dev/check-attribute";
 
-      console.log(requirePasswordChange)
-      if(requirePasswordChange === true) {
-        navigate('/zapomniane-haslo');
+      const requirePasswordChange = await LambdaConnection(
+        username,
+        attribute,
+        url
+      );
+
+      console.log(requirePasswordChange);
+      if (requirePasswordChange === true) {
+        navigate("/zapomniane-haslo");
       }
 
       setError("");
@@ -95,7 +100,7 @@ function LoginPage() {
   const handleLogJwtToken = async () => {
     try {
       const session = await fetchAuthSession();
-      return session.tokens.accessToken.toString();
+      return session.tokens.idToken.toString();
     } catch (error) {
       setError("Error fetching auth session:", error);
       setOpen(true);
@@ -113,7 +118,7 @@ function LoginPage() {
     setError("Zapomnialem hasla");
     setOpen(true);
     console.log(username, password);
-    navigate('/zapomniane-haslo');
+    navigate("/zapomniane-haslo");
   };
 
   const handleClickShowPassword = () => setShowPassword(!showPassword);

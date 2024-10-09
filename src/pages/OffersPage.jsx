@@ -175,7 +175,6 @@ function OffersPage() {
           },
         });
         setRows(response.data);
-        console.log(response.data);
       } catch (error) {
         console.error("Błąd pobierania danych:", error);
       } finally {
@@ -335,6 +334,7 @@ function OffersPage() {
   };
 
   const handleSearchAndFilter = (searchQuery, filters) => {
+    console.log(filters);
     fetchData(searchQuery, filters);
   };
 
@@ -488,7 +488,7 @@ function OffersPage() {
                         active={orderBy === column.id}
                         direction={orderBy === column.id ? order : "asc"}
                         onClick={() => handleSortRequest(column.id)}
-                        style={{ color: "white" }}
+                        style={{ color: "white", fontSize: "13px" }}
                       >
                         {column.label}
                       </TableSortLabel>
@@ -548,6 +548,7 @@ function OffersPage() {
                         padding: "0px",
                         maxHeight: "60px",
                         fontFamily: "Poppins",
+                        fontSize: "13px",
                       }}
                     >
                       {row.adres?.ulica || ""}
@@ -558,6 +559,7 @@ function OffersPage() {
                         padding: "0px",
                         maxHeight: "60px",
                         fontFamily: "Poppins",
+                        fontSize: "13px",
                       }}
                     >
                       {row.adres?.dzielnica || ""}
@@ -568,6 +570,7 @@ function OffersPage() {
                         padding: "0px",
                         maxHeight: "60px",
                         fontFamily: "Poppins",
+                        fontSize: "13px",
                       }}
                     >
                       {row.adres?.miasto || ""}
@@ -578,6 +581,7 @@ function OffersPage() {
                         padding: "0px",
                         maxHeight: "60px",
                         fontFamily: "Poppins",
+                        fontSize: "13px",
                       }}
                     >
                       {row.adres?.numerDomu || ""}
@@ -588,6 +592,7 @@ function OffersPage() {
                         padding: "0px",
                         maxHeight: "60px",
                         fontFamily: "Poppins",
+                        fontSize: "13px",
                       }}
                     >
                       {row.adres?.numerMieszkania || ""}
@@ -598,6 +603,7 @@ function OffersPage() {
                         padding: "0px",
                         maxHeight: "60px",
                         fontFamily: "Poppins",
+                        fontSize: "13px",
                       }}
                     >
                       {row.iloscPokoi}
@@ -608,6 +614,7 @@ function OffersPage() {
                         padding: "0px",
                         maxHeight: "60px",
                         fontFamily: "Poppins",
+                        fontSize: "13px",
                       }}
                     >
                       {row.metraz}
@@ -618,6 +625,7 @@ function OffersPage() {
                         padding: "0px",
                         maxHeight: "60px",
                         fontFamily: "Poppins",
+                        fontSize: "13px",
                       }}
                     >
                       {row.cena}
@@ -628,6 +636,7 @@ function OffersPage() {
                         padding: "0px",
                         maxHeight: "60px",
                         fontFamily: "Poppins",
+                        fontSize: "13px",
                       }}
                     >
                       {row.zlM2}
@@ -638,6 +647,7 @@ function OffersPage() {
                         padding: "0px",
                         maxHeight: "60px",
                         fontFamily: "Poppins",
+                        fontSize: "13px",
                       }}
                     >
                       {row.telefonWlasciciela}
@@ -648,6 +658,7 @@ function OffersPage() {
                         padding: "0px",
                         maxHeight: "60px",
                         fontFamily: "Poppins",
+                        fontSize: "13px",
                       }}
                     >
                       {row.daneWlasciciela}
@@ -658,6 +669,7 @@ function OffersPage() {
                         padding: "0px",
                         maxHeight: "60px",
                         fontFamily: "Poppins",
+                        fontSize: "13px",
                       }}
                     >
                       {row.komentarz}
@@ -668,6 +680,7 @@ function OffersPage() {
                         padding: "0px",
                         maxHeight: "60px",
                         fontFamily: "Poppins",
+                        fontSize: "13px",
                       }}
                     >
                       <strong>{row.agent}</strong>
@@ -685,6 +698,7 @@ function OffersPage() {
                             : row.statusOferty === "Wolny"
                             ? "#5BBF8C"
                             : "black",
+                        fontSize: "13px",
                       }}
                     >
                       <strong>{row.statusOferty}</strong>
@@ -695,6 +709,7 @@ function OffersPage() {
                         padding: "0px",
                         maxHeight: "60px",
                         fontFamily: "Poppins",
+                        fontSize: "13px",
                       }}
                     >
                       {row.dataUtworzenia}

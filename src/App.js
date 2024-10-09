@@ -13,7 +13,7 @@ import OfferDetailsPage from "./pages/OfferDetailsPage";
 function App() {
   return (
     <Routes>
-      <Route path="/homepage" element={<HomePage />} />
+      <Route path="/homepage" element={<OffersPage />} />
       <Route path="/" element={<LoginPage />} />
       <Route path="/login" element={<LoginPage />} />
       <Route path="/oferty" element={<OffersPage />} />
