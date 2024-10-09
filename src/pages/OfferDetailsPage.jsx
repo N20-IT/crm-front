@@ -96,10 +96,6 @@ function OfferDetailsPage() {
     setEditOfferPanelOpen(true);
   };
 
-  const fasdf = () => {
-    console.log(offer);
-  };
-
   useEffect(() => {
     fetchData();
     if (!isAuthenticated) navigate("/");
@@ -289,7 +285,7 @@ function OfferDetailsPage() {
               </IconButton>
             </Tooltip>
             <Tooltip title="Dodaj do kalendarza">
-              <IconButton onClick={fasdf}>
+              <IconButton>
                 <CalendarMonth sx={{ fontSize: "24px", color: "#535968" }} />
               </IconButton>
             </Tooltip>

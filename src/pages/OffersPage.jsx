@@ -334,7 +334,6 @@ function OffersPage() {
   };
 
   const handleSearchAndFilter = (searchQuery, filters) => {
-    console.log(filters);
     fetchData(searchQuery, filters);
   };
 
