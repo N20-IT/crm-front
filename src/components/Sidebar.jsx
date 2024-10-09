@@ -5,13 +5,17 @@ import {
   Star,
   Groups,
   Description,
+  Logout,
 } from "@mui/icons-material";
 import { Link, useLocation } from "react-router-dom";
 import { GetUserRoleFromToken } from "../utils/decodeToken";
+import { Button } from "@mui/material";
+import { useLogout } from "../utils/auth";
 
 const Sidebar = () => {
   const location = useLocation();
   const userRole = GetUserRoleFromToken();
+  const logout = useLogout();
 
   const getLinkClass = (path) => {
     return location.pathname === path ? "bg-orange" : "hover:bg-dark-blue";
@@ -96,6 +100,24 @@ const Sidebar = () => {
           )}
         </ul>
       </nav>
+      <div className="fixed bottom-3 p-4">
+        <Button
+          fullWidth
+          variant="contained"
+          sx={{
+            backgroundColor: "#FC8721",
+            color: "white",
+            borderRadius: "32px",
+            fontSize: "16px",
+            fontFamily: "Poppins",
+            textTransform: "none",
+          }}
+          startIcon={<Logout />}
+          onClick={logout}
+        >
+          Wyloguj się
+        </Button>
+      </div>
     </aside>
   );
 };
