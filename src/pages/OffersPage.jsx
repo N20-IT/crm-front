@@ -692,7 +692,7 @@ function OffersPage() {
                         fontFamily: "Poppins",
                         width: "6.916%",
                         color:
-                          row.statusOferty === "Zajety"
+                          row.statusOferty === "Zajęta"
                             ? "red"
                             : row.statusOferty === "Wolny"
                             ? "#5BBF8C"
@@ -841,9 +841,9 @@ function OffersPage() {
         sx={{
           position: "fixed",
           bottom: 0,
-          left: 0,
           right: 43.2,
           zIndex: 1000,
+          width: "90%",
         }}
       />
     </div>

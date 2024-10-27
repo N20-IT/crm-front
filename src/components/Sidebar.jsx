@@ -100,7 +100,7 @@ const Sidebar = () => {
           )}
         </ul>
       </nav>
-      <div className="fixed bottom-3 p-4">
+      <div className="fixed bottom-3 p-4 w-39">
         <Button
           fullWidth
           variant="contained"
