@@ -82,16 +82,6 @@ function OffersPage() {
       sortable: true,
     },
     {
-      id: "numerDomu",
-      label: "Numer Domu",
-      sortable: false,
-    },
-    {
-      id: "numerMieszkania",
-      label: "Numer Mieszkania",
-      sortable: false,
-    },
-    {
       id: "iloscPokoi",
       label: "Ilość pokoi / dom ",
       sortable: true,
@@ -583,28 +573,6 @@ function OffersPage() {
                         fontSize: "13px",
                       }}
                     >
-                      {row.adres?.numerDomu || ""}
-                    </TableCell>
-                    <TableCell
-                      style={{
-                        textAlign: "center",
-                        padding: "0px",
-                        maxHeight: "60px",
-                        fontFamily: "Poppins",
-                        fontSize: "13px",
-                      }}
-                    >
-                      {row.adres?.numerMieszkania || ""}
-                    </TableCell>
-                    <TableCell
-                      style={{
-                        textAlign: "center",
-                        padding: "0px",
-                        maxHeight: "60px",
-                        fontFamily: "Poppins",
-                        fontSize: "13px",
-                      }}
-                    >
                       {row.iloscPokoi}
                     </TableCell>
                     <TableCell
@@ -694,7 +662,8 @@ function OffersPage() {
                         color:
                           row.statusOferty === "Zajęta"
                             ? "red"
-                            : row.statusOferty === "Wolny"
+                            : row.statusOferty === "Wolny" ||
+                              row.statusOferty === "Wolna"
                             ? "#5BBF8C"
                             : "black",
                         fontSize: "13px",

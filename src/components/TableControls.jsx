@@ -201,7 +201,7 @@ function TableControls({
       if (maxPrice !== "") filters.maxPrice = maxPrice;
       if (minZlM2 !== "") filters.minZlM2 = minZlM2;
       if (maxZlM2 !== "") filters.maxZlM2 = maxZlM2;
-      if (status) filters.status = status;
+      if (status) filters.statusOferty = status;
       setFilters(filters);
       onFilterApply(searchValue, filters);
       toggleFilterPanel();
@@ -482,7 +482,7 @@ function TableControls({
               <em>Brak</em>
             </MenuItem>
             <MenuItem value="Wolny">Wolny</MenuItem>
-            <MenuItem value="Zajety">Zajęty</MenuItem>
+            <MenuItem value="Zajęta">Zajęta</MenuItem>
           </Select>
         </FormControl>
         <Button
