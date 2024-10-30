@@ -10,16 +10,22 @@ import {
   FormControl,
   InputLabel,
   Select,
+  ToggleButton,
+  ToggleButtonGroup,
+  Tooltip,
 } from "@mui/material";
-import { Delete, Star } from "@mui/icons-material";
+import { Delete, Star, ViewList, ViewModule } from "@mui/icons-material";
 import { KeyboardArrowDown } from "@mui/icons-material";
 import CustomTextField from "./CustomTextField";
+import { GetEmailFromToken } from "../utils/decodeToken";
+import { useReadCookie } from "../utils/auth";
 function TableControls({
   selectedCount,
   onAddOfferClick,
   deleteMultipleOffersClick,
   onSearchChange,
   onFilterApply,
+  fetchData,
 }) {
   const [searchValue, setSearchValue] = useState("");
   const [filters, setFilters] = useState({});
@@ -225,6 +231,38 @@ function TableControls({
     onFilterApply("", {});
     toggleFilterPanel();
   };
+
+  const [view, setView] = useState("podstawowy");
+  const email = GetEmailFromToken();
+  const token = useReadCookie();
+
+  const handleViewChange = async (event, newView) => {
+    if (newView) {
+      setView(newView);
+      const columnConfigValue = newView === "podstawowy" ? "0" : "1";
+
+      try {
+        await fetch(
+          "https://adgr2ko5s4.execute-api.eu-north-1.amazonaws.com/dev/change-attribute",
+          {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify({
+              email: email,
+              attribute: "custom:columnConfig",
+              value: columnConfigValue,
+            }),
+          }
+        );
+        fetchData();
+      } catch (error) {
+        console.error("Błąd wysyłania żądania:", error);
+      }
+    }
+  };
   return (
     <Box
       sx={{
@@ -302,7 +340,31 @@ function TableControls({
             flex: 1,
           }}
         />
-
+        <ToggleButtonGroup
+          value={view}
+          exclusive
+          onChange={handleViewChange}
+          aria-label="view selection"
+        >
+          <Tooltip title="Widok podstawowy">
+            <ToggleButton value="podstawowy" aria-label="basic view">
+              <ViewList
+                sx={{
+                  color: view === "podstawowy" ? "#FC8721" : "default",
+                }}
+              />
+            </ToggleButton>
+          </Tooltip>
+          <Tooltip title="Widok rozszerzony">
+            <ToggleButton value="rozszerzony" aria-label="expanded view">
+              <ViewModule
+                sx={{
+                  color: view === "rozszerzony" ? "#FC8721" : "default",
+                }}
+              />
+            </ToggleButton>
+          </Tooltip>
+        </ToggleButtonGroup>
         <Button
           variant="contained"
           sx={{

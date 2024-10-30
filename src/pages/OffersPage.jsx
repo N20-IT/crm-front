@@ -421,6 +421,7 @@ function OffersPage() {
             onSearchChange={handleSearchAndFilter}
             onFilterApply={handleSearchAndFilter}
             users={users}
+            fetchData={fetchData}
           />
         </div>
         <TableContainer
@@ -812,7 +813,7 @@ function OffersPage() {
           bottom: 0,
           right: 43.2,
           zIndex: 1000,
-          width: "90%",
+          width: "35%",
         }}
       />
     </div>
