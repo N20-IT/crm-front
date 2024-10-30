@@ -15,8 +15,6 @@ function AddOfferPanel({ onSave, onCancel, users }) {
       ulica: "",
       dzielnica: "",
       miasto: "",
-      numerDomu: "",
-      numerMieszkania: "",
     },
     iloscPokoi: "",
     metraz: "",
@@ -24,6 +22,7 @@ function AddOfferPanel({ onSave, onCancel, users }) {
     telefonWlasciciela: "",
     komentarz: "",
     agent: "",
+    statusOferty: "",
   });
 
   const handleChange = (e) => {
@@ -92,31 +91,6 @@ function AddOfferPanel({ onSave, onCancel, users }) {
                 label="Miasto"
                 name="miasto"
                 value={formData.adres.miasto}
-                onChange={handleChange}
-                variant="outlined"
-                fullWidth
-                margin="normal"
-              />
-            </div>
-          </div>
-
-          <div className="flex justify-end space-x-4">
-            <div className="w-full">
-              <CustomTextField
-                label="Numer Domu"
-                name="numerDomu"
-                value={formData.adres.numerDomu}
-                onChange={handleChange}
-                variant="outlined"
-                fullWidth
-                margin="normal"
-              />
-            </div>
-            <div className="w-full">
-              <CustomTextField
-                label="Numer Mieszkania"
-                name="numerMieszkania"
-                value={formData.adres.numerMieszkania}
                 onChange={handleChange}
                 variant="outlined"
                 fullWidth
@@ -245,6 +219,57 @@ function AddOfferPanel({ onSave, onCancel, users }) {
                     {user}
                   </MenuItem>
                 ))}
+              </Select>
+            </FormControl>
+            <FormControl
+              fullWidth
+              sx={{
+                marginTop: "12px",
+                "& .MuiOutlinedInput-root": {
+                  borderRadius: "6px",
+                  fontFamily: "Poppins",
+                  fontSize: "18px",
+                },
+                "& .MuiFormLabel-root": {
+                  fontFamily: "Poppins",
+                  fontSize: "18px",
+                  color: "#535968",
+                },
+                "& .MuiInputLabel-root.Mui-focused": {
+                  color: "#535968",
+                },
+                "& .MuiOutlinedInput-notchedOutline": {
+                  borderColor: "#535968",
+                },
+                "&:hover .MuiOutlinedInput-notchedOutline": {
+                  borderColor: "#535968",
+                },
+                "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                  borderColor: "#535968",
+                },
+                "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                  borderColor: "#535968",
+                },
+              }}
+            >
+              <InputLabel>Status</InputLabel>
+              <Select
+                value={formData.statusOferty}
+                onChange={(e) =>
+                  handleChange({
+                    target: {
+                      name: "statusOferty",
+                      value: e.target.value,
+                    },
+                  })
+                }
+                label="Status"
+              >
+                <MenuItem value="">
+                  <em>Brak</em>
+                </MenuItem>
+                <MenuItem value="Wolny">Wolny</MenuItem>
+                <MenuItem value="Zajęta">Zajęta</MenuItem>
               </Select>
             </FormControl>
           </div>
