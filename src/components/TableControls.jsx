@@ -17,15 +17,13 @@ import {
 import { Delete, Star, ViewList, ViewModule } from "@mui/icons-material";
 import { KeyboardArrowDown } from "@mui/icons-material";
 import CustomTextField from "./CustomTextField";
-import { GetEmailFromToken } from "../utils/decodeToken";
-import { useReadCookie } from "../utils/auth";
+import { useChangeColumnConfig, useReadConfig } from "../config/columnConfig";
 function TableControls({
   selectedCount,
   onAddOfferClick,
   deleteMultipleOffersClick,
   onSearchChange,
   onFilterApply,
-  fetchData,
 }) {
   const [searchValue, setSearchValue] = useState("");
   const [filters, setFilters] = useState({});
@@ -64,6 +62,9 @@ function TableControls({
     maxPrice: false,
   });
   const open = Boolean(anchorEl);
+  const changeColumnConfig = useChangeColumnConfig();
+  const readConfig = useReadConfig();
+  const [columnConfig, setColumnConfig] = useState(readConfig);
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -209,7 +210,7 @@ function TableControls({
       if (maxZlM2 !== "") filters.maxZlM2 = maxZlM2;
       if (status) filters.statusOferty = status;
       setFilters(filters);
-      onFilterApply(searchValue, filters);
+      onFilterApply(searchValue, filters, columnConfig);
       toggleFilterPanel();
     }
   };
@@ -232,35 +233,11 @@ function TableControls({
     toggleFilterPanel();
   };
 
-  const [view, setView] = useState("podstawowy");
-  const email = GetEmailFromToken();
-  const token = useReadCookie();
-
-  const handleViewChange = async (event, newView) => {
-    if (newView) {
-      setView(newView);
-      const columnConfigValue = newView === "podstawowy" ? "0" : "1";
-
-      try {
-        await fetch(
-          "https://adgr2ko5s4.execute-api.eu-north-1.amazonaws.com/dev/change-attribute",
-          {
-            method: "PUT",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${token}`,
-            },
-            body: JSON.stringify({
-              email: email,
-              attribute: "custom:columnConfig",
-              value: columnConfigValue,
-            }),
-          }
-        );
-        fetchData();
-      } catch (error) {
-        console.error("Błąd wysyłania żądania:", error);
-      }
+  const handleViewChange = async (event, newValue) => {
+    if (newValue !== null) {
+      setColumnConfig(newValue);
+      changeColumnConfig(newValue);
+      onFilterApply(searchValue, filters, newValue);
     }
   };
   return (
@@ -341,25 +318,25 @@ function TableControls({
           }}
         />
         <ToggleButtonGroup
-          value={view}
+          value={columnConfig}
           exclusive
           onChange={handleViewChange}
           aria-label="view selection"
         >
           <Tooltip title="Widok podstawowy">
-            <ToggleButton value="podstawowy" aria-label="basic view">
+            <ToggleButton value={0} aria-label="basic view">
               <ViewList
                 sx={{
-                  color: view === "podstawowy" ? "#FC8721" : "default",
+                  color: columnConfig === 0 ? "#FC8721" : "default",
                 }}
               />
             </ToggleButton>
           </Tooltip>
           <Tooltip title="Widok rozszerzony">
-            <ToggleButton value="rozszerzony" aria-label="expanded view">
+            <ToggleButton value={1} aria-label="expanded view">
               <ViewModule
                 sx={{
-                  color: view === "rozszerzony" ? "#FC8721" : "default",
+                  color: columnConfig === 1 ? "#FC8721" : "default",
                 }}
               />
             </ToggleButton>

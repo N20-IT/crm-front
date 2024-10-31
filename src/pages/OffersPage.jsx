@@ -34,6 +34,7 @@ import ConfirmDialog from "../components/ConfirmDialog";
 import EditOfferPanel from "../components/EditOfferPanel";
 import serverConfig from "../servers.json";
 import { GetEmailFromToken, GetUserRoleFromToken } from "../utils/decodeToken";
+import { useReadConfig } from "../config/columnConfig";
 
 function OffersPage() {
   const navigate = useNavigate();
@@ -64,75 +65,78 @@ function OffersPage() {
   const userRole = GetUserRoleFromToken();
   const [order, setOrder] = useState("asc");
   const [orderBy, setOrderBy] = useState("");
+  const readConfig = useReadConfig();
 
-  const columns = [
-    {
-      id: "ulica",
-      label: "Ulica",
-      sortable: true,
-    },
-    {
-      id: "dzielnica",
-      label: "Dzielnica",
-      sortable: true,
-    },
-    {
-      id: "miasto",
-      label: "Miasto",
-      sortable: true,
-    },
-    {
-      id: "iloscPokoi",
-      label: "Ilość pokoi / dom ",
-      sortable: true,
-    },
-    {
-      id: "metraz",
-      label: "Metraż",
-      sortable: true,
-    },
-    {
-      id: "cena",
-      label: "Cena",
-      sortable: true,
-    },
-    {
-      id: "zlM2",
-      label: "Zł/M2",
-      sortable: true,
-    },
-    {
-      id: "telefonDoWlasciciela",
-      label: "Telefon",
-      sortable: false,
-    },
-    {
-      id: "daneWlasciciela",
-      label: "Dane właściciela",
-      sortable: false,
-    },
-    {
-      id: "komentarz",
-      label: "Komentarz",
-      sortable: false,
-    },
-    {
-      id: "agent",
-      label: "Agent",
-      sortable: false,
-    },
-    {
-      id: "status",
-      label: "Status",
-      sortable: false,
-    },
-    { id: "dataUtworzenia", label: "Data Utworzenia", sortable: true },
-    {
-      id: "narzedzia",
-      label: "Narzędzia",
-      sortable: false,
-    },
-  ];
+  const columns = useMemo(() => {
+    return [
+      {
+        id: "ulica",
+        label: "Ulica",
+        sortable: true,
+      },
+      {
+        id: "dzielnica",
+        label: "Dzielnica",
+        sortable: true,
+      },
+      {
+        id: "miasto",
+        label: "Miasto",
+        sortable: true,
+      },
+      {
+        id: "iloscPokoi",
+        label: "Ilość pokoi / dom ",
+        sortable: true,
+      },
+      {
+        id: "metraz",
+        label: "Metraż",
+        sortable: true,
+      },
+      {
+        id: "cena",
+        label: "Cena",
+        sortable: true,
+      },
+      {
+        id: "zlM2",
+        label: "Zł/M2",
+        sortable: true,
+      },
+      {
+        id: "telefonDoWlasciciela",
+        label: "Telefon",
+        sortable: false,
+      },
+      {
+        id: "daneWlasciciela",
+        label: "Dane właściciela",
+        sortable: false,
+      },
+      {
+        id: "komentarz",
+        label: "Komentarz",
+        sortable: false,
+      },
+      {
+        id: "agent",
+        label: "Agent",
+        sortable: false,
+      },
+      {
+        id: "status",
+        label: "Status",
+        sortable: false,
+      },
+      { id: "dataUtworzenia", label: "Data Utworzenia", sortable: true },
+      {
+        id: "narzedzia",
+        label: "Narzędzia",
+        sortable: false,
+      },
+    ];
+  }, []);
 
   const fetchAgents = useCallback(async () => {
     try {
@@ -151,13 +155,14 @@ function OffersPage() {
   }, [token, backendServer]);
 
   const fetchData = useCallback(
-    async (searchQuery = "", filters = {}) => {
+    async (searchQuery = "", filters = {}, columnConfig = readConfig) => {
       setLoading(true);
       try {
         const response = await axios.get(`${backendServer}/listings`, {
           headers: {
             accept: "application/json",
             Authorization: `Bearer ${token}`,
+            columnConfig: columnConfig,
           },
           params: {
             search: searchQuery,
@@ -171,7 +176,7 @@ function OffersPage() {
         setLoading(false);
       }
     },
-    [backendServer, token]
+    [backendServer, token, readConfig]
   );
 
   const handleSaveOffer = async (offerData) => {
@@ -323,8 +328,8 @@ function OffersPage() {
     }
   };
 
-  const handleSearchAndFilter = (searchQuery, filters) => {
-    fetchData(searchQuery, filters);
+  const handleSearchAndFilter = (searchQuery, filters, columnConfig) => {
+    fetchData(searchQuery, filters, columnConfig);
   };
 
   const handleSortRequest = (columnId) => {
@@ -384,7 +389,7 @@ function OffersPage() {
       }
       return rows;
     });
-  }, [rows, order, orderBy]);
+  }, [rows, order, orderBy, columns]);
 
   const paginatedRows = useMemo(() => {
     return Array.isArray(sortedRows)
@@ -396,15 +401,8 @@ function OffersPage() {
     if (!isAuthenticated) navigate("/");
     userRole === "admin" ? fetchAgents() : setUsers([email]);
     fetchData(searchQuery);
-  }, [
-    fetchData,
-    isAuthenticated,
-    navigate,
-    searchQuery,
-    fetchAgents,
-    email,
-    userRole,
-  ]);
+    console.log("chuj");
+  }, [isAuthenticated, navigate, searchQuery, fetchAgents, email, userRole]);
 
   return (
     <div>
@@ -421,7 +419,6 @@ function OffersPage() {
             onSearchChange={handleSearchAndFilter}
             onFilterApply={handleSearchAndFilter}
             users={users}
-            fetchData={fetchData}
           />
         </div>
         <TableContainer

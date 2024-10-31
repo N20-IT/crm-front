@@ -1,6 +1,7 @@
 import { useCookies } from "react-cookie";
 import { signOut } from "@aws-amplify/auth";
 import { useNavigate } from "react-router-dom";
+import { useDeleteColumnConfig, useColumnConfig } from "../config/columnConfig";
 
 export const cookiesEnabled = () => {
   try {
@@ -36,10 +37,12 @@ export const useReadCookie = () => {
 export const useLogin = () => {
   const [, setCookie] = useCookies(["authToken"]);
   const navigate = useNavigate();
+  const setColumnConfig = useColumnConfig();
   const login = (token) => {
     cookiesEnabled()
       ? setCookie("authToken", token, { path: "/", maxAge: 60 * 60 * 12 })
       : saveTokenInSessionStorage(token);
+    setColumnConfig();
   };
   if (useAuth()) navigate("/homepage");
 
@@ -49,10 +52,12 @@ export const useLogin = () => {
 export const useLogout = () => {
   const [, , removeCookie] = useCookies(["authToken"]);
   const navigate = useNavigate();
+  const setDeleteConfig = useDeleteColumnConfig();
   const logout = () => {
     cookiesEnabled()
       ? removeCookie("authToken", { path: "/" })
       : removeTokenFromSessionStorage();
+    setDeleteConfig();
   };
   handleSignOut();
   if (!useAuth()) navigate("/");
