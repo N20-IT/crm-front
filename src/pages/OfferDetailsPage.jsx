@@ -296,7 +296,7 @@ function OfferDetailsPage() {
                   const googleMapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
                     location
                   )}`;
-                  window.open(googleMapsUrl, "_blank"); // Otwórz w nowej karcie
+                  window.open(googleMapsUrl, "_blank");
                 }}
               >
                 <Map sx={{ fontSize: "24px", color: "#535968" }} />
