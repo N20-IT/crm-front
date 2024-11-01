@@ -108,7 +108,7 @@ function OfferDetailsPage() {
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
-          height: "70%",
+          height: "80%",
           padding: "16px",
         }}
       >
@@ -122,7 +122,7 @@ function OfferDetailsPage() {
               fontFamily: "Poppins",
             }}
           >
-            Oferta nr {offer.nrOferty}
+            Oferta {offer.nrOferty !== null ? "" : "nr " + offer.nrOferty}
           </Typography>
           <Divider sx={{ marginBottom: "16px" }} />
           {loading ? (
@@ -198,9 +198,7 @@ function OfferDetailsPage() {
                 <CustomTypography sx={{ fontSize: "1rem" }}>
                   <strong>Cena:</strong> {offer.cena} zł
                 </CustomTypography>
-              </Grid2>
-
-              <Grid2 xs={12} md={6}>
+                <br></br>
                 <Typography
                   variant="h6"
                   sx={{
@@ -214,9 +212,7 @@ function OfferDetailsPage() {
                 <CustomTypography sx={{ marginTop: "6px", fontSize: "1rem" }}>
                   <strong>Agent:</strong> {offer.agent}
                 </CustomTypography>
-              </Grid2>
-
-              <Grid2 xs={12} md={6}>
+                <br></br>
                 <Typography
                   variant="h6"
                   sx={{
@@ -240,9 +236,7 @@ function OfferDetailsPage() {
                 <CustomTypography sx={{ fontSize: "1rem" }}>
                   <strong>Zł/m²:</strong> {offer.zlM2}
                 </CustomTypography>
-              </Grid2>
-
-              <Grid2 xs={12} md={6}>
+                <br></br>
                 <Typography
                   variant="h6"
                   sx={{
@@ -251,20 +245,25 @@ function OfferDetailsPage() {
                     fontSize: "1.2rem",
                   }}
                 >
-                  Data utworzenia i modyfikacji
+                  Informacje sytemowe
                 </Typography>
                 <CustomTypography sx={{ marginTop: "6px", fontSize: "1rem" }}>
-                  <strong>Data utworzenia:</strong>{" "}
+                  <strong>Utworzono:</strong>{" "}
                   {offer.dataUtworzenia
-                    ? new Date(offer.dataUtworzenia).toLocaleDateString()
+                    ? `${new Date(
+                        offer.dataUtworzenia
+                      ).toLocaleDateString()} przez ${offer.tworca}`
                     : "Brak danych"}
                 </CustomTypography>
-                <CustomTypography sx={{ fontSize: "1rem" }}>
-                  <strong>Data modyfikacji:</strong>{" "}
-                  {offer.dataModyfikacji
-                    ? new Date(offer.dataModyfikacji).toLocaleDateString()
-                    : "Brak danych"}
-                </CustomTypography>
+
+                {offer.edytor && offer.dataModyfikacji && (
+                  <CustomTypography sx={{ fontSize: "1rem" }}>
+                    <strong>Zmodyfikowano:</strong>{" "}
+                    {`${new Date(
+                      offer.dataModyfikacji
+                    ).toLocaleDateString()} przez ${offer.edytor}`}
+                  </CustomTypography>
+                )}
               </Grid2>
             </Grid2>
           )}
@@ -290,7 +289,16 @@ function OfferDetailsPage() {
               </IconButton>
             </Tooltip>
             <Tooltip title="Pokaż na mapie">
-              <IconButton>
+              <IconButton
+                onClick={() => {
+                  const { ulica, miasto } = offer.adres;
+                  const location = `${miasto}, ${ulica}`;
+                  const googleMapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+                    location
+                  )}`;
+                  window.open(googleMapsUrl, "_blank"); // Otwórz w nowej karcie
+                }}
+              >
                 <Map sx={{ fontSize: "24px", color: "#535968" }} />
               </IconButton>
             </Tooltip>
