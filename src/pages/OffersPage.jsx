@@ -460,7 +460,7 @@ function OffersPage() {
                     }}
                   />
                 </TableCell>
-                {columns.map((column) => (
+                {columns.map((column, index) => (
                   <TableCell
                     key={column.id}
                     style={{
@@ -501,7 +501,7 @@ function OffersPage() {
                   </TableRow>
                 ))
               ) : Array.isArray(paginatedRows) && paginatedRows.length > 0 ? (
-                paginatedRows.map((row) => (
+                paginatedRows.map((row, index) => (
                   <TableRow
                     key={row._id}
                     style={{
@@ -509,6 +509,7 @@ function OffersPage() {
                         maxHeight: "60px",
                       },
                       width: "100%",
+                      background: index % 2 === 1 ? "#f5f5f5" : "white",
                     }}
                   >
                     <TableCell
