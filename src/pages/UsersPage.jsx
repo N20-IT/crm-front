@@ -45,6 +45,7 @@ function UsersPage() {
     { id: "email", label: "Email" },
     { id: "name", label: "Imię" },
     { id: "family_name", label: "Nazwisko" },
+    { id: "custom:role", label: "Rola" },
     {
       id: "narzedzia",
       label: "Narzędzia",
@@ -274,6 +275,16 @@ function UsersPage() {
                         }}
                       >
                         {user.FamilyName}
+                      </TableCell>
+                      <TableCell
+                        key={user.Role}
+                        style={{
+                          textAlign: "center",
+                          fontFamily: "Poppins",
+                          minWidth: "8%",
+                        }}
+                      >
+                        {user.Role}
                       </TableCell>
                       <TableCell
                         style={{
