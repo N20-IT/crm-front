@@ -401,7 +401,6 @@ function OffersPage() {
     if (!isAuthenticated) navigate("/");
     userRole === "admin" ? fetchAgents() : setUsers([email]);
     fetchData(searchQuery);
-    console.log("chuj");
   }, [isAuthenticated, navigate, searchQuery, fetchAgents, email, userRole]);
 
   return (
