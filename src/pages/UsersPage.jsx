@@ -61,8 +61,20 @@ function UsersPage() {
           Authorization: `Bearer ${token}`,
         },
       });
+
       const usersList = JSON.parse(response.data.body);
-      setUsers(usersList);
+
+      const mappedUsersList = usersList.map((user) => ({
+        ...user,
+        Role:
+          user.Role === "admin"
+            ? "Administrator"
+            : user.Role === "user"
+            ? "Użytkownik"
+            : user.Role,
+      }));
+
+      setUsers(mappedUsersList);
     } catch (error) {
       console.log(error);
     } finally {

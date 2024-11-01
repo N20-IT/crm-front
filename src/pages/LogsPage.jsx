@@ -16,7 +16,7 @@ function LogsPage() {
   return (
     <div className=" flex items-center justify-center h-screen ml-48">
       <Sidebar />
-      <h1 className=" font-bold text-5xl">Logi</h1>
+      <h1 className=" font-bold text-5xl">Panel administratora</h1>
     </div>
   );
 }
