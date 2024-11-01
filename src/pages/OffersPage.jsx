@@ -716,7 +716,17 @@ function OffersPage() {
                         </IconButton>
                       </Tooltip>
                       <Tooltip title="Pokaż na mapie">
-                        <IconButton sx={{ padding: "4px" }}>
+                        <IconButton
+                          onClick={() => {
+                            const { ulica, miasto } = row.adres;
+                            const location = `${miasto}, ${ulica}`;
+                            const googleMapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+                              location
+                            )}`;
+                            window.open(googleMapsUrl, "_blank");
+                          }}
+                          sx={{ padding: "4px" }}
+                        >
                           <Map />
                         </IconButton>
                       </Tooltip>
