@@ -76,17 +76,17 @@ function OffersPage() {
       },
       {
         id: "dzielnica",
-        label: "Dzielnica",
+        label: "Dzielnica/Gmina",
         sortable: true,
       },
       {
         id: "miasto",
-        label: "Miasto",
+        label: "Miasto/Wieś",
         sortable: true,
       },
       {
         id: "iloscPokoi",
-        label: "Ilość pokoi / dom ",
+        label: "Ilość pokoi",
         sortable: true,
       },
       {
