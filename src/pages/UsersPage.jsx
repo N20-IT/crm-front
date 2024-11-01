@@ -61,17 +61,17 @@ function UsersPage() {
           Authorization: `Bearer ${token}`,
         },
       });
-
+      console.log("response: " + JSON.stringify(response));
       const usersList = JSON.parse(response.data.body);
 
       const mappedUsersList = usersList.map((user) => ({
         ...user,
-        Role:
-          user.Role === "admin"
+        "custom:role":
+          user["custom:role"] === "admin"
             ? "Administrator"
-            : user.Role === "user"
+            : user["custom:role"] === "user"
             ? "Użytkownik"
-            : user.Role,
+            : user["custom:role"],
       }));
 
       setUsers(mappedUsersList);
@@ -289,14 +289,14 @@ function UsersPage() {
                         {user.FamilyName}
                       </TableCell>
                       <TableCell
-                        key={user.Role}
+                        key={user["custom:role"]}
                         style={{
                           textAlign: "center",
                           fontFamily: "Poppins",
                           minWidth: "8%",
                         }}
                       >
-                        {user.Role}
+                        {user["custom:role"]}
                       </TableCell>
                       <TableCell
                         style={{
