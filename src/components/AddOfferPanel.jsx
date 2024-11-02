@@ -260,9 +260,9 @@ function AddOfferPanel({ onSave, onCancel, users }) {
             </div>
             <div className="w-full">
               <CustomTextField
-                label="Poddzielnica"
-                name="poddzielnica"
-                value={formData.adres.poddzielnica}
+                label="Miasto"
+                name="miasto"
+                value={formData.adres.miasto}
                 onChange={handleChange}
                 variant="outlined"
                 fullWidth
