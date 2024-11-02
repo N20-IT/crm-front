@@ -48,29 +48,7 @@ const EditOfferPanel = ({ offerData, onSave, onCancel, users }) => {
       <div className="bg-white p-6 rounded-lg shadow-lg w-1/3">
         <h2 className=" text-4xl font-bold mb-4 font-poppins">Edytuj ofertę</h2>
         <form>
-          <div className="w-full">
-            <CustomTextField
-              label="Ulica"
-              name="ulica"
-              value={formData.adres.ulica}
-              onChange={handleChange}
-              variant="outlined"
-              fullWidth
-              margin="normal"
-            />
-          </div>
           <div className="flex justify-end space-x-4">
-            <div className="w-full">
-              <CustomTextField
-                label="Dzielnica"
-                name="dzielnica"
-                value={formData.adres.dzielnica}
-                onChange={handleChange}
-                variant="outlined"
-                fullWidth
-                margin="normal"
-              />
-            </div>
             <div className="w-full">
               <CustomTextField
                 label="Miasto"
@@ -82,14 +60,24 @@ const EditOfferPanel = ({ offerData, onSave, onCancel, users }) => {
                 margin="normal"
               />
             </div>
+            <div className="w-full">
+              <CustomTextField
+                label="Ulica"
+                name="ulica"
+                value={formData.adres.ulica}
+                onChange={handleChange}
+                variant="outlined"
+                fullWidth
+                margin="normal"
+              />
+            </div>
           </div>
-
           <div className="flex justify-end space-x-4">
             <div className="w-full">
               <CustomTextField
-                label="Numer Domu"
-                name="numerDomu"
-                value={formData.adres.numerDomu}
+                label="Dzielnica/Gmina"
+                name="dzielnica"
+                value={formData.adres.dzielnica}
                 onChange={handleChange}
                 variant="outlined"
                 fullWidth
@@ -98,9 +86,9 @@ const EditOfferPanel = ({ offerData, onSave, onCancel, users }) => {
             </div>
             <div className="w-full">
               <CustomTextField
-                label="Numer Mieszkania"
-                name="numerMieszkania"
-                value={formData.adres.numerMieszkania}
+                label="Poddzielnica"
+                name="poddzielnica"
+                value={formData.adres.poddzielnica}
                 onChange={handleChange}
                 variant="outlined"
                 fullWidth
@@ -134,9 +122,9 @@ const EditOfferPanel = ({ offerData, onSave, onCancel, users }) => {
           </div>
           <div>
             <CustomTextField
-              label="Ilość pokoi/dom"
-              name="iloscPokoi"
-              value={formData.iloscPokoi}
+              label="Typ inwestycji"
+              name="typInwestycji"
+              value={formData.typInwestycji}
               onChange={handleChange}
               variant="outlined"
               fullWidth
@@ -145,14 +133,38 @@ const EditOfferPanel = ({ offerData, onSave, onCancel, users }) => {
           </div>
           <div>
             <CustomTextField
-              label="Telefon do właściciela"
-              name="telefonWlasciciela"
-              value={formData.telefonWlasciciela}
+              label="Ilość pokoi"
+              name="iloscPokoi"
+              value={formData.iloscPokoi}
               onChange={handleChange}
               variant="outlined"
               fullWidth
               margin="normal"
             />
+          </div>
+          <div className="flex justify-end space-x-4">
+            <div className="w-full">
+              <CustomTextField
+                label="Dane właściciela"
+                name="daneWlasciciela"
+                value={formData.daneWlasciciela}
+                onChange={handleChange}
+                variant="outlined"
+                fullWidth
+                margin="normal"
+              />
+            </div>
+            <div className="w-full">
+              <CustomTextField
+                label="Telefon do właściciela"
+                name="telefonWlasciciela"
+                value={formData.telefonWlasciciela}
+                onChange={handleChange}
+                variant="outlined"
+                fullWidth
+                margin="normal"
+              />
+            </div>
           </div>
           <div>
             <CustomTextField
@@ -165,10 +177,46 @@ const EditOfferPanel = ({ offerData, onSave, onCancel, users }) => {
               margin="normal"
             />
           </div>
-          <div className="w-full mt-4 mb-2">
+          <div className="flex justify-end space-x-4">
+            <div className="w-full">
+              <CustomTextField
+                label="Data zakończenia"
+                name="dataZakonczenia"
+                value={formData.dataZakonczenia}
+                onChange={handleChange}
+                variant="outlined"
+                fullWidth
+                margin="normal"
+              />
+            </div>
+            <div className="w-full">
+              <CustomTextField
+                label="Data kontaktu"
+                name="dataKontaktu"
+                value={formData.dataKontaktu}
+                onChange={handleChange}
+                variant="outlined"
+                fullWidth
+                margin="normal"
+              />
+            </div>
+            <div className="w-full">
+              <CustomTextField
+                label="Data nast. kontaktu"
+                name="dataNastepnegoKontaktu"
+                value={formData.dataNastepnegoKontaktu}
+                onChange={handleChange}
+                variant="outlined"
+                fullWidth
+                margin="normal"
+              />
+            </div>
+          </div>
+          <div className="w-full mb-2">
             <FormControl
               fullWidth
               sx={{
+                marginTop: "12px",
                 "& .MuiOutlinedInput-root": {
                   borderRadius: "6px",
                   fontFamily: "Poppins",

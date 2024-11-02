@@ -14,15 +14,22 @@ function AddOfferPanel({ onSave, onCancel, users }) {
     adres: {
       ulica: "",
       dzielnica: "",
+      poddzielnica: "",
       miasto: "",
     },
+    typInwestycji: "",
     iloscPokoi: "",
     metraz: "",
     cena: "",
+    daneWlasciciela: "",
     telefonWlasciciela: "",
+    linkOferta: "",
     komentarz: "",
     agent: "",
     statusOferty: "",
+    dataZakonczenia: "",
+    dataKontaktu: "",
+    dataNastepnegoKontaktu: "",
   });
 
   const handleChange = (e) => {
@@ -63,21 +70,34 @@ function AddOfferPanel({ onSave, onCancel, users }) {
           Dodaj nową ofertę
         </h2>
         <form>
-          <div className="w-full">
-            <CustomTextField
-              label="Ulica"
-              name="ulica"
-              value={formData.adres.ulica}
-              onChange={handleChange}
-              variant="outlined"
-              fullWidth
-              margin="normal"
-            />
+          <div className="flex justify-end space-x-4">
+            <div className="w-full">
+              <CustomTextField
+                label="Miasto"
+                name="miasto"
+                value={formData.adres.miasto}
+                onChange={handleChange}
+                variant="outlined"
+                fullWidth
+                margin="normal"
+              />
+            </div>
+            <div className="w-full">
+              <CustomTextField
+                label="Ulica"
+                name="ulica"
+                value={formData.adres.ulica}
+                onChange={handleChange}
+                variant="outlined"
+                fullWidth
+                margin="normal"
+              />
+            </div>
           </div>
           <div className="flex justify-end space-x-4">
             <div className="w-full">
               <CustomTextField
-                label="Dzielnica"
+                label="Dzielnica/Gmina"
                 name="dzielnica"
                 value={formData.adres.dzielnica}
                 onChange={handleChange}
@@ -88,9 +108,9 @@ function AddOfferPanel({ onSave, onCancel, users }) {
             </div>
             <div className="w-full">
               <CustomTextField
-                label="Miasto"
-                name="miasto"
-                value={formData.adres.miasto}
+                label="Poddzielnica"
+                name="poddzielnica"
+                value={formData.adres.poddzielnica}
                 onChange={handleChange}
                 variant="outlined"
                 fullWidth
@@ -124,9 +144,9 @@ function AddOfferPanel({ onSave, onCancel, users }) {
           </div>
           <div>
             <CustomTextField
-              label="Ilość pokoi/dom"
-              name="iloscPokoi"
-              value={formData.iloscPokoi}
+              label="Typ inwestycji"
+              name="typInwestycji"
+              value={formData.typInwestycji}
               onChange={handleChange}
               variant="outlined"
               fullWidth
@@ -135,14 +155,38 @@ function AddOfferPanel({ onSave, onCancel, users }) {
           </div>
           <div>
             <CustomTextField
-              label="Telefon do właściciela"
-              name="telefonWlasciciela"
-              value={formData.telefonWlasciciela}
+              label="Ilość pokoi"
+              name="iloscPokoi"
+              value={formData.iloscPokoi}
               onChange={handleChange}
               variant="outlined"
               fullWidth
               margin="normal"
             />
+          </div>
+          <div className="flex justify-end space-x-4">
+            <div className="w-full">
+              <CustomTextField
+                label="Dane właściciela"
+                name="daneWlasciciela"
+                value={formData.daneWlasciciela}
+                onChange={handleChange}
+                variant="outlined"
+                fullWidth
+                margin="normal"
+              />
+            </div>
+            <div className="w-full">
+              <CustomTextField
+                label="Telefon do właściciela"
+                name="telefonWlasciciela"
+                value={formData.telefonWlasciciela}
+                onChange={handleChange}
+                variant="outlined"
+                fullWidth
+                margin="normal"
+              />
+            </div>
           </div>
           <div>
             <CustomTextField
@@ -154,6 +198,41 @@ function AddOfferPanel({ onSave, onCancel, users }) {
               fullWidth
               margin="normal"
             />
+          </div>
+          <div className="flex justify-end space-x-4">
+            <div className="w-full">
+              <CustomTextField
+                label="Data zakończenia"
+                name="dataZakonczenia"
+                value={formData.dataZakonczenia}
+                onChange={handleChange}
+                variant="outlined"
+                fullWidth
+                margin="normal"
+              />
+            </div>
+            <div className="w-full">
+              <CustomTextField
+                label="Data kontaktu"
+                name="dataKontaktu"
+                value={formData.dataKontaktu}
+                onChange={handleChange}
+                variant="outlined"
+                fullWidth
+                margin="normal"
+              />
+            </div>
+            <div className="w-full">
+              <CustomTextField
+                label="Data nast. kontaktu"
+                name="dataNastepnegoKontaktu"
+                value={formData.dataNastepnegoKontaktu}
+                onChange={handleChange}
+                variant="outlined"
+                fullWidth
+                margin="normal"
+              />
+            </div>
           </div>
           <div className="w-full mb-2">
             <FormControl
