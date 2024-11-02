@@ -13,6 +13,7 @@ import {
   Tooltip,
   Skeleton,
   TableSortLabel,
+  Link,
 } from "@mui/material";
 import {
   Delete,
@@ -22,6 +23,7 @@ import {
   Map,
   AssignmentInd,
   Info,
+  Language,
 } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import { useAuth, useReadCookie } from "../utils/auth";
@@ -65,7 +67,7 @@ function OffersPage() {
   const userRole = GetUserRoleFromToken();
   const [order, setOrder] = useState("asc");
   const [orderBy, setOrderBy] = useState("");
-  const readConfig = useReadConfig();
+  const [readConfig, setReadConfig] = useState(useReadConfig());
 
   const columns = useMemo(() => {
     return [
@@ -84,6 +86,7 @@ function OffersPage() {
         label: "Miasto/Wieś",
         sortable: true,
       },
+      { id: "typInwestycji", label: "Typ inwestycji", sortable: false },
       {
         id: "iloscPokoi",
         label: "Ilość pokoi",
@@ -124,12 +127,21 @@ function OffersPage() {
         label: "Agent",
         sortable: false,
       },
+      { id: "tworca", label: "Twórca", sortable: false },
       {
         id: "status",
         label: "Status",
         sortable: false,
       },
+      { id: "dataKontaktu", label: "Data kontaktu", sortable: true },
+      {
+        id: "dataNastepnegoKontaktu",
+        label: "Data następnego kontaktu",
+        sortable: false,
+      },
+
       { id: "dataUtworzenia", label: "Data Utworzenia", sortable: true },
+      { id: "linkOferta", label: "Link", sortable: false },
       {
         id: "narzedzia",
         label: "Narzędzia",
@@ -329,6 +341,7 @@ function OffersPage() {
   };
 
   const handleSearchAndFilter = (searchQuery, filters, columnConfig) => {
+    setReadConfig(columnConfig);
     fetchData(searchQuery, filters, columnConfig);
   };
 
@@ -459,41 +472,79 @@ function OffersPage() {
                     }}
                   />
                 </TableCell>
-                {columns.map((column, index) => (
-                  <TableCell
-                    key={column.id}
-                    style={{
-                      color: "white",
-                      textAlign: "center",
-                      fontFamily: "Poppins",
-                    }}
-                    sortDirection={orderBy === column.id ? order : false}
-                  >
-                    {column.sortable ? (
-                      <TableSortLabel
-                        active={orderBy === column.id}
-                        direction={orderBy === column.id ? order : "asc"}
-                        onClick={() => handleSortRequest(column.id)}
-                        style={{ color: "white", fontSize: "13px" }}
-                      >
-                        {column.label}
-                      </TableSortLabel>
-                    ) : (
-                      column.label
-                    )}
-                  </TableCell>
-                ))}
+                {columns
+                  .filter((column) =>
+                    readConfig === 0
+                      ? [
+                          "ulica",
+                          "dzielnica",
+                          "typInwestycji",
+                          "iloscPokoi",
+                          "metraz",
+                          "cena",
+                          "telefonDoWlasciciela",
+                          "agent",
+                          "status",
+                          "narzedzia",
+                        ].includes(column.id)
+                      : true
+                  )
+                  .map((column, index) => (
+                    <TableCell
+                      key={column.id}
+                      style={{
+                        color: "white",
+                        textAlign: "center",
+                        fontFamily: "Poppins",
+                      }}
+                      sortDirection={orderBy === column.id ? order : false}
+                    >
+                      {column.sortable ? (
+                        <TableSortLabel
+                          active={orderBy === column.id}
+                          direction={orderBy === column.id ? order : "asc"}
+                          onClick={() => handleSortRequest(column.id)}
+                          style={{ color: "white", fontSize: "13px" }}
+                        >
+                          {column.label}
+                        </TableSortLabel>
+                      ) : (
+                        column.label
+                      )}
+                    </TableCell>
+                  ))}
               </TableRow>
             </TableHead>
             <TableBody>
               {loading ? (
                 [...Array(rowsPerPage)].map((_, index) => (
                   <TableRow key={index}>
-                    {columns.map((column) => (
-                      <TableCell key={column.id}>
-                        <Skeleton variant="rounded" width="100%" height={16} />
-                      </TableCell>
-                    ))}
+                    {columns
+                      .filter((column) =>
+                        readConfig === 0
+                          ? [
+                              "ulica",
+                              "dzielnica",
+                              "typInwestycji",
+                              "iloscPokoi",
+                              "metraz",
+                              "cena",
+                              "telefonDoWlasciciela",
+                              "agent",
+                              "status",
+                              "narzedzia",
+                            ].includes(column.id)
+                          : true
+                      )
+                      .map((column) => (
+                        <TableCell key={column.id}>
+                          <Skeleton
+                            variant="rounded"
+                            width="100%"
+                            height={16}
+                          />
+                        </TableCell>
+                      ))}
                     <TableCell key={"narzedzia"}>
                       <Skeleton variant="rounded" width="100%" height={16} />
                     </TableCell>
@@ -551,6 +602,22 @@ function OffersPage() {
                     >
                       {row.adres?.dzielnica || ""}
                     </TableCell>
+                    {readConfig === 1 ? (
+                      <TableCell
+                        style={{
+                          textAlign: "center",
+                          padding: "0px",
+                          maxHeight: "60px",
+                          fontFamily: "Poppins",
+                          fontSize: "13px",
+                        }}
+                      >
+                        {row.adres?.miasto || ""}
+                      </TableCell>
+                    ) : (
+                      true
+                    )}
+
                     <TableCell
                       style={{
                         textAlign: "center",
@@ -560,7 +627,7 @@ function OffersPage() {
                         fontSize: "13px",
                       }}
                     >
-                      {row.adres?.miasto || ""}
+                      {row.typInwestycji}
                     </TableCell>
                     <TableCell
                       style={{
@@ -595,17 +662,21 @@ function OffersPage() {
                     >
                       {row.cena}
                     </TableCell>
-                    <TableCell
-                      style={{
-                        textAlign: "center",
-                        padding: "0px",
-                        maxHeight: "60px",
-                        fontFamily: "Poppins",
-                        fontSize: "13px",
-                      }}
-                    >
-                      {row.zlM2}
-                    </TableCell>
+                    {readConfig === 1 ? (
+                      <TableCell
+                        style={{
+                          textAlign: "center",
+                          padding: "0px",
+                          maxHeight: "60px",
+                          fontFamily: "Poppins",
+                          fontSize: "13px",
+                        }}
+                      >
+                        {row.zlM2}
+                      </TableCell>
+                    ) : (
+                      true
+                    )}
                     <TableCell
                       style={{
                         textAlign: "center",
@@ -617,28 +688,36 @@ function OffersPage() {
                     >
                       {row.telefonWlasciciela}
                     </TableCell>
-                    <TableCell
-                      style={{
-                        textAlign: "center",
-                        padding: "0px",
-                        maxHeight: "60px",
-                        fontFamily: "Poppins",
-                        fontSize: "13px",
-                      }}
-                    >
-                      {row.daneWlasciciela}
-                    </TableCell>
-                    <TableCell
-                      style={{
-                        textAlign: "center",
-                        padding: "0px",
-                        maxHeight: "60px",
-                        fontFamily: "Poppins",
-                        fontSize: "13px",
-                      }}
-                    >
-                      {row.komentarz}
-                    </TableCell>
+                    {readConfig === 1 ? (
+                      <TableCell
+                        style={{
+                          textAlign: "center",
+                          padding: "0px",
+                          maxHeight: "60px",
+                          fontFamily: "Poppins",
+                          fontSize: "13px",
+                        }}
+                      >
+                        {row.daneWlasciciela}
+                      </TableCell>
+                    ) : (
+                      true
+                    )}
+                    {readConfig === 1 ? (
+                      <TableCell
+                        style={{
+                          textAlign: "center",
+                          padding: "0px",
+                          maxHeight: "60px",
+                          fontFamily: "Poppins",
+                          fontSize: "13px",
+                        }}
+                      >
+                        {row.komentarz}
+                      </TableCell>
+                    ) : (
+                      true
+                    )}
                     <TableCell
                       style={{
                         textAlign: "center",
@@ -650,6 +729,21 @@ function OffersPage() {
                     >
                       <strong>{row.agent}</strong>
                     </TableCell>
+                    {readConfig === 1 ? (
+                      <TableCell
+                        style={{
+                          textAlign: "center",
+                          padding: "0px",
+                          maxHeight: "60px",
+                          fontFamily: "Poppins",
+                          fontSize: "13px",
+                        }}
+                      >
+                        {row.tworca}
+                      </TableCell>
+                    ) : (
+                      true
+                    )}
                     <TableCell
                       style={{
                         textAlign: "center",
@@ -669,17 +763,75 @@ function OffersPage() {
                     >
                       <strong>{row.statusOferty}</strong>
                     </TableCell>
-                    <TableCell
-                      style={{
-                        textAlign: "center",
-                        padding: "0px",
-                        maxHeight: "60px",
-                        fontFamily: "Poppins",
-                        fontSize: "13px",
-                      }}
-                    >
-                      {row.dataUtworzenia}
-                    </TableCell>
+                    {readConfig === 1 ? (
+                      <TableCell
+                        style={{
+                          textAlign: "center",
+                          padding: "0px",
+                          maxHeight: "60px",
+                          fontFamily: "Poppins",
+                          fontSize: "13px",
+                        }}
+                      >
+                        {row.dataKontaktu}
+                      </TableCell>
+                    ) : (
+                      true
+                    )}
+                    {readConfig === 1 ? (
+                      <TableCell
+                        style={{
+                          textAlign: "center",
+                          padding: "0px",
+                          maxHeight: "60px",
+                          fontFamily: "Poppins",
+                          fontSize: "13px",
+                        }}
+                      >
+                        {row.dataNastepnegoKontaktu}
+                      </TableCell>
+                    ) : (
+                      true
+                    )}
+                    {readConfig === 1 ? (
+                      <TableCell
+                        style={{
+                          textAlign: "center",
+                          padding: "0px",
+                          maxHeight: "60px",
+                          fontFamily: "Poppins",
+                          fontSize: "13px",
+                        }}
+                      >
+                        {row.dataUtworzenia}
+                      </TableCell>
+                    ) : (
+                      true
+                    )}
+                    {readConfig === 1 ? (
+                      <TableCell
+                        style={{
+                          textAlign: "center",
+                          padding: "0px",
+                          maxHeight: "60px",
+                          fontFamily: "Poppins",
+                          fontSize: "13px",
+                        }}
+                      >
+                        {row.linkOferta ? (
+                          <Link href={row.linkOferta} target="_blank">
+                            <Tooltip title={row.linkOferta}>
+                              <Language sx={{ color: "#6D727F" }} />
+                            </Tooltip>
+                            {/* {row.linkOferta} */}
+                          </Link>
+                        ) : (
+                          ""
+                        )}
+                      </TableCell>
+                    ) : (
+                      true
+                    )}
                     <TableCell
                       style={{
                         textAlign: "center",
