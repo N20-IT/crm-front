@@ -855,7 +855,10 @@ function OffersPage() {
                         <Tooltip title="Usuń">
                           <IconButton
                             onClick={() => handleDeleteOfferClick([row._id])}
-                            sx={{ padding: "4px" }}
+                            sx={{
+                              padding: "4px",
+                              color: "#A11D1D",
+                            }}
                           >
                             <Delete />
                           </IconButton>
@@ -865,21 +868,39 @@ function OffersPage() {
                       <Tooltip title="Edytuj">
                         <IconButton
                           onClick={() => handleEditClick(row)}
-                          sx={{ padding: "4px" }}
+                          sx={{
+                            padding: "4px",
+                            color: "#6A99C7",
+                          }}
                         >
                           <Edit />
                         </IconButton>
                       </Tooltip>
+
                       <Tooltip title="Dodaj do ciekawych ofert">
-                        <IconButton sx={{ padding: "4px" }}>
+                        <IconButton
+                          sx={{
+                            padding: "4px",
+                            color: "#FFD700",
+                          }}
+                        >
+                          {" "}
                           <Star />
                         </IconButton>
                       </Tooltip>
+
                       <Tooltip title="Dodaj do kalendarza">
-                        <IconButton sx={{ padding: "4px" }}>
+                        <IconButton
+                          sx={{
+                            padding: "4px",
+                            color: "#6A9F6C",
+                          }}
+                        >
+                          {" "}
                           <CalendarMonth />
                         </IconButton>
                       </Tooltip>
+
                       {row.adres?.miasto && row.adres?.ulica && (
                         <Tooltip title="Pokaż na mapie">
                           <IconButton
@@ -891,23 +912,34 @@ function OffersPage() {
                               )}`;
                               window.open(googleMapsUrl, "_blank");
                             }}
-                            sx={{ padding: "4px" }}
+                            sx={{
+                              padding: "4px",
+                              color: "#FC8721",
+                            }}
                           >
                             <Map />
                           </IconButton>
                         </Tooltip>
                       )}
+
                       <Tooltip title="Przypisz ofertę">
                         <IconButton
                           onClick={() => handleUpdateOfferAgentClick(row._id)}
-                          sx={{ padding: "4px" }}
+                          sx={{
+                            padding: "4px",
+                            color: "#765592",
+                          }}
                         >
                           <AssignmentInd />
                         </IconButton>
                       </Tooltip>
+
                       <Tooltip title="Szczegóły oferty">
                         <IconButton
-                          sx={{ padding: "4px" }}
+                          sx={{
+                            padding: "4px",
+                            color: "#777",
+                          }}
                           onClick={() => handleGoToOfferDetailsPage(row._id)}
                         >
                           <Info />
