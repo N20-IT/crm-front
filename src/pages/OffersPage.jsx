@@ -840,14 +840,17 @@ function OffersPage() {
                         fontFamily: "Poppins",
                       }}
                     >
-                      <Tooltip title="Usuń">
-                        <IconButton
-                          onClick={() => handleDeleteOfferClick([row._id])}
-                          sx={{ padding: "4px" }}
-                        >
-                          <Delete />
-                        </IconButton>
-                      </Tooltip>
+                      {userRole === "admin" && (
+                        <Tooltip title="Usuń">
+                          <IconButton
+                            onClick={() => handleDeleteOfferClick([row._id])}
+                            sx={{ padding: "4px" }}
+                          >
+                            <Delete />
+                          </IconButton>
+                        </Tooltip>
+                      )}
+
                       <Tooltip title="Edytuj">
                         <IconButton
                           onClick={() => handleEditClick(row)}
@@ -866,21 +869,24 @@ function OffersPage() {
                           <CalendarMonth />
                         </IconButton>
                       </Tooltip>
-                      <Tooltip title="Pokaż na mapie">
-                        <IconButton
-                          onClick={() => {
-                            const { ulica, miasto } = row.adres;
-                            const location = `${miasto}, ${ulica}`;
-                            const googleMapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
-                              location
-                            )}`;
-                            window.open(googleMapsUrl, "_blank");
-                          }}
-                          sx={{ padding: "4px" }}
-                        >
-                          <Map />
-                        </IconButton>
-                      </Tooltip>
+                      {row.adres?.miasto && row.adres?.ulica && (
+                        <Tooltip title="Pokaż na mapie">
+                          <IconButton
+                            onClick={() => {
+                              const { ulica, miasto } = row.adres || {};
+                              if (ulica && miasto) {
+                                const location = `${miasto}, ${ulica}`;
+                                // Link do specjalnej mapy z opisem lokalizacji (bez przekazywania parametrów)
+                                const customMapUrl = `https://www.google.com/maps/d/edit?mid=1ehBKtslO7ziAGs6bg10v8eO4Y3Yj-qk&usp=sharing`;
+                                window.open(customMapUrl, "_blank");
+                              }
+                            }}
+                            sx={{ padding: "4px" }}
+                          >
+                            <Map />
+                          </IconButton>
+                        </Tooltip>
+                      )}
                       <Tooltip title="Przypisz ofertę">
                         <IconButton
                           onClick={() => handleUpdateOfferAgentClick(row._id)}
