@@ -275,6 +275,7 @@ function AddOfferPanel({ onSave, onCancel, users }) {
               <CustomTextField
                 label="Metraż"
                 name="metraz"
+                type="number"
                 value={formData.metraz}
                 onChange={handleChange}
                 variant="outlined"
@@ -286,6 +287,7 @@ function AddOfferPanel({ onSave, onCancel, users }) {
               <CustomTextField
                 label="Cena"
                 name="cena"
+                type="number"
                 value={formData.cena}
                 onChange={handleChange}
                 variant="outlined"
@@ -293,29 +295,69 @@ function AddOfferPanel({ onSave, onCancel, users }) {
                 margin="normal"
               />
             </div>
+            <div className="w-full">
+              <CustomTextField
+                label="Ilość pokoi"
+                name="iloscPokoi"
+                type="number"
+                value={formData.iloscPokoi}
+                onChange={handleChange}
+                variant="outlined"
+                fullWidth
+                margin="normal"
+              />
+            </div>
           </div>
-          <div>
-            <CustomTextField
-              label="Typ inwestycji"
-              name="typInwestycji"
+          <FormControl
+            fullWidth
+            sx={{
+              marginTop: "12px",
+              "& .MuiOutlinedInput-root": {
+                borderRadius: "6px",
+                fontFamily: "Poppins",
+                fontSize: "18px",
+              },
+              "& .MuiFormLabel-root": {
+                fontFamily: "Poppins",
+                fontSize: "18px",
+                color: "#535968",
+              },
+              "& .MuiInputLabel-root.Mui-focused": {
+                color: "#535968",
+              },
+              "& .MuiOutlinedInput-notchedOutline": {
+                borderColor: "#535968",
+              },
+              "&:hover .MuiOutlinedInput-notchedOutline": {
+                borderColor: "#535968",
+              },
+              "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                borderColor: "#535968",
+              },
+              "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                borderColor: "#535968",
+              },
+            }}
+          >
+            <InputLabel>Typ inwestycji</InputLabel>
+            <Select
               value={formData.typInwestycji}
-              onChange={handleChange}
-              variant="outlined"
-              fullWidth
-              margin="normal"
-            />
-          </div>
-          <div>
-            <CustomTextField
-              label="Ilość pokoi"
-              name="iloscPokoi"
-              value={formData.iloscPokoi}
-              onChange={handleChange}
-              variant="outlined"
-              fullWidth
-              margin="normal"
-            />
-          </div>
+              onChange={(e) =>
+                handleChange({
+                  target: {
+                    name: "typInwestycji",
+                    value: e.target.value,
+                  },
+                })
+              }
+              label="Typ inwestycji"
+            >
+              <MenuItem value="Dom">Dom</MenuItem>
+              <MenuItem value="Mieszkanie">Mieszkanie</MenuItem>
+              <MenuItem value="Lokal">Lokal</MenuItem>
+              <MenuItem value="Działka">Działka</MenuItem>
+            </Select>
+          </FormControl>
           <div className="flex justify-end space-x-4">
             <div className="w-full">
               <CustomTextField
@@ -354,19 +396,9 @@ function AddOfferPanel({ onSave, onCancel, users }) {
           <div className="flex justify-end space-x-4">
             <div className="w-full">
               <CustomTextField
-                label="Data zakończenia"
-                name="dataZakonczenia"
-                value={formData.dataZakonczenia}
-                onChange={handleChange}
-                variant="outlined"
-                fullWidth
-                margin="normal"
-              />
-            </div>
-            <div className="w-full">
-              <CustomTextField
                 label="Data kontaktu"
                 name="dataKontaktu"
+                type="datetime-local"
                 value={formData.dataKontaktu}
                 onChange={handleChange}
                 variant="outlined"
@@ -378,6 +410,7 @@ function AddOfferPanel({ onSave, onCancel, users }) {
               <CustomTextField
                 label="Data nast. kontaktu"
                 name="dataNastepnegoKontaktu"
+                type="datetime-local"
                 value={formData.dataNastepnegoKontaktu}
                 onChange={handleChange}
                 variant="outlined"
@@ -386,6 +419,7 @@ function AddOfferPanel({ onSave, onCancel, users }) {
               />
             </div>
           </div>
+
           <div className="w-full mb-2">
             <FormControl
               fullWidth
