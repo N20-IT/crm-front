@@ -285,10 +285,10 @@ function AddOfferPanel({ onSave, onCancel, users }) {
             </div>
             <div className="w-full">
               <CustomTextField
-                label="Cena"
-                name="cena"
+                label="Pow. działki"
+                name="powDzialki"
                 type="number"
-                value={formData.cena}
+                value={formData.powDzialki}
                 onChange={handleChange}
                 variant="outlined"
                 fullWidth
@@ -301,6 +301,18 @@ function AddOfferPanel({ onSave, onCancel, users }) {
                 name="iloscPokoi"
                 type="number"
                 value={formData.iloscPokoi}
+                onChange={handleChange}
+                variant="outlined"
+                fullWidth
+                margin="normal"
+              />
+            </div>
+            <div className="w-full">
+              <CustomTextField
+                label="Cena"
+                name="cena"
+                type="number"
+                value={formData.cena}
                 onChange={handleChange}
                 variant="outlined"
                 fullWidth

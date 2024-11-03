@@ -137,7 +137,7 @@ function OffersPage() {
       {
         id: "dataNastepnegoKontaktu",
         label: "Data następnego kontaktu",
-        sortable: false,
+        sortable: true,
       },
 
       { id: "dataUtworzenia", label: "Data Utworzenia", sortable: true },
@@ -784,7 +784,24 @@ function OffersPage() {
                           fontSize: "13px",
                         }}
                       >
-                        {row.dataKontaktu}
+                        {new Date(row.dataKontaktu).toLocaleDateString(
+                          "pl-PL",
+                          {
+                            year: "numeric",
+                            month: "2-digit",
+                            day: "2-digit",
+                          }
+                        )}{" "}
+                        <strong>
+                          <br />
+                          {new Date(row.dataKontaktu).toLocaleTimeString(
+                            "pl-PL",
+                            {
+                              hour: "2-digit",
+                              minute: "2-digit",
+                            }
+                          )}
+                        </strong>
                       </TableCell>
                     ) : (
                       true
@@ -799,7 +816,22 @@ function OffersPage() {
                           fontSize: "13px",
                         }}
                       >
-                        {row.dataNastepnegoKontaktu}
+                        {new Date(
+                          row.dataNastepnegoKontaktu
+                        ).toLocaleDateString("pl-PL", {
+                          year: "numeric",
+                          month: "2-digit",
+                          day: "2-digit",
+                        })}{" "}
+                        <strong>
+                          <br />
+                          {new Date(
+                            row.dataNastepnegoKontaktu
+                          ).toLocaleTimeString("pl-PL", {
+                            hour: "2-digit",
+                            minute: "2-digit",
+                          })}
+                        </strong>
                       </TableCell>
                     ) : (
                       true
@@ -814,7 +846,24 @@ function OffersPage() {
                           fontSize: "13px",
                         }}
                       >
-                        {row.dataUtworzenia}
+                        {new Date(row.dataUtworzenia).toLocaleDateString(
+                          "pl-PL",
+                          {
+                            year: "numeric",
+                            month: "2-digit",
+                            day: "2-digit",
+                          }
+                        )}{" "}
+                        <strong>
+                          <br />
+                          {new Date(row.dataUtworzenia).toLocaleTimeString(
+                            "pl-PL",
+                            {
+                              hour: "2-digit",
+                              minute: "2-digit",
+                            }
+                          )}
+                        </strong>
                       </TableCell>
                     ) : (
                       true
