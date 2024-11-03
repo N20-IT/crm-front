@@ -98,6 +98,11 @@ function OffersPage() {
         sortable: true,
       },
       {
+        id: "powDzialki",
+        label: "Powierzchnia działki",
+        sortable: true,
+      },
+      {
         id: "cena",
         label: "Cena",
         sortable: true,
@@ -651,6 +656,21 @@ function OffersPage() {
                     >
                       {row.metraz}
                     </TableCell>
+                    {readConfig === 1 ? (
+                      <TableCell
+                        style={{
+                          textAlign: "center",
+                          padding: "0px",
+                          maxHeight: "60px",
+                          fontFamily: "Poppins",
+                          fontSize: "13px",
+                        }}
+                      >
+                        {row.powDzialki}
+                      </TableCell>
+                    ) : (
+                      true
+                    )}
                     <TableCell
                       style={{
                         textAlign: "center",
