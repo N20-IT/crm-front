@@ -97,8 +97,8 @@ function LogsPage() {
           </Grid>
           <Grid item xs={4}>
             <Box sx={{ border: "1px solid #ccc", padding: 2 }}>
-              <h2>Dziennik Aktywności</h2>
-              {/* dziennik aktywności TODO */}
+              <h2>Zalogowani użytkownicy</h2>
+              {/* Zalogowani użytkownicy TODO */}
             </Box>
           </Grid>
         </Grid>
