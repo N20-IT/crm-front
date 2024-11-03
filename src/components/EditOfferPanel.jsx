@@ -276,30 +276,30 @@ const EditOfferPanel = ({ offerData, onSave, onCancel, users }) => {
                 fullWidth
                 margin="normal"
               />
-              <div className="w-full">
-                <CustomTextField
-                  label="Ilość pokoi"
-                  name="iloscPokoi"
-                  type="number"
-                  value={formData.iloscPokoi}
-                  onChange={handleChange}
-                  variant="outlined"
-                  fullWidth
-                  margin="normal"
-                />
-              </div>
-              <div className="w-full">
-                <CustomTextField
-                  label="Cena"
-                  name="cena"
-                  type="number"
-                  value={formData.cena}
-                  onChange={handleChange}
-                  variant="outlined"
-                  fullWidth
-                  margin="normal"
-                />
-              </div>
+            </div>
+            <div className="w-full">
+              <CustomTextField
+                label="Ilość pokoi"
+                name="iloscPokoi"
+                type="number"
+                value={formData.iloscPokoi}
+                onChange={handleChange}
+                variant="outlined"
+                fullWidth
+                margin="normal"
+              />
+            </div>
+            <div className="w-full">
+              <CustomTextField
+                label="Cena"
+                name="cena"
+                type="number"
+                value={formData.cena}
+                onChange={handleChange}
+                variant="outlined"
+                fullWidth
+                margin="normal"
+              />
             </div>
           </div>
           <FormControl
@@ -414,7 +414,7 @@ const EditOfferPanel = ({ offerData, onSave, onCancel, users }) => {
             </div>
           </div>
 
-          <div className="w-full mb-2">
+          <div className="flex justify-end space-x-4">
             <FormControl
               fullWidth
               sx={{

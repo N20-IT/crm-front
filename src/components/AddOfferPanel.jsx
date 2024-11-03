@@ -432,7 +432,7 @@ function AddOfferPanel({ onSave, onCancel, users }) {
             </div>
           </div>
 
-          <div className="w-full mb-2">
+          <div className="flex justify-end space-x-4">
             <FormControl
               fullWidth
               sx={{
