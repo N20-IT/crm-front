@@ -751,13 +751,24 @@ function OffersPage() {
                         maxHeight: "60px",
                         fontFamily: "Poppins",
                         width: "6.916%",
-                        color:
-                          row.statusOferty === "Zajęta"
-                            ? "red"
-                            : row.statusOferty === "Wolny" ||
-                              row.statusOferty === "Wolna"
-                            ? "#5BBF8C"
-                            : "black",
+                        color: (() => {
+                          switch (row.statusOferty) {
+                            case "Wolny":
+                              return "green";
+                            case "Zajęty":
+                              return "red";
+                            case "Chętny":
+                              return "#FFA500";
+                            case "Spotkanie":
+                              return "#1E90FF";
+                            case "W kontakcie":
+                              return "#8A2BE2";
+                            case "Był kontakt":
+                              return "#004400";
+                            default:
+                              return "black";
+                          }
+                        })(),
                         fontSize: "13px",
                       }}
                     >
@@ -873,13 +884,12 @@ function OffersPage() {
                         <Tooltip title="Pokaż na mapie">
                           <IconButton
                             onClick={() => {
-                              const { ulica, miasto } = row.adres || {};
-                              if (ulica && miasto) {
-                                const location = `${miasto}, ${ulica}`;
-                                // Link do specjalnej mapy z opisem lokalizacji (bez przekazywania parametrów)
-                                const customMapUrl = `https://www.google.com/maps/d/edit?mid=1ehBKtslO7ziAGs6bg10v8eO4Y3Yj-qk&usp=sharing`;
-                                window.open(customMapUrl, "_blank");
-                              }
+                              const { ulica, miasto } = row.adres;
+                              const location = `${miasto}, ${ulica}`;
+                              const googleMapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+                                location
+                              )}`;
+                              window.open(googleMapsUrl, "_blank");
                             }}
                             sx={{ padding: "4px" }}
                           >

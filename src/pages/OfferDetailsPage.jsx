@@ -184,10 +184,10 @@ function OfferDetailsPage() {
                     : ""}
                 </CustomTypography>
                 <CustomTypography sx={{ fontSize: "1rem" }}>
-                  <strong>Miasto:</strong> {offer.adres?.miasto}
+                  <strong>Miasto/Wieś:</strong> {offer.adres?.miasto}
                 </CustomTypography>
                 <CustomTypography sx={{ fontSize: "1rem" }}>
-                  <strong>Dzielnica:</strong> {offer.adres?.dzielnica}
+                  <strong>Dzielnica/Gmina:</strong> {offer.adres?.dzielnica}
                 </CustomTypography>
                 <CustomTypography sx={{ fontSize: "1rem" }}>
                   <strong>Ilość pokoi:</strong> {offer.iloscPokoi}

@@ -382,14 +382,14 @@ function TableControls({
           sx={{ marginTop: "12px" }}
         />
         <CustomTextField
-          label="Dzielnica"
+          label="Dzielnica/Gmina"
           value={dzielnica}
           onChange={(e) => setDzielnica(e.target.value)}
           fullWidth
           sx={{ marginTop: "12px" }}
         />
         <CustomTextField
-          label="Miasto"
+          label="Miasto/Wieś"
           value={miasto}
           onChange={(e) => setMiasto(e.target.value)}
           fullWidth
@@ -521,7 +521,11 @@ function TableControls({
               <em>Brak</em>
             </MenuItem>
             <MenuItem value="Wolny">Wolny</MenuItem>
-            <MenuItem value="Zajęta">Zajęta</MenuItem>
+            <MenuItem value="Zajęty">Zajęty</MenuItem>
+            <MenuItem value="Chętny">Chętny</MenuItem>
+            <MenuItem value="Spotkanie">Spotkanie</MenuItem>
+            <MenuItem value="W kontakcie">W kontakcie</MenuItem>
+            <MenuItem value="Był kontakt">Był kontakt</MenuItem>
           </Select>
         </FormControl>
         <Button

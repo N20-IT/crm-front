@@ -172,7 +172,7 @@ function AddOfferPanel({ onSave, onCancel, users }) {
                           borderColor: "#535968",
                         },
                       }}
-                      label="Dzielnica"
+                      label="Dzielnica/Gmina"
                     />
                   }
                 >
@@ -260,7 +260,7 @@ function AddOfferPanel({ onSave, onCancel, users }) {
             </div>
             <div className="w-full">
               <CustomTextField
-                label="Miasto"
+                label="Miasto/Wieś"
                 name="miasto"
                 value={formData.adres.miasto}
                 onChange={handleChange}
@@ -500,7 +500,11 @@ function AddOfferPanel({ onSave, onCancel, users }) {
                   <em>Brak</em>
                 </MenuItem>
                 <MenuItem value="Wolny">Wolny</MenuItem>
-                <MenuItem value="Zajęta">Zajęta</MenuItem>
+                <MenuItem value="Zajęty">Zajęty</MenuItem>
+                <MenuItem value="Chętny">Chętny</MenuItem>
+                <MenuItem value="Spotkanie">Spotkanie</MenuItem>
+                <MenuItem value="W kontakcie">W kontakcie</MenuItem>
+                <MenuItem value="Był kontakt">Był kontakt</MenuItem>
               </Select>
             </FormControl>
           </div>
