@@ -804,24 +804,30 @@ function OffersPage() {
                           fontSize: "13px",
                         }}
                       >
-                        {new Date(row.dataKontaktu).toLocaleDateString(
-                          "pl-PL",
-                          {
-                            year: "numeric",
-                            month: "2-digit",
-                            day: "2-digit",
-                          }
-                        )}{" "}
-                        <strong>
-                          <br />
-                          {new Date(row.dataKontaktu).toLocaleTimeString(
-                            "pl-PL",
-                            {
-                              hour: "2-digit",
-                              minute: "2-digit",
-                            }
-                          )}
-                        </strong>
+                        {row.dataKontaktu ? (
+                          <>
+                            {new Date(row.dataKontaktu).toLocaleDateString(
+                              "pl-PL",
+                              {
+                                year: "numeric",
+                                month: "2-digit",
+                                day: "2-digit",
+                              }
+                            )}{" "}
+                            <strong>
+                              <br />
+                              {new Date(row.dataKontaktu).toLocaleTimeString(
+                                "pl-PL",
+                                {
+                                  hour: "2-digit",
+                                  minute: "2-digit",
+                                }
+                              )}
+                            </strong>
+                          </>
+                        ) : (
+                          ""
+                        )}
                       </TableCell>
                     ) : (
                       true
@@ -836,22 +842,28 @@ function OffersPage() {
                           fontSize: "13px",
                         }}
                       >
-                        {new Date(
-                          row.dataNastepnegoKontaktu
-                        ).toLocaleDateString("pl-PL", {
-                          year: "numeric",
-                          month: "2-digit",
-                          day: "2-digit",
-                        })}{" "}
-                        <strong>
-                          <br />
-                          {new Date(
-                            row.dataNastepnegoKontaktu
-                          ).toLocaleTimeString("pl-PL", {
-                            hour: "2-digit",
-                            minute: "2-digit",
-                          })}
-                        </strong>
+                        {row.dataNastepnegoKontaktu ? (
+                          <>
+                            {new Date(
+                              row.dataNastepnegoKontaktu
+                            ).toLocaleDateString("pl-PL", {
+                              year: "numeric",
+                              month: "2-digit",
+                              day: "2-digit",
+                            })}{" "}
+                            <strong>
+                              <br />
+                              {new Date(
+                                row.dataNastepnegoKontaktu
+                              ).toLocaleTimeString("pl-PL", {
+                                hour: "2-digit",
+                                minute: "2-digit",
+                              })}
+                            </strong>
+                          </>
+                        ) : (
+                          ""
+                        )}
                       </TableCell>
                     ) : (
                       true
@@ -901,9 +913,8 @@ function OffersPage() {
                         {row.linkOferta ? (
                           <Link href={row.linkOferta} target="_blank">
                             <Tooltip title={row.linkOferta}>
-                              <Language sx={{ color: "#6D727F" }} />
+                              <Language sx={{ color: "#FC8721" }} />
                             </Tooltip>
-                            {/* {row.linkOferta} */}
                           </Link>
                         ) : (
                           ""
