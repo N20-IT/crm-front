@@ -30,6 +30,7 @@ function AddOfferPanel({ onSave, onCancel, users }) {
     statusOferty: "",
   });
   const [isSubdistrictDisabled, setIsSubdistrictDisabled] = useState(true);
+  const [errors, setErrors] = useState({});
   const krakowDistricts = [
     "Stare Miasto",
     "Grzegórzki",
@@ -125,7 +126,36 @@ function AddOfferPanel({ onSave, onCancel, users }) {
     console.log(e.target);
   };
 
+  const validateForm = () => {
+    const newErrors = {};
+
+    if (formData.statusOferty === "Zajęty" && !formData.komentarz) {
+      newErrors.komentarz =
+        "Komentarz jest wymagany, gdy status jest 'Zajęty'.";
+    }
+    if (
+      formData.statusOferty === "W kontakcie" &&
+      (!formData.komentarz || !formData.dataNastepnegoKontaktu)
+    ) {
+      if (!formData.komentarz)
+        newErrors.komentarz =
+          "Komentarz jest wymagany, gdy status jest 'W kontakcie'.";
+      if (!formData.dataNastepnegoKontaktu)
+        newErrors.dataNastepnegoKontaktu =
+          "Data następnego kontaktu jest wymagana przy statusie 'W kontakcie'.";
+    }
+    if (formData.statusOferty === "Był kontakt" && !formData.komentarz) {
+      newErrors.komentarz =
+        "Komentarz jest wymagany, gdy status to 'Był kontakt'.";
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
   const handleSave = async () => {
+    if (!validateForm()) return; // przerwij zapis, jeśli walidacja nie powiodła się
+
     try {
       await onSave(formData);
     } catch (error) {
@@ -420,6 +450,8 @@ function AddOfferPanel({ onSave, onCancel, users }) {
               variant="outlined"
               fullWidth
               margin="normal"
+              error={!!errors.komentarz}
+              helperText={errors.komentarz}
             />
           </div>
           <div className="flex justify-end space-x-4">
@@ -446,6 +478,8 @@ function AddOfferPanel({ onSave, onCancel, users }) {
                 variant="outlined"
                 fullWidth
                 margin="normal"
+                error={!!errors.dataNastepnegoKontaktu}
+                helperText={errors.dataNastepnegoKontaktu}
                 InputLabelProps={{ shrink: true }}
               />
             </div>
