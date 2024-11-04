@@ -154,7 +154,7 @@ function AddOfferPanel({ onSave, onCancel, users }) {
   };
 
   const handleSave = async () => {
-    if (!validateForm()) return; // przerwij zapis, jeśli walidacja nie powiodła się
+    if (!validateForm()) return;
 
     try {
       await onSave(formData);
