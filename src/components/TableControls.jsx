@@ -13,11 +13,16 @@ import {
   ToggleButton,
   ToggleButtonGroup,
   Tooltip,
+  OutlinedInput,
+  ListItemText,
+  Checkbox,
 } from "@mui/material";
 import { Delete, Star, ViewList, ViewModule } from "@mui/icons-material";
 import { KeyboardArrowDown } from "@mui/icons-material";
 import CustomTextField from "./CustomTextField";
 import { useChangeColumnConfig, useReadConfig } from "../config/columnConfig";
+import dzielniceData from "../dzielnice_poddzielnice.json";
+
 function TableControls({
   selectedCount,
   onAddOfferClick,
@@ -31,8 +36,10 @@ function TableControls({
   const [isFilterPanelOpen, setIsFilterPanelOpen] = useState(false);
   const [minPrice, setMinPrice] = useState("");
   const [maxPrice, setMaxPrice] = useState("");
-  const [dzielnica, setDzielnica] = useState("");
+  const [dzielnica, setDzielnica] = useState([]);
+  const [poddzielnica, setPoddzielnica] = useState([]);
   const [miasto, setMiasto] = useState("");
+  const [typInwestycji, setTypInwestycji] = useState("");
   const [minIloscPokoi, setMinIloscPokoi] = useState("");
   const [maxIloscPokoi, setMaxIloscPokoi] = useState("");
   const [iloscPokoiTouched, setIloscPokoiTouched] = useState({
@@ -195,11 +202,49 @@ function TableControls({
     setpriceTouched({ ...priceTouched, maxPrice: true });
     validatePrices();
   };
+
+  const handleDzielnicaChange = (event) => {
+    const selectedDistricts = event.target.value;
+
+    const removedDistricts = dzielnica.filter(
+      (district) => !selectedDistricts.includes(district)
+    );
+
+    setDzielnica(selectedDistricts);
+
+    if (removedDistricts.length > 0) {
+      const subdistrictsToRemove = removedDistricts.flatMap(
+        (district) => dzielniceData.Dzielnice[district] || []
+      );
+
+      setPoddzielnica((prevPoddzielnica) =>
+        prevPoddzielnica.filter(
+          (subdistrict) => !subdistrictsToRemove.includes(subdistrict)
+        )
+      );
+    }
+  };
+
+  const handlePoddzielnicaChange = (event) => {
+    setPoddzielnica(event.target.value);
+  };
+
+  const subdistricts =
+    dzielnica.length > 0
+      ? [
+          ...new Set(
+            dzielnica.flatMap((district) => dzielniceData.Dzielnice[district])
+          ),
+        ]
+      : [];
+
   const handleFilterApply = () => {
     if (!priceError && !zlM2Error && !iloscPokoiError && !metrazError) {
       if (ulica) filters.ulica = ulica;
       if (dzielnica) filters.dzielnica = dzielnica;
+      if (poddzielnica) filters.poddzielnica = poddzielnica;
       if (miasto) filters.miasto = miasto;
+      if (typInwestycji) filters.typInwestycji = typInwestycji;
       if (minIloscPokoi !== "") filters.minIloscPokoi = minIloscPokoi;
       if (maxIloscPokoi !== "") filters.maxIloscPokoi = maxIloscPokoi;
       if (minMetraz !== "") filters.minMetraz = minMetraz;
@@ -217,8 +262,10 @@ function TableControls({
   const clearFilters = () => {
     setMinPrice("");
     setMaxPrice("");
-    setDzielnica("");
+    setDzielnica([]);
+    setPoddzielnica([]);
     setMiasto("");
+    setTypInwestycji("");
     setMinIloscPokoi("");
     setMaxIloscPokoi("");
     setMinMetraz("");
@@ -372,7 +419,7 @@ function TableControls({
           variant="h4"
           sx={{ fontFamily: "Poppins", color: "#272F3E" }}
         >
-          Filter
+          Filtruj
         </Typography>
         <CustomTextField
           label="Ulica"
@@ -381,13 +428,130 @@ function TableControls({
           fullWidth
           sx={{ marginTop: "12px" }}
         />
-        <CustomTextField
-          label="Dzielnica/Gmina"
-          value={dzielnica}
-          onChange={(e) => setDzielnica(e.target.value)}
+        <FormControl
           fullWidth
-          sx={{ marginTop: "12px" }}
-        />
+          sx={{
+            marginTop: "12px",
+            "& .MuiOutlinedInput-root": {
+              borderRadius: "6px",
+              fontFamily: "Poppins",
+              fontSize: "18px",
+            },
+            "& .MuiFormLabel-root": {
+              fontFamily: "Poppins",
+              fontSize: "18px",
+              color: "#535968",
+            },
+            "& .MuiInputLabel-root.Mui-focused": {
+              color: "#535968",
+            },
+            "& .MuiOutlinedInput-notchedOutline": {
+              borderColor: "#535968",
+            },
+            "&:hover .MuiOutlinedInput-notchedOutline": {
+              borderColor: "#535968",
+            },
+            "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+              borderColor: "#535968",
+            },
+            "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline": {
+              borderColor: "#535968",
+            },
+          }}
+        >
+          <InputLabel id="district-label">Dzielnica</InputLabel>
+          <Select
+            labelId="district-label"
+            value={dzielnica}
+            onChange={handleDzielnicaChange}
+            multiple
+            id="demo-multiple-checkbox"
+            renderValue={(selected) => selected.join(", ")}
+            input={
+              <OutlinedInput
+                sx={{
+                  "& .MuiOutlinedInput-notchedOutline": {
+                    borderColor: "#535968",
+                  },
+
+                  "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                    borderColor: "#535968",
+                  },
+                }}
+                label="Dzielnica/Gmina"
+              />
+            }
+          >
+            {Object.keys(dzielniceData.Dzielnice).map((district) => (
+              <MenuItem key={district} value={district}>
+                <Checkbox checked={dzielnica.includes(district)} />
+                <ListItemText primary={district} />
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+        <FormControl
+          fullWidth
+          sx={{
+            marginTop: "12px",
+            "& .MuiOutlinedInput-root": {
+              borderRadius: "6px",
+              fontFamily: "Poppins",
+              fontSize: "18px",
+            },
+            "& .MuiFormLabel-root": {
+              fontFamily: "Poppins",
+              fontSize: "18px",
+              color: "#535968",
+            },
+            "& .MuiInputLabel-root.Mui-focused": {
+              color: "#535968",
+            },
+            "& .MuiOutlinedInput-notchedOutline": {
+              borderColor: "#535968",
+            },
+            "&:hover .MuiOutlinedInput-notchedOutline": {
+              borderColor: "#535968",
+            },
+            "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+              borderColor: "#535968",
+            },
+            "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline": {
+              borderColor: "#535968",
+            },
+          }}
+        >
+          <InputLabel id="district-label">Poddzielnica</InputLabel>
+          <Select
+            labelId="district-label"
+            value={poddzielnica}
+            onChange={handlePoddzielnicaChange}
+            multiple
+            id="demo-multiple-checkbox"
+            renderValue={(selected) => selected.join(", ")}
+            input={
+              <OutlinedInput
+                sx={{
+                  "& .MuiOutlinedInput-notchedOutline": {
+                    borderColor: "#535968",
+                  },
+
+                  "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                    borderColor: "#535968",
+                  },
+                }}
+                label="Poddzielnice"
+              />
+            }
+          >
+            {subdistricts.map((subdistrict) => (
+              <MenuItem key={subdistrict} value={subdistrict}>
+                <Checkbox checked={poddzielnica.includes(subdistrict)} />
+                <ListItemText primary={subdistrict} />
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
         <CustomTextField
           label="Miasto/Wieś"
           value={miasto}
@@ -395,7 +559,49 @@ function TableControls({
           fullWidth
           sx={{ marginTop: "12px" }}
         />
-
+        <FormControl
+          fullWidth
+          sx={{
+            marginTop: "12px",
+            "& .MuiOutlinedInput-root": {
+              borderRadius: "6px",
+              fontFamily: "Poppins",
+              fontSize: "18px",
+            },
+            "& .MuiFormLabel-root": {
+              fontFamily: "Poppins",
+              fontSize: "18px",
+              color: "#535968",
+            },
+            "& .MuiInputLabel-root.Mui-focused": {
+              color: "#535968",
+            },
+            "& .MuiOutlinedInput-notchedOutline": {
+              borderColor: "#535968",
+            },
+            "&:hover .MuiOutlinedInput-notchedOutline": {
+              borderColor: "#535968",
+            },
+            "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+              borderColor: "#535968",
+            },
+            "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline": {
+              borderColor: "#535968",
+            },
+          }}
+        >
+          <InputLabel>Typ inwestycji</InputLabel>
+          <Select
+            value={typInwestycji}
+            onChange={(e) => setTypInwestycji(e.target.value)}
+            label="Typ inwestycji"
+          >
+            <MenuItem value="Dom">Dom</MenuItem>
+            <MenuItem value="Mieszkanie">Mieszkanie</MenuItem>
+            <MenuItem value="Lokal">Lokal</MenuItem>
+            <MenuItem value="Działka">Działka</MenuItem>
+          </Select>
+        </FormControl>
         <div className="flex justify-end space-x-4 mt-3">
           <CustomTextField
             label="Min ilość pokoi"
@@ -482,6 +688,7 @@ function TableControls({
         </div>
         <FormControl
           fullWidth
+          multiple
           sx={{
             marginTop: "12px",
             "& .MuiOutlinedInput-root": {
