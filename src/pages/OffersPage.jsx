@@ -163,9 +163,10 @@ function OffersPage() {
           Authorization: `Bearer ${token}`,
         },
       });
+      console.log(JSON.parse(response.data.body));
       const usersList = JSON.parse(response.data.body);
-      const emailList = usersList.map((user) => user.Email);
-      setUsers(emailList);
+      const agents = usersList.map((user) => user.Name + " " + user.FamilyName);
+      setUsers(agents);
     } catch (error) {
       console.log(error);
     }
