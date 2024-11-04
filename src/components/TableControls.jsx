@@ -483,7 +483,13 @@ function TableControls({
             }
           >
             {Object.keys(dzielniceData.Dzielnice).map((district) => (
-              <MenuItem key={district} value={district}>
+              <MenuItem
+                key={district}
+                value={district}
+                sx={{
+                  "& .Mui-checked": { color: "#FC8721" },
+                }}
+              >
                 <Checkbox checked={dzielnica.includes(district)} />
                 <ListItemText primary={district} />
               </MenuItem>
