@@ -56,6 +56,7 @@ function OfferDetailsPage() {
         },
       });
       setOffer(response.data);
+      console.log(response.data);
     } catch (error) {
       setAlertOpen(true);
       setAlertMessage(error.message);

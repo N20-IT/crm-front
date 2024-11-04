@@ -29,8 +29,6 @@ function AddOfferPanel({ onSave, onCancel, users }) {
     agent: "",
     statusOferty: "",
   });
-  const [selectedDistrict, setSelectedDistrict] = useState("");
-  const [selectedSubdistrict, setSelectedSubdistrict] = useState("");
   const [isSubdistrictDisabled, setIsSubdistrictDisabled] = useState(true);
   const krakowDistricts = [
     "Stare Miasto",
@@ -54,11 +52,13 @@ function AddOfferPanel({ onSave, onCancel, users }) {
   ];
 
   const handleDistrictChange = (event) => {
-    const district = event.target.value;
-    setSelectedDistrict(district);
-    setSelectedSubdistrict("");
-
-    if (krakowDistricts.includes(district)) {
+    if (krakowDistricts.includes(event.target.value)) {
+      handleChange({
+        target: {
+          name: "dzielnica",
+          value: event.target.value,
+        },
+      });
       handleChange({
         target: {
           name: "miasto",
@@ -67,6 +67,12 @@ function AddOfferPanel({ onSave, onCancel, users }) {
       });
       setIsSubdistrictDisabled(false);
     } else {
+      handleChange({
+        target: {
+          name: "dzielnica",
+          value: event.target.value,
+        },
+      });
       handleChange({
         target: {
           name: "miasto",
@@ -78,20 +84,30 @@ function AddOfferPanel({ onSave, onCancel, users }) {
   };
 
   const handleSubdistrictChange = (event) => {
-    setSelectedSubdistrict(event.target.value);
+    handleChange({
+      target: {
+        name: "poddzielnica",
+        value: event.target.value,
+      },
+    });
   };
 
-  const subdistricts = selectedDistrict
-    ? dzielniceData.Dzielnice[selectedDistrict]
+  const subdistricts = formData.adres.dzielnica
+    ? dzielniceData.Dzielnice[formData.adres.dzielnica]
     : [];
 
   const handleChange = (e) => {
     const { name, value } = e.target;
 
     if (
-      ["ulica", "dzielnica", "miasto", "numerDomu", "numerMieszkania"].includes(
-        name
-      )
+      [
+        "ulica",
+        "dzielnica",
+        "miasto",
+        "numerDomu",
+        "numerMieszkania",
+        "poddzielnica",
+      ].includes(name)
     ) {
       setFormData((prevState) => ({
         ...prevState,
@@ -106,6 +122,7 @@ function AddOfferPanel({ onSave, onCancel, users }) {
         [name]: value,
       });
     }
+    console.log(e.target);
   };
 
   const handleSave = async () => {
@@ -159,7 +176,7 @@ function AddOfferPanel({ onSave, onCancel, users }) {
                 <InputLabel id="district-label">Dzielnica</InputLabel>
                 <Select
                   labelId="district-label"
-                  value={selectedDistrict}
+                  value={formData.adres.dzielnica}
                   onChange={handleDistrictChange}
                   input={
                     <OutlinedInput
@@ -215,12 +232,12 @@ function AddOfferPanel({ onSave, onCancel, users }) {
                     borderColor: "#535968",
                   },
                 }}
-                disabled={!selectedDistrict || isSubdistrictDisabled}
+                disabled={!formData.adres.dzielnica || isSubdistrictDisabled}
               >
                 <InputLabel id="subdistrict-label">Poddzielnica</InputLabel>
                 <Select
                   labelId="subdistrict-label"
-                  value={selectedSubdistrict}
+                  value={formData.adres.poddzielnica}
                   onChange={handleSubdistrictChange}
                   input={
                     <OutlinedInput
