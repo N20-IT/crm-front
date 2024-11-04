@@ -29,8 +29,8 @@ function AddOfferPanel({ onSave, onCancel, users }) {
     agent: "",
     statusOferty: "",
   });
-  const [selectedDistrict, setSelectedDistrict] = useState(""); // Wybrana dzielnica
-  const [selectedSubdistrict, setSelectedSubdistrict] = useState(""); // Wybrana poddzielnica
+  const [selectedDistrict, setSelectedDistrict] = useState("");
+  const [selectedSubdistrict, setSelectedSubdistrict] = useState("");
   const [isSubdistrictDisabled, setIsSubdistrictDisabled] = useState(true);
   const krakowDistricts = [
     "Stare Miasto",
@@ -416,6 +416,7 @@ function AddOfferPanel({ onSave, onCancel, users }) {
                 variant="outlined"
                 fullWidth
                 margin="normal"
+                InputLabelProps={{ shrink: true }}
               />
             </div>
             <div className="w-full">
@@ -428,6 +429,7 @@ function AddOfferPanel({ onSave, onCancel, users }) {
                 variant="outlined"
                 fullWidth
                 margin="normal"
+                InputLabelProps={{ shrink: true }}
               />
             </div>
           </div>
