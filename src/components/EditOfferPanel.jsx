@@ -11,15 +11,13 @@ import CustomTextField from "./CustomTextField";
 import dzielniceData from "../dzielnice_poddzielnice.json";
 
 const EditOfferPanel = ({ offerData, onSave, onCancel, users }) => {
-  const [formData, setFormData] = useState(offerData);
+  const [formData, setFormData] = useState(offerData || { adres: {} });
 
   useEffect(() => {
-    setFormData(offerData);
+    setFormData(offerData || { adres: {} });
   }, [offerData]);
 
-  const [selectedDistrict, setSelectedDistrict] = useState(""); // Wybrana dzielnica
-  const [selectedSubdistrict, setSelectedSubdistrict] = useState(""); // Wybrana poddzielnica
-  const [isSubdistrictDisabled, setIsSubdistrictDisabled] = useState(true);
+  const [isSubdistrictDisabled, setIsSubdistrictDisabled] = useState(false);
   const krakowDistricts = [
     "Stare Miasto",
     "Grzegórzki",
@@ -42,11 +40,13 @@ const EditOfferPanel = ({ offerData, onSave, onCancel, users }) => {
   ];
 
   const handleDistrictChange = (event) => {
-    const district = event.target.value;
-    setSelectedDistrict(district);
-    setSelectedSubdistrict("");
-
-    if (krakowDistricts.includes(district)) {
+    if (krakowDistricts.includes(event.target.value)) {
+      handleChange({
+        target: {
+          name: "dzielnica",
+          value: event.target.value,
+        },
+      });
       handleChange({
         target: {
           name: "miasto",
@@ -55,6 +55,12 @@ const EditOfferPanel = ({ offerData, onSave, onCancel, users }) => {
       });
       setIsSubdistrictDisabled(false);
     } else {
+      handleChange({
+        target: {
+          name: "dzielnica",
+          value: event.target.value,
+        },
+      });
       handleChange({
         target: {
           name: "miasto",
@@ -66,20 +72,30 @@ const EditOfferPanel = ({ offerData, onSave, onCancel, users }) => {
   };
 
   const handleSubdistrictChange = (event) => {
-    setSelectedSubdistrict(event.target.value);
+    handleChange({
+      target: {
+        name: "poddzielnica",
+        value: event.target.value,
+      },
+    });
   };
 
-  const subdistricts = selectedDistrict
-    ? dzielniceData.Dzielnice[selectedDistrict]
+  const subdistricts = formData.adres?.dzielnica
+    ? dzielniceData.Dzielnice[formData.adres.dzielnica] || []
     : [];
 
   const handleChange = (e) => {
     const { name, value } = e.target;
 
     if (
-      ["ulica", "dzielnica", "miasto", "numerDomu", "numerMieszkania"].includes(
-        name
-      )
+      [
+        "ulica",
+        "dzielnica",
+        "miasto",
+        "numerDomu",
+        "numerMieszkania",
+        "poddzielnica",
+      ].includes(name)
     ) {
       setFormData((prevState) => ({
         ...prevState,
@@ -141,7 +157,7 @@ const EditOfferPanel = ({ offerData, onSave, onCancel, users }) => {
                 <InputLabel id="district-label">Dzielnica</InputLabel>
                 <Select
                   labelId="district-label"
-                  value={selectedDistrict}
+                  value={formData.adres.dzielnica}
                   onChange={handleDistrictChange}
                   input={
                     <OutlinedInput
@@ -197,12 +213,12 @@ const EditOfferPanel = ({ offerData, onSave, onCancel, users }) => {
                     borderColor: "#535968",
                   },
                 }}
-                disabled={!selectedDistrict || isSubdistrictDisabled}
+                disabled={!formData.adres.dzielnica || isSubdistrictDisabled}
               >
                 <InputLabel id="subdistrict-label">Poddzielnica</InputLabel>
                 <Select
                   labelId="subdistrict-label"
-                  value={selectedSubdistrict}
+                  value={formData.adres.poddzielnica}
                   onChange={handleSubdistrictChange}
                   input={
                     <OutlinedInput
@@ -219,11 +235,12 @@ const EditOfferPanel = ({ offerData, onSave, onCancel, users }) => {
                     />
                   }
                 >
-                  {subdistricts.map((subdistrict) => (
-                    <MenuItem key={subdistrict} value={subdistrict}>
-                      {subdistrict}
-                    </MenuItem>
-                  ))}
+                  {Array.isArray(subdistricts) &&
+                    subdistricts.map((subdistrict) => (
+                      <MenuItem key={subdistrict} value={subdistrict}>
+                        {subdistrict}
+                      </MenuItem>
+                    ))}
                 </Select>
               </FormControl>
             </div>
