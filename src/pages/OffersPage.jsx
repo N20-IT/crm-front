@@ -163,7 +163,6 @@ function OffersPage() {
           Authorization: `Bearer ${token}`,
         },
       });
-      console.log(JSON.parse(response.data.body));
       const usersList = JSON.parse(response.data.body);
       const agents = usersList.map((user) => user.Name + " " + user.FamilyName);
       setUsers(agents);
