@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import {
   Button,
   FormControl,
@@ -9,8 +9,14 @@ import {
 } from "@mui/material";
 import CustomTextField from "./CustomTextField";
 import dzielniceData from "../dzielnice_poddzielnice.json";
+import axios from "axios";
+import serverConfig from "../servers.json";
+import { useReadCookie } from "../utils/auth";
+import { debounce } from "lodash";
 
 function AddOfferPanel({ onSave, onCancel, users }) {
+  const backendServer = serverConfig["backend-server"];
+  const token = useReadCookie();
   const [formData, setFormData] = useState({
     adres: {
       ulica: "",
@@ -31,6 +37,8 @@ function AddOfferPanel({ onSave, onCancel, users }) {
   });
   const [isSubdistrictDisabled, setIsSubdistrictDisabled] = useState(true);
   const [errors, setErrors] = useState({});
+  const [phoneExistsInfo, setPhoneExistsInfo] = useState("");
+
   const krakowDistricts = [
     "Stare Miasto",
     "Grzegórzki",
@@ -51,6 +59,33 @@ function AddOfferPanel({ onSave, onCancel, users }) {
     "Podgórze Duchackie",
     "Bieżanów - Prokocim",
   ];
+
+  const checkIfPhoneExists = async (phoneNumber) => {
+    try {
+      const response = await axios.get(`${backendServer}/listings`, {
+        headers: {
+          accept: "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        params: {
+          telefonWlasciciela: phoneNumber,
+        },
+      });
+
+      if (response.data.length > 0) {
+        setPhoneExistsInfo("Oferta z tym numerem telefonu już istnieje.");
+      } else {
+        setPhoneExistsInfo("");
+      }
+    } catch (error) {
+      console.error("Błąd podczas sprawdzania numeru telefonu:", error);
+    }
+  };
+
+  const debouncedCheckIfPhoneExists = useCallback(
+    debounce(checkIfPhoneExists, 1000),
+    [checkIfPhoneExists]
+  );
 
   const handleDistrictChange = (event) => {
     if (krakowDistricts.includes(event.target.value)) {
@@ -97,9 +132,11 @@ function AddOfferPanel({ onSave, onCancel, users }) {
     ? dzielniceData.Dzielnice[formData.adres.dzielnica]
     : [];
 
-  const handleChange = (e) => {
+  const handleChange = async (e) => {
     const { name, value } = e.target;
-
+    if (name === "telefonWlasciciela") {
+      await debouncedCheckIfPhoneExists(value);
+    }
     if (
       [
         "ulica",
@@ -439,6 +476,11 @@ function AddOfferPanel({ onSave, onCancel, users }) {
                 fullWidth
                 margin="normal"
               />
+              {phoneExistsInfo && (
+                <p style={{ color: "blue", fontFamily: "Poppins" }}>
+                  {phoneExistsInfo}
+                </p>
+              )}
             </div>
           </div>
           <div>
