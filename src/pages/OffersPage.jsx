@@ -83,6 +83,11 @@ function OffersPage() {
         sortable: true,
       },
       {
+        id: "poddzielnica",
+        label: "Poddzielnica",
+        sortable: true,
+      },
+      {
         id: "miasto",
         label: "Miasto/Wieś",
         sortable: true,
@@ -187,7 +192,16 @@ function OffersPage() {
             ...filters,
           },
           paramsSerializer: (params) => {
-            return qs.stringify(params, { arrayFormat: "repeat" });
+            const serializedParams = {
+              ...params,
+              dzielnica: params.dzielnica
+                ? params.dzielnica.join(",")
+                : undefined,
+              poddzielnica: params.poddzielnica
+                ? params.poddzielnica.join(",")
+                : undefined,
+            };
+            return qs.stringify(serializedParams, { arrayFormat: "repeat" });
           },
         });
         setRows(response.data);
@@ -374,6 +388,7 @@ function OffersPage() {
         if (
           orderBy === "ulica" ||
           orderBy === "dzielnica" ||
+          orderBy === "poddzielnica" ||
           orderBy === "miasto" ||
           orderBy === "numerDomu" ||
           orderBy === "numerMieszkania"
@@ -611,6 +626,21 @@ function OffersPage() {
                     >
                       {row.adres?.dzielnica || ""}
                     </TableCell>
+                    {readConfig === 1 ? (
+                      <TableCell
+                        style={{
+                          textAlign: "center",
+                          padding: "0px",
+                          maxHeight: "60px",
+                          fontFamily: "Poppins",
+                          fontSize: "13px",
+                        }}
+                      >
+                        {row.adres?.poddzielnica || ""}
+                      </TableCell>
+                    ) : (
+                      true
+                    )}
                     {readConfig === 1 ? (
                       <TableCell
                         style={{
