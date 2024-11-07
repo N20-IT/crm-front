@@ -85,10 +85,10 @@ function TableControls({
     setSearchValue(value);
     if (value.length > 2) {
       const updatedFilters = { ...filters };
-      onSearchChange(value, updatedFilters);
+      onSearchChange(value, updatedFilters, columnConfig);
     } else if (value.length === 0) {
       const updatedFilters = { ...filters };
-      onSearchChange(value, updatedFilters);
+      onSearchChange(value, updatedFilters, columnConfig);
     }
   };
 
