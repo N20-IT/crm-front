@@ -276,7 +276,7 @@ function TableControls({
     setStatus("");
     setFilters({});
     setSearchValue("");
-    onFilterApply("", {});
+    onFilterApply("", {}, readConfig);
     toggleFilterPanel();
   };
 
