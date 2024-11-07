@@ -28,6 +28,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import { useAuth, useReadCookie } from "../utils/auth";
 import axios from "axios";
+import qs from "qs";
 import Sidebar from "../components/Sidebar";
 import TableControls from "../components/TableControls";
 import Alerts from "../components/Alerts";
@@ -184,6 +185,9 @@ function OffersPage() {
           params: {
             search: searchQuery,
             ...filters,
+          },
+          paramsSerializer: (params) => {
+            return qs.stringify(params, { arrayFormat: "repeat" });
           },
         });
         setRows(response.data);
