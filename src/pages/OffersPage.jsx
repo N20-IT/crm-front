@@ -28,6 +28,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import { useAuth, useReadCookie } from "../utils/auth";
 import axios from "axios";
+import qs from "qs";
 import Sidebar from "../components/Sidebar";
 import TableControls from "../components/TableControls";
 import Alerts from "../components/Alerts";
@@ -79,6 +80,11 @@ function OffersPage() {
       {
         id: "dzielnica",
         label: "Dzielnica/Gmina",
+        sortable: true,
+      },
+      {
+        id: "poddzielnica",
+        label: "Poddzielnica",
         sortable: true,
       },
       {
@@ -164,8 +170,8 @@ function OffersPage() {
         },
       });
       const usersList = JSON.parse(response.data.body);
-      const emailList = usersList.map((user) => user.Email);
-      setUsers(emailList);
+      const agents = usersList.map((user) => user.Name + " " + user.FamilyName);
+      setUsers(agents);
     } catch (error) {
       console.log(error);
     }
@@ -184,6 +190,18 @@ function OffersPage() {
           params: {
             search: searchQuery,
             ...filters,
+          },
+          paramsSerializer: (params) => {
+            const serializedParams = {
+              ...params,
+              dzielnica: params.dzielnica
+                ? params.dzielnica.join(",")
+                : undefined,
+              poddzielnica: params.poddzielnica
+                ? params.poddzielnica.join(",")
+                : undefined,
+            };
+            return qs.stringify(serializedParams, { arrayFormat: "repeat" });
           },
         });
         setRows(response.data);
@@ -384,6 +402,7 @@ function OffersPage() {
         if (
           orderBy === "ulica" ||
           orderBy === "dzielnica" ||
+          orderBy === "poddzielnica" ||
           orderBy === "miasto" ||
           orderBy === "numerDomu" ||
           orderBy === "numerMieszkania"
@@ -621,6 +640,21 @@ function OffersPage() {
                     >
                       {row.adres?.dzielnica || ""}
                     </TableCell>
+                    {readConfig === 1 ? (
+                      <TableCell
+                        style={{
+                          textAlign: "center",
+                          padding: "0px",
+                          maxHeight: "60px",
+                          fontFamily: "Poppins",
+                          fontSize: "13px",
+                        }}
+                      >
+                        {row.adres?.poddzielnica || ""}
+                      </TableCell>
+                    ) : (
+                      true
+                    )}
                     {readConfig === 1 ? (
                       <TableCell
                         style={{

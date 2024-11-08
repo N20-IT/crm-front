@@ -415,6 +415,7 @@ const EditOfferPanel = ({ offerData, onSave, onCancel, users }) => {
                 variant="outlined"
                 fullWidth
                 margin="normal"
+                InputLabelProps={{ shrink: true }}
               />
             </div>
             <div className="w-full">
@@ -427,6 +428,7 @@ const EditOfferPanel = ({ offerData, onSave, onCancel, users }) => {
                 variant="outlined"
                 fullWidth
                 margin="normal"
+                InputLabelProps={{ shrink: true }}
               />
             </div>
           </div>

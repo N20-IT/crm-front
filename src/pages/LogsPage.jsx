@@ -3,7 +3,19 @@ import { useNavigate } from "react-router-dom";
 import { useAuth, useReadCookie } from "../utils/auth";
 import Sidebar from "../components/Sidebar";
 import { GetUserRoleFromToken } from "../utils/decodeToken";
-import { Box, Grid, IconButton, Typography } from "@mui/material";
+import {
+  Box,
+  Grid,
+  IconButton,
+  Typography,
+  Paper,
+  Button,
+  Select,
+  MenuItem,
+  FormControl,
+  InputLabel,
+  CircularProgress,
+} from "@mui/material";
 import axios from "axios";
 import serverConfig from "../servers.json";
 
@@ -57,51 +69,107 @@ function LogsPage() {
   return (
     <div className="flex items-start justify-start h-screen ml-48 flex-col">
       <Sidebar />
-      <Box sx={{ flexGrow: 1, p: 2 }}>
-        <h1 className="font-bold text-5xl">Panel administratora</h1>
-        <Grid container spacing={2}>
-          <Grid item xs={4}>
-            <Box sx={{ border: "1px solid #ccc", padding: 2 }}>
-              <h2>Akcje</h2>
-              {/* elementy akcji - przywracanie danych ofert */}
-            </Box>
-          </Grid>
-          <Grid item xs={4}>
-            <Box sx={{ border: "1px solid #ccc", padding: 2 }}>
-              <h2>Logi</h2>
-              {Array.from({ length: 8 }, (_, index) => {
-                const daysAgo = 7 - index;
-                const date = new Date();
-                date.setDate(date.getDate() - daysAgo);
-                const formattedDate = date.toISOString().split("T")[0];
+      <Box sx={{ flexGrow: 1, marginLeft: "24px", width: "97%" }}>
+        <Typography
+          variant="h3"
+          sx={{
+            fontWeight: "bold",
+            marginBottom: "16px",
+            marginTop: "24px",
+          }}
+        >
+          Panel Administratora
+        </Typography>
 
-                return (
-                  <IconButton
-                    key={daysAgo}
-                    onClick={() => handleLogClick(daysAgo)}
-                  >
-                    {daysAgo === 0
-                      ? formattedDate + " (Dzisiaj)"
-                      : daysAgo === 1
-                      ? formattedDate + " (Wczoraj)"
-                      : formattedDate}
-                  </IconButton>
-                );
-              })}
-              <Box sx={{ marginTop: 2 }}>
-                <Typography variant="body2" component="pre">
-                  {loading ? "Ładowanie..." : logs}
-                </Typography>
+        <div className="flex flex-row">
+          <div className="ml-3 w-1/4">
+            <Paper elevation={3} sx={{ padding: 3 }}>
+              <Typography variant="h5" sx={{ fontWeight: "bold" }}>
+                Akcje
+              </Typography>
+              <Button
+                variant="contained"
+                sx={{ marginTop: 2, backgroundColor: "#FC8721" }}
+              >
+                Przywróć ofertę
+              </Button>
+            </Paper>
+          </div>
+          <div className="ml-3 w-3/4">
+            <Paper elevation={3} sx={{ padding: 3, width: "100%" }}>
+              <Typography variant="h5" sx={{ fontWeight: "bold" }}>
+                Logi
+              </Typography>
+              <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
+                {Array.from({ length: 8 }, (_, index) => {
+                  const daysAgo = 7 - index;
+                  const date = new Date();
+                  date.setDate(date.getDate() - daysAgo);
+                  const formattedDate = date.toISOString().split("T")[0];
+
+                  return (
+                    <Button
+                      key={daysAgo}
+                      variant="outlined"
+                      onClick={() => handleLogClick(daysAgo)}
+                      sx={{
+                        textTransform: "none",
+                        fontSize: "16px",
+                        color: "#535968",
+                        borderColor: "#535968",
+                        "&:hover": {
+                          borderColor: "#333",
+                          backgroundColor: "#f5f5f5",
+                        },
+                      }}
+                    >
+                      {daysAgo === 0
+                        ? formattedDate + " (Dzisiaj)"
+                        : daysAgo === 1
+                        ? formattedDate + " (Wczoraj)"
+                        : formattedDate}
+                    </Button>
+                  );
+                })}
               </Box>
-            </Box>
-          </Grid>
-          <Grid item xs={4}>
-            <Box sx={{ border: "1px solid #ccc", padding: 2 }}>
-              <h2>Zalogowani użytkownicy</h2>
+              <Box
+                sx={{
+                  marginTop: 3,
+                  padding: 2,
+                  maxHeight: 300,
+                  overflowY: "auto",
+                  backgroundColor: "#f9f9f9",
+                  borderRadius: "4px",
+                  display: "flex",
+                  justifyContent: "center",
+                }}
+              >
+                {loading ? (
+                  <CircularProgress size={24} sx={{ color: "#FC8721" }} />
+                ) : (
+                  <Typography
+                    variant="body2"
+                    component="pre"
+                    sx={{
+                      whiteSpace: "pre-wrap",
+                      fontFamily: "Courier New, monospace",
+                    }}
+                  >
+                    {logs || "Wybierz logi z listy powyżej."}
+                  </Typography>
+                )}
+              </Box>
+            </Paper>
+          </div>
+          <div className="ml-3 w-1/4">
+            <Paper elevation={3} sx={{ padding: 3, width: "100%" }}>
+              <Typography variant="h5" sx={{ fontWeight: "bold" }}>
+                Zalogowani użytkownicy
+              </Typography>
               {/* Zalogowani użytkownicy TODO */}
-            </Box>
-          </Grid>
-        </Grid>
+            </Paper>
+          </div>
+        </div>
       </Box>
     </div>
   );
