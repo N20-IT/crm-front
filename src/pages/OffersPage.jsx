@@ -376,12 +376,24 @@ function OffersPage() {
 
   const handleAddToCalendar = (row) => {
     const eventTitle = "Spotkanie";
-    const eventDate = row.dataNastepnegoKontaktu;
     const eventDescription = row.linkOferta;
+
+    const startDate = new Date(row.dataNastepnegoKontaktu);
+    const endDate = new Date(startDate);
+    endDate.setHours(startDate.getHours() + 1);
+
+    const formatDateForCalendar = (date) =>
+      date
+        .toISOString()
+        .replace(/[-:.]/g, "")
+        .slice(0, 15) + "Z";
+
+    const formattedStartDate = formatDateForCalendar(startDate);
+    const formattedEndDate = formatDateForCalendar(endDate);
 
     const googleCalendarUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(
       eventTitle
-    )}&dates=${eventDate}/${eventDate}&details=${encodeURIComponent(
+    )}&dates=${formattedStartDate}/${formattedEndDate}&details=${encodeURIComponent(
       eventDescription
     )}&sf=true&output=xml`;
 
@@ -1016,19 +1028,21 @@ function OffersPage() {
                           <Star />
                         </IconButton>
                       </Tooltip>
-
-                      <Tooltip title="Dodaj do kalendarza">
-                        <IconButton
-                          onClick={() => handleAddToCalendar(row)}
-                          sx={{
-                            padding: "4px",
-                            color: "#6A9F6C",
-                          }}
-                        >
-                          <CalendarMonth />
-                        </IconButton>
-                      </Tooltip>
-
+                      {readConfig === 1 ? (
+                        <Tooltip title="Dodaj do kalendarza">
+                          <IconButton
+                            onClick={() => handleAddToCalendar(row)}
+                            sx={{
+                              padding: "4px",
+                              color: "#6A9F6C",
+                            }}
+                          >
+                            <CalendarMonth />
+                          </IconButton>
+                        </Tooltip>
+                      ) : (
+                        true
+                      )}
                       {row.adres?.miasto && row.adres?.ulica && (
                         <Tooltip title="Pokaż na mapie">
                           <IconButton

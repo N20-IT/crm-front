@@ -99,12 +99,24 @@ function OfferDetailsPage() {
 
   const handleAddToCalendar = (row) => {
     const eventTitle = "Spotkanie";
-    const eventDate = row.dataNastepnegoKontaktu;
     const eventDescription = row.linkOferta;
+
+    const startDate = new Date(row.dataNastepnegoKontaktu);
+    const endDate = new Date(startDate);
+    endDate.setHours(startDate.getHours() + 1);
+
+    const formatDateForCalendar = (date) =>
+      date
+        .toISOString()
+        .replace(/[-:.]/g, "")
+        .slice(0, 15) + "Z";
+
+    const formattedStartDate = formatDateForCalendar(startDate);
+    const formattedEndDate = formatDateForCalendar(endDate);
 
     const googleCalendarUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(
       eventTitle
-    )}&dates=${eventDate}/${eventDate}&details=${encodeURIComponent(
+    )}&dates=${formattedStartDate}/${formattedEndDate}&details=${encodeURIComponent(
       eventDescription
     )}&sf=true&output=xml`;
 
