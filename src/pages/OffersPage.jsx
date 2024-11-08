@@ -356,6 +356,20 @@ function OffersPage() {
     setOrderBy(columnId);
   };
 
+  const handleAddToCalendar = (row) => {
+    const eventTitle = "Spotkanie";
+    const eventDate = row.dataNastepnegoKontaktu;
+    const eventDescription = row.linkOferta;
+
+    const googleCalendarUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(
+      eventTitle
+    )}&dates=${eventDate}/${eventDate}&details=${encodeURIComponent(
+      eventDescription
+    )}&sf=true&output=xml`;
+
+    window.open(googleCalendarUrl, "_blank");
+  };
+
   const sortedRows = useMemo(() => {
     const column = columns.find((col) => col.id === orderBy);
 
@@ -971,12 +985,12 @@ function OffersPage() {
 
                       <Tooltip title="Dodaj do kalendarza">
                         <IconButton
+                          onClick={() => handleAddToCalendar(row)}
                           sx={{
                             padding: "4px",
                             color: "#6A9F6C",
                           }}
                         >
-                          {" "}
                           <CalendarMonth />
                         </IconButton>
                       </Tooltip>

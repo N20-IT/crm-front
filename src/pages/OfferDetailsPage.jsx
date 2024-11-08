@@ -97,6 +97,20 @@ function OfferDetailsPage() {
     setEditOfferPanelOpen(true);
   };
 
+  const handleAddToCalendar = (row) => {
+    const eventTitle = "Spotkanie";
+    const eventDate = row.dataNastepnegoKontaktu;
+    const eventDescription = row.linkOferta;
+
+    const googleCalendarUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(
+      eventTitle
+    )}&dates=${eventDate}/${eventDate}&details=${encodeURIComponent(
+      eventDescription
+    )}&sf=true&output=xml`;
+
+    window.open(googleCalendarUrl, "_blank");
+  };
+
   useEffect(() => {
     fetchData();
     if (!isAuthenticated) navigate("/");
@@ -285,7 +299,7 @@ function OfferDetailsPage() {
               </IconButton>
             </Tooltip>
             <Tooltip title="Dodaj do kalendarza">
-              <IconButton>
+              <IconButton onClick={() => handleAddToCalendar(offer)}>
                 <CalendarMonth sx={{ fontSize: "24px", color: "#535968" }} />
               </IconButton>
             </Tooltip>
