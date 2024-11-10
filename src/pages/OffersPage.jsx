@@ -7,7 +7,6 @@ import {
   TableHead,
   TableRow,
   Paper,
-  IconButton,
   Checkbox,
   TablePagination,
   Tooltip,
@@ -15,16 +14,7 @@ import {
   TableSortLabel,
   Link,
 } from "@mui/material";
-import {
-  Delete,
-  Edit,
-  Star,
-  CalendarMonth,
-  Map,
-  AssignmentInd,
-  Info,
-  Language,
-} from "@mui/icons-material";
+import { Language } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import { useAuth, useReadCookie } from "../utils/auth";
 import axios from "axios";
@@ -38,6 +28,7 @@ import EditOfferPanel from "../components/EditOfferPanel";
 import serverConfig from "../servers.json";
 import { GetEmailFromToken, GetUserRoleFromToken } from "../utils/decodeToken";
 import { useReadConfig } from "../config/columnConfig";
+import OfferActions from "../components/OfferAction";
 
 function OffersPage() {
   const navigate = useNavigate();
@@ -983,111 +974,16 @@ function OffersPage() {
                     ) : (
                       true
                     )}
-                    <TableCell
-                      style={{
-                        textAlign: "center",
-                        maxHeight: "60px",
-                        padding: "0px",
-                        fontFamily: "Poppins",
-                      }}
-                    >
-                      {userRole === "admin" && (
-                        <Tooltip title="Usuń">
-                          <IconButton
-                            onClick={() => handleDeleteOfferClick([row._id])}
-                            sx={{
-                              padding: "4px",
-                              color: "#A11D1D",
-                            }}
-                          >
-                            <Delete />
-                          </IconButton>
-                        </Tooltip>
-                      )}
-
-                      <Tooltip title="Edytuj">
-                        <IconButton
-                          onClick={() => handleEditClick(row)}
-                          sx={{
-                            padding: "4px",
-                            color: "#6A99C7",
-                          }}
-                        >
-                          <Edit />
-                        </IconButton>
-                      </Tooltip>
-
-                      <Tooltip title="Dodaj do ciekawych ofert">
-                        <IconButton
-                          sx={{
-                            padding: "4px",
-                            color: "#FFD700",
-                          }}
-                        >
-                          {" "}
-                          <Star />
-                        </IconButton>
-                      </Tooltip>
-                      {readConfig === 1 ? (
-                        <Tooltip title="Dodaj do kalendarza">
-                          <IconButton
-                            onClick={() => handleAddToCalendar(row)}
-                            sx={{
-                              padding: "4px",
-                              color: "#6A9F6C",
-                            }}
-                          >
-                            <CalendarMonth />
-                          </IconButton>
-                        </Tooltip>
-                      ) : (
-                        true
-                      )}
-                      {row.adres?.miasto && row.adres?.ulica && (
-                        <Tooltip title="Pokaż na mapie">
-                          <IconButton
-                            onClick={() => {
-                              const { ulica, miasto } = row.adres;
-                              const location = `${miasto}, ${ulica}`;
-                              const googleMapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
-                                location
-                              )}`;
-                              window.open(googleMapsUrl, "_blank");
-                            }}
-                            sx={{
-                              padding: "4px",
-                              color: "#FC8721",
-                            }}
-                          >
-                            <Map />
-                          </IconButton>
-                        </Tooltip>
-                      )}
-
-                      <Tooltip title="Przypisz ofertę">
-                        <IconButton
-                          onClick={() => handleUpdateOfferAgentClick(row._id)}
-                          sx={{
-                            padding: "4px",
-                            color: "#765592",
-                          }}
-                        >
-                          <AssignmentInd />
-                        </IconButton>
-                      </Tooltip>
-
-                      <Tooltip title="Szczegóły oferty">
-                        <IconButton
-                          sx={{
-                            padding: "4px",
-                            color: "#777",
-                          }}
-                          onClick={() => handleGoToOfferDetailsPage(row._id)}
-                        >
-                          <Info />
-                        </IconButton>
-                      </Tooltip>
-                    </TableCell>
+                    <OfferActions
+                      row={row}
+                      userRole={userRole}
+                      readConfig={readConfig}
+                      handleDeleteOfferClick={handleDeleteOfferClick}
+                      handleEditClick={handleEditClick}
+                      handleAddToCalendar={handleAddToCalendar}
+                      handleUpdateOfferAgentClick={handleUpdateOfferAgentClick}
+                      handleGoToOfferDetailsPage={handleGoToOfferDetailsPage}
+                    />
                   </TableRow>
                 ))
               ) : (
