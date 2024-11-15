@@ -18,12 +18,10 @@ function AddOfferPanel({ onSave, onCancel, users }) {
   const backendServer = serverConfig["backend-server"];
   const token = useReadCookie();
   const [formData, setFormData] = useState({
-    adres: {
-      ulica: "",
-      dzielnica: "",
-      poddzielnica: "",
-      miasto: "",
-    },
+    dzielnica: "",
+    ulica: "",
+    poddzielnica: "",
+    miasto: "",
     typInwestycji: "",
     iloscPokoi: "",
     metraz: "",
@@ -88,35 +86,20 @@ function AddOfferPanel({ onSave, onCancel, users }) {
   );
 
   const handleDistrictChange = (event) => {
-    if (krakowDistricts.includes(event.target.value)) {
-      handleChange({
-        target: {
-          name: "dzielnica",
-          value: event.target.value,
-        },
-      });
-      handleChange({
-        target: {
-          name: "miasto",
-          value: "Kraków",
-        },
-      });
-      setIsSubdistrictDisabled(false);
-    } else {
-      handleChange({
-        target: {
-          name: "dzielnica",
-          value: event.target.value,
-        },
-      });
-      handleChange({
-        target: {
-          name: "miasto",
-          value: "",
-        },
-      });
-      setIsSubdistrictDisabled(true);
-    }
+    const districtValue = event.target.value;
+    const isKrakowDistrict = krakowDistricts.includes(districtValue);
+
+    const updatedFormData = {
+      dzielnica: districtValue,
+      miasto: isKrakowDistrict ? "Kraków" : "",
+    };
+
+    setFormData((prev) => ({
+      ...prev,
+      ...updatedFormData,
+    }));
+
+    setIsSubdistrictDisabled(!isKrakowDistrict);
   };
 
   const handleSubdistrictChange = (event) => {
@@ -128,8 +111,8 @@ function AddOfferPanel({ onSave, onCancel, users }) {
     });
   };
 
-  const subdistricts = formData.adres.dzielnica
-    ? dzielniceData.Dzielnice[formData.adres.dzielnica]
+  const subdistricts = formData.dzielnica
+    ? dzielniceData.Dzielnice[formData.dzielnica]
     : [];
 
   const handleChange = async (e) => {
@@ -137,30 +120,10 @@ function AddOfferPanel({ onSave, onCancel, users }) {
     if (name === "telefonWlasciciela") {
       await debouncedCheckIfPhoneExists(value);
     }
-    if (
-      [
-        "ulica",
-        "dzielnica",
-        "miasto",
-        "numerDomu",
-        "numerMieszkania",
-        "poddzielnica",
-      ].includes(name)
-    ) {
-      setFormData((prevState) => ({
-        ...prevState,
-        adres: {
-          ...prevState.adres,
-          [name]: value,
-        },
-      }));
-    } else {
-      setFormData({
-        ...formData,
-        [name]: value,
-      });
-    }
-    console.log(e.target);
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
   };
 
   const validateForm = () => {
@@ -243,7 +206,8 @@ function AddOfferPanel({ onSave, onCancel, users }) {
                 <InputLabel id="district-label">Dzielnica</InputLabel>
                 <Select
                   labelId="district-label"
-                  value={formData.adres.dzielnica}
+                  name="dzielnica"
+                  value={formData.dzielnica || ""}
                   onChange={handleDistrictChange}
                   input={
                     <OutlinedInput
@@ -299,12 +263,12 @@ function AddOfferPanel({ onSave, onCancel, users }) {
                     borderColor: "#535968",
                   },
                 }}
-                disabled={!formData.adres.dzielnica || isSubdistrictDisabled}
+                disabled={!formData.dzielnica || isSubdistrictDisabled}
               >
                 <InputLabel id="subdistrict-label">Poddzielnica</InputLabel>
                 <Select
                   labelId="subdistrict-label"
-                  value={formData.adres.poddzielnica}
+                  value={formData.poddzielnica}
                   onChange={handleSubdistrictChange}
                   input={
                     <OutlinedInput
@@ -335,7 +299,7 @@ function AddOfferPanel({ onSave, onCancel, users }) {
               <CustomTextField
                 label="Ulica"
                 name="ulica"
-                value={formData.adres.ulica}
+                value={formData.ulica}
                 onChange={handleChange}
                 variant="outlined"
                 fullWidth
@@ -346,7 +310,7 @@ function AddOfferPanel({ onSave, onCancel, users }) {
               <CustomTextField
                 label="Miasto/Wieś"
                 name="miasto"
-                value={formData.adres.miasto}
+                value={formData.miasto}
                 onChange={handleChange}
                 variant="outlined"
                 fullWidth

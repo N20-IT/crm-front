@@ -11,10 +11,10 @@ import CustomTextField from "./CustomTextField";
 import dzielniceData from "../dzielnice_poddzielnice.json";
 
 const EditOfferPanel = ({ offerData, onSave, onCancel, users }) => {
-  const [formData, setFormData] = useState(offerData || { adres: {} });
+  const [formData, setFormData] = useState(offerData);
 
   useEffect(() => {
-    setFormData(offerData || { adres: {} });
+    setFormData(offerData);
   }, [offerData]);
 
   const [isSubdistrictDisabled, setIsSubdistrictDisabled] = useState(false);
@@ -40,35 +40,20 @@ const EditOfferPanel = ({ offerData, onSave, onCancel, users }) => {
   ];
 
   const handleDistrictChange = (event) => {
-    if (krakowDistricts.includes(event.target.value)) {
-      handleChange({
-        target: {
-          name: "dzielnica",
-          value: event.target.value,
-        },
-      });
-      handleChange({
-        target: {
-          name: "miasto",
-          value: "Kraków",
-        },
-      });
-      setIsSubdistrictDisabled(false);
-    } else {
-      handleChange({
-        target: {
-          name: "dzielnica",
-          value: event.target.value,
-        },
-      });
-      handleChange({
-        target: {
-          name: "miasto",
-          value: "",
-        },
-      });
-      setIsSubdistrictDisabled(true);
-    }
+    const districtValue = event.target.value;
+    const isKrakowDistrict = krakowDistricts.includes(districtValue);
+
+    const updatedFormData = {
+      dzielnica: districtValue,
+      miasto: isKrakowDistrict ? "Kraków" : "",
+    };
+
+    setFormData((prev) => ({
+      ...prev,
+      ...updatedFormData,
+    }));
+
+    setIsSubdistrictDisabled(!isKrakowDistrict);
   };
 
   const handleSubdistrictChange = (event) => {
@@ -80,36 +65,17 @@ const EditOfferPanel = ({ offerData, onSave, onCancel, users }) => {
     });
   };
 
-  const subdistricts = formData.adres?.dzielnica
-    ? dzielniceData.Dzielnice[formData.adres.dzielnica] || []
+  const subdistricts = formData.dzielnica
+    ? dzielniceData.Dzielnice[formData.dzielnica] || []
     : [];
 
   const handleChange = (e) => {
     const { name, value } = e.target;
 
-    if (
-      [
-        "ulica",
-        "dzielnica",
-        "miasto",
-        "numerDomu",
-        "numerMieszkania",
-        "poddzielnica",
-      ].includes(name)
-    ) {
-      setFormData((prevState) => ({
-        ...prevState,
-        adres: {
-          ...prevState.adres,
-          [name]: value,
-        },
-      }));
-    } else {
-      setFormData({
-        ...formData,
-        [name]: value,
-      });
-    }
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
   };
 
   const handleSave = () => {
@@ -157,7 +123,7 @@ const EditOfferPanel = ({ offerData, onSave, onCancel, users }) => {
                 <InputLabel id="district-label">Dzielnica</InputLabel>
                 <Select
                   labelId="district-label"
-                  value={formData.adres.dzielnica}
+                  value={formData.dzielnica}
                   onChange={handleDistrictChange}
                   input={
                     <OutlinedInput
@@ -213,12 +179,12 @@ const EditOfferPanel = ({ offerData, onSave, onCancel, users }) => {
                     borderColor: "#535968",
                   },
                 }}
-                disabled={!formData.adres.dzielnica || isSubdistrictDisabled}
+                disabled={!formData.dzielnica || isSubdistrictDisabled}
               >
                 <InputLabel id="subdistrict-label">Poddzielnica</InputLabel>
                 <Select
                   labelId="subdistrict-label"
-                  value={formData.adres.poddzielnica}
+                  value={formData.poddzielnica}
                   onChange={handleSubdistrictChange}
                   input={
                     <OutlinedInput
@@ -250,7 +216,7 @@ const EditOfferPanel = ({ offerData, onSave, onCancel, users }) => {
               <CustomTextField
                 label="Ulica"
                 name="ulica"
-                value={formData.adres.ulica}
+                value={formData.ulica}
                 onChange={handleChange}
                 variant="outlined"
                 fullWidth
@@ -261,7 +227,7 @@ const EditOfferPanel = ({ offerData, onSave, onCancel, users }) => {
               <CustomTextField
                 label="Miasto/Wieś"
                 name="miasto"
-                value={formData.adres.miasto}
+                value={formData.miasto}
                 onChange={handleChange}
                 variant="outlined"
                 fullWidth
