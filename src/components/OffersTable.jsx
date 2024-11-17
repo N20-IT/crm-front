@@ -44,8 +44,8 @@ function OffersTable({
   };
 
   const handleSelectAll = () => {
-    if (selected.length === rows.length) setSelected([]);
-    else setSelected(rows.map((row) => row._id));
+    if (selected.length === paginatedRows.length) setSelected([]);
+    else setSelected(paginatedRows.map((row) => row._id));
   };
 
   const handleSortRequest = (columnId) => {
