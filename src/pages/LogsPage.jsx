@@ -15,9 +15,16 @@ import {
   FormControl,
   InputLabel,
   CircularProgress,
+  Table,
+  TableHead,
+  TableRow,
+  TableCell,
+  TableBody,
 } from "@mui/material";
+import RestoreIcon from "@mui/icons-material/Restore";
 import axios from "axios";
 import serverConfig from "../servers.json";
+import Alerts from "../components/Alerts";
 
 function LogsPage() {
   const navigate = useNavigate();
@@ -30,9 +37,11 @@ function LogsPage() {
   const [alertMessage, setAlertMessage] = useState("");
   const [alertSeverity, setAlertSeverity] = useState("");
   const backendServer = serverConfig["backend-server"];
+  const [deletedOffers, setDeletedOffers] = useState([]);
 
   useEffect(() => {
     if (!isAuthenticated || userRole !== "admin") navigate("/");
+    // fetchDeletedOffers();
   }, [isAuthenticated, userRole, navigate]);
 
   const fetchLogs = useCallback(
@@ -45,7 +54,7 @@ function LogsPage() {
             Authorization: `Bearer ${token}`,
           },
         });
-        setLogs(response.data); // Upewnij się, że odpowiedź to tekst logów
+        setLogs(response.data);
       } catch (error) {
         console.log(error);
         setAlertOpen(true);
@@ -64,6 +73,66 @@ function LogsPage() {
     const formattedDate = date.toISOString().split("T")[0]; // format YYYY-MM-DD
     const filename = `${formattedDate}-all.log`;
     fetchLogs(filename);
+  };
+
+  const fetchDeletedOffers = useCallback(async () => {
+    setLoading(true);
+    try {
+      const response = await axios.get(`${backendServer}/listings/deleted`, {
+        headers: {
+          accept: "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      console.log(response.data);
+      setDeletedOffers(response.data);
+    } catch (error) {
+      console.error("Error fetching deleted offers:", error);
+    } finally {
+      setLoading(false);
+    }
+  }, [backendServer, token]);
+
+  const handleRestoreOffer = async (offerId) => {
+    try {
+      await axios.post(
+        `${backendServer}/listings/undelete/${offerId}`,
+        {},
+        {
+          headers: {
+            accept: "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      setDeletedOffers((prevOffers) =>
+        prevOffers.filter((offer) => offer.id !== offerId)
+      );
+    } catch (error) {
+      console.error("Error restoring offer:", error);
+    }
+  };
+
+  const handleRestoreAll = async () => {
+    try {
+      const response = await axios.post(
+        `${backendServer}/listings/undelete-all`,
+        {},
+        {
+          headers: {
+            accept: "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      setAlertOpen(true);
+      setAlertMessage(response.data.message);
+      setAlertSeverity("success");
+    } catch (error) {
+      setAlertOpen(true);
+      setAlertMessage("Wystąpił błąd podczas odzyskiwania ofert");
+      setAlertSeverity("error");
+    }
   };
 
   return (
@@ -85,13 +154,49 @@ function LogsPage() {
           <div className="ml-3 w-1/4">
             <Paper elevation={3} sx={{ padding: 3 }}>
               <Typography variant="h5" sx={{ fontWeight: "bold" }}>
-                Akcje
+                Usunięte oferty
               </Typography>
+              {/* <Box sx={{ marginTop: 2, overflowX: "auto" }}>
+                {loading ? (
+                  <CircularProgress size={24} sx={{ color: "#FC8721" }} />
+                ) : deletedOffers.length > 0 ? (
+                  <Table>
+                    <TableHead>
+                      <TableRow>
+                        <TableCell>Ulica</TableCell>
+                        <TableCell>Telefon</TableCell>
+                        <TableCell>Agent</TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {deletedOffers.map((offer) => (
+                        <TableRow key={offer.ulica}>
+                          <TableCell>{offer.telefonWlasciciela}</TableCell>
+                          <TableCell>{offer.agent}</TableCell>
+                          <TableCell>
+                            <IconButton
+                              onClick={() => handleRestoreOffer(offer.id)}
+                              // color="primary"
+                            >
+                              <RestoreIcon />
+                            </IconButton>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                ) : (
+                  <Typography variant="body2">
+                    Brak usuniętych ofert.
+                  </Typography>
+                )}
+              </Box> */}
               <Button
                 variant="contained"
+                onClick={() => handleRestoreAll()}
                 sx={{ marginTop: 2, backgroundColor: "#FC8721" }}
               >
-                Przywróć ofertę
+                Przywróć oferty
               </Button>
             </Paper>
           </div>
@@ -171,6 +276,12 @@ function LogsPage() {
           </div>
         </div>
       </Box>
+      <Alerts
+        message={alertMessage}
+        severity={alertSeverity}
+        open={alertOpen}
+        onClose={() => setAlertOpen(false)}
+      />
     </div>
   );
 }
