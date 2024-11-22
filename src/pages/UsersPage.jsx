@@ -5,26 +5,14 @@ import Sidebar from "../components/Sidebar";
 import { GetUserRoleFromToken } from "../utils/decodeToken";
 import axios from "axios";
 import serverConfig from "../servers.json";
-import {
-  TableContainer,
-  Paper,
-  Table,
-  TableHead,
-  TableRow,
-  TableCell,
-  TableBody,
-  Tooltip,
-  IconButton,
-  Checkbox,
-  TablePagination,
-  Skeleton,
-} from "@mui/material";
-import { Delete, Edit } from "@mui/icons-material";
+import { TableContainer, Paper, TablePagination } from "@mui/material";
 import TableControlsUsers from "../components/TableControlsUsers";
 import ConfirmDialog from "../components/ConfirmDialog";
 import Alerts from "../components/Alerts";
 import AddUserPanel from "../components/AddUserPanel";
 import EditUserPanel from "../components/EditUserPanel";
+import UsersTable from "../components/UsersTable";
+import columnsUsersConfig from "../config/columnsUsersConfig";
 function UsersPage() {
   const navigate = useNavigate();
   const token = useReadCookie();
@@ -44,16 +32,6 @@ function UsersPage() {
   const backendServer = serverConfig["backend-server"];
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(false);
-  const columns = [
-    { id: "email", label: "Email" },
-    { id: "imie", label: "Imię" },
-    { id: "nazwisko", label: "Nazwisko" },
-    { id: "custom:role", label: "Rola" },
-    {
-      id: "narzedzia",
-      label: "Narzędzia",
-    },
-  ];
 
   const fetchData = useCallback(async () => {
     setLoading(true);
@@ -221,147 +199,18 @@ function UsersPage() {
           maxHeight: "74.765%",
         }}
       >
-        <Table>
-          <TableHead style={{ backgroundColor: "#272F3E", width: "60px" }}>
-            <TableRow>
-              <TableCell
-                padding="checkbox"
-                style={{
-                  color: "white",
-                  textAlign: "center",
-                }}
-              >
-                <Checkbox
-                  checked={selected.length === users.length}
-                  indeterminate={
-                    selected.length > 0 && selected.length < users.length
-                  }
-                  onChange={handleSelectAll}
-                  style={{
-                    color: "white",
-                  }}
-                />
-              </TableCell>
-              {columns.map((column) => (
-                <TableCell
-                  key={column.id}
-                  style={{
-                    color: "white",
-                    textAlign: "center",
-                    fontFamily: "Poppins",
-                    minWidth: "8%",
-                  }}
-                >
-                  {column.label}
-                </TableCell>
-              ))}
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {loading
-              ? [...Array(rowsPerPage)].map((_, index) => (
-                  <TableRow key={index}>
-                    <TableCell colSpan={columns.length + 1}>
-                      <Skeleton
-                        variant="rounded"
-                        width="100%"
-                        height={16}
-                        animation="wave"
-                      />
-                    </TableCell>
-                  </TableRow>
-                ))
-              : users
-                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                  .map((user) => (
-                    <TableRow key={user.email}>
-                      <TableCell
-                        style={{
-                          textAlign: "center",
-                          padding: "5px",
-                          maxHeight: "60px",
-                        }}
-                      >
-                        <Checkbox
-                          checked={selected.includes(user.email)}
-                          onChange={() => handleSelect(user.email)}
-                          sx={{
-                            color: "#272F3E",
-                            "&.Mui-checked": {
-                              color: "#272F3E",
-                            },
-                          }}
-                        />
-                      </TableCell>
-                      <TableCell
-                        key={user.email}
-                        style={{
-                          textAlign: "center",
-                          fontFamily: "Poppins",
-                          minWidth: "8%",
-                        }}
-                      >
-                        {user.email}
-                      </TableCell>
-                      <TableCell
-                        key={user.imie}
-                        style={{
-                          textAlign: "center",
-                          fontFamily: "Poppins",
-                          minWidth: "8%",
-                        }}
-                      >
-                        {user.imie}
-                      </TableCell>
-                      <TableCell
-                        key={user.nazwisko}
-                        style={{
-                          textAlign: "center",
-                          fontFamily: "Poppins",
-                          minWidth: "8%",
-                        }}
-                      >
-                        {user.nazwisko}
-                      </TableCell>
-                      <TableCell
-                        key={user.role}
-                        style={{
-                          textAlign: "center",
-                          fontFamily: "Poppins",
-                          minWidth: "8%",
-                        }}
-                      >
-                        {user.role}
-                      </TableCell>
-                      <TableCell
-                        style={{
-                          textAlign: "center",
-                          maxHeight: "60px",
-                          padding: "0px",
-                          fontFamily: "Poppins",
-                        }}
-                      >
-                        <Tooltip title="Usuń">
-                          <IconButton
-                            sx={{ padding: "4px", color: "#A11D1D" }}
-                            onClick={() => handleDeleteUserClick(user._id)}
-                          >
-                            <Delete />
-                          </IconButton>
-                        </Tooltip>
-                        <Tooltip title="Edytuj">
-                          <IconButton
-                            onClick={() => handleEditUserClick(user)}
-                            sx={{ padding: "4px", color: "#6A99C7" }}
-                          >
-                            <Edit />
-                          </IconButton>
-                        </Tooltip>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-          </TableBody>
-        </Table>
+        <UsersTable
+          users={users}
+          selected={selected}
+          loading={loading}
+          onSelect={handleSelect}
+          onSelectAll={handleSelectAll}
+          onDeleteClick={handleDeleteUserClick}
+          onEditClick={handleEditUserClick}
+          columns={columnsUsersConfig}
+          rowsPerPage={rowsPerPage}
+          page={page}
+        />
       </TableContainer>
 
       <Alerts
