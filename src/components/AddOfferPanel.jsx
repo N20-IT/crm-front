@@ -613,6 +613,15 @@ function AddOfferPanel({ onSave, onCancel, users }) {
               </Select>
             </FormControl>
           </div>
+          <CustomTextField
+            label="Link do oferty"
+            name="linkOferta"
+            value={formData.linkOferta}
+            onChange={handleChange}
+            variant="outlined"
+            fullWidth
+            margin="normal"
+          />
 
           <div className="flex justify-end space-x-4 mt-4">
             <Button
