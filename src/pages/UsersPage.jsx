@@ -43,8 +43,8 @@ function UsersPage() {
   const [loading, setLoading] = useState(false);
   const columns = [
     { id: "email", label: "Email" },
-    { id: "name", label: "Imię" },
-    { id: "family_name", label: "Nazwisko" },
+    { id: "imie", label: "Imię" },
+    { id: "nazwisko", label: "Nazwisko" },
     { id: "custom:role", label: "Rola" },
     {
       id: "narzedzia",
@@ -55,23 +55,22 @@ function UsersPage() {
   const fetchData = useCallback(async () => {
     setLoading(true);
     try {
-      const response = await axios.get(`${backendServer}/list-users`, {
+      const response = await axios.get(`${backendServer}/users`, {
         headers: {
           accept: "application/json",
           Authorization: `Bearer ${token}`,
         },
       });
-      console.log("response: " + JSON.stringify(response));
-      const usersList = JSON.parse(response.data.body);
-
+      const usersList = response.data;
+      console.log(response.data);
       const mappedUsersList = usersList.map((user) => ({
         ...user,
-        "custom:role":
-          user["custom:role"] === "admin"
+        role:
+          user.role === "admin"
             ? "Administrator"
-            : user["custom:role"] === "user"
+            : user.role === "user"
             ? "Użytkownik"
-            : user["custom:role"],
+            : user.role,
       }));
 
       setUsers(mappedUsersList);
@@ -116,7 +115,7 @@ function UsersPage() {
 
   const handleDeleteUser = async (userId) => {
     try {
-      await axios.delete(`${backendServer}/delete-user`, {
+      await axios.delete(`${backendServer}/users/${userId}`, {
         headers: {
           accept: "application/json",
           Authorization: `Bearer ${token}`,
@@ -137,12 +136,13 @@ function UsersPage() {
 
   const handleSaveUser = async (userData) => {
     try {
-      await axios.post(`${backendServer}/create-user`, userData, {
+      await axios.post(`${backendServer}/users`, userData, {
         headers: {
           accept: "application/json",
           Authorization: `Bearer ${token}`,
         },
       });
+      console.log(userData);
       handleAddUserClick();
       await fetchData();
       setAlertOpen(true);
@@ -239,7 +239,7 @@ function UsersPage() {
               : users
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((user) => (
-                    <TableRow key={user.Email}>
+                    <TableRow key={user.email}>
                       <TableCell
                         style={{
                           textAlign: "center",
@@ -248,8 +248,8 @@ function UsersPage() {
                         }}
                       >
                         <Checkbox
-                          checked={selected.includes(user.Email)}
-                          onChange={() => handleSelect(user.Email)}
+                          checked={selected.includes(user.email)}
+                          onChange={() => handleSelect(user.email)}
                           sx={{
                             color: "#272F3E",
                             "&.Mui-checked": {
@@ -259,44 +259,44 @@ function UsersPage() {
                         />
                       </TableCell>
                       <TableCell
-                        key={user.Email}
+                        key={user.email}
                         style={{
                           textAlign: "center",
                           fontFamily: "Poppins",
                           minWidth: "8%",
                         }}
                       >
-                        {user.Email}
+                        {user.email}
                       </TableCell>
                       <TableCell
-                        key={user.Name}
+                        key={user.imie}
                         style={{
                           textAlign: "center",
                           fontFamily: "Poppins",
                           minWidth: "8%",
                         }}
                       >
-                        {user.Name}
+                        {user.imie}
                       </TableCell>
                       <TableCell
-                        key={user.FamilyName}
+                        key={user.nazwisko}
                         style={{
                           textAlign: "center",
                           fontFamily: "Poppins",
                           minWidth: "8%",
                         }}
                       >
-                        {user.FamilyName}
+                        {user.nazwisko}
                       </TableCell>
                       <TableCell
-                        key={user["custom:role"]}
+                        key={user.role}
                         style={{
                           textAlign: "center",
                           fontFamily: "Poppins",
                           minWidth: "8%",
                         }}
                       >
-                        {user["custom:role"]}
+                        {user.role}
                       </TableCell>
                       <TableCell
                         style={{
@@ -309,7 +309,7 @@ function UsersPage() {
                         <Tooltip title="Usuń">
                           <IconButton
                             sx={{ padding: "4px" }}
-                            onClick={() => handleDeleteUserClick(user.Email)}
+                            onClick={() => handleDeleteUserClick(user._id)}
                           >
                             <Delete />
                           </IconButton>
