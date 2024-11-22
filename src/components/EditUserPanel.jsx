@@ -15,7 +15,11 @@ function EditUserPanel({ initialData, onSave, onCancel }) {
 
   const handleSave = async () => {
     try {
-      await onSave(formData);
+      const updatedFormData = {
+        ...formData,
+        role: formData.role === "Administrator" ? "admin" : "user",
+      };
+      await onSave(updatedFormData);
     } catch (error) {
       console.log("Wystąpił błąd podczas zapisywania: ", error);
     }

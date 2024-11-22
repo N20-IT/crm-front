@@ -110,6 +110,7 @@ function UsersPage() {
           },
         }
       );
+      handleEditUserClickCancel();
       setAlertOpen(true);
       setAlertMessage("Pomyslnie edytowano użytkownika");
       setAlertSeverity("success");
