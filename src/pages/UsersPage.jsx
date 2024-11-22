@@ -19,11 +19,12 @@ import {
   TablePagination,
   Skeleton,
 } from "@mui/material";
-import { Delete } from "@mui/icons-material";
+import { Delete, Edit } from "@mui/icons-material";
 import TableControlsUsers from "../components/TableControlsUsers";
 import ConfirmDialog from "../components/ConfirmDialog";
 import Alerts from "../components/Alerts";
 import AddUserPanel from "../components/AddUserPanel";
+import EditUserPanel from "../components/EditUserPanel";
 function UsersPage() {
   const navigate = useNavigate();
   const token = useReadCookie();
@@ -38,6 +39,8 @@ function UsersPage() {
   const [isAddUserPanelOpen, setAddUserPanelOpen] = useState(false);
   const userRole = GetUserRoleFromToken();
   const [userIdToDelete, setUserIdToDelete] = useState(null);
+  const [userToEdit, setUserToEdit] = useState(null);
+  const [isEditUserPanelOpen, setIsEditUserPanelOpen] = useState(false);
   const backendServer = serverConfig["backend-server"];
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -62,7 +65,6 @@ function UsersPage() {
         },
       });
       const usersList = response.data;
-      console.log(response.data);
       const mappedUsersList = usersList.map((user) => ({
         ...user,
         role:
@@ -108,8 +110,41 @@ function UsersPage() {
     setOpenDialog(false);
   };
 
-  const handleDeleteUserClick = (offerId) => {
-    setUserIdToDelete(offerId);
+  const handleEditUserClick = (userId) => {
+    setUserToEdit(userId);
+    setIsEditUserPanelOpen(!isEditUserPanelOpen);
+  };
+
+  const handleEditUserClickCancel = () => {
+    setUserToEdit("");
+    setIsEditUserPanelOpen(!isEditUserPanelOpen);
+  };
+
+  const handleEditUser = async (updatedUserData) => {
+    try {
+      await axios.put(
+        `${backendServer}/users/${updatedUserData._id}`,
+        updatedUserData,
+        {
+          headers: {
+            accept: "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      setAlertOpen(true);
+      setAlertMessage("Pomyslnie edytowano użytkownika");
+      setAlertSeverity("success");
+      await fetchData();
+    } catch (error) {
+      setAlertOpen(true);
+      setAlertMessage("Błąd podczas edytowania użytkownika: " + error.message);
+      setAlertSeverity("error");
+    }
+  };
+
+  const handleDeleteUserClick = (userId) => {
+    setUserIdToDelete(userId);
     setOpenDialog(true);
   };
 
@@ -129,7 +164,7 @@ function UsersPage() {
       setSelected([]);
     } catch (error) {
       setAlertOpen(true);
-      setAlertMessage("Błąd podczas usuwania ofert: " + error.message);
+      setAlertMessage("Błąd podczas usuwania użytkownika: " + error.message);
       setAlertSeverity("error");
     }
   };
@@ -142,7 +177,6 @@ function UsersPage() {
           Authorization: `Bearer ${token}`,
         },
       });
-      console.log(userData);
       handleAddUserClick();
       await fetchData();
       setAlertOpen(true);
@@ -158,6 +192,7 @@ function UsersPage() {
   const handleAddUserClick = () => {
     setAddUserPanelOpen(!isAddUserPanelOpen);
   };
+
   useEffect(() => {
     if (!isAuthenticated || userRole !== "admin") navigate("/");
     fetchData();
@@ -308,10 +343,18 @@ function UsersPage() {
                       >
                         <Tooltip title="Usuń">
                           <IconButton
-                            sx={{ padding: "4px" }}
+                            sx={{ padding: "4px", color: "#A11D1D" }}
                             onClick={() => handleDeleteUserClick(user._id)}
                           >
                             <Delete />
+                          </IconButton>
+                        </Tooltip>
+                        <Tooltip title="Edytuj">
+                          <IconButton
+                            onClick={() => handleEditUserClick(user)}
+                            sx={{ padding: "4px", color: "#6A99C7" }}
+                          >
+                            <Edit />
                           </IconButton>
                         </Tooltip>
                       </TableCell>
@@ -340,6 +383,13 @@ function UsersPage() {
       />
       {isAddUserPanelOpen && (
         <AddUserPanel onSave={handleSaveUser} onCancel={handleAddUserClick} />
+      )}
+      {isEditUserPanelOpen && (
+        <EditUserPanel
+          initialData={userToEdit}
+          onSave={handleEditUser}
+          onCancel={handleEditUserClickCancel}
+        />
       )}
       <TablePagination
         component="div"
