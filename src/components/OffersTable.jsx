@@ -32,10 +32,10 @@ function OffersTable({
   handleUpdateOfferAgentClick,
   handleGoToOfferDetailsPage,
 }) {
-  const [order, setOrder] = useState("asc");
-  const [orderBy, setOrderBy] = useState("");
+  const [order, setOrder] = useState("desc");
+  const [orderBy, setOrderBy] = useState("dataUtworzenia");
   const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [rowsPerPage, setRowsPerPage] = useState(100);
 
   const handleSelect = (id) => {
     if (selected.includes(id))
@@ -114,6 +114,7 @@ function OffersTable({
   const filteredColumns = columns.filter((column) =>
     readConfig === 0 ? column.view === "basic" : true
   );
+
   return (
     <TableContainer
       component={Paper}

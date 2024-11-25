@@ -117,7 +117,7 @@ function AddOfferPanel({ onSave, onCancel, users }) {
 
   const handleChange = async (e) => {
     const { name, value } = e.target;
-    if (name === "telefonWlasciciela") {
+    if (name === "telefonWlasciciela" && value.length === 9) {
       await debouncedCheckIfPhoneExists(value);
     }
     setFormData({
