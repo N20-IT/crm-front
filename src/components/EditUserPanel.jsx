@@ -2,12 +2,8 @@ import React, { useState } from "react";
 import { Button } from "@mui/material";
 import UserForm from "./UserForm";
 
-function AddUserPanel({ onSave, onCancel }) {
-  const [formData, setFormData] = useState({
-    email: "",
-    imie: "",
-    nazwisko: "",
-  });
+function EditUserPanel({ initialData, onSave, onCancel }) {
+  const [formData, setFormData] = useState(initialData);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -19,17 +15,20 @@ function AddUserPanel({ onSave, onCancel }) {
 
   const handleSave = async () => {
     try {
-      await onSave(formData);
+      const updatedFormData = {
+        ...formData,
+        role: formData.role === "Administrator" ? "admin" : "user",
+      };
+      await onSave(updatedFormData);
     } catch (error) {
-      console.error("Wystąpił błąd podczas zapisywania:", error);
+      console.log("Wystąpił błąd podczas zapisywania: ", error);
     }
   };
-
   return (
     <div className=" fixed inset-0 bg-light-grey bg-opacity-75 flex items-center justify-center z-50">
       <div className="bg-white p-6 rounded-lg shadow-lg w-1/3">
         <h2 className="text-4xl font-bold mb-4 font-poppins">
-          Dodaj nowego użytkownika
+          Edytuj użytkownika
         </h2>
         <form>
           <div className="w-full">
@@ -69,4 +68,4 @@ function AddUserPanel({ onSave, onCancel }) {
   );
 }
 
-export default AddUserPanel;
+export default EditUserPanel;
