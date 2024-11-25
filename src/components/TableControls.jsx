@@ -235,7 +235,7 @@ function TableControls({
           ...new Set(
             dzielnica.flatMap((district) => dzielniceData.Dzielnice[district])
           ),
-        ]
+        ].sort()
       : [];
 
   const handleFilterApply = () => {
