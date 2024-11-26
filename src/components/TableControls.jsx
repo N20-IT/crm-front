@@ -29,6 +29,7 @@ function TableControls({
   deleteMultipleOffersClick,
   onSearchChange,
   onFilterApply,
+  allUsers,
 }) {
   const [searchValue, setSearchValue] = useState("");
   const [filters, setFilters] = useState({});
@@ -62,6 +63,7 @@ function TableControls({
     maxZlM2: false,
   });
   const [zlM2Error, setZlM2Error] = useState(false);
+  const [agent, setAgent] = useState("");
   const [status, setStatus] = useState(false);
   const [priceError, setPriceError] = useState(false);
   const [priceTouched, setpriceTouched] = useState({
@@ -253,6 +255,7 @@ function TableControls({
       if (maxPrice !== "") filters.maxPrice = maxPrice;
       if (minZlM2 !== "") filters.minZlM2 = minZlM2;
       if (maxZlM2 !== "") filters.maxZlM2 = maxZlM2;
+      if (agent !== "") filters.agent = agent;
       if (status) filters.statusOferty = status;
       setFilters(filters);
       onFilterApply(searchValue, filters, columnConfig);
@@ -692,55 +695,116 @@ function TableControls({
             error={zlM2Error && Number(maxZlM2) < Number(minZlM2)}
           />
         </div>
-        <FormControl
-          fullWidth
-          multiple
-          sx={{
-            marginTop: "12px",
-            "& .MuiOutlinedInput-root": {
-              borderRadius: "6px",
-              fontFamily: "Poppins",
-              fontSize: "18px",
-            },
-            "& .MuiFormLabel-root": {
-              fontFamily: "Poppins",
-              fontSize: "18px",
-              color: "#535968",
-            },
-            "& .MuiInputLabel-root.Mui-focused": {
-              color: "#535968",
-            },
-            "& .MuiOutlinedInput-notchedOutline": {
-              borderColor: "#535968",
-            },
-            "&:hover .MuiOutlinedInput-notchedOutline": {
-              borderColor: "#535968",
-            },
-            "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-              borderColor: "#535968",
-            },
-            "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline": {
-              borderColor: "#535968",
-            },
-          }}
-        >
-          <InputLabel>Status</InputLabel>
-          <Select
-            value={status}
-            onChange={(e) => setStatus(e.target.value)}
-            label="Status"
+        <div className="flex justify-end space-x-4 mt-3">
+          <FormControl
+            fullWidth
+            sx={{
+              marginTop: "12px",
+              "& .MuiOutlinedInput-root": {
+                borderRadius: "6px",
+                fontFamily: "Poppins",
+                fontSize: "18px",
+              },
+              "& .MuiFormLabel-root": {
+                fontFamily: "Poppins",
+                fontSize: "18px",
+                color: "#535968",
+              },
+              "& .MuiInputLabel-root.Mui-focused": {
+                color: "#535968",
+              },
+              "& .MuiOutlinedInput-notchedOutline": {
+                borderColor: "#535968",
+              },
+              "&:hover .MuiOutlinedInput-notchedOutline": {
+                borderColor: "#535968",
+              },
+              "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                borderColor: "#535968",
+              },
+              "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                borderColor: "#535968",
+              },
+            }}
           >
-            <MenuItem value="">
-              <em>Brak</em>
-            </MenuItem>
-            <MenuItem value="Wolny">Wolny</MenuItem>
-            <MenuItem value="Zajęty">Zajęty</MenuItem>
-            <MenuItem value="Chętny">Chętny</MenuItem>
-            <MenuItem value="Spotkanie">Spotkanie</MenuItem>
-            <MenuItem value="W kontakcie">W kontakcie</MenuItem>
-            <MenuItem value="Był kontakt">Był kontakt</MenuItem>
-          </Select>
-        </FormControl>
+            <InputLabel>Agent</InputLabel>
+            <Select
+              input={
+                <OutlinedInput
+                  sx={{
+                    "& .MuiOutlinedInput-notchedOutline": {
+                      borderColor: "#535968",
+                    },
+
+                    "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                      borderColor: "#535968",
+                    },
+                  }}
+                  label="Agent"
+                />
+              }
+              value={agent}
+              onChange={(e) => setAgent(e.target.value)}
+              fullWidth
+            >
+              {allUsers.map((user) => (
+                <MenuItem key={user} value={user}>
+                  {user}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+
+          <FormControl
+            fullWidth
+            multiple
+            sx={{
+              marginTop: "12px",
+              "& .MuiOutlinedInput-root": {
+                borderRadius: "6px",
+                fontFamily: "Poppins",
+                fontSize: "18px",
+              },
+              "& .MuiFormLabel-root": {
+                fontFamily: "Poppins",
+                fontSize: "18px",
+                color: "#535968",
+              },
+              "& .MuiInputLabel-root.Mui-focused": {
+                color: "#535968",
+              },
+              "& .MuiOutlinedInput-notchedOutline": {
+                borderColor: "#535968",
+              },
+              "&:hover .MuiOutlinedInput-notchedOutline": {
+                borderColor: "#535968",
+              },
+              "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                borderColor: "#535968",
+              },
+              "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                borderColor: "#535968",
+              },
+            }}
+          >
+            <InputLabel>Status</InputLabel>
+            <Select
+              value={status}
+              onChange={(e) => setStatus(e.target.value)}
+              label="Status"
+            >
+              <MenuItem value="">
+                <em>Brak</em>
+              </MenuItem>
+              <MenuItem value="Wolny">Wolny</MenuItem>
+              <MenuItem value="Zajęty">Zajęty</MenuItem>
+              <MenuItem value="Chętny">Chętny</MenuItem>
+              <MenuItem value="Spotkanie">Spotkanie</MenuItem>
+              <MenuItem value="W kontakcie">W kontakcie</MenuItem>
+              <MenuItem value="Był kontakt">Był kontakt</MenuItem>
+            </Select>
+          </FormControl>
+        </div>
         <Button
           variant="contained"
           sx={{
