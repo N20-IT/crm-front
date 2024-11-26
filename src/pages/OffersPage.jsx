@@ -38,7 +38,6 @@ function OffersPage() {
   const backendServer = serverConfig["backend-server"];
   const [searchQuery] = useState("");
   const [users, setUsers] = useState([]);
-  const [email, setEmail] = GetInformationFromToken("email");
   const userInformation =
     GetInformationFromToken("name") +
     " " +
@@ -165,7 +164,7 @@ function OffersPage() {
 
   const handleConfirmOfferAssignment = async () => {
     try {
-      const updatedData = { agent: email };
+      const updatedData = { agent: userInformation };
       await axios.put(
         `${backendServer}/listings/${offerIdToUpdateAgent}`,
         updatedData,
