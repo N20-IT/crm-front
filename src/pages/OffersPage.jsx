@@ -38,6 +38,7 @@ function OffersPage() {
   const backendServer = serverConfig["backend-server"];
   const [searchQuery] = useState("");
   const [users, setUsers] = useState([]);
+  const [allUsers, setAllUsers] = useState([]);
   const userInformation =
     GetInformationFromToken("name") +
     " " +
@@ -57,7 +58,11 @@ function OffersPage() {
       });
       const usersList = response.data;
       const agents = usersList.map((user) => user.imie + " " + user.nazwisko);
-      setUsers(agents);
+      if (userRole === "admin") setUsers(agents);
+      else {
+        setUsers([userInformation]);
+        setAllUsers(agents);
+      }
     } catch (error) {
       console.log(error);
     }
@@ -262,7 +267,7 @@ function OffersPage() {
 
   useEffect(() => {
     if (!isAuthenticated) navigate("/");
-    userRole === "admin" ? fetchAgents() : setUsers([userInformation]);
+    fetchAgents();
     fetchData(searchQuery);
   }, [
     isAuthenticated,
@@ -287,7 +292,7 @@ function OffersPage() {
             deleteMultipleOffersClick={handleDeleteMiltipleOffers}
             onSearchChange={handleSearchAndFilter}
             onFilterApply={handleSearchAndFilter}
-            users={users}
+            allUsers={allUsers.length !== 0 ? allUsers : users}
           />
         </div>
         <OffersTable
