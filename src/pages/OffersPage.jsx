@@ -10,7 +10,7 @@ import AddOfferPanel from "../components/AddOfferPanel";
 import ConfirmDialog from "../components/ConfirmDialog";
 import EditOfferPanel from "../components/EditOfferPanel";
 import serverConfig from "../servers.json";
-import { GetEmailFromToken, GetUserRoleFromToken } from "../utils/decodeToken";
+import { GetInformationFromToken } from "../utils/decodeToken";
 import { useReadConfig } from "../config/columnConfig";
 import OffersTable from "../components/OffersTable";
 import columnsOffersConfig from "../config/columnsOffersConfig";
@@ -38,22 +38,26 @@ function OffersPage() {
   const backendServer = serverConfig["backend-server"];
   const [searchQuery] = useState("");
   const [users, setUsers] = useState([]);
-  const email = GetEmailFromToken();
-  const userRole = GetUserRoleFromToken();
+  const [email, setEmail] = GetInformationFromToken("email");
+  const userInformation =
+    GetInformationFromToken("name") +
+    " " +
+    GetInformationFromToken("family_name");
+  const userRole = GetInformationFromToken("custom:role");
   const [readConfig, setReadConfig] = useState(useReadConfig());
 
   const columns = useMemo(() => columnsOffersConfig, []);
 
   const fetchAgents = useCallback(async () => {
     try {
-      const response = await axios.get(`${backendServer}/list-users`, {
+      const response = await axios.get(`${backendServer}/users`, {
         headers: {
           accept: "application/json",
           Authorization: `Bearer ${token}`,
         },
       });
-      const usersList = JSON.parse(response.data.body);
-      const agents = usersList.map((user) => user.Name + " " + user.FamilyName);
+      const usersList = response.data;
+      const agents = usersList.map((user) => user.imie + " " + user.nazwisko);
       setUsers(agents);
     } catch (error) {
       console.log(error);
@@ -259,9 +263,16 @@ function OffersPage() {
 
   useEffect(() => {
     if (!isAuthenticated) navigate("/");
-    userRole === "admin" ? fetchAgents() : setUsers([email]);
+    userRole === "admin" ? fetchAgents() : setUsers([userInformation]);
     fetchData(searchQuery);
-  }, [isAuthenticated, navigate, searchQuery, fetchAgents, email, userRole]);
+  }, [
+    isAuthenticated,
+    navigate,
+    searchQuery,
+    fetchAgents,
+    userInformation,
+    userRole,
+  ]);
 
   return (
     <div>
