@@ -8,13 +8,13 @@ import {
   Logout,
 } from "@mui/icons-material";
 import { Link, useLocation } from "react-router-dom";
-import { GetUserRoleFromToken } from "../utils/decodeToken";
+import { GetInformationFromToken } from "../utils/decodeToken";
 import { Button } from "@mui/material";
 import { useLogout } from "../utils/auth";
 
 const Sidebar = () => {
   const location = useLocation();
-  const userRole = GetUserRoleFromToken();
+  const userRole = GetInformationFromToken("custom:role");
   const logout = useLogout();
 
   const getLinkClass = (path) => {

@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth, useReadCookie } from "../utils/auth";
 import Sidebar from "../components/Sidebar";
-import { GetUserRoleFromToken } from "../utils/decodeToken";
+import { GetInformationFromToken } from "../utils/decodeToken";
 import axios from "axios";
 import serverConfig from "../servers.json";
 import { TableContainer, Paper, TablePagination } from "@mui/material";
@@ -25,7 +25,7 @@ function UsersPage() {
   const [alertSeverity, setAlertSeverity] = useState("");
   const [alertOpen, setAlertOpen] = useState(false);
   const [isAddUserPanelOpen, setAddUserPanelOpen] = useState(false);
-  const userRole = GetUserRoleFromToken();
+  const userRole = GetInformationFromToken("custom:role");
   const [userIdToDelete, setUserIdToDelete] = useState(null);
   const [userToEdit, setUserToEdit] = useState(null);
   const [isEditUserPanelOpen, setIsEditUserPanelOpen] = useState(false);

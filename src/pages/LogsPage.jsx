@@ -2,7 +2,7 @@ import React, { useEffect, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth, useReadCookie } from "../utils/auth";
 import Sidebar from "../components/Sidebar";
-import { GetUserRoleFromToken } from "../utils/decodeToken";
+import { GetInformationFromToken } from "../utils/decodeToken";
 import {
   Box,
   Grid,
@@ -30,7 +30,7 @@ function LogsPage() {
   const navigate = useNavigate();
   const token = useReadCookie();
   const isAuthenticated = useAuth();
-  const userRole = GetUserRoleFromToken();
+  const userRole = GetInformationFromToken("custom:role");
   const [logs, setLogs] = useState("");
   const [loading, setLoading] = useState(false);
   const [alertOpen, setAlertOpen] = useState(false);
