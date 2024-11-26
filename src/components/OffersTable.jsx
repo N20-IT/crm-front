@@ -259,7 +259,15 @@ function OffersTable({
                   true
                 )}
                 {readConfig === 1 ? (
-                  <CustomTableCell>{row.komentarz}</CustomTableCell>
+                  <CustomTableCell>
+                    {row.komentarz.length > 50 ? (
+                      <Tooltip title={row.komentarz}>
+                        <span>{row.komentarz.slice(0, 50)} ...</span>
+                      </Tooltip>
+                    ) : (
+                      row.komentarz
+                    )}
+                  </CustomTableCell>
                 ) : (
                   true
                 )}
