@@ -41,7 +41,6 @@ function LogsPage() {
 
   useEffect(() => {
     if (!isAuthenticated || userRole !== "admin") navigate("/");
-    // fetchDeletedOffers();
   }, [isAuthenticated, userRole, navigate]);
 
   const fetchLogs = useCallback(
@@ -84,7 +83,6 @@ function LogsPage() {
           Authorization: `Bearer ${token}`,
         },
       });
-      console.log(response.data);
       setDeletedOffers(response.data);
     } catch (error) {
       console.error("Error fetching deleted offers:", error);
@@ -110,6 +108,27 @@ function LogsPage() {
       );
     } catch (error) {
       console.error("Error restoring offer:", error);
+    }
+  };
+
+  const handleRestoreOffers = async (type) => {
+    try {
+      const response = await axios.get(`${backendServer}/listings/undelete`, {
+        headers: {
+          accept: "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        params: {
+          type: type,
+        },
+      });
+      setAlertOpen(true);
+      setAlertMessage("Poprawnie przywrócono oferty");
+      setAlertSeverity("success");
+    } catch (error) {
+      setAlertOpen(true);
+      setAlertMessage("Wystąpił błąd podczas odzyskiwania ofert");
+      setAlertSeverity("error");
     }
   };
 
@@ -154,7 +173,7 @@ function LogsPage() {
           <div className="ml-3 w-1/4">
             <Paper elevation={3} sx={{ padding: 3 }}>
               <Typography variant="h5" sx={{ fontWeight: "bold" }}>
-                Usunięte oferty
+                Przywracanie ofert
               </Typography>
               {/* <Box sx={{ marginTop: 2, overflowX: "auto" }}>
                 {loading ? (
@@ -194,9 +213,31 @@ function LogsPage() {
               <Button
                 variant="contained"
                 onClick={() => handleRestoreAll()}
-                sx={{ marginTop: 2, backgroundColor: "#FC8721" }}
+                sx={{ marginTop: 2, backgroundColor: "#FC8721", width: "100%" }}
               >
                 Przywróć oferty
+              </Button>
+
+              <Button
+                variant="contained"
+                onClick={() => handleRestoreOffers(0)}
+                sx={{ marginTop: 2, backgroundColor: "#FC8721", width: "100%" }}
+              >
+                Ostatnie 24h
+              </Button>
+              <Button
+                variant="contained"
+                onClick={() => handleRestoreOffers(1)}
+                sx={{ marginTop: 2, backgroundColor: "#FC8721", width: "100%" }}
+              >
+                Ostatnie 3 dni
+              </Button>
+              <Button
+                variant="contained"
+                onClick={() => handleRestoreOffers(2)}
+                sx={{ marginTop: 2, backgroundColor: "#FC8721", width: "100%" }}
+              >
+                Ostatnie 7 dni
               </Button>
             </Paper>
           </div>
