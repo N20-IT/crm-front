@@ -277,6 +277,7 @@ function TableControls({
     setMinZlM2("");
     setMaxZlM2("");
     setStatus("");
+    setAgent("");
     setFilters({});
     setSearchValue("");
     onFilterApply("", {}, readConfig);
