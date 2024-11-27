@@ -68,7 +68,7 @@ const columnsOffersConfig = [
   {
     id: "daneWlasciciela",
     label: "Dane właściciela",
-    sortable: false,
+    sortable: true,
     view: "extended",
   },
   {
@@ -80,7 +80,7 @@ const columnsOffersConfig = [
   {
     id: "agent",
     label: "Agent",
-    sortable: false,
+    sortable: true,
     view: "basic",
   },
   { id: "tworca", label: "Twórca", sortable: false, view: "extended" },

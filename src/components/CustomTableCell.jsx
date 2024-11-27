@@ -10,6 +10,7 @@ const CustomTableCell = ({ sx = {}, children, ...rest }) => {
         maxHeight: "60px",
         fontFamily: "Poppins",
         fontSize: "13px",
+        width: "9.5%",
         ...sx,
       }}
     >

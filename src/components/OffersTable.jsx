@@ -238,23 +238,25 @@ function OffersTable({
                   true
                 )}
 
-                <CustomTableCell>{row.typInwestycji}</CustomTableCell>
-                <CustomTableCell>{row.iloscPokoi}</CustomTableCell>
-                <CustomTableCell>{row.metraz}</CustomTableCell>
+                <CustomTableCell>{row.typInwestycji || ""}</CustomTableCell>
+                <CustomTableCell>{row.iloscPokoi || ""}</CustomTableCell>
+                <CustomTableCell>{row.metraz || ""}</CustomTableCell>
                 {readConfig === 1 ? (
-                  <CustomTableCell>{row.powDzialki}</CustomTableCell>
+                  <CustomTableCell>{row.powDzialki || ""}</CustomTableCell>
                 ) : (
                   true
                 )}
-                <CustomTableCell>{row.cena}</CustomTableCell>
+                <CustomTableCell>{row.cena || ""}</CustomTableCell>
                 {readConfig === 1 ? (
-                  <CustomTableCell>{row.zlM2}</CustomTableCell>
+                  <CustomTableCell>{row.zlM2 || ""}</CustomTableCell>
                 ) : (
                   true
                 )}
-                <CustomTableCell>{row.telefonWlasciciela}</CustomTableCell>
+                <CustomTableCell>
+                  {row.telefonWlasciciela || ""}
+                </CustomTableCell>
                 {readConfig === 1 ? (
-                  <CustomTableCell>{row.daneWlasciciela}</CustomTableCell>
+                  <CustomTableCell>{row.daneWlasciciela || ""}</CustomTableCell>
                 ) : (
                   true
                 )}
@@ -272,10 +274,10 @@ function OffersTable({
                   true
                 )}
                 <CustomTableCell>
-                  <strong>{row.agent}</strong>
+                  <strong>{row.agent || ""}</strong>
                 </CustomTableCell>
                 {readConfig === 1 ? (
-                  <CustomTableCell>{row.tworca}</CustomTableCell>
+                  <CustomTableCell>{row.tworca || ""}</CustomTableCell>
                 ) : (
                   true
                 )}
