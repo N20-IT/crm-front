@@ -17,6 +17,7 @@ import {
 import { Language } from "@mui/icons-material";
 import OfferActions from "../components/OfferAction";
 import CustomTableCell from "./CustomTableCell";
+import statusesConfig from "../config/statusesConfig";
 
 function OffersTable({
   rows,
@@ -283,24 +284,10 @@ function OffersTable({
                 )}
                 <CustomTableCell
                   sx={{
-                    color: (() => {
-                      switch (row.statusOferty) {
-                        case "Wolny":
-                          return "green";
-                        case "Zajęty":
-                          return "red";
-                        case "Chętny":
-                          return "#FFA500";
-                        case "Spotkanie":
-                          return "#1E90FF";
-                        case "W kontakcie":
-                          return "#8A2BE2";
-                        case "Był kontakt":
-                          return "#004400";
-                        default:
-                          return "black";
-                      }
-                    })(),
+                    color:
+                      statusesConfig.find(
+                        (status) => status.value === row.statusOferty
+                      )?.color || "black",
                     fontSize: "13px",
                   }}
                 >

@@ -13,6 +13,7 @@ import axios from "axios";
 import serverConfig from "../servers.json";
 import { useReadCookie } from "../utils/auth";
 import { debounce } from "lodash";
+import statusesConfig from "../config/statusesConfig";
 
 function AddOfferPanel({ onSave, onCancel, users }) {
   const backendServer = serverConfig["backend-server"];
@@ -601,15 +602,11 @@ function AddOfferPanel({ onSave, onCancel, users }) {
                 }
                 label="Status"
               >
-                <MenuItem value="">
-                  <em>Brak</em>
-                </MenuItem>
-                <MenuItem value="Wolny">Wolny</MenuItem>
-                <MenuItem value="Zajęty">Zajęty</MenuItem>
-                <MenuItem value="Chętny">Chętny</MenuItem>
-                <MenuItem value="Spotkanie">Spotkanie</MenuItem>
-                <MenuItem value="W kontakcie">W kontakcie</MenuItem>
-                <MenuItem value="Był kontakt">Był kontakt</MenuItem>
+                {statusesConfig.map((status) => (
+                  <MenuItem key={status.value} value={status.value}>
+                    {status.label}
+                  </MenuItem>
+                ))}
               </Select>
             </FormControl>
           </div>

@@ -22,6 +22,7 @@ import { KeyboardArrowDown } from "@mui/icons-material";
 import CustomTextField from "./CustomTextField";
 import { useChangeColumnConfig, useReadConfig } from "../config/columnConfig";
 import dzielniceData from "../dzielnice_poddzielnice.json";
+import statusesConfig from "../config/statusesConfig";
 
 function TableControls({
   selectedCount,
@@ -794,15 +795,11 @@ function TableControls({
               onChange={(e) => setStatus(e.target.value)}
               label="Status"
             >
-              <MenuItem value="">
-                <em>Brak</em>
-              </MenuItem>
-              <MenuItem value="Wolny">Wolny</MenuItem>
-              <MenuItem value="Zajęty">Zajęty</MenuItem>
-              <MenuItem value="Chętny">Chętny</MenuItem>
-              <MenuItem value="Spotkanie">Spotkanie</MenuItem>
-              <MenuItem value="W kontakcie">W kontakcie</MenuItem>
-              <MenuItem value="Był kontakt">Był kontakt</MenuItem>
+              {statusesConfig.map((status) => (
+                <MenuItem key={status.value} value={status.value}>
+                  {status.label}
+                </MenuItem>
+              ))}
             </Select>
           </FormControl>
         </div>
