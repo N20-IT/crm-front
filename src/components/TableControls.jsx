@@ -243,20 +243,22 @@ function TableControls({
 
   const handleFilterApply = () => {
     if (!priceError && !zlM2Error && !iloscPokoiError && !metrazError) {
-      if (ulica) filters.ulica = ulica;
+      if (ulica !== filters.ulica) filters.ulica = ulica;
       if (dzielnica) filters.dzielnica = dzielnica;
       if (poddzielnica) filters.poddzielnica = poddzielnica;
-      if (miasto) filters.miasto = miasto;
+      if (miasto !== filters.miasto) filters.miasto = miasto;
       if (typInwestycji) filters.typInwestycji = typInwestycji;
-      if (minIloscPokoi !== "") filters.minIloscPokoi = minIloscPokoi;
-      if (maxIloscPokoi !== "") filters.maxIloscPokoi = maxIloscPokoi;
-      if (minMetraz !== "") filters.minMetraz = minMetraz;
-      if (maxMetraz !== "") filters.maxMetraz = maxMetraz;
-      if (minPrice !== "") filters.minPrice = minPrice;
-      if (maxPrice !== "") filters.maxPrice = maxPrice;
-      if (minZlM2 !== "") filters.minZlM2 = minZlM2;
-      if (maxZlM2 !== "") filters.maxZlM2 = maxZlM2;
-      if (agent !== "") filters.agent = agent;
+      if (minIloscPokoi !== filters.minIloscPokoi)
+        filters.minIloscPokoi = minIloscPokoi;
+      if (maxIloscPokoi !== filters.maxIloscPokoi)
+        filters.maxIloscPokoi = maxIloscPokoi;
+      if (minMetraz !== filters.minMetraz) filters.minMetraz = minMetraz;
+      if (maxMetraz !== filters.maxMetraz) filters.maxMetraz = maxMetraz;
+      if (minPrice !== filters.minPrice) filters.minPrice = minPrice;
+      if (maxPrice !== filters.maxPrice) filters.maxPrice = maxPrice;
+      if (minZlM2 !== filters.minZlM2) filters.minZlM2 = minZlM2;
+      if (maxZlM2 !== filters.maxZlM2) filters.maxZlM2 = maxZlM2;
+      if (agent !== filters.agent) filters.agent = agent;
       if (status !== filters.statusOferty) filters.statusOferty = status;
       setFilters(filters);
       onFilterApply(searchValue, filters, columnConfig);
