@@ -13,6 +13,7 @@ import serverConfig from "../servers.json";
 import { GetInformationFromToken } from "../utils/decodeToken";
 import { useReadConfig } from "../config/columnConfig";
 import OffersTable from "../components/OffersTable";
+import OfferDetailsPage from "./OfferDetailsPage";
 import columnsOffersConfig from "../config/columnsOffersConfig";
 
 function OffersPage() {
@@ -34,6 +35,8 @@ function OffersPage() {
   const [offerIdToDelete, setOfferIdToDelete] = useState(null);
   const [offerIdToUpdateAgent, setOfferIdToUpdateAgent] = useState(null);
   const [isEditOfferPanelOpen, setEditOfferPanelOpen] = useState(false);
+  const [isOfferDetailsPanelOpen, setIsOfferDetailsPanelOpen] = useState(false);
+  const [offerDetailsId, setOfferDetailsId] = useState(null);
   const [editOfferData, setEditOfferData] = useState(null);
   const backendServer = serverConfig["backend-server"];
   const [searchQuery] = useState("");
@@ -66,7 +69,7 @@ function OffersPage() {
     } catch (error) {
       console.log(error);
     }
-  }, [token, backendServer]);
+  }, [token, backendServer, userInformation, userRole]);
 
   const fetchData = useCallback(
     async (searchQuery = "", filters = {}, columnConfig = readConfig) => {
@@ -135,6 +138,8 @@ function OffersPage() {
       setAlertOpen(true);
       setAlertMessage(response.data.message);
       setAlertSeverity("success");
+      if (isOfferDetailsPanelOpen)
+        setIsOfferDetailsPanelOpen(!isOfferDetailsPanelOpen);
       await fetchData();
       setSelected([]);
     } catch (error) {
@@ -159,6 +164,8 @@ function OffersPage() {
       setAlertMessage("Zaktualizowano pomyślnie");
       setAlertSeverity("success");
       setEditOfferPanelOpen(false);
+      if (isOfferDetailsPanelOpen)
+        setIsOfferDetailsPanelOpen(!isOfferDetailsPanelOpen);
       await fetchData();
     } catch (error) {
       setAlertOpen(true);
@@ -184,6 +191,8 @@ function OffersPage() {
       setAlertMessage("Pomyślnie zaktualizowano ofertę");
       setAlertSeverity("success");
       setOpenDialogConfirmOfferAssignment(false);
+      if (isOfferDetailsPanelOpen)
+        setIsOfferDetailsPanelOpen(!isOfferDetailsPanelOpen);
       await fetchData();
     } catch (error) {
       setAlertOpen(true);
@@ -192,8 +201,14 @@ function OffersPage() {
     }
   };
 
-  const handleGoToOfferDetailsPage = (offerId) => {
-    navigate(`/oferta/${offerId}`);
+  const handleOpenOfferDetailsPanel = (offerId) => {
+    setOfferDetailsId(offerId);
+    setIsOfferDetailsPanelOpen(!isOfferDetailsPanelOpen);
+  };
+
+  const handleCloseOfferDetailsPanel = () => {
+    setIsOfferDetailsPanelOpen(!isOfferDetailsPanelOpen);
+    setOfferDetailsId(null);
   };
 
   const handleAddOfferClick = () => {
@@ -307,7 +322,7 @@ function OffersPage() {
           handleEditClick={handleEditClick}
           handleAddToCalendar={handleAddToCalendar}
           handleUpdateOfferAgentClick={handleUpdateOfferAgentClick}
-          handleGoToOfferDetailsPage={handleGoToOfferDetailsPage}
+          handleGoToOfferDetailsPage={handleOpenOfferDetailsPanel}
         />
         <Alerts
           message={alertMessage}
@@ -347,6 +362,19 @@ function OffersPage() {
             offerData={editOfferData}
             onSave={handleSaveEditedOffer}
             onCancel={() => setEditOfferPanelOpen(false)}
+            users={users}
+          />
+        )}
+        {isOfferDetailsPanelOpen && (
+          <OfferDetailsPage
+            id={offerDetailsId}
+            onClose={handleCloseOfferDetailsPanel}
+            userRole={userRole}
+            readConfig={readConfig}
+            handleSaveEditedOffer={handleSaveEditedOffer}
+            handleDeleteOfferClick={handleDeleteOfferClick}
+            handleAddToCalendar={handleAddToCalendar}
+            handleUpdateOfferAgentClick={handleUpdateOfferAgentClick}
             users={users}
           />
         )}

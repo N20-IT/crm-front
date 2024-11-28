@@ -19,6 +19,7 @@ function OfferActions({
   handleAddToCalendar,
   handleUpdateOfferAgentClick,
   handleGoToOfferDetailsPage,
+  showDetailsIcon,
 }) {
   return (
     <TableCell
@@ -114,15 +115,17 @@ function OfferActions({
       </Tooltip>
 
       <Tooltip title="Szczegóły oferty">
-        <IconButton
-          onClick={() => handleGoToOfferDetailsPage(row._id)}
-          sx={{
-            padding: "4px",
-            color: "#777",
-          }}
-        >
-          <Info />
-        </IconButton>
+        {showDetailsIcon && (
+          <IconButton
+            onClick={() => handleGoToOfferDetailsPage(row._id)}
+            sx={{
+              padding: "4px",
+              color: "#777",
+            }}
+          >
+            <Info />
+          </IconButton>
+        )}
       </Tooltip>
     </TableCell>
   );

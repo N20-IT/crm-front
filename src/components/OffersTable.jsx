@@ -396,6 +396,7 @@ function OffersTable({
                   handleAddToCalendar={handleAddToCalendar}
                   handleUpdateOfferAgentClick={handleUpdateOfferAgentClick}
                   handleGoToOfferDetailsPage={handleGoToOfferDetailsPage}
+                  showDetailsIcon={true}
                 />
               </TableRow>
             ))
