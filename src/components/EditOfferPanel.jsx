@@ -511,7 +511,15 @@ const EditOfferPanel = ({ offerData, onSave, onCancel, users }) => {
                 label="Status"
               >
                 {statusesConfig.map((status) => (
-                  <MenuItem key={status.value} value={status.value}>
+                  <MenuItem
+                    key={status.value}
+                    value={status.value === "Brak" ? "" : status.value}
+                    sx={{
+                      fontStyle: status.value === "Brak" ? "italic" : "normal",
+                      color: status.value === "Brak" ? "gray" : "inherit",
+                      fontWeight: status.value === "Brak" ? "bold" : "poppins",
+                    }}
+                  >
                     {status.label}
                   </MenuItem>
                 ))}
