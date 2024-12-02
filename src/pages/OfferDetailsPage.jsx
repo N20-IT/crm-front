@@ -19,6 +19,7 @@ import { useReadCookie } from "../utils/auth";
 import EditOfferPanel from "../components/EditOfferPanel";
 import serverConfig from "../servers.json";
 import OfferActions from "../components/OfferAction";
+import statusesConfig from "../config/statusesConfig";
 
 function OfferDetailsPage({
   id,
@@ -39,6 +40,11 @@ function OfferDetailsPage({
   const [isEditOfferPanelOpen, setEditOfferPanelOpen] = useState(false);
   const token = useReadCookie();
   const backendServer = serverConfig["backend-server"];
+  const [statusesColor, setStatuesColor] = useState("");
+
+  // const statusConfig = offer.statusOferty
+  //   ? statusesConfig.find((element) => element.value === offer.statusOferty)
+  //   : {};
 
   const navigate = useNavigate();
   const isAuthenticated = useAuth();
@@ -70,8 +76,13 @@ function OfferDetailsPage({
 
   useEffect(() => {
     fetchDetailsData();
+    if (offer.statusOferty) {
+      setStatuesColor(
+        statusesConfig.find((status) => status.value === offer.statusOferty)
+      );
+    }
     if (!isAuthenticated) navigate("/");
-  }, [isAuthenticated, navigate]);
+  }, [isAuthenticated, navigate, offer.statusOferty, statusesColor]);
   return (
     <div className=" fixed inset-0 bg-light-grey bg-opacity-75 flex items-center justify-center z-50">
       <div className="bg-white p-6 rounded-lg shadow-lg w-1/3">
@@ -214,10 +225,18 @@ function OfferDetailsPage({
                 Dodatkowe informacje
               </Typography>
               <CustomTypography sx={{ marginTop: "6px", fontSize: "1rem" }}>
-                <strong>Telefon właściciela:</strong> {offer.telefonWlasciciela}
+                <strong>Telefon właściciela: </strong>{" "}
+                {offer.telefonWlasciciela}
               </CustomTypography>
               <CustomTypography sx={{ fontSize: "1rem" }}>
-                <strong>Status oferty:</strong> {offer.statusOferty}
+                <strong>Status oferty: </strong>
+
+                <Box
+                  component="span"
+                  sx={{ color: statusesColor || "inherit" }}
+                >
+                  {offer?.statusOferty}
+                </Box>
               </CustomTypography>
               <CustomTypography sx={{ fontSize: "1rem" }}>
                 <strong>Komentarz:</strong> {offer.komentarz}
