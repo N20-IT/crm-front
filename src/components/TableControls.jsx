@@ -32,40 +32,40 @@ function TableControls({
   onFilterApply,
   allUsers,
 }) {
+  const [filters, setFilters] = useState({
+    ulica: "",
+    dzielnica: [],
+    poddzielnica: [],
+    miasto: "",
+    typInwestycji: "",
+    minIloscPokoi: "",
+    maxIloscPokoi: "",
+    minMetraz: "",
+    maxMetraz: "",
+    minPrice: "",
+    maxPrice: "",
+    agent: "",
+    statusOferty: "",
+  });
+
   const [searchValue, setSearchValue] = useState("");
-  const [filters, setFilters] = useState({});
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [isFilterPanelOpen, setIsFilterPanelOpen] = useState(false);
-  const [minPrice, setMinPrice] = useState("");
-  const [maxPrice, setMaxPrice] = useState("");
-  const [dzielnica, setDzielnica] = useState([]);
-  const [poddzielnica, setPoddzielnica] = useState([]);
-  const [miasto, setMiasto] = useState("");
-  const [typInwestycji, setTypInwestycji] = useState("");
-  const [minIloscPokoi, setMinIloscPokoi] = useState("");
-  const [maxIloscPokoi, setMaxIloscPokoi] = useState("");
   const [iloscPokoiTouched, setIloscPokoiTouched] = useState({
     minIloscPokoi: false,
     maxIloscPokoi: false,
   });
   const [iloscPokoiError, setIloscPokoiError] = useState(false);
-  const [minMetraz, setMinMetraz] = useState("");
-  const [maxMetraz, setMaxMetraz] = useState("");
   const [metrazTouched, setMetrazTouched] = useState({
     minMetraz: false,
     maxMetraz: false,
   });
   const [metrazError, setMetrazError] = useState(false);
-  const [ulica, setUlica] = useState("");
-  const [minZlM2, setMinZlM2] = useState("");
-  const [maxZlM2, setMaxZlM2] = useState("");
   const [zlM2Touched, setZlM2Touched] = useState({
     minZlM2: false,
     maxZlM2: false,
   });
   const [zlM2Error, setZlM2Error] = useState(false);
-  const [agent, setAgent] = useState("");
-  const [status, setStatus] = useState(false);
   const [priceError, setPriceError] = useState(false);
   const [priceTouched, setpriceTouched] = useState({
     minPrice: false,
@@ -87,11 +87,11 @@ function TableControls({
     const value = e.target.value;
     setSearchValue(value);
     if (value.length > 2) {
-      const updatedFilters = { ...filters };
-      onSearchChange(value, updatedFilters, columnConfig);
+      const filters = { ...filters };
+      onSearchChange(value, filters, columnConfig);
     } else if (value.length === 0) {
-      const updatedFilters = { ...filters };
-      onSearchChange(value, updatedFilters, columnConfig);
+      const filters = { ...filters };
+      onSearchChange(value, filters, columnConfig);
     }
   };
 
@@ -102,25 +102,19 @@ function TableControls({
 
   const validateMetraz = () => {
     if (
-      minMetraz !== "" &&
-      (maxMetraz !== "") & (Number(minMetraz) > Number(maxMetraz))
+      filters.minMetraz !== "" &&
+      filters.maxMetraz !== "" &&
+      Number(filters.minMetraz) > Number(filters.maxMetraz)
     )
       setMetrazError(true);
     else setMetrazError(false);
-  };
-
-  const handleMinMetraz = (e) => {
-    setMinMetraz(e.target.value);
-  };
-
-  const handleMaxMetraz = (e) => {
-    setMaxMetraz(e.target.value);
   };
 
   const handleMinMetrazBlur = () => {
     setMetrazTouched({ ...metrazTouched, minMetraz: true });
     validateMetraz();
   };
+
   const handleMaxMetrazBlur = () => {
     setMetrazTouched({ ...metrazTouched, maxMetraz: true });
     validateMetraz();
@@ -128,20 +122,12 @@ function TableControls({
 
   const validateIloscPokoi = () => {
     if (
-      minIloscPokoi !== "" &&
-      maxIloscPokoi !== "" &&
-      Number(minIloscPokoi) > Number(maxIloscPokoi)
+      filters.minIloscPokoi !== "" &&
+      filters.maxIloscPokoi !== "" &&
+      Number(filters.minIloscPokoi) > Number(filters.maxIloscPokoi)
     )
       setIloscPokoiError(true);
     else setIloscPokoiError(false);
-  };
-
-  const handleMinIloscPokoi = (e) => {
-    setMinIloscPokoi(e.target.value);
-  };
-
-  const handleMaxIloscPokoi = (e) => {
-    setMaxIloscPokoi(e.target.value);
   };
 
   const handleMinIloscPokoiBlur = () => {
@@ -154,16 +140,13 @@ function TableControls({
   };
 
   const validateZlM2 = () => {
-    if (minZlM2 !== "" && maxZlM2 !== "" && Number(minZlM2) > Number(maxZlM2))
+    if (
+      filters.minZlM2 !== "" &&
+      filters.maxZlM2 !== "" &&
+      Number(filters.minZlM2) > Number(filters.maxZlM2)
+    )
       setZlM2Error(true);
     else setZlM2Error(false);
-  };
-
-  const handleMinZlM2 = (e) => {
-    setMinZlM2(e.target.value);
-  };
-  const handleMaxZlM2 = (e) => {
-    setMaxZlM2(e.target.value);
   };
 
   const handleMinZlM2Blur = () => {
@@ -178,22 +161,14 @@ function TableControls({
 
   const validatePrices = () => {
     if (
-      minPrice !== "" &&
-      maxPrice !== "" &&
-      Number(minPrice) > Number(maxPrice)
+      filters.minPrice !== "" &&
+      filters.maxPrice !== "" &&
+      Number(filters.minPrice) > Number(filters.maxPrice)
     ) {
       setPriceError(true);
     } else {
       setPriceError(false);
     }
-  };
-
-  const handleMinPriceChange = (e) => {
-    setMinPrice(e.target.value);
-  };
-
-  const handleMaxPriceChange = (e) => {
-    setMaxPrice(e.target.value);
   };
 
   const handleMinPriceBlur = () => {
@@ -209,80 +184,69 @@ function TableControls({
   const handleDzielnicaChange = (event) => {
     const selectedDistricts = event.target.value;
 
-    const removedDistricts = dzielnica.filter(
+    const removedDistricts = filters.dzielnica.filter(
       (district) => !selectedDistricts.includes(district)
     );
 
-    setDzielnica(selectedDistricts);
+    updateFilters("dzielnica", selectedDistricts);
 
     if (removedDistricts.length > 0) {
       const subdistrictsToRemove = removedDistricts.flatMap(
         (district) => dzielniceData.Dzielnice[district] || []
       );
-
-      setPoddzielnica((prevPoddzielnica) =>
-        prevPoddzielnica.filter(
-          (subdistrict) => !subdistrictsToRemove.includes(subdistrict)
-        )
+      const newPoddzielnica = filters.poddzielnica.filter(
+        (subdistrict) => !subdistrictsToRemove.includes(subdistrict)
       );
+      updateFilters("poddzielnica", newPoddzielnica);
     }
   };
 
   const handlePoddzielnicaChange = (event) => {
-    setPoddzielnica(event.target.value);
+    const selectedSubdistricts = Array.isArray(event.target.value)
+      ? event.target.value
+      : [];
+    updateFilters("poddzielnica", selectedSubdistricts);
   };
 
   const subdistricts =
-    dzielnica.length > 0
+    filters.dzielnica.length > 0
       ? [
           ...new Set(
-            dzielnica.flatMap((district) => dzielniceData.Dzielnice[district])
+            filters.dzielnica.flatMap(
+              (district) => dzielniceData.Dzielnice[district]
+            )
           ),
         ].sort()
       : [];
 
-  const handleFilterApply = () => {
+  const updateFilters = (key, value) => {
+    setFilters((prev) => ({ ...prev, [key]: value }));
+  };
+
+  const handleFilter = () => {
     if (!priceError && !zlM2Error && !iloscPokoiError && !metrazError) {
-      if (ulica !== filters.ulica) filters.ulica = ulica;
-      if (dzielnica) filters.dzielnica = dzielnica;
-      if (poddzielnica) filters.poddzielnica = poddzielnica;
-      if (miasto !== filters.miasto) filters.miasto = miasto;
-      if (typInwestycji) filters.typInwestycji = typInwestycji;
-      if (minIloscPokoi !== filters.minIloscPokoi)
-        filters.minIloscPokoi = minIloscPokoi;
-      if (maxIloscPokoi !== filters.maxIloscPokoi)
-        filters.maxIloscPokoi = maxIloscPokoi;
-      if (minMetraz !== filters.minMetraz) filters.minMetraz = minMetraz;
-      if (maxMetraz !== filters.maxMetraz) filters.maxMetraz = maxMetraz;
-      if (minPrice !== filters.minPrice) filters.minPrice = minPrice;
-      if (maxPrice !== filters.maxPrice) filters.maxPrice = maxPrice;
-      if (minZlM2 !== filters.minZlM2) filters.minZlM2 = minZlM2;
-      if (maxZlM2 !== filters.maxZlM2) filters.maxZlM2 = maxZlM2;
-      if (agent !== filters.agent) filters.agent = agent;
-      if (status !== filters.statusOferty) filters.statusOferty = status;
-      setFilters(filters);
+      console.log(filters);
       onFilterApply(searchValue, filters, columnConfig);
       toggleFilterPanel();
     }
   };
+
   const clearFilters = () => {
-    setMinPrice("");
-    setMaxPrice("");
-    setDzielnica([]);
-    setPoddzielnica([]);
-    setMiasto("");
-    setTypInwestycji("");
-    setMinIloscPokoi("");
-    setMaxIloscPokoi("");
-    setMinMetraz("");
-    setMaxMetraz("");
-    setUlica("");
-    setMinZlM2("");
-    setMaxZlM2("");
-    setStatus("");
-    setAgent("");
-    setFilters({});
-    setSearchValue("");
+    setFilters({
+      ulica: "",
+      dzielnica: [],
+      poddzielnica: [],
+      miasto: "",
+      typInwestycji: "",
+      minIloscPokoi: "",
+      maxIloscPokoi: "",
+      minMetraz: "",
+      maxMetraz: "",
+      minPrice: "",
+      maxPrice: "",
+      agent: "",
+      statusOferty: "",
+    });
     onFilterApply("", {}, readConfig);
     toggleFilterPanel();
   };
@@ -430,8 +394,8 @@ function TableControls({
         </Typography>
         <CustomTextField
           label="Ulica"
-          value={ulica}
-          onChange={(e) => setUlica(e.target.value)}
+          value={filters.ulica}
+          onChange={(e) => updateFilters("ulica", e.target.value)}
           fullWidth
           sx={{ marginTop: "12px" }}
         />
@@ -469,7 +433,7 @@ function TableControls({
           <InputLabel id="district-label">Dzielnica</InputLabel>
           <Select
             labelId="district-label"
-            value={dzielnica}
+            value={filters.dzielnica}
             onChange={handleDzielnicaChange}
             multiple
             id="demo-multiple-checkbox"
@@ -497,7 +461,7 @@ function TableControls({
                   "& .Mui-checked": { color: "#FC8721" },
                 }}
               >
-                <Checkbox checked={dzielnica.includes(district)} />
+                <Checkbox checked={filters.dzielnica.includes(district)} />
                 <ListItemText primary={district} />
               </MenuItem>
             ))}
@@ -537,11 +501,13 @@ function TableControls({
           <InputLabel id="district-label">Poddzielnica</InputLabel>
           <Select
             labelId="district-label"
-            value={poddzielnica}
+            value={filters.poddzielnica}
             onChange={handlePoddzielnicaChange}
             multiple
             id="demo-multiple-checkbox"
-            renderValue={(selected) => selected.join(", ")}
+            renderValue={(selected) =>
+              Array.isArray(selected) ? selected.join(", ") : ""
+            }
             input={
               <OutlinedInput
                 sx={{
@@ -559,7 +525,9 @@ function TableControls({
           >
             {subdistricts.map((subdistrict) => (
               <MenuItem key={subdistrict} value={subdistrict}>
-                <Checkbox checked={poddzielnica.includes(subdistrict)} />
+                <Checkbox
+                  checked={filters.poddzielnica.includes(subdistrict)}
+                />
                 <ListItemText primary={subdistrict} />
               </MenuItem>
             ))}
@@ -567,8 +535,8 @@ function TableControls({
         </FormControl>
         <CustomTextField
           label="Miasto/Wieś"
-          value={miasto}
-          onChange={(e) => setMiasto(e.target.value)}
+          value={filters.miasto}
+          onChange={(e) => updateFilters("miasto", e.target.value)}
           fullWidth
           sx={{ marginTop: "12px" }}
         />
@@ -605,10 +573,16 @@ function TableControls({
         >
           <InputLabel>Typ inwestycji</InputLabel>
           <Select
-            value={typInwestycji}
-            onChange={(e) => setTypInwestycji(e.target.value)}
+            value={filters.typInwestycji}
+            onChange={(e) => updateFilters("typInwestycji", e.target.value)}
             label="Typ inwestycji"
           >
+            <MenuItem
+              value=""
+              sx={{ fontStyle: "italic", color: "gray", fontWeight: "bold" }}
+            >
+              Brak
+            </MenuItem>
             <MenuItem value="Dom">Dom</MenuItem>
             <MenuItem value="Mieszkanie">Mieszkanie</MenuItem>
             <MenuItem value="Lokal">Lokal</MenuItem>
@@ -618,23 +592,25 @@ function TableControls({
         <div className="flex justify-end space-x-4 mt-3">
           <CustomTextField
             label="Min ilość pokoi"
-            value={minIloscPokoi}
-            onChange={handleMinIloscPokoi}
+            value={filters.minIloscPokoi}
+            onChange={(e) => updateFilters("minIloscPokoi", e.target.value)}
             onBlur={handleMinIloscPokoiBlur}
             fullWidth
             type="number"
             error={
-              iloscPokoiError && Number(maxIloscPokoi) < Number(minIloscPokoi)
+              iloscPokoiError &&
+              Number(filters.maxIloscPokoi) < Number(filters.minIloscPokoi)
             }
           />
           <CustomTextField
             label="Max ilość pokoi"
-            value={maxIloscPokoi}
-            onChange={handleMaxIloscPokoi}
+            value={filters.maxIloscPokoi}
+            onChange={(e) => updateFilters("maxIloscPokoi", e.target.value)}
             onBlur={handleMaxIloscPokoiBlur}
             fullWidth
             error={
-              iloscPokoiError && Number(maxIloscPokoi) < Number(minIloscPokoi)
+              iloscPokoiError &&
+              Number(filters.maxIloscPokoi) < Number(filters.minIloscPokoi)
             }
             type="number"
           />
@@ -642,61 +618,75 @@ function TableControls({
         <div className="flex justify-end space-x-4 mt-3">
           <CustomTextField
             label="Min metraż"
-            value={minMetraz}
-            onChange={handleMinMetraz}
+            value={filters.minMetraz}
+            onChange={(e) => updateFilters("minMetraz", e.target.value)}
             onBlur={handleMinMetrazBlur}
             fullWidth
             type="number"
-            error={metrazError && Number(maxMetraz) < Number(minMetraz)}
+            error={
+              metrazError &&
+              Number(filters.maxMetraz) < Number(filters.minMetraz)
+            }
           />
           <CustomTextField
             label="Max metraż"
-            value={maxMetraz}
-            onChange={handleMaxMetraz}
+            value={filters.maxMetraz}
+            onChange={(e) => updateFilters("maxMetraz", e.target.value)}
             onBlur={handleMaxMetrazBlur}
             fullWidth
-            error={metrazError && Number(maxMetraz) < Number(minMetraz)}
+            error={
+              metrazError &&
+              Number(filters.maxMetraz) < Number(filters.minMetraz)
+            }
             type="number"
           />
         </div>
         <div className="flex justify-end space-x-4 mt-3">
           <CustomTextField
             label="Min cena"
-            value={minPrice}
-            onChange={handleMinPriceChange}
+            value={filters.minPrice}
+            onChange={(e) => updateFilters("minPrice", e.target.value)}
             onBlur={handleMinPriceBlur}
             fullWidth
             type="number"
-            error={priceError && Number(maxPrice) < Number(minPrice)}
+            error={
+              priceError && Number(filters.maxPrice) < Number(filters.minPrice)
+            }
           />
           <CustomTextField
             label="Max cena"
-            value={maxPrice}
-            onChange={handleMaxPriceChange}
+            value={filters.maxPrice}
+            onChange={(e) => updateFilters("maxPrice", e.target.value)}
             onBlur={handleMaxPriceBlur}
             fullWidth
-            error={priceError && Number(maxPrice) < Number(minPrice)}
+            error={
+              priceError && Number(filters.maxPrice) < Number(filters.minPrice)
+            }
             type="number"
           />
         </div>
         <div className="flex justify-end space-x-4 mt-3">
           <CustomTextField
             label="Min zł/m2"
-            value={minZlM2}
-            onChange={handleMinZlM2}
+            value={filters.minZlM2}
+            onChange={(e) => updateFilters("minZlM2", e.target.value)}
             onBlur={handleMinZlM2Blur}
             fullWidth
             type="number"
-            error={zlM2Error && Number(maxZlM2) < Number(minZlM2)}
+            error={
+              zlM2Error && Number(filters.maxZlM2) < Number(filters.minZlM2)
+            }
           />
           <CustomTextField
             label="Max zł/m2"
-            value={maxZlM2}
-            onChange={handleMaxZlM2}
+            value={filters.maxZlM2}
+            onChange={(e) => updateFilters("maxZlM2", e.target.value)}
             onBlur={handleMaxZlM2Blur}
             fullWidth
             type="number"
-            error={zlM2Error && Number(maxZlM2) < Number(minZlM2)}
+            error={
+              zlM2Error && Number(filters.maxZlM2) < Number(filters.minZlM2)
+            }
           />
         </div>
         <div className="flex justify-end space-x-4 mt-3">
@@ -747,10 +737,16 @@ function TableControls({
                   label="Agent"
                 />
               }
-              value={agent}
-              onChange={(e) => setAgent(e.target.value)}
+              value={filters.agent}
+              onChange={(e) => updateFilters("agent", e.target.value)}
               fullWidth
             >
+              <MenuItem
+                value={""}
+                sx={{ fontStyle: "italic", color: "gray", fontWeight: "bold" }}
+              >
+                Brak
+              </MenuItem>
               {allUsers.map((user) => (
                 <MenuItem key={user} value={user}>
                   {user}
@@ -793,8 +789,8 @@ function TableControls({
           >
             <InputLabel>Status</InputLabel>
             <Select
-              value={status}
-              onChange={(e) => setStatus(e.target.value)}
+              value={filters.statusOferty}
+              onChange={(e) => updateFilters("statusOferty", e.target.value)}
               label="Status"
             >
               {statusesConfig.map((status) => (
@@ -823,7 +819,7 @@ function TableControls({
             fontSize: "18px",
             backgroundColor: "#FC8721",
           }}
-          onClick={handleFilterApply}
+          onClick={handleFilter}
         >
           Zastosuj filtry
         </Button>

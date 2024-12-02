@@ -459,6 +459,17 @@ const EditOfferPanel = ({ offerData, onSave, onCancel, users }) => {
                 }
                 fullWidth
               >
+                <MenuItem
+                  key={"null"}
+                  value={""}
+                  sx={{
+                    fontStyle: "italic",
+                    color: "gray",
+                    fontWeight: "bold",
+                  }}
+                >
+                  Brak
+                </MenuItem>
                 {users.map((user) => (
                   <MenuItem key={user} value={user}>
                     {user}
