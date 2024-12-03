@@ -413,6 +413,17 @@ function AddOfferPanel({ onSave, onCancel, users }) {
               }
               label="Typ inwestycji"
             >
+              <MenuItem
+                key={"null"}
+                value={""}
+                sx={{
+                  fontStyle: "italic",
+                  color: "gray",
+                  fontWeight: "bold",
+                }}
+              >
+                Brak
+              </MenuItem>
               <MenuItem value="Dom">Dom</MenuItem>
               <MenuItem value="Mieszkanie">Mieszkanie</MenuItem>
               <MenuItem value="Lokal">Lokal</MenuItem>
