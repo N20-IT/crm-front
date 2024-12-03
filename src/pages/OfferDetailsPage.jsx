@@ -19,6 +19,7 @@ import { useReadCookie } from "../utils/auth";
 import EditOfferPanel from "../components/EditOfferPanel";
 import serverConfig from "../servers.json";
 import OfferActions from "../components/OfferAction";
+import statusesConfig from "../config/statusesConfig";
 
 function OfferDetailsPage({
   id,
@@ -39,7 +40,7 @@ function OfferDetailsPage({
   const [isEditOfferPanelOpen, setEditOfferPanelOpen] = useState(false);
   const token = useReadCookie();
   const backendServer = serverConfig["backend-server"];
-
+  const [statusesColor, setStatuesColor] = useState("");
   const navigate = useNavigate();
   const isAuthenticated = useAuth();
 
@@ -70,8 +71,14 @@ function OfferDetailsPage({
 
   useEffect(() => {
     fetchDetailsData();
+    if (offer.statusOferty) {
+      setStatuesColor(
+        statusesConfig.find((status) => status.value === offer.statusOferty)
+      );
+    }
+    console.log(offer);
     if (!isAuthenticated) navigate("/");
-  }, [isAuthenticated, navigate]);
+  }, [isAuthenticated, navigate, offer.statusOferty, statusesColor]);
   return (
     <div className=" fixed inset-0 bg-light-grey bg-opacity-75 flex items-center justify-center z-50">
       <div className="bg-white p-6 rounded-lg shadow-lg w-1/3">
@@ -155,54 +162,86 @@ function OfferDetailsPage({
               >
                 Informacje o nieruchomości
               </Typography>
-              <CustomTypography sx={{ marginTop: "6px", fontSize: "1rem" }}>
-                <strong>Ulica:</strong> {offer.ulica}
-                {offer.numerDomu ? ` ${offer.numerDomu}` : ""}
-                {offer.numerMieszkania ? `/${offer.numerMieszkania}` : ""}
-              </CustomTypography>
-              <CustomTypography sx={{ fontSize: "1rem" }}>
-                <strong>Miasto/Wieś:</strong> {offer.miasto}
-              </CustomTypography>
-              <CustomTypography sx={{ fontSize: "1rem" }}>
-                <strong>Dzielnica/Gmina:</strong> {offer.dzielnica}
-              </CustomTypography>
-              <CustomTypography sx={{ fontSize: "1rem" }}>
-                <strong>Ilość pokoi:</strong> {offer.iloscPokoi}
-              </CustomTypography>
-              <CustomTypography sx={{ fontSize: "1rem" }}>
-                <strong>Metraż:</strong> {offer.metraz} m²
-              </CustomTypography>
-              <CustomTypography sx={{ fontSize: "1rem" }}>
-                <strong>Cena:</strong> {offer.cena} zł
-              </CustomTypography>
-              <CustomTypography sx={{ fontSize: "1rem" }}>
-                <strong>Link do oferty:</strong>{" "}
-                <Tooltip title={offer.linkOferta}>
-                  <Link
-                    href={offer.linkOferta}
-                    target="_blank"
-                    style={{ color: "#FC8721", textDecoration: "underline" }}
-                  >
-                    Zobacz szczegóły
-                  </Link>
-                </Tooltip>
-              </CustomTypography>
+              {offer.ulica && (
+                <CustomTypography sx={{ marginTop: "6px", fontSize: "1rem" }}>
+                  <strong>Ulica:</strong> {offer.ulica}
+                </CustomTypography>
+              )}
+              {offer.miasto && (
+                <CustomTypography sx={{ fontSize: "1rem" }}>
+                  <strong>Miasto/Wieś:</strong> {offer.miasto}
+                </CustomTypography>
+              )}
+              {offer.dzielnica && (
+                <CustomTypography sx={{ fontSize: "1rem" }}>
+                  <strong>Dzielnica/Gmina:</strong> {offer.dzielnica}
+                </CustomTypography>
+              )}
+              {offer.poddzielnica && (
+                <CustomTypography sx={{ fontSize: "1rem" }}>
+                  <strong>Poddzielnica:</strong> {offer.poddzielnica}
+                </CustomTypography>
+              )}
+              {offer.typInwestycji && (
+                <CustomTypography sx={{ fontSize: "1rem" }}>
+                  <strong>Typ inwestycji:</strong> {offer.typInwestycji}
+                </CustomTypography>
+              )}
+              {offer.iloscPokoi && (
+                <CustomTypography sx={{ fontSize: "1rem" }}>
+                  <strong>Ilość pokoi:</strong> {offer.iloscPokoi}
+                </CustomTypography>
+              )}
+              {offer.metraz && (
+                <CustomTypography sx={{ fontSize: "1rem" }}>
+                  <strong>Metraż:</strong> {offer.metraz} m²
+                </CustomTypography>
+              )}
+              {offer.powDzialki && (
+                <CustomTypography sx={{ fontSize: "1rem" }}>
+                  <strong>Powierzchnia działki:</strong> {offer.powDzialki}
+                </CustomTypography>
+              )}
+              {offer.cena && (
+                <CustomTypography sx={{ fontSize: "1rem" }}>
+                  <strong>Cena:</strong> {offer.cena} zł
+                </CustomTypography>
+              )}
+              {offer.linkOferta && (
+                <CustomTypography sx={{ fontSize: "1rem" }}>
+                  <strong>Link do oferty:</strong>{" "}
+                  <Tooltip title={offer.linkOferta}>
+                    <Link
+                      href={offer.linkOferta}
+                      target="_blank"
+                      style={{ color: "#FC8721", textDecoration: "underline" }}
+                    >
+                      Zobacz szczegóły
+                    </Link>
+                  </Tooltip>
+                </CustomTypography>
+              )}
 
               <br></br>
-              <Typography
-                variant="h6"
-                sx={{
-                  fontFamily: "Poppins",
-                  fontWeight: 500,
-                  fontSize: "1.2rem",
-                }}
-              >
-                Agent odpowiedzialny
-              </Typography>
-              <CustomTypography sx={{ marginTop: "6px", fontSize: "1rem" }}>
-                <strong>Agent:</strong> {offer.agent}
-              </CustomTypography>
-              <br></br>
+              {offer.agent && (
+                <>
+                  <Typography
+                    variant="h6"
+                    sx={{
+                      fontFamily: "Poppins",
+                      fontWeight: 500,
+                      fontSize: "1.2rem",
+                    }}
+                  >
+                    Agent odpowiedzialny
+                  </Typography>
+                  <CustomTypography sx={{ marginTop: "6px", fontSize: "1rem" }}>
+                    <strong>Agent:</strong> {offer.agent}
+                  </CustomTypography>
+                  <br></br>
+                </>
+              )}
+
               <Typography
                 variant="h6"
                 sx={{
@@ -213,18 +252,34 @@ function OfferDetailsPage({
               >
                 Dodatkowe informacje
               </Typography>
-              <CustomTypography sx={{ marginTop: "6px", fontSize: "1rem" }}>
-                <strong>Telefon właściciela:</strong> {offer.telefonWlasciciela}
-              </CustomTypography>
-              <CustomTypography sx={{ fontSize: "1rem" }}>
-                <strong>Status oferty:</strong> {offer.statusOferty}
-              </CustomTypography>
-              <CustomTypography sx={{ fontSize: "1rem" }}>
-                <strong>Komentarz:</strong> {offer.komentarz}
-              </CustomTypography>
-              <CustomTypography sx={{ fontSize: "1rem" }}>
-                <strong>Zł/m²:</strong> {offer.zlM2}
-              </CustomTypography>
+              {offer.telefonWlasciciela && (
+                <CustomTypography sx={{ marginTop: "6px", fontSize: "1rem" }}>
+                  <strong>Telefon właściciela: </strong>{" "}
+                  {offer.telefonWlasciciela}
+                </CustomTypography>
+              )}
+              {offer.statusOferty && (
+                <CustomTypography sx={{ fontSize: "1rem" }}>
+                  <strong>Status oferty: </strong>
+
+                  <Box
+                    component="span"
+                    sx={{ color: statusesColor || "inherit" }}
+                  >
+                    {offer?.statusOferty}
+                  </Box>
+                </CustomTypography>
+              )}
+              {offer.komentarz && (
+                <CustomTypography sx={{ fontSize: "1rem" }}>
+                  <strong>Komentarz:</strong> {offer.komentarz}
+                </CustomTypography>
+              )}
+              {offer.zlM2 && (
+                <CustomTypography sx={{ fontSize: "1rem" }}>
+                  <strong>Zł/m²:</strong> {offer.zlM2}
+                </CustomTypography>
+              )}
               <br></br>
               <Typography
                 variant="h6"

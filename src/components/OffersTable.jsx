@@ -125,7 +125,7 @@ function OffersTable({
         alignSelf: "center",
         borderBottomLeftRadius: "8px",
         borderBottomRightRadius: "8px",
-        maxHeight: "74.765%",
+        maxHeight: "83%",
       }}
     >
       <Table>
@@ -173,10 +173,10 @@ function OffersTable({
                     onClick={() => handleSortRequest(column.id)}
                     style={{ color: "white", fontSize: "13px" }}
                   >
-                    {column.label}
+                    <Tooltip title={column.label}>{column.shortLabel}</Tooltip>
                   </TableSortLabel>
                 ) : (
-                  column.label
+                  <Tooltip title={column.label}>{column.shortLabel}</Tooltip>
                 )}
               </TableCell>
             ))}

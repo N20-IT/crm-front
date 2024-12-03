@@ -72,10 +72,14 @@ const EditOfferPanel = ({ offerData, onSave, onCancel, users }) => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
+    const sanitizedValue = value.replace(
+      /[^a-zA-Z0-9ąćęłńóśźżĄĆĘŁŃÓŚŹŻ\s]/g,
+      ""
+    );
 
     setFormData({
       ...formData,
-      [name]: value,
+      [name]: sanitizedValue,
     });
   };
 
