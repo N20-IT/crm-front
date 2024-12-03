@@ -76,7 +76,6 @@ function OfferDetailsPage({
         statusesConfig.find((status) => status.value === offer.statusOferty)
       );
     }
-    console.log(offer);
     if (!isAuthenticated) navigate("/");
   }, [isAuthenticated, navigate, offer.statusOferty, statusesColor]);
   return (
@@ -291,21 +290,56 @@ function OfferDetailsPage({
               >
                 Informacje sytemowe
               </Typography>
-              <CustomTypography sx={{ marginTop: "6px", fontSize: "1rem" }}>
+              {offer.dataKontaktu && (
+                <CustomTypography sx={{ marginTop: "6px", fontSize: "1rem" }}>
+                  <strong>Data kontaktu:</strong>{" "}
+                  {new Date(offer.dataKontaktu).toLocaleString("pl-PL", {
+                    year: "numeric",
+                    month: "2-digit",
+                    day: "2-digit",
+                    hour: "2-digit",
+                    minute: "2-digit",
+                  })}
+                </CustomTypography>
+              )}
+              {offer.dataNastepnegoKontaktu && (
+                <CustomTypography sx={{ fontSize: "1rem" }}>
+                  <strong>Data następnego kontaktu:</strong>{" "}
+                  {new Date(offer.dataNastepnegoKontaktu).toLocaleString(
+                    "pl-PL",
+                    {
+                      year: "numeric",
+                      month: "2-digit",
+                      day: "2-digit",
+                      hour: "2-digit",
+                      minute: "2-digit",
+                    }
+                  )}
+                </CustomTypography>
+              )}
+              <CustomTypography sx={{ fontSize: "1rem" }}>
                 <strong>Utworzono:</strong>{" "}
                 {offer.dataUtworzenia
-                  ? `${new Date(
-                      offer.dataUtworzenia
-                    ).toLocaleDateString()} przez ${offer.tworca}`
+                  ? `${new Date(offer.dataUtworzenia).toLocaleString("pl-PL", {
+                      year: "numeric",
+                      month: "2-digit",
+                      day: "2-digit",
+                      hour: "2-digit",
+                      minute: "2-digit",
+                    })} przez ${offer.tworca}`
                   : "Brak danych"}
               </CustomTypography>
 
               {offer.edytor && offer.dataModyfikacji && (
                 <CustomTypography sx={{ fontSize: "1rem" }}>
                   <strong>Zmodyfikowano:</strong>{" "}
-                  {`${new Date(
-                    offer.dataModyfikacji
-                  ).toLocaleDateString()} przez ${offer.edytor}`}
+                  {`${new Date(offer.dataModyfikacji).toLocaleString("pl-PL", {
+                    year: "numeric",
+                    month: "2-digit",
+                    day: "2-digit",
+                    hour: "2-digit",
+                    minute: "2-digit",
+                  })} przez ${offer.edytor}`}
                 </CustomTypography>
               )}
             </Grid2>
