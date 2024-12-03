@@ -72,10 +72,10 @@ const EditOfferPanel = ({ offerData, onSave, onCancel, users }) => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    const sanitizedValue = value.replace(
-      /[^a-zA-Z0-9ąćęłńóśźżĄĆĘŁŃÓŚŹŻ\s]/g,
-      ""
-    );
+    const sanitizedValue =
+      name !== "dataKontaktu" && name !== "dataNastepnegoKontaktu"
+        ? value.replace(/[^a-zA-Z0-9ąćęłńóśźżĄĆĘŁŃÓŚŹŻ\s]/g, "")
+        : value;
 
     setFormData({
       ...formData,
@@ -381,7 +381,17 @@ const EditOfferPanel = ({ offerData, onSave, onCancel, users }) => {
                 label="Data kontaktu"
                 name="dataKontaktu"
                 type="datetime-local"
-                value={formData.dataKontaktu}
+                value={
+                  formData.dataKontaktu
+                    ? new Date(formData.dataKontaktu).toLocaleDateString(
+                        "en-CA"
+                      ) +
+                      "T" +
+                      new Date(formData.dataKontaktu)
+                        .toLocaleTimeString("en-CA", { hour12: false })
+                        .slice(0, 5)
+                    : ""
+                }
                 onChange={handleChange}
                 variant="outlined"
                 fullWidth
@@ -394,7 +404,17 @@ const EditOfferPanel = ({ offerData, onSave, onCancel, users }) => {
                 label="Data nast. kontaktu"
                 name="dataNastepnegoKontaktu"
                 type="datetime-local"
-                value={formData.dataNastepnegoKontaktu}
+                value={
+                  formData.dataNastepnegoKontaktu
+                    ? new Date(
+                        formData.dataNastepnegoKontaktu
+                      ).toLocaleDateString("en-CA") +
+                      "T" +
+                      new Date(formData.dataNastepnegoKontaktu)
+                        .toLocaleTimeString("en-CA", { hour12: false })
+                        .slice(0, 5)
+                    : ""
+                }
                 onChange={handleChange}
                 variant="outlined"
                 fullWidth
