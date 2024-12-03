@@ -23,6 +23,7 @@ import CustomTextField from "./CustomTextField";
 import { useChangeColumnConfig, useReadConfig } from "../config/columnConfig";
 import dzielniceData from "../dzielnice_poddzielnice.json";
 import statusesConfig from "../config/statusesConfig";
+import { transform } from "lodash";
 
 function TableControls({
   selectedCount,
@@ -84,14 +85,18 @@ function TableControls({
   };
 
   const handleSearchChange = (e) => {
-    const value = e.target.value;
-    setSearchValue(value);
-    if (value.length > 2) {
-      const filters = { ...filters };
-      onSearchChange(value, filters, columnConfig);
-    } else if (value.length === 0) {
-      const filters = { ...filters };
-      onSearchChange(value, filters, columnConfig);
+    const sanitizedValue = e.target.value.replace(
+      /[^a-zA-Z0-9ąćęłńóśźżĄĆĘŁŃÓŚŹŻ\s]/g,
+      ""
+    );
+    console.log(sanitizedValue.length);
+    setSearchValue(sanitizedValue);
+    if (sanitizedValue.length > 2 && sanitizedValue !== searchValue) {
+      const updatedFilters = { ...filters };
+      onSearchChange(sanitizedValue, updatedFilters, columnConfig);
+    } else if (sanitizedValue.length === 0 && sanitizedValue !== searchValue) {
+      const updatedFilters = { ...filters };
+      onSearchChange(sanitizedValue, updatedFilters, columnConfig);
     }
   };
 
@@ -220,7 +225,11 @@ function TableControls({
       : [];
 
   const updateFilters = (key, value) => {
-    setFilters((prev) => ({ ...prev, [key]: value }));
+    const sanitizedValue = value.replace(
+      /[^a-zA-Z0-9ąćęłńóśźżĄĆĘŁŃÓŚŹŻ\s]/g,
+      ""
+    );
+    setFilters((prev) => ({ ...prev, [key]: sanitizedValue }));
   };
 
   const handleFilter = () => {
@@ -285,7 +294,7 @@ function TableControls({
             fontFamily: "Poppins",
             borderColor: "black",
             width: "180px",
-            height: "56px",
+            height: "40px",
           }}
         >
           Zaznaczono {selectedCount}
@@ -320,7 +329,7 @@ function TableControls({
             fontFamily: "Poppins",
             borderColor: "black",
             width: "180px",
-            height: "56px",
+            height: "40px",
             fontSize: "18px",
           }}
           onClick={toggleFilterPanel}
@@ -333,6 +342,15 @@ function TableControls({
           onChange={handleSearchChange}
           sx={{
             flex: 1,
+            "& .MuiOutlinedInput-root": {
+              height: "40px",
+            },
+            "& .MuiInputLabel-root": {
+              transform: "translate(14px, 9px) scale(1)",
+            },
+            "& .MuiInputLabel-root.MuiInputLabel-shrink": {
+              transform: "translate(14px, -9px) scale(0.75)",
+            },
           }}
         />
         <ToggleButtonGroup
@@ -340,6 +358,7 @@ function TableControls({
           exclusive
           onChange={handleViewChange}
           aria-label="view selection"
+          sx={{ height: "40px" }}
         >
           <Tooltip title="Widok podstawowy">
             <ToggleButton value={0} aria-label="basic view">
@@ -363,7 +382,7 @@ function TableControls({
         <Button
           variant="contained"
           sx={{
-            height: "100%",
+            height: "40px",
             backgroundColor: "#FC8721",
             fontFamily: "Poppins",
             fontSize: "18px",
@@ -524,7 +543,13 @@ function TableControls({
             }
           >
             {subdistricts.map((subdistrict) => (
-              <MenuItem key={subdistrict} value={subdistrict}>
+              <MenuItem
+                key={subdistrict}
+                value={subdistrict}
+                sx={{
+                  "& .Mui-checked": { color: "#FC8721" },
+                }}
+              >
                 <Checkbox
                   checked={filters.poddzielnica.includes(subdistrict)}
                 />
@@ -689,7 +714,7 @@ function TableControls({
             }
           />
         </div>
-        <div className="flex justify-end space-x-4 mt-3">
+        <div className="flex justify-end space-x-4">
           <FormControl
             fullWidth
             sx={{

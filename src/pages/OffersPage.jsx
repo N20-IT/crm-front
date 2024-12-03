@@ -297,10 +297,7 @@ function OffersPage() {
     <div>
       <div className=" flex items-start justify-start h-screen ml-48 flex-col">
         <Sidebar />
-        <h1 className=" font-bold text-5xl font-poppins ml-6 mt-6 mb-4">
-          Oferty
-        </h1>
-        <div className="flex justify-center w-full">
+        <div className="flex justify-center w-full mt-2">
           <TableControls
             selectedCount={selected.length}
             onAddOfferClick={handleAddOfferClick}
