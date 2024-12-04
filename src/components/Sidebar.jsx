@@ -93,7 +93,7 @@ const Sidebar = () => {
                   className="flex items-center justify-start text-xl ml-4 w-full h-full"
                 >
                   <Description sx={{ marginRight: "6px" }} />
-                  <span>Panel administratora</span>
+                  <span>Administrator</span>
                 </Link>
               </li>
             </>

@@ -118,14 +118,16 @@ function OffersTable({
 
   return (
     <TableContainer
+      className="ml-5"
       component={Paper}
       elevation={8}
       style={{
-        width: "100%",
+        width: "99.4%",
         alignSelf: "center",
         borderBottomLeftRadius: "8px",
         borderBottomRightRadius: "8px",
-        maxHeight: "83%",
+        maxHeight: "88vh",
+        marginLeft: "10px",
       }}
     >
       <Table>
@@ -428,7 +430,7 @@ function OffersTable({
           bottom: 0,
           right: 43.2,
           zIndex: 1000,
-          width: "35%",
+          width: "30vw",
         }}
       />
     </TableContainer>
