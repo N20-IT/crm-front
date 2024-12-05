@@ -75,10 +75,8 @@ const EditOfferPanel = ({ offerData, onSave, onCancel, users }) => {
     let sanitizedValue = value;
 
     if (name === "telefonWlasciciela") {
-      // Usuwanie spacji z numeru telefonu
       sanitizedValue = sanitizedValue.replace(/\s/g, "");
     } else if (name !== "dataKontaktu" && name !== "dataNastepnegoKontaktu") {
-      // Usuwanie niedozwolonych znaków dla innych pól
       sanitizedValue = sanitizedValue.replace(
         /[^a-zA-Z0-9ąćęłńóśźżĄĆĘŁŃÓŚŹŻ\s]/g,
         ""
