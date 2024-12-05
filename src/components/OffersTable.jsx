@@ -173,7 +173,11 @@ function OffersTable({
                     active={orderBy === column.id}
                     direction={orderBy === column.id ? order : "asc"}
                     onClick={() => handleSortRequest(column.id)}
-                    style={{ color: "white", fontSize: "13px" }}
+                    style={{
+                      color: "white",
+                      fontSize: "13px",
+                      paddingLeft: "20px",
+                    }}
                   >
                     <Tooltip title={column.label}>{column.shortLabel}</Tooltip>
                   </TableSortLabel>
@@ -256,7 +260,7 @@ function OffersTable({
                   true
                 )}
                 <CustomTableCell>
-                  {row.telefonWlasciciela || ""}
+                  <strong>{row.telefonWlasciciela || ""}</strong>
                 </CustomTableCell>
                 {readConfig === 1 ? (
                   <CustomTableCell>{row.daneWlasciciela || ""}</CustomTableCell>

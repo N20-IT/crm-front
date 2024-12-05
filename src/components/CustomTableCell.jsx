@@ -11,6 +11,8 @@ const CustomTableCell = ({ sx = {}, children, ...rest }) => {
         fontFamily: "Poppins",
         fontSize: "13px",
         width: "9.5%",
+        paddingLeft: "10px",
+        paddingRight: "10px",
         ...sx,
       }}
     >
