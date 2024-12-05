@@ -118,10 +118,18 @@ function AddOfferPanel({ onSave, onCancel, users }) {
 
   const handleChange = async (e) => {
     const { name, value } = e.target;
-    const sanitizedValue =
-      name !== "dataKontaktu" && name !== "dataNastepnegoKontaktu"
-        ? value.replace(/[^a-zA-Z0-9ąćęłńóśźżĄĆĘŁŃÓŚŹŻ\s]/g, "")
-        : value;
+    let sanitizedValue = value;
+
+    if (name === "telefonWlasciciela") {
+      // Usuwanie spacji z numeru telefonu
+      sanitizedValue = sanitizedValue.replace(/\s/g, "");
+    } else if (name !== "dataKontaktu" && name !== "dataNastepnegoKontaktu") {
+      // Usuwanie niedozwolonych znaków dla innych pól
+      sanitizedValue = sanitizedValue.replace(
+        /[^a-zA-Z0-9ąćęłńóśźżĄĆĘŁŃÓŚŹŻ\s]/g,
+        ""
+      );
+    }
     if (name === "telefonWlasciciela" && sanitizedValue.length === 9) {
       await debouncedCheckIfPhoneExists(sanitizedValue);
     }
@@ -160,7 +168,6 @@ function AddOfferPanel({ onSave, onCancel, users }) {
 
   const handleSave = async () => {
     if (!validateForm()) return;
-
     try {
       await onSave(formData);
     } catch (error) {
