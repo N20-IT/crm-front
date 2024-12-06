@@ -225,10 +225,10 @@ function TableControls({
       : [];
 
   const updateFilters = (key, value) => {
-    const sanitizedValue = value.replace(
-      /[^a-zA-Z0-9ąćęłńóśźżĄĆĘŁŃÓŚŹŻ\s]/g,
-      ""
-    );
+    const sanitizedValue =
+      key !== "dzielnica" && key !== "poddzielnica"
+        ? value.replace(/[^a-zA-Z0-9ąćęłńóśźżĄĆĘŁŃÓŚŹŻ\s]/g, "")
+        : value;
     setFilters((prev) => ({ ...prev, [key]: sanitizedValue }));
   };
 

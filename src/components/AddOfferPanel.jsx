@@ -122,7 +122,11 @@ function AddOfferPanel({ onSave, onCancel, users }) {
 
     if (name === "telefonWlasciciela") {
       sanitizedValue = sanitizedValue.replace(/\s/g, "");
-    } else if (name !== "dataKontaktu" && name !== "dataNastepnegoKontaktu") {
+    } else if (
+      name !== "dataKontaktu" &&
+      name !== "dataNastepnegoKontaktu" &&
+      name !== "linkOferta"
+    ) {
       sanitizedValue = sanitizedValue.replace(
         /[^a-zA-Z0-9ąćęłńóśźżĄĆĘŁŃÓŚŹŻ\s]/g,
         ""
