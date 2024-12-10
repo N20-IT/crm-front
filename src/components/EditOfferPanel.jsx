@@ -73,20 +73,9 @@ const EditOfferPanel = ({ offerData, onSave, onCancel, users }) => {
   const handleChange = (e) => {
     const { name, value } = e.target;
     let sanitizedValue = value;
-
     if (name === "telefonWlasciciela") {
       sanitizedValue = sanitizedValue.replace(/\s/g, "");
-    } else if (
-      name !== "dataKontaktu" &&
-      name !== "dataNastepnegoKontaktu" &&
-      name !== "linkOferta"
-    ) {
-      sanitizedValue = sanitizedValue.replace(
-        /[^a-zA-Z0-9ąćęłńóśźżĄĆĘŁŃÓŚŹŻ\s]/g,
-        ""
-      );
     }
-
     setFormData({
       ...formData,
       [name]: sanitizedValue,

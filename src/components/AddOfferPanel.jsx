@@ -119,18 +119,8 @@ function AddOfferPanel({ onSave, onCancel, users }) {
   const handleChange = async (e) => {
     const { name, value } = e.target;
     let sanitizedValue = value;
-
     if (name === "telefonWlasciciela") {
       sanitizedValue = sanitizedValue.replace(/\s/g, "");
-    } else if (
-      name !== "dataKontaktu" &&
-      name !== "dataNastepnegoKontaktu" &&
-      name !== "linkOferta"
-    ) {
-      sanitizedValue = sanitizedValue.replace(
-        /[^a-zA-Z0-9ąćęłńóśźżĄĆĘŁŃÓŚŹŻ\s]/g,
-        ""
-      );
     }
     if (name === "telefonWlasciciela" && sanitizedValue.length === 9) {
       await debouncedCheckIfPhoneExists(sanitizedValue);

@@ -23,7 +23,6 @@ import CustomTextField from "./CustomTextField";
 import { useChangeColumnConfig, useReadConfig } from "../config/columnConfig";
 import dzielniceData from "../dzielnice_poddzielnice.json";
 import statusesConfig from "../config/statusesConfig";
-import { transform } from "lodash";
 
 function TableControls({
   selectedCount,
@@ -85,18 +84,14 @@ function TableControls({
   };
 
   const handleSearchChange = (e) => {
-    const sanitizedValue = e.target.value.replace(
-      /[^a-zA-Z0-9ąćęłńóśźżĄĆĘŁŃÓŚŹŻ\s]/g,
-      ""
-    );
-    console.log(sanitizedValue.length);
-    setSearchValue(sanitizedValue);
-    if (sanitizedValue.length > 2 && sanitizedValue !== searchValue) {
+    const value = e.target.value;
+    setSearchValue(value);
+    if (value.length > 2 && value !== searchValue) {
       const updatedFilters = { ...filters };
-      onSearchChange(sanitizedValue, updatedFilters, columnConfig);
-    } else if (sanitizedValue.length === 0 && sanitizedValue !== searchValue) {
+      onSearchChange(value, updatedFilters, columnConfig);
+    } else if (value.length === 0 && value !== searchValue) {
       const updatedFilters = { ...filters };
-      onSearchChange(sanitizedValue, updatedFilters, columnConfig);
+      onSearchChange(value, updatedFilters, columnConfig);
     }
   };
 
@@ -225,16 +220,11 @@ function TableControls({
       : [];
 
   const updateFilters = (key, value) => {
-    const sanitizedValue =
-      key !== "dzielnica" && key !== "poddzielnica"
-        ? value.replace(/[^a-zA-Z0-9ąćęłńóśźżĄĆĘŁŃÓŚŹŻ\s]/g, "")
-        : value;
-    setFilters((prev) => ({ ...prev, [key]: sanitizedValue }));
+    setFilters((prev) => ({ ...prev, [key]: value }));
   };
 
   const handleFilter = () => {
     if (!priceError && !zlM2Error && !iloscPokoiError && !metrazError) {
-      console.log(filters);
       onFilterApply(searchValue, filters, columnConfig);
       toggleFilterPanel();
     }
