@@ -48,6 +48,10 @@ function OffersPage() {
     GetInformationFromToken("family_name");
   const userRole = GetInformationFromToken("custom:role");
   const [readConfig, setReadConfig] = useState(useReadConfig());
+  const [page, setPage] = useState(2);
+  const [itemsPerPage, setItemsPerPage] = useState(100);
+  const [filters, setFilters] = useState({});
+  const [searchValue, setSearchValue] = useState("");
 
   const columns = useMemo(() => columnsOffersConfig, []);
 
@@ -72,9 +76,22 @@ function OffersPage() {
   }, [token, backendServer, userInformation, userRole]);
 
   const fetchData = useCallback(
-    async (searchQuery = "", filters = {}, columnConfig = readConfig) => {
+    async (
+      searchQuery = searchValue,
+      currentFilters = filters,
+      columnConfig = readConfig,
+      currentPage = page,
+      rowsPerValue = itemsPerPage
+    ) => {
       setLoading(true);
       try {
+        console.log(
+          searchQuery,
+          currentFilters,
+          columnConfig,
+          currentPage,
+          rowsPerValue
+        );
         const response = await axios.get(`${backendServer}/listings`, {
           headers: {
             accept: "application/json",
@@ -83,7 +100,9 @@ function OffersPage() {
           },
           params: {
             search: searchQuery,
-            ...filters,
+            page: currentPage,
+            limit: rowsPerValue,
+            ...currentFilters,
           },
           paramsSerializer: (params) => {
             const serializedParams = {
@@ -98,6 +117,7 @@ function OffersPage() {
             return qs.stringify(serializedParams, { arrayFormat: "repeat" });
           },
         });
+
         setRows(response.data);
       } catch (error) {
         console.error("Błąd pobierania danych:", error);
@@ -249,9 +269,17 @@ function OffersPage() {
     }
   };
 
-  const handleSearchAndFilter = (searchQuery, filters, columnConfig) => {
+  const handleSearchAndFilter = (searchQuery, currentFilters, columnConfig) => {
     setReadConfig(columnConfig);
-    fetchData(searchQuery, filters, columnConfig);
+    if (searchQuery !== searchValue) setSearchValue(searchQuery);
+    if (currentFilters !== filters) setFilters(currentFilters);
+    fetchData(searchQuery, currentFilters, columnConfig);
+  };
+
+  const handlePagination = (currentPage, rowsPerValue) => {
+    if (currentPage !== page) setPage(currentPage);
+    if (rowsPerValue !== itemsPerPage) setItemsPerPage(rowsPerValue);
+    fetchData(undefined, undefined, undefined, currentPage, rowsPerValue);
   };
 
   const handleAddToCalendar = (row) => {
@@ -320,6 +348,7 @@ function OffersPage() {
           handleAddToCalendar={handleAddToCalendar}
           handleUpdateOfferAgentClick={handleUpdateOfferAgentClick}
           handleGoToOfferDetailsPage={handleOpenOfferDetailsPanel}
+          onPaginationApply={handlePagination}
         />
         <Alerts
           message={alertMessage}
