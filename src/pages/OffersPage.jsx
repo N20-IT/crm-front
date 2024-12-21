@@ -48,7 +48,7 @@ function OffersPage() {
     GetInformationFromToken("family_name");
   const userRole = GetInformationFromToken("custom:role");
   const [readConfig, setReadConfig] = useState(useReadConfig());
-  const [page, setPage] = useState(2);
+  const [page, setPage] = useState(0);
   const [itemsPerPage, setItemsPerPage] = useState(100);
   const [filters, setFilters] = useState({});
   const [searchValue, setSearchValue] = useState("");
@@ -117,6 +117,15 @@ function OffersPage() {
             return qs.stringify(serializedParams, { arrayFormat: "repeat" });
           },
         });
+        console.log(
+          searchQuery,
+          currentFilters,
+          columnConfig,
+          currentPage,
+          rowsPerValue,
+          sortBy,
+          sort
+        );
         setRows(response.data["listings"]);
         setQuantityOffers(response.data["total"]);
       } catch (error) {
@@ -280,9 +289,9 @@ function OffersPage() {
     if (currentPage !== page) setPage(currentPage);
     if (rowsPerValue !== itemsPerPage) setItemsPerPage(rowsPerValue);
     fetchData(
-      undefined,
-      undefined,
-      undefined,
+      searchValue,
+      filters,
+      readConfig,
       currentPage,
       rowsPerValue,
       orderBy,
@@ -296,9 +305,9 @@ function OffersPage() {
     if (sortBy !== orderBy) setOrderBy(sortBy);
     if (sort !== order) setOrder(sort);
     fetchData(
-      undefined,
-      undefined,
-      undefined,
+      searchValue,
+      filters,
+      readConfig,
       currentPage,
       rowsPerValue,
       sortBy,
