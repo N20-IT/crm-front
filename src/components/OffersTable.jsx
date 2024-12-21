@@ -33,8 +33,10 @@ function OffersTable({
   handleUpdateOfferAgentClick,
   handleGoToOfferDetailsPage,
   onPaginationApply,
+  onSortApply,
+  quantityOffers,
 }) {
-  const [order, setOrder] = useState("desc");
+  const [order, setOrder] = useState(true);
   const [orderBy, setOrderBy] = useState("dataUtworzenia");
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(100);
@@ -51,9 +53,9 @@ function OffersTable({
   };
 
   const handleSortRequest = (columnId) => {
-    const isAsc = orderBy === columnId && order === "asc";
-    setOrder(isAsc ? "desc" : "asc");
+    setOrder(!order);
     setOrderBy(columnId);
+    onSortApply(0, rowsPerPage, columnId, order ? "asc" : "desc");
   };
 
   const handleChangePage = (event, newPage) => {
@@ -70,10 +72,6 @@ function OffersTable({
   const filteredColumns = columns.filter((column) =>
     readConfig === 0 ? column.view === "basic" : true
   );
-
-  useEffect(() => {
-    console.log(rows);
-  });
 
   return (
     <TableContainer
@@ -130,7 +128,7 @@ function OffersTable({
                 {column.sortable ? (
                   <TableSortLabel
                     active={orderBy === column.id}
-                    direction={orderBy === column.id ? order : "asc"}
+                    direction={order ? "asc" : "desc"}
                     onClick={() => handleSortRequest(column.id)}
                     style={{
                       color: "white",
@@ -379,7 +377,7 @@ function OffersTable({
       </Table>
       <TablePagination
         component="div"
-        count={100}
+        count={quantityOffers}
         page={page}
         onPageChange={handleChangePage}
         rowsPerPage={rowsPerPage}

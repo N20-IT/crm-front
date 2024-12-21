@@ -52,6 +52,9 @@ function OffersPage() {
   const [itemsPerPage, setItemsPerPage] = useState(100);
   const [filters, setFilters] = useState({});
   const [searchValue, setSearchValue] = useState("");
+  const [quantityOffers, setQuantityOffers] = useState(0);
+  const [orderBy, setOrderBy] = useState("dataUtworzenia");
+  const [order, setOrder] = useState("asc");
 
   const columns = useMemo(() => columnsOffersConfig, []);
 
@@ -81,17 +84,12 @@ function OffersPage() {
       currentFilters = filters,
       columnConfig = readConfig,
       currentPage = page,
-      rowsPerValue = itemsPerPage
+      rowsPerValue = itemsPerPage,
+      sortBy = orderBy,
+      sort = order
     ) => {
       setLoading(true);
       try {
-        console.log(
-          searchQuery,
-          currentFilters,
-          columnConfig,
-          currentPage,
-          rowsPerValue
-        );
         const response = await axios.get(`${backendServer}/listings`, {
           headers: {
             accept: "application/json",
@@ -102,6 +100,8 @@ function OffersPage() {
             search: searchQuery,
             page: currentPage,
             limit: rowsPerValue,
+            sortBy,
+            sort,
             ...currentFilters,
           },
           paramsSerializer: (params) => {
@@ -117,8 +117,8 @@ function OffersPage() {
             return qs.stringify(serializedParams, { arrayFormat: "repeat" });
           },
         });
-
-        setRows(response.data);
+        setRows(response.data["listings"]);
+        setQuantityOffers(response.data["total"]);
       } catch (error) {
         console.error("Błąd pobierania danych:", error);
       } finally {
@@ -279,7 +279,31 @@ function OffersPage() {
   const handlePagination = (currentPage, rowsPerValue) => {
     if (currentPage !== page) setPage(currentPage);
     if (rowsPerValue !== itemsPerPage) setItemsPerPage(rowsPerValue);
-    fetchData(undefined, undefined, undefined, currentPage, rowsPerValue);
+    fetchData(
+      undefined,
+      undefined,
+      undefined,
+      currentPage,
+      rowsPerValue,
+      orderBy,
+      order
+    );
+  };
+
+  const handleSort = (currentPage, rowsPerValue, sortBy, sort) => {
+    setPage(currentPage);
+    if (rowsPerValue !== itemsPerPage) setItemsPerPage(rowsPerValue);
+    if (sortBy !== orderBy) setOrderBy(sortBy);
+    if (sort !== order) setOrder(sort);
+    fetchData(
+      undefined,
+      undefined,
+      undefined,
+      currentPage,
+      rowsPerValue,
+      sortBy,
+      sort
+    );
   };
 
   const handleAddToCalendar = (row) => {
@@ -349,6 +373,8 @@ function OffersPage() {
           handleUpdateOfferAgentClick={handleUpdateOfferAgentClick}
           handleGoToOfferDetailsPage={handleOpenOfferDetailsPanel}
           onPaginationApply={handlePagination}
+          onSortApply={handleSort}
+          quantityOffers={quantityOffers}
         />
         <Alerts
           message={alertMessage}
