@@ -36,7 +36,7 @@ function OffersTable({
   onSortApply,
   quantityOffers,
 }) {
-  const [order, setOrder] = useState(true);
+  const [order, setOrder] = useState("desc");
   const [orderBy, setOrderBy] = useState("dataUtworzenia");
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(100);
@@ -53,9 +53,11 @@ function OffersTable({
   };
 
   const handleSortRequest = (columnId) => {
-    setOrder(!order);
+    const isDesc = orderBy === columnId && order === "desc";
+    console.log(isDesc);
+    isDesc ? setOrder("asc") : setOrder("desc");
     setOrderBy(columnId);
-    onSortApply(0, rowsPerPage, columnId, order ? "asc" : "desc");
+    onSortApply(0, rowsPerPage, columnId, isDesc ? "asc" : "desc");
   };
 
   const handleChangePage = (event, newPage) => {

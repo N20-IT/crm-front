@@ -54,7 +54,7 @@ function OffersPage() {
   const [searchValue, setSearchValue] = useState("");
   const [quantityOffers, setQuantityOffers] = useState(0);
   const [orderBy, setOrderBy] = useState("dataUtworzenia");
-  const [order, setOrder] = useState("asc");
+  const [order, setOrder] = useState("desc");
 
   const columns = useMemo(() => columnsOffersConfig, []);
 
@@ -117,15 +117,6 @@ function OffersPage() {
             return qs.stringify(serializedParams, { arrayFormat: "repeat" });
           },
         });
-        console.log(
-          searchQuery,
-          currentFilters,
-          columnConfig,
-          currentPage,
-          rowsPerValue,
-          sortBy,
-          sort
-        );
         setRows(response.data["listings"]);
         setQuantityOffers(response.data["total"]);
       } catch (error) {
@@ -301,6 +292,7 @@ function OffersPage() {
 
   const handleSort = (currentPage, rowsPerValue, sortBy, sort) => {
     setPage(currentPage);
+    console.log(sortBy, sort);
     if (rowsPerValue !== itemsPerPage) setItemsPerPage(rowsPerValue);
     if (sortBy !== orderBy) setOrderBy(sortBy);
     if (sort !== order) setOrder(sort);
