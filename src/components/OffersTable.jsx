@@ -54,7 +54,6 @@ function OffersTable({
 
   const handleSortRequest = (columnId) => {
     const isDesc = orderBy === columnId && order === "desc";
-    console.log(isDesc);
     isDesc ? setOrder("asc") : setOrder("desc");
     setOrderBy(columnId);
     onSortApply(0, rowsPerPage, columnId, isDesc ? "asc" : "desc");

@@ -292,7 +292,6 @@ function OffersPage() {
 
   const handleSort = (currentPage, rowsPerValue, sortBy, sort) => {
     setPage(currentPage);
-    console.log(sortBy, sort);
     if (rowsPerValue !== itemsPerPage) setItemsPerPage(rowsPerValue);
     if (sortBy !== orderBy) setOrderBy(sortBy);
     if (sort !== order) setOrder(sort);
