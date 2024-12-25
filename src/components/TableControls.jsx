@@ -16,8 +16,10 @@ import {
   OutlinedInput,
   ListItemText,
   Checkbox,
+  InputAdornment,
+  IconButton,
 } from "@mui/material";
-import { Delete, Star, ViewList, ViewModule } from "@mui/icons-material";
+import { Delete, Star, ViewList, ViewModule, Clear } from "@mui/icons-material";
 import { KeyboardArrowDown } from "@mui/icons-material";
 import CustomTextField from "./CustomTextField";
 import { useChangeColumnConfig, useReadConfig } from "../config/columnConfig";
@@ -330,6 +332,19 @@ function TableControls({
           label="Szukaj..."
           value={searchValue}
           onChange={handleSearchChange}
+          InputProps={{
+            endAdornment: searchValue && (
+              <InputAdornment position="end">
+                <IconButton
+                  onClick={() => handleSearchChange({ target: { value: "" } })}
+                  edge="end"
+                  size="small"
+                >
+                  <Clear />
+                </IconButton>
+              </InputAdornment>
+            ),
+          }}
           sx={{
             flex: 1,
             "& .MuiOutlinedInput-root": {
