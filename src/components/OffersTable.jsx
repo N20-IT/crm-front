@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Table,
   TableBody,
@@ -32,6 +32,9 @@ function OffersTable({
   handleAddToCalendar,
   handleUpdateOfferAgentClick,
   handleGoToOfferDetailsPage,
+  onPaginationApply,
+  onSortApply,
+  quantityOffers,
 }) {
   const [order, setOrder] = useState("desc");
   const [orderBy, setOrderBy] = useState("dataUtworzenia");
@@ -45,71 +48,26 @@ function OffersTable({
   };
 
   const handleSelectAll = () => {
-    if (selected.length === paginatedRows.length) setSelected([]);
-    else setSelected(paginatedRows.map((row) => row._id));
+    if (selected.length === rows.length) setSelected([]);
+    else setSelected(rows.map((row) => row._id));
   };
 
   const handleSortRequest = (columnId) => {
-    const isAsc = orderBy === columnId && order === "asc";
-    setOrder(isAsc ? "desc" : "asc");
+    const isDesc = orderBy === columnId && order === "desc";
+    isDesc ? setOrder("asc") : setOrder("desc");
     setOrderBy(columnId);
+    onSortApply(0, rowsPerPage, columnId, isDesc ? "asc" : "desc");
   };
-
-  const sortedRows = useMemo(() => {
-    const column = columns.find((col) => col.id === orderBy);
-
-    if (!column || !column.sortable) {
-      return rows;
-    }
-    return [...rows].sort((a, b) => {
-      if (orderBy) {
-        let aValue = a[orderBy] ?? "";
-        let bValue = b[orderBy] ?? "";
-
-        if (
-          aValue === undefined ||
-          aValue === null ||
-          aValue === "" ||
-          aValue === " " ||
-          aValue === "???" ||
-          aValue === "????"
-        )
-          return 1;
-        if (
-          bValue === undefined ||
-          bValue === null ||
-          bValue === "" ||
-          bValue === " " ||
-          bValue === "???" ||
-          bValue === "????"
-        )
-          return -1;
-
-        if (typeof aValue === "number" && typeof bValue === "number") {
-          return order === "asc" ? aValue - bValue : bValue - aValue;
-        }
-
-        return order === "asc"
-          ? aValue.toString().localeCompare(bValue.toString())
-          : bValue.toString().localeCompare(aValue.toString());
-      }
-      return rows;
-    });
-  }, [rows, order, orderBy, columns]);
-
-  const paginatedRows = useMemo(() => {
-    return Array.isArray(sortedRows)
-      ? sortedRows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-      : [];
-  }, [sortedRows, page, rowsPerPage]);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
+    onPaginationApply(newPage, rowsPerPage);
   };
 
   const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
+    onPaginationApply(0, parseInt(event.target.value, 10));
   };
 
   const filteredColumns = columns.filter((column) =>
@@ -171,7 +129,7 @@ function OffersTable({
                 {column.sortable ? (
                   <TableSortLabel
                     active={orderBy === column.id}
-                    direction={orderBy === column.id ? order : "asc"}
+                    direction={order ? "asc" : "desc"}
                     onClick={() => handleSortRequest(column.id)}
                     style={{
                       color: "white",
@@ -202,8 +160,8 @@ function OffersTable({
                 </TableCell>
               </TableRow>
             ))
-          ) : Array.isArray(paginatedRows) && paginatedRows.length > 0 ? (
-            paginatedRows.map((row, index) => (
+          ) : Array.isArray(rows) && rows.length > 0 ? (
+            rows.map((row, index) => (
               <TableRow
                 key={row._id}
                 style={{
@@ -420,7 +378,7 @@ function OffersTable({
       </Table>
       <TablePagination
         component="div"
-        count={rows.length}
+        count={quantityOffers}
         page={page}
         onPageChange={handleChangePage}
         rowsPerPage={rowsPerPage}

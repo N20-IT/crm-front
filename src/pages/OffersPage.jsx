@@ -48,6 +48,13 @@ function OffersPage() {
     GetInformationFromToken("family_name");
   const userRole = GetInformationFromToken("custom:role");
   const [readConfig, setReadConfig] = useState(useReadConfig());
+  const [page, setPage] = useState(0);
+  const [itemsPerPage, setItemsPerPage] = useState(100);
+  const [filters, setFilters] = useState({});
+  const [searchValue, setSearchValue] = useState("");
+  const [quantityOffers, setQuantityOffers] = useState(0);
+  const [orderBy, setOrderBy] = useState("dataUtworzenia");
+  const [order, setOrder] = useState("desc");
 
   const columns = useMemo(() => columnsOffersConfig, []);
 
@@ -72,7 +79,15 @@ function OffersPage() {
   }, [token, backendServer, userInformation, userRole]);
 
   const fetchData = useCallback(
-    async (searchQuery = "", filters = {}, columnConfig = readConfig) => {
+    async (
+      searchQuery = searchValue,
+      currentFilters = filters,
+      columnConfig = readConfig,
+      currentPage = page,
+      rowsPerValue = itemsPerPage,
+      sortBy = orderBy,
+      sort = order
+    ) => {
       setLoading(true);
       try {
         const response = await axios.get(`${backendServer}/listings`, {
@@ -83,7 +98,11 @@ function OffersPage() {
           },
           params: {
             search: searchQuery,
-            ...filters,
+            page: currentPage,
+            limit: rowsPerValue,
+            sortBy,
+            sort,
+            ...currentFilters,
           },
           paramsSerializer: (params) => {
             const serializedParams = {
@@ -98,7 +117,8 @@ function OffersPage() {
             return qs.stringify(serializedParams, { arrayFormat: "repeat" });
           },
         });
-        setRows(response.data);
+        setRows(response.data["listings"]);
+        setQuantityOffers(response.data["total"]);
       } catch (error) {
         console.error("Błąd pobierania danych:", error);
       } finally {
@@ -249,9 +269,41 @@ function OffersPage() {
     }
   };
 
-  const handleSearchAndFilter = (searchQuery, filters, columnConfig) => {
+  const handleSearchAndFilter = (searchQuery, currentFilters, columnConfig) => {
     setReadConfig(columnConfig);
-    fetchData(searchQuery, filters, columnConfig);
+    if (searchQuery !== searchValue) setSearchValue(searchQuery);
+    if (currentFilters !== filters) setFilters(currentFilters);
+    fetchData(searchQuery, currentFilters, columnConfig);
+  };
+
+  const handlePagination = (currentPage, rowsPerValue) => {
+    if (currentPage !== page) setPage(currentPage);
+    if (rowsPerValue !== itemsPerPage) setItemsPerPage(rowsPerValue);
+    fetchData(
+      searchValue,
+      filters,
+      readConfig,
+      currentPage,
+      rowsPerValue,
+      orderBy,
+      order
+    );
+  };
+
+  const handleSort = (currentPage, rowsPerValue, sortBy, sort) => {
+    setPage(currentPage);
+    if (rowsPerValue !== itemsPerPage) setItemsPerPage(rowsPerValue);
+    if (sortBy !== orderBy) setOrderBy(sortBy);
+    if (sort !== order) setOrder(sort);
+    fetchData(
+      searchValue,
+      filters,
+      readConfig,
+      currentPage,
+      rowsPerValue,
+      sortBy,
+      sort
+    );
   };
 
   const handleAddToCalendar = (row) => {
@@ -320,6 +372,9 @@ function OffersPage() {
           handleAddToCalendar={handleAddToCalendar}
           handleUpdateOfferAgentClick={handleUpdateOfferAgentClick}
           handleGoToOfferDetailsPage={handleOpenOfferDetailsPanel}
+          onPaginationApply={handlePagination}
+          onSortApply={handleSort}
+          quantityOffers={quantityOffers}
         />
         <Alerts
           message={alertMessage}
