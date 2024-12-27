@@ -82,6 +82,20 @@ function OffersTable({
         })
       : "";
 
+  const getShortType = (type) => {
+    switch (type) {
+      case "Dom":
+        return "D";
+      case "Mieszkanie":
+        return "M";
+      case "Działka":
+        return "Dz";
+      case "Lokal":
+        return "L";
+      default:
+        return type;
+    }
+  };
   return (
     <TableContainer
       className="ml-5"
@@ -359,7 +373,9 @@ function OffersTable({
                   {formatNumber(row.metraz) || ""}
                 </CustomTableCell>
                 <CustomTableCell>{row.iloscPokoi || ""}</CustomTableCell>
-                <CustomTableCell>{row.typInwestycji || ""}</CustomTableCell>
+                <CustomTableCell>
+                  <strong>{getShortType(row.typInwestycji)}</strong>
+                </CustomTableCell>
                 {readConfig === 1 ? (
                   <CustomTableCell>{row.miasto || ""}</CustomTableCell>
                 ) : (
