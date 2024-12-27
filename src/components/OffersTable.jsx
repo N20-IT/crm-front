@@ -197,108 +197,50 @@ function OffersTable({
                       },
                     }}
                   />
-                </TableCell>
-                <CustomTableCell>{row.ulica || ""}</CustomTableCell>
-                <CustomTableCell>{row.dzielnica || ""}</CustomTableCell>
-                {readConfig === 1 ? (
-                  <CustomTableCell>{row.poddzielnica || ""}</CustomTableCell>
-                ) : (
-                  true
-                )}
-                {readConfig === 1 ? (
-                  <CustomTableCell>{row.miasto || ""}</CustomTableCell>
-                ) : (
-                  true
-                )}
-
-                <CustomTableCell>{row.typInwestycji || ""}</CustomTableCell>
-                <CustomTableCell>{row.iloscPokoi || ""}</CustomTableCell>
-                <CustomTableCell>
-                  {formatNumber(row.metraz) || ""}
-                </CustomTableCell>
+                </TableCell>{" "}
+                <OfferActions
+                  row={row}
+                  userRole={userRole}
+                  readConfig={readConfig}
+                  handleDeleteOfferClick={handleDeleteOfferClick}
+                  handleEditClick={handleEditClick}
+                  handleAddToCalendar={handleAddToCalendar}
+                  handleUpdateOfferAgentClick={handleUpdateOfferAgentClick}
+                  handleGoToOfferDetailsPage={handleGoToOfferDetailsPage}
+                  showDetailsIcon={true}
+                />
                 {readConfig === 1 ? (
                   <CustomTableCell>
-                    {formatNumber(row.powDzialki) || ""}
-                  </CustomTableCell>
-                ) : (
-                  true
-                )}
-                <CustomTableCell>
-                  {formatNumber(row.cena) || ""}
-                </CustomTableCell>
-                {readConfig === 1 ? (
-                  <CustomTableCell>
-                    {formatNumber(row.zlM2) || ""}
-                  </CustomTableCell>
-                ) : (
-                  true
-                )}
-                <CustomTableCell>
-                  <strong>{row.telefonWlasciciela || ""}</strong>
-                </CustomTableCell>
-                {readConfig === 1 ? (
-                  <CustomTableCell>{row.daneWlasciciela || ""}</CustomTableCell>
-                ) : (
-                  true
-                )}
-                {readConfig === 1 ? (
-                  <CustomTableCell>
-                    {row.komentarz && row.komentarz.length > 50 ? (
-                      <Tooltip title={row.komentarz}>
-                        <span>{row.komentarz.slice(0, 50)} ...</span>
-                      </Tooltip>
-                    ) : (
-                      row.komentarz || ""
-                    )}
-                  </CustomTableCell>
-                ) : (
-                  true
-                )}
-                <CustomTableCell>
-                  <strong>{row.agent || ""}</strong>
-                </CustomTableCell>
-                {readConfig === 1 ? (
-                  <CustomTableCell>{row.tworca || ""}</CustomTableCell>
-                ) : (
-                  true
-                )}
-                <CustomTableCell
-                  sx={{
-                    color:
-                      statusesConfig.find(
-                        (status) => status.value === row.statusOferty
-                      )?.color || "black",
-                    fontSize: "13px",
-                  }}
-                >
-                  <strong>{row.statusOferty}</strong>
-                </CustomTableCell>
-                {readConfig === 1 ? (
-                  <CustomTableCell>
-                    {row.dataKontaktu ? (
-                      <>
-                        {new Date(row.dataKontaktu).toLocaleDateString(
-                          "pl-PL",
-                          {
-                            year: "numeric",
-                            month: "2-digit",
-                            day: "2-digit",
-                          }
-                        )}{" "}
-                        <strong>
-                          <br />
-                          {new Date(row.dataKontaktu).toLocaleTimeString(
-                            "pl-PL",
-                            {
-                              hour: "2-digit",
-                              minute: "2-digit",
-                            }
-                          )}
-                        </strong>
-                      </>
+                    {row.linkOferta ? (
+                      <Link href={row.linkOferta} target="_blank">
+                        <Tooltip title={row.linkOferta}>
+                          <Language sx={{ color: "#FC8721" }} />
+                        </Tooltip>
+                      </Link>
                     ) : (
                       ""
                     )}
+                  </CustomTableCell>
+                ) : (
+                  true
+                )}
+                {readConfig === 1 ? (
+                  <CustomTableCell>
+                    {new Date(row.dataUtworzenia).toLocaleDateString("pl-PL", {
+                      year: "numeric",
+                      month: "2-digit",
+                      day: "2-digit",
+                    })}{" "}
+                    <strong>
+                      <br />
+                      {new Date(row.dataUtworzenia).toLocaleTimeString(
+                        "pl-PL",
+                        {
+                          hour: "2-digit",
+                          minute: "2-digit",
+                        }
+                      )}
+                    </strong>
                   </CustomTableCell>
                 ) : (
                   true
@@ -333,33 +275,27 @@ function OffersTable({
                 )}
                 {readConfig === 1 ? (
                   <CustomTableCell>
-                    {new Date(row.dataUtworzenia).toLocaleDateString("pl-PL", {
-                      year: "numeric",
-                      month: "2-digit",
-                      day: "2-digit",
-                    })}{" "}
-                    <strong>
-                      <br />
-                      {new Date(row.dataUtworzenia).toLocaleTimeString(
-                        "pl-PL",
-                        {
-                          hour: "2-digit",
-                          minute: "2-digit",
-                        }
-                      )}
-                    </strong>
-                  </CustomTableCell>
-                ) : (
-                  true
-                )}
-                {readConfig === 1 ? (
-                  <CustomTableCell>
-                    {row.linkOferta ? (
-                      <Link href={row.linkOferta} target="_blank">
-                        <Tooltip title={row.linkOferta}>
-                          <Language sx={{ color: "#FC8721" }} />
-                        </Tooltip>
-                      </Link>
+                    {row.dataKontaktu ? (
+                      <>
+                        {new Date(row.dataKontaktu).toLocaleDateString(
+                          "pl-PL",
+                          {
+                            year: "numeric",
+                            month: "2-digit",
+                            day: "2-digit",
+                          }
+                        )}{" "}
+                        <strong>
+                          <br />
+                          {new Date(row.dataKontaktu).toLocaleTimeString(
+                            "pl-PL",
+                            {
+                              hour: "2-digit",
+                              minute: "2-digit",
+                            }
+                          )}
+                        </strong>
+                      </>
                     ) : (
                       ""
                     )}
@@ -367,17 +303,75 @@ function OffersTable({
                 ) : (
                   true
                 )}
-                <OfferActions
-                  row={row}
-                  userRole={userRole}
-                  readConfig={readConfig}
-                  handleDeleteOfferClick={handleDeleteOfferClick}
-                  handleEditClick={handleEditClick}
-                  handleAddToCalendar={handleAddToCalendar}
-                  handleUpdateOfferAgentClick={handleUpdateOfferAgentClick}
-                  handleGoToOfferDetailsPage={handleGoToOfferDetailsPage}
-                  showDetailsIcon={true}
-                />
+                <CustomTableCell
+                  sx={{
+                    color:
+                      statusesConfig.find(
+                        (status) => status.value === row.statusOferty
+                      )?.color || "black",
+                    fontSize: "13px",
+                  }}
+                >
+                  <strong>{row.statusOferty}</strong>
+                </CustomTableCell>
+                <CustomTableCell>
+                  <strong>{row.agent || ""}</strong>
+                </CustomTableCell>
+                {readConfig === 1 ? (
+                  <CustomTableCell>
+                    {row.komentarz && row.komentarz.length > 50 ? (
+                      <Tooltip title={row.komentarz}>
+                        <span>{row.komentarz.slice(0, 50)} ...</span>
+                      </Tooltip>
+                    ) : (
+                      row.komentarz || ""
+                    )}
+                  </CustomTableCell>
+                ) : (
+                  true
+                )}
+                {readConfig === 1 ? (
+                  <CustomTableCell>{row.daneWlasciciela || ""}</CustomTableCell>
+                ) : (
+                  true
+                )}
+                <CustomTableCell>
+                  <strong>{row.telefonWlasciciela || ""}</strong>
+                </CustomTableCell>
+                {readConfig === 1 ? (
+                  <CustomTableCell>
+                    {formatNumber(row.zlM2) || ""}
+                  </CustomTableCell>
+                ) : (
+                  true
+                )}
+                <CustomTableCell>
+                  {formatNumber(row.cena) || ""}
+                </CustomTableCell>
+                {readConfig === 1 ? (
+                  <CustomTableCell>
+                    {formatNumber(row.powDzialki) || ""}
+                  </CustomTableCell>
+                ) : (
+                  true
+                )}
+                <CustomTableCell>
+                  {formatNumber(row.metraz) || ""}
+                </CustomTableCell>
+                <CustomTableCell>{row.iloscPokoi || ""}</CustomTableCell>
+                <CustomTableCell>{row.typInwestycji || ""}</CustomTableCell>
+                {readConfig === 1 ? (
+                  <CustomTableCell>{row.miasto || ""}</CustomTableCell>
+                ) : (
+                  true
+                )}
+                <CustomTableCell>{row.dzielnica || ""}</CustomTableCell>
+                {readConfig === 1 ? (
+                  <CustomTableCell>{row.poddzielnica || ""}</CustomTableCell>
+                ) : (
+                  true
+                )}
+                <CustomTableCell>{row.ulica || ""}</CustomTableCell>
               </TableRow>
             ))
           ) : (
