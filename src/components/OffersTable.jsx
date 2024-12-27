@@ -365,13 +365,17 @@ function OffersTable({
                 ) : (
                   true
                 )}
-                <CustomTableCell>{row.dzielnica || ""}</CustomTableCell>
+                <CustomTableCell>
+                  <strong>{row.dzielnica || ""}</strong>
+                </CustomTableCell>
                 {readConfig === 1 ? (
                   <CustomTableCell>{row.poddzielnica || ""}</CustomTableCell>
                 ) : (
                   true
                 )}
-                <CustomTableCell>{row.ulica || ""}</CustomTableCell>
+                <CustomTableCell>
+                  <strong>{row.ulica || ""}</strong>
+                </CustomTableCell>
               </TableRow>
             ))
           ) : (
