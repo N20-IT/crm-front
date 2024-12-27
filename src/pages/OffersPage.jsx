@@ -307,7 +307,7 @@ function OffersPage() {
   };
 
   const handleAddToCalendar = (row) => {
-    const eventTitle = "Spotkanie";
+    const eventTitle = row.telefonWlasciciela;
     const eventDescription = row.linkOferta;
 
     const startDate = new Date(row.dataNastepnegoKontaktu);
