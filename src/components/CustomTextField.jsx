@@ -6,12 +6,18 @@ const CustomTextField = ({ sx = {}, children, ...rest }) => (
       "& .MuiOutlinedInput-root": {
         borderRadius: "6px",
         fontFamily: "Poppins",
-        fontSize: "18px",
+        fontSize: "16px",
+        height: "40px",
+        "& input": {
+          padding: "8px",
+          height: "16px",
+        },
       },
       "& .MuiFormLabel-root": {
         fontFamily: "Poppins",
-        fontSize: "18px",
+        fontSize: "16px",
         color: "#535968",
+        transform: "translate(14px, 9px) scale(1)",
       },
       "& .MuiInputLabel-root.Mui-focused": {
         color: "#535968",
@@ -28,6 +34,10 @@ const CustomTextField = ({ sx = {}, children, ...rest }) => (
       "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline": {
         borderColor: "#535968",
       },
+      "& .MuiInputLabel-root.MuiInputLabel-shrink": {
+        transform: "translate(14px, -9px) scale(0.75)",
+      },
+
       ...sx,
     }}
     {...rest}
