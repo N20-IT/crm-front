@@ -169,12 +169,12 @@ function AddOfferPanel({ onSave, onCancel, users }) {
 
   return (
     <div className=" fixed inset-0 bg-light-grey bg-opacity-75 flex items-center justify-center z-50">
-      <div className="bg-white p-6 rounded-lg shadow-lg w-1/3">
+      <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md md:max-w-lg lg:max-w-xl h-5/6 overflow-auto">
         <h2 className="text-4xl font-bold mb-4 font-poppins">
           Dodaj nową ofertę
         </h2>
         <form>
-          <div className="flex justify-end space-x-4">
+          <div className="flex flex-col md:flex-row justify-end space-y-4 md:space-x-4 md:space-y-0">
             <div className="w-full">
               <FormControl
                 fullWidth
@@ -183,12 +183,22 @@ function AddOfferPanel({ onSave, onCancel, users }) {
                   "& .MuiOutlinedInput-root": {
                     borderRadius: "6px",
                     fontFamily: "Poppins",
-                    fontSize: "18px",
+                    fontSize: "16px",
+                    height: "40px",
+                    "& input": {
+                      padding: "8px",
+                      height: "16px",
+                    },
                   },
+                  "& .MuiInputLabel-root.MuiInputLabel-shrink": {
+                    transform: "translate(14px, -9px) scale(0.75)",
+                  },
+
                   "& .MuiFormLabel-root": {
                     fontFamily: "Poppins",
-                    fontSize: "18px",
+                    fontSize: "16px",
                     color: "#535968",
+                    transform: "translate(14px, 9px) scale(1)",
                   },
                   "& .MuiInputLabel-root.Mui-focused": {
                     color: "#535968",
@@ -244,13 +254,23 @@ function AddOfferPanel({ onSave, onCancel, users }) {
                   "& .MuiOutlinedInput-root": {
                     borderRadius: "6px",
                     fontFamily: "Poppins",
-                    fontSize: "18px",
+                    fontSize: "16px",
+                    height: "40px",
+                    "& input": {
+                      padding: "8px",
+                      height: "16px",
+                    },
                   },
                   "& .MuiFormLabel-root": {
                     fontFamily: "Poppins",
-                    fontSize: "18px",
+                    fontSize: "16px",
                     color: "#535968",
+                    transform: "translate(14px, 9px) scale(1)",
                   },
+                  "& .MuiInputLabel-root.MuiInputLabel-shrink": {
+                    transform: "translate(14px, -9px) scale(0.75)",
+                  },
+
                   "& .MuiInputLabel-root.Mui-focused": {
                     color: "#535968",
                   },
@@ -298,7 +318,7 @@ function AddOfferPanel({ onSave, onCancel, users }) {
               </FormControl>
             </div>
           </div>
-          <div className="flex justify-end space-x-4">
+          <div className="flex flex-col md:flex-row justify-end space-y-4 md:space-x-4 md:space-y-0">
             <div className="w-full">
               <CustomTextField
                 label="Ulica"
@@ -322,7 +342,7 @@ function AddOfferPanel({ onSave, onCancel, users }) {
               />
             </div>
           </div>
-          <div className="flex justify-end space-x-4">
+          <div className="flex flex-col md:flex-row justify-end space-y-4 md:space-x-4 md:space-y-0">
             <div className="w-full">
               <CustomTextField
                 label="Metraż"
@@ -379,13 +399,23 @@ function AddOfferPanel({ onSave, onCancel, users }) {
               "& .MuiOutlinedInput-root": {
                 borderRadius: "6px",
                 fontFamily: "Poppins",
-                fontSize: "18px",
+                fontSize: "16px",
+                height: "40px",
+                "& input": {
+                  padding: "8px",
+                  height: "16px",
+                },
               },
               "& .MuiFormLabel-root": {
                 fontFamily: "Poppins",
-                fontSize: "18px",
+                fontSize: "16px",
                 color: "#535968",
+                transform: "translate(14px, 9px) scale(1)",
               },
+              "& .MuiInputLabel-root.MuiInputLabel-shrink": {
+                transform: "translate(14px, -9px) scale(0.75)",
+              },
+
               "& .MuiInputLabel-root.Mui-focused": {
                 color: "#535968",
               },
@@ -433,7 +463,7 @@ function AddOfferPanel({ onSave, onCancel, users }) {
               <MenuItem value="Działka">Działka</MenuItem>
             </Select>
           </FormControl>
-          <div className="flex justify-end space-x-4">
+          <div className="flex flex-col md:flex-row justify-end space-y-4 md:space-x-4 md:space-y-0">
             <div className="w-full">
               <CustomTextField
                 label="Dane właściciela"
@@ -476,34 +506,30 @@ function AddOfferPanel({ onSave, onCancel, users }) {
             />
           </div>
           <div className="flex justify-end space-x-4">
-            <div className="w-full">
-              <CustomTextField
-                label="Data kontaktu"
-                name="dataKontaktu"
-                type="datetime-local"
-                value={formData.dataKontaktu}
-                onChange={handleChange}
-                variant="outlined"
-                fullWidth
-                margin="normal"
-                InputLabelProps={{ shrink: true }}
-              />
-            </div>
-            <div className="w-full">
-              <CustomTextField
-                label="Data nast. kontaktu"
-                name="dataNastepnegoKontaktu"
-                type="datetime-local"
-                value={formData.dataNastepnegoKontaktu}
-                onChange={handleChange}
-                variant="outlined"
-                fullWidth
-                margin="normal"
-                error={!!errors.dataNastepnegoKontaktu}
-                helperText={errors.dataNastepnegoKontaktu}
-                InputLabelProps={{ shrink: true }}
-              />
-            </div>
+            <CustomTextField
+              label="Data kontaktu"
+              name="dataKontaktu"
+              type="datetime-local"
+              value={formData.dataKontaktu}
+              onChange={handleChange}
+              variant="outlined"
+              fullWidth
+              margin="normal"
+              InputLabelProps={{ shrink: true }}
+            />
+            <CustomTextField
+              label="Data nast. kontaktu"
+              name="dataNastepnegoKontaktu"
+              type="datetime-local"
+              value={formData.dataNastepnegoKontaktu}
+              onChange={handleChange}
+              variant="outlined"
+              fullWidth
+              margin="normal"
+              error={!!errors.dataNastepnegoKontaktu}
+              helperText={errors.dataNastepnegoKontaktu}
+              InputLabelProps={{ shrink: true }}
+            />
           </div>
 
           <div className="flex justify-end space-x-4">
@@ -514,13 +540,23 @@ function AddOfferPanel({ onSave, onCancel, users }) {
                 "& .MuiOutlinedInput-root": {
                   borderRadius: "6px",
                   fontFamily: "Poppins",
-                  fontSize: "18px",
+                  fontSize: "16px",
+                  height: "40px",
+                  "& input": {
+                    padding: "8px",
+                    height: "16px",
+                  },
                 },
                 "& .MuiFormLabel-root": {
                   fontFamily: "Poppins",
-                  fontSize: "18px",
+                  fontSize: "16px",
                   color: "#535968",
+                  transform: "translate(14px, 9px) scale(1)",
                 },
+                "& .MuiInputLabel-root.MuiInputLabel-shrink": {
+                  transform: "translate(14px, -9px) scale(0.75)",
+                },
+
                 "& .MuiInputLabel-root.Mui-focused": {
                   color: "#535968",
                 },
@@ -590,12 +626,21 @@ function AddOfferPanel({ onSave, onCancel, users }) {
                 "& .MuiOutlinedInput-root": {
                   borderRadius: "6px",
                   fontFamily: "Poppins",
-                  fontSize: "18px",
+                  fontSize: "16px",
+                  height: "40px",
+                  "& input": {
+                    padding: "8px",
+                    height: "16px",
+                  },
                 },
                 "& .MuiFormLabel-root": {
                   fontFamily: "Poppins",
-                  fontSize: "18px",
+                  fontSize: "16px",
                   color: "#535968",
+                  transform: "translate(14px, 9px) scale(1)",
+                },
+                "& .MuiInputLabel-root.MuiInputLabel-shrink": {
+                  transform: "translate(14px, -9px) scale(0.75)",
                 },
                 "& .MuiInputLabel-root.Mui-focused": {
                   color: "#535968",

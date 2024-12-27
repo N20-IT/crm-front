@@ -74,6 +74,14 @@ function OffersTable({
     readConfig === 0 ? column.view === "basic" : true
   );
 
+  const formatNumber = (value) =>
+    value
+      ? value.toLocaleString("pl-PL", {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2,
+        })
+      : "";
+
   return (
     <TableContainer
       className="ml-5"
@@ -205,15 +213,23 @@ function OffersTable({
 
                 <CustomTableCell>{row.typInwestycji || ""}</CustomTableCell>
                 <CustomTableCell>{row.iloscPokoi || ""}</CustomTableCell>
-                <CustomTableCell>{row.metraz || ""}</CustomTableCell>
+                <CustomTableCell>
+                  {formatNumber(row.metraz) || ""}
+                </CustomTableCell>
                 {readConfig === 1 ? (
-                  <CustomTableCell>{row.powDzialki || ""}</CustomTableCell>
+                  <CustomTableCell>
+                    {formatNumber(row.powDzialki) || ""}
+                  </CustomTableCell>
                 ) : (
                   true
                 )}
-                <CustomTableCell>{row.cena || ""}</CustomTableCell>
+                <CustomTableCell>
+                  {formatNumber(row.cena) || ""}
+                </CustomTableCell>
                 {readConfig === 1 ? (
-                  <CustomTableCell>{row.zlM2 || ""}</CustomTableCell>
+                  <CustomTableCell>
+                    {formatNumber(row.zlM2) || ""}
+                  </CustomTableCell>
                 ) : (
                   true
                 )}
