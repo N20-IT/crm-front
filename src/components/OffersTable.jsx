@@ -94,6 +94,10 @@ function OffersTable({
         return "Dz";
       case "Lokal":
         return "L";
+      case "Pierwotny":
+        return "P";
+      case "Wtórny":
+        return "W";
       default:
         return type;
     }
@@ -199,6 +203,8 @@ function OffersTable({
                     textAlign: "center",
                     fontFamily: "Poppins",
                     padding: "0px",
+                    paddingLeft: "5px",
+                    paddingRight: "5px",
                   }}
                   sortDirection={orderBy === column.id ? order : false}
                 >
@@ -456,6 +462,13 @@ function OffersTable({
                   <CustomTableCell>
                     <strong>{getShortType(row.typInwestycji)}</strong>
                   </CustomTableCell>
+                  {readConfig === 1 ? (
+                    <CustomTableCell>
+                      {getShortType(row.rynek) || ""}
+                    </CustomTableCell>
+                  ) : (
+                    true
+                  )}
                   {readConfig === 1 ? (
                     <CustomTableCell>{row.miasto || ""}</CustomTableCell>
                   ) : (

@@ -186,6 +186,11 @@ function OfferDetailsPage({
                   <strong>Typ inwestycji:</strong> {offer.typInwestycji}
                 </CustomTypography>
               )}
+              {offer.rynek && (
+                <CustomTypography sx={{ fontSize: "1rem" }}>
+                  <strong>Rynek:</strong> {offer.rynek}
+                </CustomTypography>
+              )}
               {offer.iloscPokoi && (
                 <CustomTypography sx={{ fontSize: "1rem" }}>
                   <strong>Ilość pokoi:</strong> {offer.iloscPokoi}

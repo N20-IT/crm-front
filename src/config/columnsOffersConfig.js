@@ -105,6 +105,13 @@ const columnsOffersConfig = [
     view: "basic",
   },
   {
+    id: "rynek",
+    label: "Rynek",
+    shortLabel: "Rynek",
+    sortable: false,
+    view: "extended",
+  },
+  {
     id: "miasto",
     label: "Miasto/Wieś",
     shortLabel: "Miasto",

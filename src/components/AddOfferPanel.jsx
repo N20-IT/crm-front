@@ -24,6 +24,7 @@ function AddOfferPanel({ onSave, onCancel, users }) {
     poddzielnica: "",
     miasto: "",
     typInwestycji: "",
+    rynek: "",
     iloscPokoi: "",
     metraz: "",
     cena: "",
@@ -392,77 +393,152 @@ function AddOfferPanel({ onSave, onCancel, users }) {
               />
             </div>
           </div>
-          <FormControl
-            fullWidth
-            sx={{
-              marginTop: "12px",
-              "& .MuiOutlinedInput-root": {
-                borderRadius: "6px",
-                fontFamily: "Poppins",
-                fontSize: "16px",
-                height: "40px",
-                "& input": {
-                  padding: "8px",
-                  height: "16px",
-                },
-              },
-              "& .MuiFormLabel-root": {
-                fontFamily: "Poppins",
-                fontSize: "16px",
-                color: "#535968",
-                transform: "translate(14px, 9px) scale(1)",
-              },
-              "& .MuiInputLabel-root.MuiInputLabel-shrink": {
-                transform: "translate(14px, -9px) scale(0.75)",
-              },
-
-              "& .MuiInputLabel-root.Mui-focused": {
-                color: "#535968",
-              },
-              "& .MuiOutlinedInput-notchedOutline": {
-                borderColor: "#535968",
-              },
-              "&:hover .MuiOutlinedInput-notchedOutline": {
-                borderColor: "#535968",
-              },
-              "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                borderColor: "#535968",
-              },
-              "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                borderColor: "#535968",
-              },
-            }}
-          >
-            <InputLabel>Typ inwestycji</InputLabel>
-            <Select
-              value={formData.typInwestycji}
-              onChange={(e) =>
-                handleChange({
-                  target: {
-                    name: "typInwestycji",
-                    value: e.target.value,
-                  },
-                })
-              }
-              label="Typ inwestycji"
-            >
-              <MenuItem
-                key={"null"}
-                value={""}
+          <div className="flex flex-col md:flex-row justify-end space-y-4 md:space-x-4 md:space-y-0">
+            <div className="w-full">
+              <FormControl
+                fullWidth
                 sx={{
-                  fontStyle: "italic",
-                  color: "gray",
-                  fontWeight: "bold",
+                  marginTop: "12px",
+                  "& .MuiOutlinedInput-root": {
+                    borderRadius: "6px",
+                    fontFamily: "Poppins",
+                    fontSize: "16px",
+                    height: "40px",
+                    "& input": {
+                      padding: "8px",
+                      height: "16px",
+                    },
+                  },
+                  "& .MuiFormLabel-root": {
+                    fontFamily: "Poppins",
+                    fontSize: "16px",
+                    color: "#535968",
+                    transform: "translate(14px, 9px) scale(1)",
+                  },
+                  "& .MuiInputLabel-root.MuiInputLabel-shrink": {
+                    transform: "translate(14px, -9px) scale(0.75)",
+                  },
+
+                  "& .MuiInputLabel-root.Mui-focused": {
+                    color: "#535968",
+                  },
+                  "& .MuiOutlinedInput-notchedOutline": {
+                    borderColor: "#535968",
+                  },
+                  "&:hover .MuiOutlinedInput-notchedOutline": {
+                    borderColor: "#535968",
+                  },
+                  "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                    borderColor: "#535968",
+                  },
+                  "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                    borderColor: "#535968",
+                  },
                 }}
               >
-                Brak
-              </MenuItem>
-              <MenuItem value="Dom">Dom</MenuItem>
-              <MenuItem value="Mieszkanie">Mieszkanie</MenuItem>
-              <MenuItem value="Lokal">Lokal</MenuItem>
-              <MenuItem value="Działka">Działka</MenuItem>
-            </Select>
-          </FormControl>
+                <InputLabel>Typ inwestycji</InputLabel>
+                <Select
+                  value={formData.typInwestycji}
+                  onChange={(e) =>
+                    handleChange({
+                      target: {
+                        name: "typInwestycji",
+                        value: e.target.value,
+                      },
+                    })
+                  }
+                  label="Typ inwestycji"
+                >
+                  <MenuItem
+                    key={"null"}
+                    value={""}
+                    sx={{
+                      fontStyle: "italic",
+                      color: "gray",
+                      fontWeight: "bold",
+                    }}
+                  >
+                    Brak
+                  </MenuItem>
+                  <MenuItem value="Dom">Dom</MenuItem>
+                  <MenuItem value="Mieszkanie">Mieszkanie</MenuItem>
+                  <MenuItem value="Lokal">Lokal</MenuItem>
+                  <MenuItem value="Działka">Działka</MenuItem>
+                </Select>
+              </FormControl>
+            </div>
+            <div className="w-full">
+              <FormControl
+                fullWidth
+                sx={{
+                  marginTop: "12px",
+                  "& .MuiOutlinedInput-root": {
+                    borderRadius: "6px",
+                    fontFamily: "Poppins",
+                    fontSize: "16px",
+                    height: "40px",
+                    "& input": {
+                      padding: "8px",
+                      height: "16px",
+                    },
+                  },
+                  "& .MuiFormLabel-root": {
+                    fontFamily: "Poppins",
+                    fontSize: "16px",
+                    color: "#535968",
+                    transform: "translate(14px, 9px) scale(1)",
+                  },
+                  "& .MuiInputLabel-root.MuiInputLabel-shrink": {
+                    transform: "translate(14px, -9px) scale(0.75)",
+                  },
+
+                  "& .MuiInputLabel-root.Mui-focused": {
+                    color: "#535968",
+                  },
+                  "& .MuiOutlinedInput-notchedOutline": {
+                    borderColor: "#535968",
+                  },
+                  "&:hover .MuiOutlinedInput-notchedOutline": {
+                    borderColor: "#535968",
+                  },
+                  "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                    borderColor: "#535968",
+                  },
+                  "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                    borderColor: "#535968",
+                  },
+                }}
+              >
+                <InputLabel>Rynek</InputLabel>
+                <Select
+                  value={formData.rynek}
+                  onChange={(e) =>
+                    handleChange({
+                      target: {
+                        name: "rynek",
+                        value: e.target.value,
+                      },
+                    })
+                  }
+                  label="Rynek"
+                >
+                  <MenuItem
+                    key={"null"}
+                    value={""}
+                    sx={{
+                      fontStyle: "italic",
+                      color: "gray",
+                      fontWeight: "bold",
+                    }}
+                  >
+                    Brak
+                  </MenuItem>
+                  <MenuItem value="Pierwotny">Pierwotny</MenuItem>
+                  <MenuItem value="Wtórny">Wtórny</MenuItem>
+                </Select>
+              </FormControl>
+            </div>
+          </div>
           <div className="flex flex-col md:flex-row justify-end space-y-4 md:space-x-4 md:space-y-0">
             <div className="w-full">
               <CustomTextField
