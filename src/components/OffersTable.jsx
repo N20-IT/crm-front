@@ -167,10 +167,13 @@ function OffersTable({
                     active={orderBy === column.id}
                     direction={order === "asc" ? "asc" : "desc"}
                     onClick={() => handleSortRequest(column.id)}
-                    style={{
-                      color: "white",
+                    sx={{
+                      color: "white !important",
                       fontSize: "13px",
                       paddingLeft: "20px",
+                      "& .MuiTableSortLabel-icon": {
+                        color: "white !important",
+                      },
                     }}
                   >
                     <Tooltip title={column.label}>{column.shortLabel}</Tooltip>
