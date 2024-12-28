@@ -424,18 +424,20 @@ function OffersTable({
                       <span style={{ whiteSpace: "nowrap" }}>
                         {formatPhoneNumber(row.telefonWlasciciela || "")}
                       </span>
-                      <Tooltip title="Skopiuj numer">
-                        <IconButton
-                          onClick={() =>
-                            copyToClipboard(row.telefonWlasciciela || "")
-                          }
-                          sx={{
-                            padding: "6px",
-                          }}
-                        >
-                          <FileCopy />
-                        </IconButton>
-                      </Tooltip>
+                      {row.telefonWlasciciela && (
+                        <Tooltip title="Skopiuj numer">
+                          <IconButton
+                            onClick={() =>
+                              copyToClipboard(row.telefonWlasciciela || "")
+                            }
+                            sx={{
+                              padding: "6px",
+                            }}
+                          >
+                            <FileCopy />
+                          </IconButton>
+                        </Tooltip>
+                      )}
                     </strong>
                   </CustomTableCell>
                   {readConfig === 1 ? (
