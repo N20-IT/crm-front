@@ -40,6 +40,7 @@ function TableControls({
     poddzielnica: [],
     miasto: "",
     typInwestycji: "",
+    rynek: "",
     minIloscPokoi: "",
     maxIloscPokoi: "",
     minMetraz: "",
@@ -239,6 +240,7 @@ function TableControls({
       poddzielnica: [],
       miasto: "",
       typInwestycji: "",
+      rynek: "",
       minIloscPokoi: "",
       maxIloscPokoi: "",
       minMetraz: "",
@@ -430,13 +432,23 @@ function TableControls({
             "& .MuiOutlinedInput-root": {
               borderRadius: "6px",
               fontFamily: "Poppins",
-              fontSize: "18px",
+              fontSize: "16px",
+              height: "40px",
+              "& input": {
+                padding: "8px",
+                height: "16px",
+              },
             },
             "& .MuiFormLabel-root": {
               fontFamily: "Poppins",
-              fontSize: "18px",
+              fontSize: "16px",
               color: "#535968",
+              transform: "translate(14px, 9px) scale(1)",
             },
+            "& .MuiInputLabel-root.MuiInputLabel-shrink": {
+              transform: "translate(14px, -9px) scale(0.75)",
+            },
+
             "& .MuiInputLabel-root.Mui-focused": {
               color: "#535968",
             },
@@ -498,13 +510,23 @@ function TableControls({
             "& .MuiOutlinedInput-root": {
               borderRadius: "6px",
               fontFamily: "Poppins",
-              fontSize: "18px",
+              fontSize: "16px",
+              height: "40px",
+              "& input": {
+                padding: "8px",
+                height: "16px",
+              },
             },
             "& .MuiFormLabel-root": {
               fontFamily: "Poppins",
-              fontSize: "18px",
+              fontSize: "16px",
               color: "#535968",
+              transform: "translate(14px, 9px) scale(1)",
             },
+            "& .MuiInputLabel-root.MuiInputLabel-shrink": {
+              transform: "translate(14px, -9px) scale(0.75)",
+            },
+
             "& .MuiInputLabel-root.Mui-focused": {
               color: "#535968",
             },
@@ -570,55 +592,124 @@ function TableControls({
           fullWidth
           sx={{ marginTop: "12px" }}
         />
-        <FormControl
-          fullWidth
-          sx={{
-            marginTop: "12px",
-            "& .MuiOutlinedInput-root": {
-              borderRadius: "6px",
-              fontFamily: "Poppins",
-              fontSize: "18px",
-            },
-            "& .MuiFormLabel-root": {
-              fontFamily: "Poppins",
-              fontSize: "18px",
-              color: "#535968",
-            },
-            "& .MuiInputLabel-root.Mui-focused": {
-              color: "#535968",
-            },
-            "& .MuiOutlinedInput-notchedOutline": {
-              borderColor: "#535968",
-            },
-            "&:hover .MuiOutlinedInput-notchedOutline": {
-              borderColor: "#535968",
-            },
-            "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-              borderColor: "#535968",
-            },
-            "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline": {
-              borderColor: "#535968",
-            },
-          }}
-        >
-          <InputLabel>Typ inwestycji</InputLabel>
-          <Select
-            value={filters.typInwestycji}
-            onChange={(e) => updateFilters("typInwestycji", e.target.value)}
-            label="Typ inwestycji"
+        <div className="flex justify-end space-x-4">
+          <FormControl
+            fullWidth
+            sx={{
+              marginTop: "12px",
+              "& .MuiOutlinedInput-root": {
+                borderRadius: "6px",
+                fontFamily: "Poppins",
+                fontSize: "16px",
+                height: "40px",
+                "& input": {
+                  padding: "8px",
+                  height: "16px",
+                },
+              },
+              "& .MuiFormLabel-root": {
+                fontFamily: "Poppins",
+                fontSize: "16px",
+                color: "#535968",
+                transform: "translate(14px, 9px) scale(1)",
+              },
+              "& .MuiInputLabel-root.MuiInputLabel-shrink": {
+                transform: "translate(14px, -9px) scale(0.75)",
+              },
+
+              "& .MuiInputLabel-root.Mui-focused": {
+                color: "#535968",
+              },
+              "& .MuiOutlinedInput-notchedOutline": {
+                borderColor: "#535968",
+              },
+              "&:hover .MuiOutlinedInput-notchedOutline": {
+                borderColor: "#535968",
+              },
+              "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                borderColor: "#535968",
+              },
+              "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                borderColor: "#535968",
+              },
+            }}
           >
-            <MenuItem
-              value=""
-              sx={{ fontStyle: "italic", color: "gray", fontWeight: "bold" }}
+            <InputLabel>Typ inwestycji</InputLabel>
+            <Select
+              value={filters.typInwestycji}
+              onChange={(e) => updateFilters("typInwestycji", e.target.value)}
+              label="Typ inwestycji"
             >
-              Brak
-            </MenuItem>
-            <MenuItem value="Dom">Dom</MenuItem>
-            <MenuItem value="Mieszkanie">Mieszkanie</MenuItem>
-            <MenuItem value="Lokal">Lokal</MenuItem>
-            <MenuItem value="Działka">Działka</MenuItem>
-          </Select>
-        </FormControl>
+              <MenuItem
+                value=""
+                sx={{ fontStyle: "italic", color: "gray", fontWeight: "bold" }}
+              >
+                Brak
+              </MenuItem>
+              <MenuItem value="Dom">Dom</MenuItem>
+              <MenuItem value="Mieszkanie">Mieszkanie</MenuItem>
+              <MenuItem value="Lokal">Lokal</MenuItem>
+              <MenuItem value="Działka">Działka</MenuItem>
+            </Select>
+          </FormControl>
+          <FormControl
+            fullWidth
+            sx={{
+              marginTop: "12px",
+              "& .MuiOutlinedInput-root": {
+                borderRadius: "6px",
+                fontFamily: "Poppins",
+                fontSize: "16px",
+                height: "40px",
+                "& input": {
+                  padding: "8px",
+                  height: "16px",
+                },
+              },
+              "& .MuiFormLabel-root": {
+                fontFamily: "Poppins",
+                fontSize: "16px",
+                color: "#535968",
+                transform: "translate(14px, 9px) scale(1)",
+              },
+              "& .MuiInputLabel-root.MuiInputLabel-shrink": {
+                transform: "translate(14px, -9px) scale(0.75)",
+              },
+
+              "& .MuiInputLabel-root.Mui-focused": {
+                color: "#535968",
+              },
+              "& .MuiOutlinedInput-notchedOutline": {
+                borderColor: "#535968",
+              },
+              "&:hover .MuiOutlinedInput-notchedOutline": {
+                borderColor: "#535968",
+              },
+              "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                borderColor: "#535968",
+              },
+              "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                borderColor: "#535968",
+              },
+            }}
+          >
+            <InputLabel>Rynek</InputLabel>
+            <Select
+              value={filters.rynek}
+              onChange={(e) => updateFilters("rynek", e.target.value)}
+              label="Rynek"
+            >
+              <MenuItem
+                value=""
+                sx={{ fontStyle: "italic", color: "gray", fontWeight: "bold" }}
+              >
+                Brak
+              </MenuItem>
+              <MenuItem value="Pierwotny">Pierwotny</MenuItem>
+              <MenuItem value="Wtórny">Wtórny</MenuItem>
+            </Select>
+          </FormControl>
+        </div>
         <div className="flex justify-end space-x-4 mt-3">
           <CustomTextField
             label="Min ilość pokoi"
@@ -727,13 +818,23 @@ function TableControls({
               "& .MuiOutlinedInput-root": {
                 borderRadius: "6px",
                 fontFamily: "Poppins",
-                fontSize: "18px",
+                fontSize: "16px",
+                height: "40px",
+                "& input": {
+                  padding: "8px",
+                  height: "16px",
+                },
               },
               "& .MuiFormLabel-root": {
                 fontFamily: "Poppins",
-                fontSize: "18px",
+                fontSize: "16px",
                 color: "#535968",
+                transform: "translate(14px, 9px) scale(1)",
               },
+              "& .MuiInputLabel-root.MuiInputLabel-shrink": {
+                transform: "translate(14px, -9px) scale(0.75)",
+              },
+
               "& .MuiInputLabel-root.Mui-focused": {
                 color: "#535968",
               },
@@ -793,13 +894,23 @@ function TableControls({
               "& .MuiOutlinedInput-root": {
                 borderRadius: "6px",
                 fontFamily: "Poppins",
-                fontSize: "18px",
+                fontSize: "16px",
+                height: "40px",
+                "& input": {
+                  padding: "8px",
+                  height: "16px",
+                },
               },
               "& .MuiFormLabel-root": {
                 fontFamily: "Poppins",
-                fontSize: "18px",
+                fontSize: "16px",
                 color: "#535968",
+                transform: "translate(14px, 9px) scale(1)",
               },
+              "& .MuiInputLabel-root.MuiInputLabel-shrink": {
+                transform: "translate(14px, -9px) scale(0.75)",
+              },
+
               "& .MuiInputLabel-root.Mui-focused": {
                 color: "#535968",
               },

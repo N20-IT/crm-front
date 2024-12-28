@@ -1,12 +1,5 @@
 const columnsOffersConfig = [
   {
-    id: "narzedzia",
-    label: "Narzędzia",
-    shortLabel: "Narzędzia",
-    sortable: false,
-    view: "basic",
-  },
-  {
     id: "linkOferta",
     label: "Link",
     shortLabel: "Link",
@@ -110,6 +103,13 @@ const columnsOffersConfig = [
     shortLabel: "Typ",
     sortable: false,
     view: "basic",
+  },
+  {
+    id: "rynek",
+    label: "Rynek",
+    shortLabel: "Rynek",
+    sortable: false,
+    view: "extended",
   },
   {
     id: "miasto",
