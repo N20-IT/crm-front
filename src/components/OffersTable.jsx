@@ -138,20 +138,34 @@ function OffersTable({
                 }}
               />
             </TableCell>
+            <TableCell
+              key="narzedzia"
+              sx={{
+                color: "white",
+                textAlign: "center",
+                fontFamily: "Poppins",
+                padding: "0px",
+                paddingLeft: "14px",
+                paddingRight: "14px",
+              }}
+            >
+              <Tooltip title="Narzędzia">Narzędzia</Tooltip>
+            </TableCell>
             {filteredColumns.map((column, index) => (
               <TableCell
                 key={column.id}
-                style={{
+                sx={{
                   color: "white",
                   textAlign: "center",
                   fontFamily: "Poppins",
+                  padding: "0px",
                 }}
                 sortDirection={orderBy === column.id ? order : false}
               >
                 {column.sortable ? (
                   <TableSortLabel
                     active={orderBy === column.id}
-                    direction={order ? "asc" : "desc"}
+                    direction={order === "asc" ? "asc" : "desc"}
                     onClick={() => handleSortRequest(column.id)}
                     style={{
                       color: "white",

@@ -1,12 +1,5 @@
 const columnsOffersConfig = [
   {
-    id: "narzedzia",
-    label: "Narzędzia",
-    shortLabel: "Narzędzia",
-    sortable: false,
-    view: "basic",
-  },
-  {
     id: "linkOferta",
     label: "Link",
     shortLabel: "Link",
