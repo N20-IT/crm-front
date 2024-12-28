@@ -14,8 +14,9 @@ import {
   TableSortLabel,
   Link,
   TablePagination,
+  IconButton,
 } from "@mui/material";
-import { Language } from "@mui/icons-material";
+import { Language, FileCopy } from "@mui/icons-material";
 import OfferActions from "../components/OfferAction";
 import CustomTableCell from "./CustomTableCell";
 import statusesConfig from "../config/statusesConfig";
@@ -119,6 +120,20 @@ function OffersTable({
       },
     },
   });
+
+  const formatPhoneNumber = (number) => {
+    return number.replace(/(\d{3})(?=\d)/g, "$1 ");
+  };
+
+  const copyToClipboard = (number) => {
+    const formattedNumber = number.replace(/\D/g, "");
+    const textarea = document.createElement("textarea");
+    textarea.value = formattedNumber;
+    document.body.appendChild(textarea);
+    textarea.select();
+    document.execCommand("copy");
+    document.body.removeChild(textarea);
+  };
 
   return (
     <ThemeProvider theme={customTheme}>
@@ -398,8 +413,24 @@ function OffersTable({
                   ) : (
                     true
                   )}
-                  <CustomTableCell>
-                    <strong>{row.telefonWlasciciela || ""}</strong>
+                  <CustomTableCell sx={{ whiteSpace: "nowrap" }}>
+                    <strong>
+                      <span style={{ whiteSpace: "nowrap" }}>
+                        {formatPhoneNumber(row.telefonWlasciciela || "")}
+                      </span>
+                      <Tooltip title="Skopiuj numer">
+                        <IconButton
+                          onClick={() =>
+                            copyToClipboard(row.telefonWlasciciela || "")
+                          }
+                          sx={{
+                            padding: "6px",
+                          }}
+                        >
+                          <FileCopy />
+                        </IconButton>
+                      </Tooltip>
+                    </strong>
                   </CustomTableCell>
                   {readConfig === 1 ? (
                     <CustomTableCell>
