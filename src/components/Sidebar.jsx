@@ -121,32 +121,33 @@ const Sidebar = () => {
           )}
         </ul>
       </nav>
-      <Button
-        fullWidth={!isCollapsed}
-        variant="contained"
-        sx={{
-          position: "absolute",
-          bottom: "0.75rem",
-          backgroundColor: "#FC8721",
-          color: "white",
-          borderRadius: "32px",
-          fontSize: isCollapsed ? "0px" : "16px",
-          fontFamily: "Poppins",
-          textTransform: "none",
-          padding: isCollapsed ? "10px" : "10px 20px",
-          transition: "all 0.3s ease-in-out",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: isCollapsed ? "center" : "flex-start",
-          "& .MuiButton-startIcon": {
-            margin: isCollapsed ? 0 : undefined,
-          },
-        }}
-        startIcon={<Logout />}
-        onClick={logout}
+      <div
+        className={`fixed bottom-3 p-4 flex justify-center items-center ${
+          isCollapsed ? "w-16" : "w-39"
+        }`}
       >
-        {!isCollapsed && "Wyloguj się"}
-      </Button>
+        <Button
+          fullWidth={!isCollapsed}
+          variant="contained"
+          sx={{
+            backgroundColor: "#FC8721",
+            color: "white",
+            borderRadius: "32px",
+            fontSize: isCollapsed ? "0px" : "16px",
+            fontFamily: "Poppins",
+            textTransform: "none",
+            padding: isCollapsed ? "10px" : "10px 20px",
+            transition: "all 0.3s ease-in-out",
+            "& .MuiButton-startIcon": {
+              margin: isCollapsed ? 0 : undefined,
+            },
+          }}
+          startIcon={<Logout />}
+          onClick={logout}
+        >
+          {!isCollapsed && "Wyloguj się"}
+        </Button>
+      </div>
     </aside>
   );
 };
