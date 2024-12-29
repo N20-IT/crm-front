@@ -193,8 +193,8 @@ function OffersTable({
                   textAlign: "center",
                   fontFamily: "Poppins",
                   padding: "0px",
-                  paddingLeft: "14px",
-                  paddingRight: "14px",
+                  paddingLeft: "30px",
+                  paddingRight: "30px",
                 }}
               >
                 <Tooltip title="Narzędzia">Narzędzia</Tooltip>
