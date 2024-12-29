@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { TableCell, IconButton, Tooltip } from "@mui/material";
 import {
   Delete,
@@ -22,6 +22,9 @@ function OfferActions({
   showDetailsIcon,
   handleChangeOfferInterestClick,
 }) {
+  useEffect(() => {
+    console.log(row);
+  });
   return (
     <TableCell
       style={{
@@ -57,7 +60,11 @@ function OfferActions({
         </IconButton>
       </Tooltip>
 
-      <Tooltip title="Dodaj do ciekawych ofert">
+      <Tooltip
+        title={
+          row.czyCiekawa ? "Usuń z ciekawych ofert" : "Dodaj do ciekawych ofert"
+        }
+      >
         <IconButton
           onClick={() => handleChangeOfferInterestClick(row)}
           sx={{
