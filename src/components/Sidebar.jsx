@@ -34,11 +34,11 @@ const Sidebar = () => {
       } h-screen flex flex-col transition-all duration-300`}
     >
       <div
-        className={`h-24 flex justify-between items-center ${
+        className={`h-36 flex justify-center items-center ${
           isCollapsed ? "p-1" : "p-6"
         } relative`}
       >
-        <Link to="/homepage" className="w-24">
+        <Link to="/homepage" className="w-32">
           <img className={`h-full w-full `} src="/n20logo.png" alt="Logo" />
         </Link>
         <button
