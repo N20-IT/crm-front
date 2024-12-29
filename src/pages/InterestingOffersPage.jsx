@@ -143,7 +143,12 @@ function InterestingOffersPage() {
 
   const handleSaveOffer = async (offerData) => {
     try {
-      await axios.post(`${backendServer}/listings`, offerData, {
+      const modifiedOfferData = {
+        ...offerData,
+        czyCiekawa: true,
+      };
+
+      await axios.post(`${backendServer}/listings`, modifiedOfferData, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
