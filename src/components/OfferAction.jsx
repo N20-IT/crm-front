@@ -90,11 +90,11 @@ function OfferActions({
         </Tooltip>
       )}
 
-      {row.adres?.miasto && row.adres?.ulica && (
+      {row.miasto && row.ulica && (
         <Tooltip title="Pokaż na mapie">
           <IconButton
             onClick={() => {
-              const { ulica, miasto } = row.adres;
+              const { ulica, miasto } = row;
               const location = `${miasto}, ${ulica}`;
               const googleMapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
                 location
