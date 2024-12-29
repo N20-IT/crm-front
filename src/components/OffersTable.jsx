@@ -179,6 +179,9 @@ function OffersTable({
                   onChange={handleSelectAll}
                   style={{
                     color: "white",
+                    padding: "0px",
+                    paddingLeft: "5px",
+                    paddingRight: "5px",
                   }}
                 />
               </TableCell>
