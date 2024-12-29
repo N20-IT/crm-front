@@ -33,6 +33,7 @@ function OffersTable({
   handleEditClick,
   handleAddToCalendar,
   handleUpdateOfferAgentClick,
+  handleChangeOfferInterestClick,
   handleGoToOfferDetailsPage,
   onPaginationApply,
   onSortApply,
@@ -290,6 +291,9 @@ function OffersTable({
                     handleUpdateOfferAgentClick={handleUpdateOfferAgentClick}
                     handleGoToOfferDetailsPage={handleGoToOfferDetailsPage}
                     showDetailsIcon={true}
+                    handleChangeOfferInterestClick={
+                      handleChangeOfferInterestClick
+                    }
                   />
                   {readConfig === 1 ? (
                     <CustomTableCell>

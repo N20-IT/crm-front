@@ -33,8 +33,15 @@ function OffersPage() {
     openDialogConfirmOfferAssignment,
     setOpenDialogConfirmOfferAssignment,
   ] = useState(false);
+  const [
+    openDialogChangeOfferInterest,
+    setOpenDialogChangeOfferInterest,
+  ] = useState(false);
   const [offerIdToDelete, setOfferIdToDelete] = useState(null);
   const [offerIdToUpdateAgent, setOfferIdToUpdateAgent] = useState(null);
+  const [offerToChangeOfferInterest, setOfferToChangeOfferInterest] = useState(
+    null
+  );
   const [isEditOfferPanelOpen, setEditOfferPanelOpen] = useState(false);
   const [isOfferDetailsPanelOpen, setIsOfferDetailsPanelOpen] = useState(false);
   const [offerDetailsId, setOfferDetailsId] = useState(null);
@@ -226,6 +233,34 @@ function OffersPage() {
     }
   };
 
+  const handleChangeOfferInterest = async () => {
+    const editedOffer = offerToChangeOfferInterest;
+    editedOffer.czyCiekawa = !editedOffer.czyCiekawa;
+    try {
+      await axios.put(
+        `${backendServer}/listings/${editedOffer._id}`,
+        editedOffer,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      setAlertOpen(true);
+      setAlertMessage("Pomyślnie zaktualizowano ofertę");
+      setAlertSeverity("success");
+      setOpenDialogChangeOfferInterest(false);
+      if (isOfferDetailsPanelOpen)
+        setIsOfferDetailsPanelOpen(!isOfferDetailsPanelOpen);
+      await fetchData();
+    } catch (error) {
+      setAlertOpen(true);
+      setAlertMessage("Błąd podczas aktualizowania oferty: " + error.message);
+      setAlertSeverity("error");
+    }
+  };
+
   const handleOpenOfferDetailsPanel = (offerId) => {
     setOfferDetailsId(offerId);
     setIsOfferDetailsPanelOpen(!isOfferDetailsPanelOpen);
@@ -258,7 +293,14 @@ function OffersPage() {
     handleOpenCloseDialogConfirmOfferAssignment(true);
   };
 
+  const handleChangeOfferInterestClick = (offer) => {
+    setOfferToChangeOfferInterest(offer);
+    handleOpenCloseDialogChangeOfferInterest(true);
+  };
+
   const handleOpenCloseDialog = () => setopenDialogDelete(!openDialogDelete);
+  const handleOpenCloseDialogChangeOfferInterest = () =>
+    setOpenDialogChangeOfferInterest(!openDialogChangeOfferInterest);
   const handleOpenCloseDialogConfirmOfferAssignment = () =>
     setOpenDialogConfirmOfferAssignment(!openDialogConfirmOfferAssignment);
 
@@ -388,10 +430,12 @@ function OffersPage() {
           handleEditClick={handleEditClick}
           handleAddToCalendar={handleAddToCalendar}
           handleUpdateOfferAgentClick={handleUpdateOfferAgentClick}
+          handleChangeOfferInterestClick={handleChangeOfferInterestClick}
           handleGoToOfferDetailsPage={handleOpenOfferDetailsPanel}
           onPaginationApply={handlePagination}
           onSortApply={handleSort}
           quantityOffers={quantityOffers}
+          handleChangeOfferInterest={handleChangeOfferInterest}
         />
         <Alerts
           message={alertMessage}
@@ -417,6 +461,26 @@ function OffersPage() {
           buttonText={"Usuń"}
           buttonColor={"error"}
         />
+        {offerToChangeOfferInterest && (
+          <ConfirmDialog
+            open={openDialogChangeOfferInterest}
+            onClose={handleOpenCloseDialogChangeOfferInterest}
+            onConfirm={handleChangeOfferInterest}
+            dialogTitle={
+              offerToChangeOfferInterest.czyCiekawa
+                ? "Potwierdzenie usunięcia oferty z ciekawych"
+                : "Potwierdzenie dodania oferty do ciekawych"
+            }
+            dialogContent={
+              offerToChangeOfferInterest.czyCiekawa
+                ? "Czy na pewno chcesz usunąć te ofertę z ciekawych?"
+                : "Czy na pewno chcesz dodać te ofertę do ciekawych?"
+            }
+            buttonText={"Potwierdź"}
+            buttonColor={"warning"}
+          />
+        )}
+
         <ConfirmDialog
           open={openDialogConfirmOfferAssignment}
           onClose={handleOpenCloseDialogConfirmOfferAssignment}

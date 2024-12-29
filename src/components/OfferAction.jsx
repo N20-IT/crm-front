@@ -20,6 +20,7 @@ function OfferActions({
   handleUpdateOfferAgentClick,
   handleGoToOfferDetailsPage,
   showDetailsIcon,
+  handleChangeOfferInterestClick,
 }) {
   return (
     <TableCell
@@ -58,9 +59,10 @@ function OfferActions({
 
       <Tooltip title="Dodaj do ciekawych ofert">
         <IconButton
+          onClick={() => handleChangeOfferInterestClick(row)}
           sx={{
             padding: "4px",
-            color: "#FFD700",
+            color: row.czyCiekawa ? "#FFD700" : "grey",
           }}
         >
           <Star />
