@@ -170,7 +170,7 @@ function AddOfferPanel({ onSave, onCancel, users }) {
 
   return (
     <div className=" fixed inset-0 bg-light-grey bg-opacity-75 flex items-center justify-center z-50">
-      <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md md:max-w-lg lg:max-w-xl h-5/6 overflow-auto">
+      <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md md:max-w-lg lg:max-w-xl h-3/4 overflow-auto">
         <h2 className="text-4xl font-bold mb-4 font-poppins">
           Dodaj nową ofertę
         </h2>
