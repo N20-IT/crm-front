@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   LocalOffer,
   Group,
@@ -8,26 +8,47 @@ import {
   Logout,
 } from "@mui/icons-material";
 import { Link, useLocation } from "react-router-dom";
+import { GoSidebarCollapse, GoSidebarExpand } from "react-icons/go";
 import { GetInformationFromToken } from "../utils/decodeToken";
 import { Button } from "@mui/material";
 import { useLogout } from "../utils/auth";
+import { useSelector, useDispatch } from "react-redux";
+import { toggleSidebar } from "../redux/sidebarSlice";
 
 const Sidebar = () => {
   const location = useLocation();
   const userRole = GetInformationFromToken("custom:role");
   const logout = useLogout();
 
+  const isCollapsed = useSelector((state) => state.sidebar.isCollapsed);
+  const dispatch = useDispatch();
+
   const getLinkClass = (path) => {
     return location.pathname === path ? "bg-orange" : "hover:bg-dark-blue";
   };
+
   return (
-    <aside className="fixed top-0 left-0 bg-light-grey text-white w-48 h-screen flex justify-start flex-col">
-      <div className="h-36 flex justif-center items-center">
-        <Link to="/homepage" className="w-32 mx-auto">
-          <img className=" h-full w-full " src="/n20logo.png" alt="Logo" />
+    <aside
+      className={`fixed top-0 left-0 bg-light-grey text-white ${
+        isCollapsed ? "w-16" : "w-48"
+      } h-screen flex flex-col transition-all duration-300`}
+    >
+      <div
+        className={`h-24 flex justify-between items-center ${
+          isCollapsed ? "p-1" : "p-6"
+        } relative`}
+      >
+        <Link to="/homepage" className="w-24">
+          <img className={`h-full w-full `} src="/n20logo.png" alt="Logo" />
         </Link>
+        <button
+          onClick={() => dispatch(toggleSidebar())}
+          className="absolute right-[-12px] top-1/2 transform -translate-y-1/2 bg-dark-blue text-white rounded-full p-2 hover:bg-orange"
+        >
+          {isCollapsed ? <GoSidebarCollapse /> : <GoSidebarExpand />}
+        </button>
       </div>
-      <nav>
+      <nav className="flex-1">
         <ul>
           <li
             className={`w-full h-14 flex justify-start items-center ${getLinkClass(
@@ -39,7 +60,7 @@ const Sidebar = () => {
               className="flex items-center justify-start text-xl ml-4 w-full h-full"
             >
               <LocalOffer sx={{ marginRight: "6px" }} />
-              <span>Oferty</span>
+              {!isCollapsed && <span>Oferty</span>}
             </Link>
           </li>
           <li
@@ -52,7 +73,7 @@ const Sidebar = () => {
               className="flex items-center justify-start text-xl ml-4 w-full h-full"
             >
               <Group sx={{ marginRight: "6px" }} />
-              <span>Klienci</span>
+              {!isCollapsed && <span>Klienci</span>}
             </Link>
           </li>
           <li
@@ -65,7 +86,7 @@ const Sidebar = () => {
               className="flex items-center justify-start text-xl ml-4 w-full h-full"
             >
               <Star sx={{ marginRight: "6px" }} />
-              <span>Ciek. oferty</span>
+              {!isCollapsed && <span>Ciek. oferty</span>}
             </Link>
           </li>
           {userRole === "admin" && (
@@ -80,7 +101,7 @@ const Sidebar = () => {
                   className="flex items-center justify-start text-xl ml-4 w-full h-full"
                 >
                   <Groups sx={{ marginRight: "6px" }} />
-                  <span>Użytkownicy</span>
+                  {!isCollapsed && <span>Użytkownicy</span>}
                 </Link>
               </li>
               <li
@@ -93,29 +114,35 @@ const Sidebar = () => {
                   className="flex items-center justify-start text-xl ml-4 w-full h-full"
                 >
                   <Description sx={{ marginRight: "6px" }} />
-                  <span>Administrator</span>
+                  {!isCollapsed && <span>Administrator</span>}
                 </Link>
               </li>
             </>
           )}
         </ul>
       </nav>
-      <div className="fixed bottom-3 p-4 w-39">
+      <div
+        className={`fixed bottom-3 p-4 flex justify-center items-center ${
+          isCollapsed ? "w-16" : "w-39"
+        }`}
+      >
         <Button
-          fullWidth
+          fullWidth={!isCollapsed}
           variant="contained"
           sx={{
             backgroundColor: "#FC8721",
             color: "white",
             borderRadius: "32px",
-            fontSize: "16px",
+            fontSize: isCollapsed ? "0px" : "16px",
             fontFamily: "Poppins",
             textTransform: "none",
+            padding: isCollapsed ? "10px" : "10px 20px",
+            transition: "all 0.3s ease-in-out",
           }}
           startIcon={<Logout />}
           onClick={logout}
         >
-          Wyloguj się
+          {!isCollapsed && "Wyloguj się"}
         </Button>
       </div>
     </aside>
