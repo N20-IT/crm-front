@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { TableCell, IconButton, Tooltip } from "@mui/material";
 import {
   Delete,
@@ -22,9 +22,6 @@ function OfferActions({
   showDetailsIcon,
   handleChangeOfferInterestClick,
 }) {
-  useEffect(() => {
-    console.log(row);
-  });
   return (
     <TableCell
       style={{
