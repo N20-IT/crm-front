@@ -20,6 +20,7 @@ function OfferActions({
   handleUpdateOfferAgentClick,
   handleGoToOfferDetailsPage,
   showDetailsIcon,
+  handleChangeOfferInterestClick,
 }) {
   return (
     <TableCell
@@ -56,11 +57,16 @@ function OfferActions({
         </IconButton>
       </Tooltip>
 
-      <Tooltip title="Dodaj do ciekawych ofert">
+      <Tooltip
+        title={
+          row.czyCiekawa ? "Usuń z ciekawych ofert" : "Dodaj do ciekawych ofert"
+        }
+      >
         <IconButton
+          onClick={() => handleChangeOfferInterestClick(row)}
           sx={{
             padding: "4px",
-            color: "#FFD700",
+            color: row.czyCiekawa ? "#FFD700" : "grey",
           }}
         >
           <Star />
@@ -81,11 +87,11 @@ function OfferActions({
         </Tooltip>
       )}
 
-      {row.adres?.miasto && row.adres?.ulica && (
+      {row.miasto && row.ulica && (
         <Tooltip title="Pokaż na mapie">
           <IconButton
             onClick={() => {
-              const { ulica, miasto } = row.adres;
+              const { ulica, miasto } = row;
               const location = `${miasto}, ${ulica}`;
               const googleMapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
                 location
