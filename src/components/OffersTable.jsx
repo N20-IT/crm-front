@@ -505,7 +505,7 @@ function OffersTable({
             bottom: 0,
             right: 43.2,
             zIndex: 1000,
-            width: "30vw",
+            width: "50%",
           }}
         />
       </TableContainer>
