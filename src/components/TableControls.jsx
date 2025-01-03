@@ -49,6 +49,10 @@ function TableControls({
     maxPrice: "",
     agent: "",
     statusOferty: "",
+    dataKontaktuOd: "",
+    dataKontaktuDo: "",
+    dataNastepnegoKontaktuOd: "",
+    dataNastepnegoKontaktuDo: "",
   });
 
   const [searchValue, setSearchValue] = useState("");
@@ -73,6 +77,10 @@ function TableControls({
   const [priceTouched, setpriceTouched] = useState({
     minPrice: false,
     maxPrice: false,
+  });
+  const [dateError, setDateError] = useState({
+    contactDate: false,
+    followUpDate: false,
   });
   const open = Boolean(anchorEl);
   const changeColumnConfig = useChangeColumnConfig();
@@ -101,6 +109,29 @@ function TableControls({
   const toggleFilterPanel = () => {
     setIsFilterPanelOpen(!isFilterPanelOpen);
     setPriceError(false);
+  };
+
+  const validateDates = () => {
+    const contactDateInvalid =
+      filters.dataKontaktuOd &&
+      filters.dataKontaktuDo &&
+      new Date(filters.dataKontaktuOd) > new Date(filters.dataKontaktuDo);
+    const followUpDateInvalid =
+      filters.dataNastepnegoKontaktuOd &&
+      filters.dataNastepnegoKontaktuDo &&
+      new Date(filters.dataNastepnegoKontaktuOd) >
+        new Date(filters.dataNastepnegoKontaktuDo);
+    setDateError({
+      contactDate: contactDateInvalid,
+      followUpDate: followUpDateInvalid,
+    });
+  };
+  const handleContactDateBlur = () => {
+    validateDates();
+  };
+
+  const handleFollowUpDateBlur = () => {
+    validateDates();
   };
 
   const validateMetraz = () => {
@@ -227,7 +258,14 @@ function TableControls({
   };
 
   const handleFilter = () => {
-    if (!priceError && !zlM2Error && !iloscPokoiError && !metrazError) {
+    if (
+      !priceError &&
+      !zlM2Error &&
+      !iloscPokoiError &&
+      !metrazError &&
+      !dateError.contactDate &&
+      !dateError.followUpDate
+    ) {
       onFilterApply(searchValue, filters, columnConfig);
       toggleFilterPanel();
     }
@@ -249,6 +287,14 @@ function TableControls({
       maxPrice: "",
       agent: "",
       statusOferty: "",
+      dataKontaktuOd: "",
+      dataKontaktuDo: "",
+      dataNastepnegoKontaktuOd: "",
+      dataNastepnegoKontaktuDo: "",
+    });
+    setDateError({
+      contactDate: false,
+      followUpDate: false,
     });
     onFilterApply("", {}, readConfig);
     toggleFilterPanel();
@@ -949,6 +995,78 @@ function TableControls({
               ))}
             </Select>
           </FormControl>
+        </div>
+        <div className="flex justify-end space-x-4 mt-3">
+          <CustomTextField
+            label="Kontakt od"
+            name="dataKontaktuOd"
+            type="datetime-local"
+            value={filters.dataKontaktuOd}
+            onChange={(e) => updateFilters("dataKontaktuOd", e.target.value)}
+            variant="outlined"
+            fullWidth
+            InputLabelProps={{ shrink: true }}
+            onBlur={handleContactDateBlur}
+            error={
+              dateError.contactDate &&
+              new Date(filters.dataKontaktuOd) >
+                new Date(filters.dataKontaktuDo)
+            }
+          />
+          <CustomTextField
+            label="Kontakt do"
+            name="dataKontaktuDo"
+            type="datetime-local"
+            value={filters.dataKontaktuDo}
+            onChange={(e) => updateFilters("dataKontaktuDo", e.target.value)}
+            variant="outlined"
+            fullWidth
+            InputLabelProps={{ shrink: true }}
+            onBlur={handleContactDateBlur}
+            error={
+              dateError.contactDate &&
+              new Date(filters.dataKontaktuOd) >
+                new Date(filters.dataKontaktuDo)
+            }
+          />
+        </div>
+        <div className="flex justify-end space-x-4 mt-3">
+          <CustomTextField
+            label="Następny od"
+            name="dataNastepnegoKontaktuOd"
+            type="datetime-local"
+            value={filters.dataNastepnegoKontaktuOd}
+            onChange={(e) =>
+              updateFilters("dataNastepnegoKontaktuOd", e.target.value)
+            }
+            variant="outlined"
+            fullWidth
+            InputLabelProps={{ shrink: true }}
+            onBlur={handleFollowUpDateBlur}
+            error={
+              dateError.followUpDate &&
+              new Date(filters.dataNastepnegoKontaktuOd) >
+                new Date(filters.dataNastepnegoKontaktuDo)
+            }
+          />
+          <CustomTextField
+            label="Następny do"
+            name="dataNastepnegoKontaktuDo"
+            type="datetime-local"
+            value={filters.dataNastepnegoKontaktuDo}
+            onChange={(e) =>
+              updateFilters("dataNastepnegoKontaktuDo", e.target.value)
+            }
+            variant="outlined"
+            fullWidth
+            InputLabelProps={{ shrink: true }}
+            onBlur={handleFollowUpDateBlur}
+            error={
+              dateError.followUpDate &&
+              new Date(filters.dataNastepnegoKontaktuOd) >
+                new Date(filters.dataNastepnegoKontaktuDo)
+            }
+          />
         </div>
         <Button
           variant="contained"
