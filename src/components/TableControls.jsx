@@ -1000,7 +1000,7 @@ function TableControls({
           <CustomTextField
             label="Kontakt od"
             name="dataKontaktuOd"
-            type="datetime-local"
+            type="date"
             value={filters.dataKontaktuOd}
             onChange={(e) => updateFilters("dataKontaktuOd", e.target.value)}
             variant="outlined"
@@ -1016,7 +1016,7 @@ function TableControls({
           <CustomTextField
             label="Kontakt do"
             name="dataKontaktuDo"
-            type="datetime-local"
+            type="date"
             value={filters.dataKontaktuDo}
             onChange={(e) => updateFilters("dataKontaktuDo", e.target.value)}
             variant="outlined"
@@ -1034,7 +1034,7 @@ function TableControls({
           <CustomTextField
             label="Następny od"
             name="dataNastepnegoKontaktuOd"
-            type="datetime-local"
+            type="date"
             value={filters.dataNastepnegoKontaktuOd}
             onChange={(e) =>
               updateFilters("dataNastepnegoKontaktuOd", e.target.value)
@@ -1052,7 +1052,7 @@ function TableControls({
           <CustomTextField
             label="Następny do"
             name="dataNastepnegoKontaktuDo"
-            type="datetime-local"
+            type="date"
             value={filters.dataNastepnegoKontaktuDo}
             onChange={(e) =>
               updateFilters("dataNastepnegoKontaktuDo", e.target.value)
