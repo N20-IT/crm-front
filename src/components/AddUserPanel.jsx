@@ -7,6 +7,7 @@ function AddUserPanel({ onSave, onCancel }) {
     email: "",
     imie: "",
     nazwisko: "",
+    role: "",
   });
 
   const handleChange = (e) => {

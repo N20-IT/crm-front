@@ -26,7 +26,7 @@ function UsersPage() {
   const [alertOpen, setAlertOpen] = useState(false);
   const [isAddUserPanelOpen, setAddUserPanelOpen] = useState(false);
   const userRole = GetInformationFromToken("custom:role");
-  const [userIdToDelete, setUserIdToDelete] = useState(null);
+  const [userToDelete, setUserToDelete] = useState([]);
   const [userToEdit, setUserToEdit] = useState(null);
   const [isEditUserPanelOpen, setIsEditUserPanelOpen] = useState(false);
   const backendServer = serverConfig["backend-server"];
@@ -81,9 +81,9 @@ function UsersPage() {
   const handleOpenCloseDialog = () => setOpenDialog(!openDialog);
 
   const handleConfirmDelete = async () => {
-    if (userIdToDelete) {
-      await handleDeleteUser(userIdToDelete);
-      setUserIdToDelete(null);
+    if (userToDelete) {
+      await handleDeleteUser(userToDelete);
+      setUserToDelete([]);
     }
     setOpenDialog(false);
   };
@@ -122,19 +122,33 @@ function UsersPage() {
     }
   };
 
-  const handleDeleteUserClick = (userId) => {
-    setUserIdToDelete(userId);
+  const handleDeleteUserClick = (user) => {
+    setUserToDelete(user);
     setOpenDialog(true);
   };
 
-  const handleDeleteUser = async (userId) => {
+  const handleDeleteUser = async (user) => {
     try {
-      await axios.delete(`${backendServer}/users/${userId}`, {
+      await axios.delete(`${backendServer}/users/${user._id}`, {
         headers: {
           accept: "application/json",
           Authorization: `Bearer ${token}`,
         },
-        data: { email: userId },
+        data: { email: user._id },
+      });
+    } catch (error) {
+      setAlertOpen(true);
+      setAlertMessage("Błąd podczas usuwania użytkownika: " + error.message);
+      setAlertSeverity("error");
+    }
+
+    try {
+      await axios.delete(`${backendServer}/delete-user`, {
+        headers: {
+          accept: "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        data: { email: user.email },
       });
       setAlertOpen(true);
       setAlertMessage("Pomyślnie usunięto użytkownika");
@@ -143,7 +157,7 @@ function UsersPage() {
       setSelected([]);
     } catch (error) {
       setAlertOpen(true);
-      setAlertMessage("Błąd podczas usuwania użytkownika: " + error.message);
+      setAlertMessage("Błąd podczas usuwania ofert: " + error.message);
       setAlertSeverity("error");
     }
   };
@@ -151,6 +165,19 @@ function UsersPage() {
   const handleSaveUser = async (userData) => {
     try {
       await axios.post(`${backendServer}/users`, userData, {
+        headers: {
+          accept: "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+    } catch (error) {
+      setAlertOpen(true);
+      setAlertMessage(error.message);
+      setAlertSeverity("error");
+    }
+    try {
+      const transformedData = transformUserData(userData);
+      await axios.post(`${backendServer}/create-user`, transformedData, {
         headers: {
           accept: "application/json",
           Authorization: `Bearer ${token}`,
@@ -170,6 +197,15 @@ function UsersPage() {
 
   const handleAddUserClick = () => {
     setAddUserPanelOpen(!isAddUserPanelOpen);
+  };
+
+  const transformUserData = (data) => {
+    return {
+      email: data.email || "",
+      name: data.imie || "",
+      family_name: data.nazwisko || "",
+      "custom:role": data.role || "",
+    };
   };
 
   useEffect(() => {

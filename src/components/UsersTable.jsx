@@ -105,7 +105,7 @@ function UsersTable({
                     <Tooltip title="Usuń">
                       <IconButton
                         sx={{ padding: "4px", color: "#A11D1D" }}
-                        onClick={() => onDeleteClick(user._id)}
+                        onClick={() => onDeleteClick(user)}
                       >
                         <Delete />
                       </IconButton>

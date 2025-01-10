@@ -21,7 +21,7 @@ const columnsUsersConfig = [
     id: "role",
     label: "Rola",
     type: "text",
-    includeInForm: false,
+    includeInForm: true,
   },
 ];
 
