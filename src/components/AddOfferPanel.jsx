@@ -568,7 +568,7 @@ function AddOfferPanel({ onSave, onCancel, users }) {
               )}
             </div>
           </div>
-          <div>
+          <div className="flex justify-end space-x-4">
             <CustomTextField
               label="Komentarz"
               name="komentarz"
@@ -580,8 +580,6 @@ function AddOfferPanel({ onSave, onCancel, users }) {
               error={!!errors.komentarz}
               helperText={errors.komentarz}
             />
-          </div>
-          <div className="flex justify-end space-x-4">
             <CustomTextField
               label="Data kontaktu"
               name="dataKontaktu"
@@ -593,6 +591,8 @@ function AddOfferPanel({ onSave, onCancel, users }) {
               margin="normal"
               InputLabelProps={{ shrink: true }}
             />
+          </div>
+          <div className="flex justify-end space-x-4">
             <CustomTextField
               label="Data nast. kontaktu"
               name="dataNastepnegoKontaktu"
@@ -606,8 +606,20 @@ function AddOfferPanel({ onSave, onCancel, users }) {
               helperText={errors.dataNastepnegoKontaktu}
               InputLabelProps={{ shrink: true }}
             />
+            <CustomTextField
+              label="Data aktualizacji"
+              name="dataAktualizacji"
+              type="datetime-local"
+              value={formData.dataAktualizacji}
+              onChange={handleChange}
+              variant="outlined"
+              fullWidth
+              margin="normal"
+              error={!!errors.dataAktualizacji}
+              helperText={errors.dataAktualizacji}
+              InputLabelProps={{ shrink: true }}
+            />
           </div>
-
           <div className="flex justify-end space-x-4">
             <FormControl
               fullWidth

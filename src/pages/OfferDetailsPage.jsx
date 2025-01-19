@@ -322,6 +322,18 @@ function OfferDetailsPage({
                   )}
                 </CustomTypography>
               )}
+              {offer.dataAktualizacji && (
+                <CustomTypography sx={{ fontSize: "1rem" }}>
+                  <strong>Data aktualizacji:</strong>{" "}
+                  {new Date(offer.dataAktualizacji).toLocaleString("pl-PL", {
+                    year: "numeric",
+                    month: "2-digit",
+                    day: "2-digit",
+                    hour: "2-digit",
+                    minute: "2-digit",
+                  })}
+                </CustomTypography>
+              )}
               <CustomTypography sx={{ fontSize: "1rem" }}>
                 <strong>Utworzono:</strong>{" "}
                 {offer.dataUtworzenia

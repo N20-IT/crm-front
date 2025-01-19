@@ -28,6 +28,13 @@ const columnsOffersConfig = [
     view: "extended",
   },
   {
+    id: "dataAktualizacji",
+    label: "Data aktualizacji",
+    shortLabel: "Akt.",
+    sortable: false,
+    view: "extended",
+  },
+  {
     id: "status",
     label: "Status",
     shortLabel: "Status",
