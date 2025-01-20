@@ -479,6 +479,8 @@ const EditOfferPanel = ({ offerData, onSave, onCancel, users }) => {
               fullWidth
               margin="normal"
             />
+          </div>
+          <div className="flex flex-col md:flex-row justify-end space-y-4 md:space-x-4 md:space-y-0">
             <div className="w-full">
               <CustomTextField
                 label="Data kontaktu"
@@ -502,8 +504,7 @@ const EditOfferPanel = ({ offerData, onSave, onCancel, users }) => {
                 InputLabelProps={{ shrink: true }}
               />
             </div>
-          </div>
-          <div className="flex flex-col md:flex-row justify-end space-y-4 md:space-x-4 md:space-y-0">
+
             <div className="w-full">
               <CustomTextField
                 label="Data nast. kontaktu"
@@ -516,29 +517,6 @@ const EditOfferPanel = ({ offerData, onSave, onCancel, users }) => {
                       ).toLocaleDateString("en-CA") +
                       "T" +
                       new Date(formData.dataNastepnegoKontaktu)
-                        .toLocaleTimeString("en-CA", { hour12: false })
-                        .slice(0, 5)
-                    : ""
-                }
-                onChange={handleChange}
-                variant="outlined"
-                fullWidth
-                margin="normal"
-                InputLabelProps={{ shrink: true }}
-              />
-            </div>
-            <div className="w-full">
-              <CustomTextField
-                label="Data aktualizacji"
-                name="dataAktualizacji"
-                type="datetime-local"
-                value={
-                  formData.dataAktualizacji
-                    ? new Date(formData.dataAktualizacji).toLocaleDateString(
-                        "en-CA"
-                      ) +
-                      "T" +
-                      new Date(formData.dataAktualizacji)
                         .toLocaleTimeString("en-CA", { hour12: false })
                         .slice(0, 5)
                     : ""

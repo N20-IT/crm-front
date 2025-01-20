@@ -371,36 +371,6 @@ function OffersTable({
                   ) : (
                     true
                   )}
-                  {readConfig === 1 ? (
-                    <CustomTableCell>
-                      {row.dataAktualizacji ? (
-                        <>
-                          {new Date(row.dataAktualizacji).toLocaleDateString(
-                            "pl-PL",
-                            {
-                              year: "numeric",
-                              month: "2-digit",
-                              day: "2-digit",
-                            }
-                          )}{" "}
-                          <strong>
-                            <br />
-                            {new Date(row.dataAktualizacji).toLocaleTimeString(
-                              "pl-PL",
-                              {
-                                hour: "2-digit",
-                                minute: "2-digit",
-                              }
-                            )}
-                          </strong>
-                        </>
-                      ) : (
-                        ""
-                      )}
-                    </CustomTableCell>
-                  ) : (
-                    true
-                  )}
                   <CustomTableCell
                     sx={{
                       color:
