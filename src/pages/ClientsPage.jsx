@@ -8,6 +8,8 @@ import columnsClientsConfig from "../config/columnsClientsConfig";
 import { useReadConfig } from "../config/columnConfig";
 import serverConfig from "../servers.json";
 import axios from "axios";
+import Alerts from "../components/Alerts";
+import ConfirmDialog from "../components/ConfirmDialog";
 
 //TODO
 function ClientsPage() {
@@ -15,6 +17,9 @@ function ClientsPage() {
   const isAuthenticated = useAuth();
   const [selected, setSelected] = useState([]);
   const [rows, setRows] = useState([]);
+  const [alertMessage, setAlertMessage] = useState("");
+  const [alertSeverity, setAlertSeverity] = useState("");
+  const [alertOpen, setAlertOpen] = useState(false);
   const token = useReadCookie();
   const [quantityClients, setQuantityClients] = useState(0);
   const isCollapsed = useSelector((state) => state.sidebar.isCollapsed);
@@ -30,6 +35,9 @@ function ClientsPage() {
   const [searchValue, setSearchValue] = useState("");
   const [orderBy, setOrderBy] = useState("dataUtworzenia");
   const [order, setOrder] = useState("desc");
+  const [openDialogDelete, setopenDialogDelete] = useState(false);
+  const [clientIdToDelete, setClientIdToDelete] = useState(null);
+  const [isClientPanelOpen, setIsClientPanelOpen] = useState(false);
 
   const fetchData = useCallback(async () => {
     try {
@@ -46,6 +54,44 @@ function ClientsPage() {
       console.log("Błąd podczas pobierania danych", error);
     }
   });
+
+  const handleDeleteClient = async (clientId) => {
+    try {
+      const response = await axios.delete(
+        `${backendServer}/clients/${clientId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      setAlertOpen(true);
+      setAlertMessage(response.data.message);
+      setAlertSeverity("success");
+      if (isClientPanelOpen) setIsClientPanelOpen(!isClientPanelOpen);
+      await fetchData();
+      setSelected([]);
+    } catch (error) {
+      setAlertOpen(true);
+      setAlertMessage("Błąd podczas usuwania ofert: " + error.message);
+      setAlertSeverity("error");
+    }
+  };
+
+  const handleConfirmDelete = async () => {
+    if (clientIdToDelete) {
+      await handleDeleteClient(clientIdToDelete);
+      setClientIdToDelete(null);
+    }
+    setopenDialogDelete(false);
+  };
+
+  const handleDeleteClientClick = (clientId) => {
+    setClientIdToDelete(clientId);
+    setopenDialogDelete(true);
+  };
+
+  const handleOpenCloseDialog = () => setopenDialogDelete(!openDialogDelete);
 
   const handlePagination = (currentPage, rowsPerValue) => {
     if (currentPage !== page) setPage(currentPage);
@@ -86,6 +132,24 @@ function ClientsPage() {
         readConfig={readConfig}
         quantityClients={quantityClients}
         onPaginationApply={handlePagination}
+        handleDeleteClientClick={handleDeleteClientClick}
+      />
+      <Alerts
+        message={alertMessage}
+        severity={alertSeverity}
+        open={alertOpen}
+        onClose={() => setAlertOpen(false)}
+      />
+      <ConfirmDialog
+        open={openDialogDelete}
+        onClose={handleOpenCloseDialog}
+        onConfirm={handleConfirmDelete}
+        dialogTitle={"Potwierdzenie usunięcia"}
+        dialogContent={
+          "Czy na pewno chcesz usunąć? Ta operacja jest nieodwracalna."
+        }
+        buttonText={"Usuń"}
+        buttonColor={"error"}
       />
     </div>
   );

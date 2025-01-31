@@ -28,6 +28,7 @@ function ClientsTable({
   readConfig,
   quantityClients,
   onPaginationApply,
+  handleDeleteClientClick,
 }) {
   const [order, setOrder] = useState("desc");
   const [orderBy, setOrderBy] = useState("dataUtworzenia");
@@ -228,7 +229,10 @@ function ClientsTable({
                       }}
                     />
                   </TableCell>
-                  <ClientAction />
+                  <ClientAction
+                    row={row}
+                    handleDeleteClientClick={handleDeleteClientClick}
+                  />
                   <CustomTableCell>
                     {new Date(row.dataZapytania).toLocaleDateString("pl-PL", {
                       year: "numeric",
@@ -268,11 +272,15 @@ function ClientsTable({
                   <CustomTableCell>{row.adresEmail || ""}</CustomTableCell>
                   <CustomTableCell>{row.numerGalactica || ""}</CustomTableCell>
                   <CustomTableCell>
-                    <Tooltip title={row.nrOfertyLink || ""}>
-                      <IconButton>
-                        <OpenInNew />
-                      </IconButton>
-                    </Tooltip>
+                    {row.nrOfertyLink ? (
+                      <Tooltip title={row.nrOfertyLink || ""}>
+                        <IconButton>
+                          <OpenInNew />
+                        </IconButton>
+                      </Tooltip>
+                    ) : (
+                      ""
+                    )}
                   </CustomTableCell>
                   <CustomTableCell
                     sx={{
@@ -356,6 +364,7 @@ function ClientsTable({
             )}
           </TableBody>
         </Table>
+        {/* Do poprawy */}
         <TablePagination
           component="div"
           count={quantityClients}

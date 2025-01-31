@@ -2,7 +2,7 @@ import { Delete, Edit } from "@mui/icons-material";
 import { IconButton, TableCell, Tooltip } from "@mui/material";
 import React from "react";
 
-function ClientAction() {
+function ClientAction({ row, handleDeleteClientClick }) {
   return (
     <TableCell
       style={{
@@ -14,6 +14,7 @@ function ClientAction() {
     >
       <Tooltip title="Usuń">
         <IconButton
+          onClick={() => handleDeleteClientClick([row._id])}
           sx={{
             padding: "4px",
             color: "#A11D1D",
