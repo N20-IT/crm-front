@@ -15,14 +15,26 @@ import {
   Tooltip,
 } from "@mui/material";
 import CustomTableCell from "./CustomTableCell";
-import { CheckBox, FileCopy } from "@mui/icons-material";
+import { FileCopy } from "@mui/icons-material";
 import ClientAction from "./ClientAction";
+import clientStatuesConfig from "../config/clientStatuesConfig";
 
 function ClientsTable({ rows, columns, selected, setSelected, readConfig }) {
   const [order, setOrder] = useState("desc");
   const [orderBy, setOrderBy] = useState("dataUtworzenia");
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(100);
+
+  const handleSelect = (id) => {
+    if (selected.includes(id))
+      setSelected(selected.filter((itemId) => itemId !== id));
+    else setSelected([...selected, id]);
+  };
+
+  const handleSelectAll = () => {
+    if (selected.length === rows.length) setSelected([]);
+    else setSelected(rows.map((row) => row._id));
+  };
 
   const handleSortRequest = (columnId) => {
     const isDesc = orderBy === columnId && order === "desc";
@@ -34,6 +46,25 @@ function ClientsTable({ rows, columns, selected, setSelected, readConfig }) {
   const filteredColumns = columns.filter((column) =>
     readConfig === 0 ? column.view === "basic" : true
   );
+
+  const getShortType = (type) => {
+    switch (type) {
+      case "Dom":
+        return "D";
+      case "Mieszkanie":
+        return "M";
+      case "Działka":
+        return "Dz";
+      case "Lokal":
+        return "L";
+      case "Pierwotny":
+        return "P";
+      case "Wtórny":
+        return "W";
+      default:
+        return type;
+    }
+  };
 
   const formatPhoneNumber = (number) => {
     return String(number).replace(/(\d{3})(?=\d)/g, "$1 ");
@@ -82,6 +113,11 @@ function ClientsTable({ rows, columns, selected, setSelected, readConfig }) {
                 }}
               >
                 <Checkbox
+                  checked={selected.length === rows.length}
+                  indeterminate={
+                    selected.length > 0 && selected.length < rows.length
+                  }
+                  onChange={handleSelectAll}
                   style={{
                     color: "white",
                     padding: "0px",
@@ -154,8 +190,23 @@ function ClientsTable({ rows, columns, selected, setSelected, readConfig }) {
                     background: index % 2 === 1 ? "#f5f5f5" : "white",
                   }}
                 >
-                  <TableCell>
-                    <CheckBox />
+                  <TableCell
+                    style={{
+                      textAlign: "center",
+                      padding: "5px",
+                      maxHeight: "60px",
+                    }}
+                  >
+                    <Checkbox
+                      checked={selected.includes(row._id)}
+                      onChange={() => handleSelect(row._id)}
+                      sx={{
+                        color: "#272F3E",
+                        "&.Mui-checked": {
+                          color: "#272F3E",
+                        },
+                      }}
+                    />
                   </TableCell>
                   <ClientAction />
                   <CustomTableCell>
@@ -197,7 +248,15 @@ function ClientsTable({ rows, columns, selected, setSelected, readConfig }) {
                   <CustomTableCell>{row.adresEmail || ""}</CustomTableCell>
                   <CustomTableCell>{row.numerGalactica || ""}</CustomTableCell>
                   <CustomTableCell>{row.nrOfertyLink || ""}</CustomTableCell>
-                  <CustomTableCell>
+                  <CustomTableCell
+                    sx={{
+                      color:
+                        clientStatuesConfig.find(
+                          (status) => status.value === row.status
+                        )?.color || "black",
+                      fontSize: "13px",
+                    }}
+                  >
                     <strong>{row.status || ""}</strong>
                   </CustomTableCell>
                   <CustomTableCell>
@@ -207,7 +266,9 @@ function ClientsTable({ rows, columns, selected, setSelected, readConfig }) {
                     <strong>{row.lokalizacja || ""}</strong>
                   </CustomTableCell>
                   <CustomTableCell>
-                    <strong>{row.rodzajNieruchomosci || ""}</strong>
+                    <strong>
+                      {getShortType(row.rodzajNieruchomosci) || ""}
+                    </strong>
                   </CustomTableCell>
                   <CustomTableCell>{row.iloscPokoiOd || ""}</CustomTableCell>
                   <CustomTableCell>{row.iloscPokoiDo || ""}</CustomTableCell>
