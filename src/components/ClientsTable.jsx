@@ -16,6 +16,7 @@ import {
 } from "@mui/material";
 import CustomTableCell from "./CustomTableCell";
 import { CheckBox, FileCopy } from "@mui/icons-material";
+import ClientAction from "./ClientAction";
 
 function ClientsTable({ rows, columns, selected, setSelected, readConfig }) {
   const [order, setOrder] = useState("desc");
@@ -156,7 +157,7 @@ function ClientsTable({ rows, columns, selected, setSelected, readConfig }) {
                   <TableCell>
                     <CheckBox />
                   </TableCell>
-                  <TableCell></TableCell>
+                  <ClientAction />
                   <CustomTableCell>
                     {new Date(row.dataZapytania).toLocaleDateString("pl-PL", {
                       year: "numeric",
