@@ -24,6 +24,12 @@ function ClientsPage() {
   const columns = useMemo(() => columnsClientsConfig, []);
   const [readConfig, setReadConfig] = useState(useReadConfig());
   const backendServer = serverConfig["backend-server"];
+  const [page, setPage] = useState(0);
+  const [itemsPerPage, setItemsPerPage] = useState(100);
+  const [filters, setFilters] = useState({});
+  const [searchValue, setSearchValue] = useState("");
+  const [orderBy, setOrderBy] = useState("dataUtworzenia");
+  const [order, setOrder] = useState("desc");
 
   const fetchData = useCallback(async () => {
     try {
@@ -40,6 +46,20 @@ function ClientsPage() {
       console.log("Błąd podczas pobierania danych", error);
     }
   });
+
+  const handlePagination = (currentPage, rowsPerValue) => {
+    if (currentPage !== page) setPage(currentPage);
+    if (rowsPerValue !== itemsPerPage) setItemsPerPage(rowsPerValue);
+    fetchData(
+      searchValue,
+      filters,
+      readConfig,
+      currentPage,
+      rowsPerValue,
+      orderBy,
+      order
+    );
+  };
 
   useEffect(() => {
     if (!isAuthenticated) navigate("/");
@@ -58,6 +78,8 @@ function ClientsPage() {
         selected={selected}
         setSelected={setSelected}
         readConfig={readConfig}
+        quantityClients={quantityClients}
+        onPaginationApply={handlePagination}
       />
     </div>
   );

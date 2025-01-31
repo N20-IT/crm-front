@@ -10,16 +10,25 @@ import {
   TableCell,
   TableContainer,
   TableHead,
+  TablePagination,
   TableRow,
   TableSortLabel,
   Tooltip,
 } from "@mui/material";
 import CustomTableCell from "./CustomTableCell";
-import { FileCopy } from "@mui/icons-material";
+import { FileCopy, OpenInNew } from "@mui/icons-material";
 import ClientAction from "./ClientAction";
 import clientStatuesConfig from "../config/clientStatuesConfig";
 
-function ClientsTable({ rows, columns, selected, setSelected, readConfig }) {
+function ClientsTable({
+  rows,
+  columns,
+  selected,
+  setSelected,
+  readConfig,
+  quantityClients,
+  onPaginationApply,
+}) {
   const [order, setOrder] = useState("desc");
   const [orderBy, setOrderBy] = useState("dataUtworzenia");
   const [page, setPage] = useState(0);
@@ -41,6 +50,17 @@ function ClientsTable({ rows, columns, selected, setSelected, readConfig }) {
     isDesc ? setOrder("asc") : setOrder("desc");
     setOrderBy(columnId);
     // onSortApply(0, rowsPerPage, columnId, isDesc ? "asc" : "desc");
+  };
+
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+    onPaginationApply(newPage, rowsPerPage);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+    onPaginationApply(0, parseInt(event.target.value, 10));
   };
 
   const filteredColumns = columns.filter((column) =>
@@ -247,7 +267,13 @@ function ClientsTable({ rows, columns, selected, setSelected, readConfig }) {
                   </CustomTableCell>
                   <CustomTableCell>{row.adresEmail || ""}</CustomTableCell>
                   <CustomTableCell>{row.numerGalactica || ""}</CustomTableCell>
-                  <CustomTableCell>{row.nrOfertyLink || ""}</CustomTableCell>
+                  <CustomTableCell>
+                    <Tooltip title={row.nrOfertyLink || ""}>
+                      <IconButton>
+                        <OpenInNew />
+                      </IconButton>
+                    </Tooltip>
+                  </CustomTableCell>
                   <CustomTableCell
                     sx={{
                       color:
@@ -330,6 +356,27 @@ function ClientsTable({ rows, columns, selected, setSelected, readConfig }) {
             )}
           </TableBody>
         </Table>
+        <TablePagination
+          component="div"
+          count={quantityClients}
+          page={page}
+          onPageChange={handleChangePage}
+          rowsPerPage={rowsPerPage}
+          onRowsPerPageChange={handleChangeRowsPerPage}
+          labelRowsPerPage="Wiersze na stronę"
+          labelDisplayedRows={({ from, to, count }) =>
+            `${from}-${to} z ${count}`
+          }
+          showFirstButton
+          showLastButton
+          sx={{
+            position: "fixed",
+            bottom: 0,
+            right: 43.2,
+            zIndex: 1000,
+            width: "50%",
+          }}
+        />
       </TableContainer>
     </ThemeProvider>
   );
