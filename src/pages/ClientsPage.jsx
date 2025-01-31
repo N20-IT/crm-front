@@ -64,7 +64,13 @@ function ClientsPage() {
   useEffect(() => {
     if (!isAuthenticated) navigate("/");
     fetchData();
-  }, [isAuthenticated, navigate]);
+    if (isCollapsed) {
+      const timer = setTimeout(() => setIsSidebarCollapsedDelayed(true), 300);
+      return () => clearTimeout(timer);
+    } else {
+      setIsSidebarCollapsedDelayed(false);
+    }
+  }, [isAuthenticated, navigate, isCollapsed]);
   return (
     <div
       className={`flex items-start justify-start h-screen ${
