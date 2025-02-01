@@ -10,6 +10,7 @@ import serverConfig from "../servers.json";
 import axios from "axios";
 import Alerts from "../components/Alerts";
 import ConfirmDialog from "../components/ConfirmDialog";
+import ClientTableControls from "../components/ClientTableControls";
 
 //TODO
 function ClientsPage() {
@@ -124,6 +125,9 @@ function ClientsPage() {
       } flex-col`}
     >
       <Sidebar />
+      <div className="flex justify-center w-full">
+        <ClientTableControls />
+      </div>
       <ClientsTable
         rows={rows}
         columns={columns}
