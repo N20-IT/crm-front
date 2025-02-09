@@ -30,6 +30,7 @@ function ClientsTable({
   quantityClients,
   onPaginationApply,
   handleDeleteClientClick,
+  handleEditClientClick,
 }) {
   const [order, setOrder] = useState("desc");
   const [orderBy, setOrderBy] = useState("dataUtworzenia");
@@ -233,6 +234,7 @@ function ClientsTable({
                   <ClientAction
                     row={row}
                     handleDeleteClientClick={handleDeleteClientClick}
+                    handleEditClientClick={handleEditClientClick}
                   />
                   <CustomTableCell>
                     {row.dataZapytania ? (

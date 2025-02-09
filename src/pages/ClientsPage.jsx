@@ -13,6 +13,7 @@ import ConfirmDialog from "../components/ConfirmDialog";
 import ClientTableControls from "../components/ClientTableControls";
 import AddClientPanel from "../components/AddClientPanel";
 import { GetInformationFromToken } from "../utils/decodeToken";
+import EditClientPanel from "../components/EditClientPanel";
 
 //TODO
 function ClientsPage() {
@@ -41,7 +42,8 @@ function ClientsPage() {
   const [openDialogDelete, setopenDialogDelete] = useState(false);
   const [clientIdToDelete, setClientIdToDelete] = useState(null);
   const [isClientPanelOpen, setIsClientPanelOpen] = useState(false);
-  const [isAddClientPanelOpen, setIsAddClientPanelOpen] = useState(true);
+  const [isAddClientPanelOpen, setIsAddClientPanelOpen] = useState(false);
+  const [isEditClientPanelOpen, setIsEditClientPanelOpen] = useState(false);
   const [users, setUsers] = useState([]);
   const [allUsers, setAllUsers] = useState([]);
   const userInformation =
@@ -49,6 +51,7 @@ function ClientsPage() {
     " " +
     GetInformationFromToken("family_name");
   const userRole = GetInformationFromToken("custom:role");
+  const [clientToEdit, setClientToEdit] = useState(null);
 
   const fetchAgents = useCallback(async () => {
     try {
@@ -108,6 +111,35 @@ function ClientsPage() {
     }
   };
 
+  const handleEditClient = async (updatedClientDate) => {
+    try {
+      await axios.put(
+        `${backendServer}/clients/${updatedClientDate._id}`,
+        updatedClientDate,
+        {
+          headers: {
+            accept: "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      handleEditClientClick();
+      setAlertOpen(true);
+      setAlertMessage("Pomyslnie edytowano klienta");
+      setAlertSeverity("success");
+      await fetchData();
+    } catch (error) {
+      setAlertOpen(true);
+      setAlertMessage("Błąd podczas edytowania klienta: " + error.message);
+      setAlertSeverity("error");
+    }
+  };
+
+  const handleEditClientClickCancel = () => {
+    setClientToEdit("");
+    setIsEditClientPanelOpen(!isEditClientPanelOpen);
+  };
+
   const handleConfirmDelete = async () => {
     if (clientIdToDelete) {
       await handleDeleteClient(clientIdToDelete);
@@ -119,6 +151,11 @@ function ClientsPage() {
   const handleDeleteClientClick = (clientId) => {
     setClientIdToDelete(clientId);
     setopenDialogDelete(true);
+  };
+
+  const handleEditClientClick = (client) => {
+    setClientToEdit(client);
+    setIsEditClientPanelOpen(!isEditClientPanelOpen);
   };
 
   const handleOpenCloseDialog = () => setopenDialogDelete(!openDialogDelete);
@@ -192,6 +229,7 @@ function ClientsPage() {
         quantityClients={quantityClients}
         onPaginationApply={handlePagination}
         handleDeleteClientClick={handleDeleteClientClick}
+        handleEditClientClick={handleEditClientClick}
       />
       <Alerts
         message={alertMessage}
@@ -214,6 +252,14 @@ function ClientsPage() {
         <AddClientPanel
           onSave={handleSaveClient}
           onCancel={handleAddClientClick}
+          allUsers={allUsers.length !== 0 ? allUsers : users}
+        />
+      )}
+      {isEditClientPanelOpen && (
+        <EditClientPanel
+          initialData={clientToEdit}
+          onSave={handleEditClient}
+          onCancel={handleEditClientClickCancel}
           allUsers={allUsers.length !== 0 ? allUsers : users}
         />
       )}

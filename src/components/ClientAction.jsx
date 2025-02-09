@@ -2,7 +2,7 @@ import { Delete, Edit } from "@mui/icons-material";
 import { IconButton, TableCell, Tooltip } from "@mui/material";
 import React from "react";
 
-function ClientAction({ row, handleDeleteClientClick }) {
+function ClientAction({ row, handleDeleteClientClick, handleEditClientClick }) {
   return (
     <TableCell
       style={{
@@ -24,7 +24,10 @@ function ClientAction({ row, handleDeleteClientClick }) {
         </IconButton>
       </Tooltip>
       <Tooltip title="Edytuj">
-        <IconButton sx={{ padding: "4px", color: "#6A99C7" }}>
+        <IconButton
+          sx={{ padding: "4px", color: "#6A99C7" }}
+          onClick={() => handleEditClientClick(row)}
+        >
           <Edit />
         </IconButton>
       </Tooltip>
