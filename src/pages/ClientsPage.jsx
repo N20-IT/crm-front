@@ -99,7 +99,7 @@ function ClientsPage() {
         }
       );
       setAlertOpen(true);
-      setAlertMessage(response.data.message);
+      setAlertMessage("Pomyślnie usunięto klienta");
       setAlertSeverity("success");
       if (isClientPanelOpen) setIsClientPanelOpen(!isClientPanelOpen);
       await fetchData();
@@ -125,7 +125,7 @@ function ClientsPage() {
       );
       handleEditClientClick();
       setAlertOpen(true);
-      setAlertMessage("Pomyslnie edytowano klienta");
+      setAlertMessage("Pomyślnie edytowano klienta");
       setAlertSeverity("success");
       await fetchData();
     } catch (error) {
