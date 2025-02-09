@@ -1,0 +1,156 @@
+const columnsClientsConfig = [
+  {
+    id: "dataZapytania",
+    label: "Data zapytania",
+    shortLabel: "Zapyt.",
+    type: "datetime",
+    sortable: false,
+    view: "basic",
+  },
+  {
+    id: "daneKlienta",
+    label: "Dane klienta",
+    shortLabel: "Klient",
+    type: "string",
+    sortable: false,
+    view: "basic",
+  },
+  {
+    id: "numerTelefonu",
+    label: "Numer telefonu",
+    shortLabel: "Tel.",
+    type: "number",
+    sortable: false,
+    view: "basic",
+  },
+  {
+    id: "adresEmail",
+    label: "Adres e-mail",
+    shortLabel: "Email",
+    type: "string",
+    sortable: false,
+    view: "basic",
+  },
+  {
+    id: "numerGalactica",
+    label: "Numer oferty w Galactice",
+    shortLabel: "Galact.",
+    type: "string", // Do ustalenia
+    sortable: false,
+    view: "basic",
+  },
+  {
+    id: "nrOfertyLink",
+    label: "Wybrana oferta",
+    shortLabel: "Oferta",
+    type: "button", // Przycisk/link do oferty
+    sortable: false,
+    view: "basic",
+  },
+  {
+    id: "status",
+    label: "Status",
+    shortLabel: "Status",
+    type: "dictionary", // Słownik: WOLNY, ZAJĘTY, DO ZBRIFOWANIA
+    sortable: false,
+    view: "basic",
+  },
+  {
+    id: "agent",
+    label: "Agent",
+    shortLabel: "Agent",
+    type: "dictionary", // Słownik: lista agentów
+    sortable: false,
+    view: "basic",
+  },
+  {
+    id: "lokalizacja",
+    label: "Lokalizacja",
+    shortLabel: "Lok.",
+    type: "dictionary", // Słownik: dzielnice (bez poddzielnic)
+    sortable: false,
+    view: "basic",
+  },
+  {
+    id: "rodzajNieruchomosci",
+    label: "Rodzaj nieruchomości",
+    shortLabel: "Typ",
+    type: "dictionary", // Słownik: M/D
+    sortable: false,
+    view: "basic",
+  },
+  {
+    id: "iloscPokoiOd",
+    label: "Ilość pokoi od",
+    shortLabel: "Pokoje Od",
+    type: "number",
+    sortable: false,
+    view: "basic",
+  },
+  {
+    id: "iloscPokoiDo",
+    label: "Ilość pokoi do",
+    shortLabel: "Pokoje Do",
+    type: "number",
+    sortable: false,
+    view: "basic",
+  },
+  {
+    id: "metrazOd",
+    label: "Metraż od",
+    shortLabel: "Metraż Od",
+    type: "number",
+    sortable: false,
+    view: "basic",
+  },
+  {
+    id: "metrazDo",
+    label: "Metraż do",
+    shortLabel: "Metraż Do",
+    type: "number",
+    sortable: false,
+    view: "basic",
+  },
+  {
+    id: "standard",
+    label: "Standard",
+    shortLabel: "Stand.",
+    type: "dictionary", // Słownik: Do wejścia, Do remontu, Deweloperski, Do odświeżenia
+    sortable: false,
+    view: "basic",
+  },
+  {
+    id: "budzetOd",
+    label: "Budżet od",
+    shortLabel: "Budżet Od",
+    type: "number",
+    sortable: false,
+    view: "basic",
+  },
+  {
+    id: "budzetDo",
+    label: "Budżet do",
+    shortLabel: "Budżet Do",
+    type: "number",
+    sortable: false,
+    view: "basic",
+  },
+  {
+    id: "ostatniKontakt",
+    label: "Ostatni kontakt",
+    shortLabel: "Ost. Kontakt",
+    type: "datetime",
+    sortable: false,
+    view: "basic",
+  },
+  {
+    id: "dataNastepnegoKontaktu",
+    label: "Data następnego kontaktu",
+    shortLabel: "Nast. Kontakt",
+    type: "datetime",
+    sortable: false,
+    view: "basic",
+  },
+];
+
+export default columnsClientsConfig;
