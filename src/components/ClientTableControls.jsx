@@ -9,7 +9,7 @@ import {
 } from "@mui/material";
 import CustomTextField from "./CustomTextField";
 
-function ClientTableControls() {
+function ClientTableControls({ onAddClientClick }) {
   return (
     <Box
       sx={{
@@ -92,8 +92,9 @@ function ClientTableControls() {
             fontFamily: "Poppins",
             fontSize: "18px",
           }}
+          onClick={onAddClientClick}
         >
-          Dodaj ofertę
+          Dodaj Klienta
         </Button>
       </Stack>
     </Box>

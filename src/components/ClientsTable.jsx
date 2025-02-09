@@ -19,6 +19,7 @@ import CustomTableCell from "./CustomTableCell";
 import { FileCopy, OpenInNew } from "@mui/icons-material";
 import ClientAction from "./ClientAction";
 import clientStatuesConfig from "../config/clientStatuesConfig";
+import clientStandardConfig from "../config/clientStandardConfig";
 
 function ClientsTable({
   rows,
@@ -234,18 +235,30 @@ function ClientsTable({
                     handleDeleteClientClick={handleDeleteClientClick}
                   />
                   <CustomTableCell>
-                    {new Date(row.dataZapytania).toLocaleDateString("pl-PL", {
-                      year: "numeric",
-                      month: "2-digit",
-                      day: "2-digit",
-                    })}{" "}
-                    <strong>
-                      <br />
-                      {new Date(row.dataZapytania).toLocaleTimeString("pl-PL", {
-                        hour: "2-digit",
-                        minute: "2-digit",
-                      })}
-                    </strong>
+                    {row.dataZapytania ? (
+                      <>
+                        {new Date(row.dataZapytania).toLocaleDateString(
+                          "pl-PL",
+                          {
+                            year: "numeric",
+                            month: "2-digit",
+                            day: "2-digit",
+                          }
+                        )}{" "}
+                        <strong>
+                          <br />
+                          {new Date(row.dataZapytania).toLocaleTimeString(
+                            "pl-PL",
+                            {
+                              hour: "2-digit",
+                              minute: "2-digit",
+                            }
+                          )}
+                        </strong>
+                      </>
+                    ) : (
+                      ""
+                    )}
                   </CustomTableCell>
                   <CustomTableCell>{row.daneKlienta || ""}</CustomTableCell>
                   <CustomTableCell sx={{ whiteSpace: "nowrap" }}>
@@ -269,7 +282,7 @@ function ClientsTable({
                       )}
                     </strong>
                   </CustomTableCell>
-                  <CustomTableCell>{row.adresEmail || ""}</CustomTableCell>
+                  <CustomTableCell>{row.email || ""}</CustomTableCell>
                   <CustomTableCell>{row.numerGalactica || ""}</CustomTableCell>
                   <CustomTableCell>
                     {row.nrOfertyLink ? (
@@ -308,47 +321,67 @@ function ClientsTable({
                   <CustomTableCell>{row.iloscPokoiDo || ""}</CustomTableCell>
                   <CustomTableCell>{row.metrazOd || ""}</CustomTableCell>
                   <CustomTableCell>{row.metrazDo || ""}</CustomTableCell>
-                  <CustomTableCell>
+                  <CustomTableCell
+                    sx={{
+                      color:
+                        clientStandardConfig.find(
+                          (standard) => standard.value == row.standard
+                        )?.color || "black",
+                    }}
+                  >
                     <strong>{row.standard || ""}</strong>
                   </CustomTableCell>
                   <CustomTableCell>{row.budzetOd || ""}</CustomTableCell>
                   <CustomTableCell>{row.budzetDo || ""}</CustomTableCell>
                   <CustomTableCell>
-                    {new Date(row.ostatniKontakt).toLocaleDateString("pl-PL", {
-                      year: "numeric",
-                      month: "2-digit",
-                      day: "2-digit",
-                    })}{" "}
-                    <strong>
-                      <br />
-                      {new Date(row.ostatniKontakt).toLocaleTimeString(
-                        "pl-PL",
-                        {
-                          hour: "2-digit",
-                          minute: "2-digit",
-                        }
-                      )}
-                    </strong>
+                    {row.ostatniKontakt ? (
+                      <>
+                        {new Date(row.ostatniKontakt).toLocaleDateString(
+                          "pl-PL",
+                          {
+                            year: "numeric",
+                            month: "2-digit",
+                            day: "2-digit",
+                          }
+                        )}{" "}
+                        <strong>
+                          <br />
+                          {new Date(row.ostatniKontakt).toLocaleTimeString(
+                            "pl-PL",
+                            {
+                              hour: "2-digit",
+                              minute: "2-digit",
+                            }
+                          )}
+                        </strong>
+                      </>
+                    ) : (
+                      ""
+                    )}
                   </CustomTableCell>
                   <CustomTableCell>
-                    {new Date(row.dataNastepnegoKontaktu).toLocaleDateString(
-                      "pl-PL",
-                      {
-                        year: "numeric",
-                        month: "2-digit",
-                        day: "2-digit",
-                      }
-                    )}{" "}
-                    <strong>
-                      <br />
-                      {new Date(row.dataNastepnegoKontaktu).toLocaleTimeString(
-                        "pl-PL",
-                        {
-                          hour: "2-digit",
-                          minute: "2-digit",
-                        }
-                      )}
-                    </strong>
+                    {row.dataNastepnegoKontaktu ? (
+                      <>
+                        {new Date(
+                          row.dataNastepnegoKontaktu
+                        ).toLocaleDateString("pl-PL", {
+                          year: "numeric",
+                          month: "2-digit",
+                          day: "2-digit",
+                        })}{" "}
+                        <strong>
+                          <br />
+                          {new Date(
+                            row.dataNastepnegoKontaktu
+                          ).toLocaleTimeString("pl-PL", {
+                            hour: "2-digit",
+                            minute: "2-digit",
+                          })}
+                        </strong>
+                      </>
+                    ) : (
+                      ""
+                    )}
                   </CustomTableCell>
                 </TableRow>
               ))
