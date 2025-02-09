@@ -11,6 +11,8 @@ import axios from "axios";
 import Alerts from "../components/Alerts";
 import ConfirmDialog from "../components/ConfirmDialog";
 import ClientTableControls from "../components/ClientTableControls";
+import AddClientPanel from "../components/AddClientPanel";
+import { GetInformationFromToken } from "../utils/decodeToken";
 
 //TODO
 function ClientsPage() {
@@ -39,6 +41,34 @@ function ClientsPage() {
   const [openDialogDelete, setopenDialogDelete] = useState(false);
   const [clientIdToDelete, setClientIdToDelete] = useState(null);
   const [isClientPanelOpen, setIsClientPanelOpen] = useState(false);
+  const [isAddClientPanelOpen, setIsAddClientPanelOpen] = useState(true);
+  const [users, setUsers] = useState([]);
+  const [allUsers, setAllUsers] = useState([]);
+  const userInformation =
+    GetInformationFromToken("name") +
+    " " +
+    GetInformationFromToken("family_name");
+  const userRole = GetInformationFromToken("custom:role");
+
+  const fetchAgents = useCallback(async () => {
+    try {
+      const response = await axios.get(`${backendServer}/users`, {
+        headers: {
+          accept: "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      const usersList = response.data;
+      const agents = usersList.map((user) => user.imie + " " + user.nazwisko);
+      if (userRole === "admin") setUsers(agents);
+      else {
+        setUsers([userInformation]);
+        setAllUsers(agents);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }, [token, backendServer, userInformation, userRole]);
 
   const fetchData = useCallback(async () => {
     try {
@@ -48,7 +78,6 @@ function ClientsPage() {
           Authorization: `Bearer ${token}`,
         },
       });
-      console.log(response.data);
       setRows(response.data["klienci"]);
       setQuantityClients(response.data["total"]);
     } catch (error) {
@@ -108,8 +137,34 @@ function ClientsPage() {
     );
   };
 
+  const handleSaveClient = async (clientData) => {
+    try {
+      await axios.post(`${backendServer}/clients`, clientData, {
+        headers: {
+          accept: "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      handleAddClientClick();
+      await fetchData();
+      setAlertOpen(true);
+      setAlertMessage("Dodano klienta pomyślnie");
+      setAlertSeverity("success");
+    } catch (error) {
+      setAlertOpen(true);
+      setAlertMessage("Wystąpił błąd podczas dodawania klienta");
+      setAlertSeverity("error");
+      console.log(error.message);
+    }
+  };
+
+  const handleAddClientClick = () => {
+    setIsAddClientPanelOpen(!isAddClientPanelOpen);
+  };
+
   useEffect(() => {
     if (!isAuthenticated) navigate("/");
+    fetchAgents();
     fetchData();
     if (isCollapsed) {
       const timer = setTimeout(() => setIsSidebarCollapsedDelayed(true), 300);
@@ -117,7 +172,7 @@ function ClientsPage() {
     } else {
       setIsSidebarCollapsedDelayed(false);
     }
-  }, [isAuthenticated, navigate, isCollapsed]);
+  }, [isAuthenticated, navigate, isCollapsed, fetchAgents]);
   return (
     <div
       className={`flex items-start justify-start h-screen ${
@@ -126,7 +181,7 @@ function ClientsPage() {
     >
       <Sidebar />
       <div className="flex justify-center w-full">
-        <ClientTableControls />
+        <ClientTableControls onAddClientClick={handleAddClientClick} />
       </div>
       <ClientsTable
         rows={rows}
@@ -155,6 +210,13 @@ function ClientsPage() {
         buttonText={"Usuń"}
         buttonColor={"error"}
       />
+      {isAddClientPanelOpen && (
+        <AddClientPanel
+          onSave={handleSaveClient}
+          onCancel={handleAddClientClick}
+          allUsers={allUsers.length !== 0 ? allUsers : users}
+        />
+      )}
     </div>
   );
 }
