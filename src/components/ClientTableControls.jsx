@@ -25,7 +25,7 @@ function ClientTableControls({ onAddClientClick }) {
         spacing={2}
         alignItems="center"
       >
-        <Button
+        {/* <Button
           aria-haspopup="true"
           variant="outlined"
           endIcon={<KeyboardArrowDown />}
@@ -66,8 +66,8 @@ function ClientTableControls({ onAddClientClick }) {
               transform: "translate(14px, -9px) scale(0.75)",
             },
           }}
-        />
-        <ToggleButtonGroup
+        /> */}
+        {/* <ToggleButtonGroup
           exclusive
           aria-label="view selection"
           sx={{ height: "40px" }}
@@ -82,7 +82,7 @@ function ClientTableControls({ onAddClientClick }) {
               <ViewModule sx={{ color: "default" }} />
             </ToggleButton>
           </Tooltip>
-        </ToggleButtonGroup>
+        </ToggleButtonGroup> */}
 
         <Button
           variant="contained"
