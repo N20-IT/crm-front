@@ -24,6 +24,7 @@ function ClientTableControls({ onAddClientClick }) {
         direction={{ xs: "column", sm: "row" }}
         spacing={2}
         alignItems="center"
+        justifyContent="flex-end"
       >
         {/* <Button
           aria-haspopup="true"
