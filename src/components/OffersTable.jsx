@@ -220,14 +220,17 @@ function OffersTable({
             {loading ? (
               [...Array(rowsPerPage)].map((_, index) => (
                 <TableRow key={index}>
+                  <TableCell key={"checkbox"}>
+                    <Skeleton variant="rounded" width="100%" height={16} />
+                  </TableCell>
+                  <TableCell key={"narzedzia"}>
+                    <Skeleton variant="rounded" width="100%" height={16} />
+                  </TableCell>
                   {filteredColumns.map((column) => (
                     <TableCell key={column.id}>
                       <Skeleton variant="rounded" width="100%" height={16} />
                     </TableCell>
                   ))}
-                  <TableCell key={"narzedzia"}>
-                    <Skeleton variant="rounded" width="100%" height={16} />
-                  </TableCell>
                 </TableRow>
               ))
             ) : Array.isArray(rows) && rows.length > 0 ? (
