@@ -4,7 +4,7 @@ const columnsClientsConfig = [
     label: "Data zapytania",
     shortLabel: "Zapyt.",
     type: "datetime",
-    sortable: false,
+    sortable: true,
     view: "basic",
   },
   {
@@ -12,7 +12,7 @@ const columnsClientsConfig = [
     label: "Dane klienta",
     shortLabel: "Klient",
     type: "string",
-    sortable: false,
+    sortable: true,
     view: "basic",
   },
   {
@@ -60,7 +60,7 @@ const columnsClientsConfig = [
     label: "Agent",
     shortLabel: "Agent",
     type: "dictionary", // Słownik: lista agentów
-    sortable: false,
+    sortable: true,
     view: "basic",
   },
   {
@@ -84,7 +84,7 @@ const columnsClientsConfig = [
     label: "Ilość pokoi od",
     shortLabel: "Pokoje Od",
     type: "number",
-    sortable: false,
+    sortable: true,
     view: "basic",
   },
   {
@@ -92,7 +92,7 @@ const columnsClientsConfig = [
     label: "Ilość pokoi do",
     shortLabel: "Pokoje Do",
     type: "number",
-    sortable: false,
+    sortable: true,
     view: "basic",
   },
   {
@@ -100,7 +100,7 @@ const columnsClientsConfig = [
     label: "Metraż od",
     shortLabel: "Metraż Od",
     type: "number",
-    sortable: false,
+    sortable: true,
     view: "basic",
   },
   {
@@ -108,7 +108,7 @@ const columnsClientsConfig = [
     label: "Metraż do",
     shortLabel: "Metraż Do",
     type: "number",
-    sortable: false,
+    sortable: true,
     view: "basic",
   },
   {
@@ -116,7 +116,7 @@ const columnsClientsConfig = [
     label: "Standard",
     shortLabel: "Stand.",
     type: "dictionary", // Słownik: Do wejścia, Do remontu, Deweloperski, Do odświeżenia
-    sortable: false,
+    sortable: true,
     view: "basic",
   },
   {
@@ -124,7 +124,7 @@ const columnsClientsConfig = [
     label: "Budżet od",
     shortLabel: "Budżet Od",
     type: "number",
-    sortable: false,
+    sortable: true,
     view: "basic",
   },
   {
@@ -132,7 +132,7 @@ const columnsClientsConfig = [
     label: "Budżet do",
     shortLabel: "Budżet Do",
     type: "number",
-    sortable: false,
+    sortable: true,
     view: "basic",
   },
   {
@@ -140,7 +140,7 @@ const columnsClientsConfig = [
     label: "Ostatni kontakt",
     shortLabel: "Ost. Kontakt",
     type: "datetime",
-    sortable: false,
+    sortable: true,
     view: "basic",
   },
   {
@@ -148,7 +148,7 @@ const columnsClientsConfig = [
     label: "Data następnego kontaktu",
     shortLabel: "Nast. Kontakt",
     type: "datetime",
-    sortable: false,
+    sortable: true,
     view: "basic",
   },
 ];
