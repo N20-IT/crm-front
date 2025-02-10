@@ -67,6 +67,7 @@ function OffersPage() {
   const [isSidebarCollapsedDelayed, setIsSidebarCollapsedDelayed] = useState(
     isCollapsed
   );
+  const [clients, setClients] = useState([]);
   const location = useLocation();
   const clientFilter = location.state?.clientFilter || {};
 
@@ -143,6 +144,20 @@ function OffersPage() {
     },
     [backendServer, token, readConfig]
   );
+
+  const fetchClients = useCallback(async () => {
+    try {
+      const response = await axios.get(`${backendServer}/clients`, {
+        headers: {
+          accept: "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      setClients(response.data["klienci"]);
+    } catch (error) {
+      console.log("Błąd podczas pobierania klientów: " + error.message);
+    }
+  });
 
   const handleSaveOffer = async (offerData) => {
     try {
@@ -386,6 +401,7 @@ function OffersPage() {
   useEffect(() => {
     if (!isAuthenticated) navigate("/");
     fetchAgents();
+    fetchClients();
     fetchData(searchQuery);
 
     if (isCollapsed) {
@@ -420,6 +436,7 @@ function OffersPage() {
             onSearchChange={handleSearchAndFilter}
             onFilterApply={handleSearchAndFilter}
             allUsers={allUsers.length !== 0 ? allUsers : users}
+            clients={clients}
           />
         </div>
         <OffersTable

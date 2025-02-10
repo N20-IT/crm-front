@@ -33,6 +33,7 @@ function TableControls({
   onSearchChange,
   onFilterApply,
   allUsers,
+  clients,
 }) {
   const [filters, setFilters] = useState({
     ulica: "",
@@ -53,6 +54,7 @@ function TableControls({
     dataKontaktuDo: "",
     dataNastepnegoKontaktuOd: "",
     dataNastepnegoKontaktuDo: "",
+    clientId: "",
   });
 
   const [searchValue, setSearchValue] = useState("");
@@ -291,6 +293,7 @@ function TableControls({
       dataKontaktuDo: "",
       dataNastepnegoKontaktuOd: "",
       dataNastepnegoKontaktuDo: "",
+      clientId: "",
     });
     setDateError({
       contactDate: false,
@@ -1068,6 +1071,66 @@ function TableControls({
             }
           />
         </div>
+        <FormControl
+          fullWidth
+          sx={{
+            marginTop: "12px",
+            "& .MuiOutlinedInput-root": {
+              borderRadius: "6px",
+              fontFamily: "Poppins",
+              fontSize: "16px",
+              height: "40px",
+              "& input": {
+                padding: "8px",
+                height: "16px",
+              },
+            },
+            "& .MuiFormLabel-root": {
+              fontFamily: "Poppins",
+              fontSize: "16px",
+              color: "#535968",
+              transform: "translate(14px, 9px) scale(1)",
+            },
+            "& .MuiInputLabel-root.MuiInputLabel-shrink": {
+              transform: "translate(14px, -9px) scale(0.75)",
+            },
+
+            "& .MuiInputLabel-root.Mui-focused": {
+              color: "#535968",
+            },
+            "& .MuiOutlinedInput-notchedOutline": {
+              borderColor: "#535968",
+            },
+            "&:hover .MuiOutlinedInput-notchedOutline": {
+              borderColor: "#535968",
+            },
+            "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+              borderColor: "#535968",
+            },
+            "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline": {
+              borderColor: "#535968",
+            },
+          }}
+        >
+          <InputLabel>Klient</InputLabel>
+          <Select
+            value={filters.clientId}
+            onChange={(e) => updateFilters("clientId", e.target.value)}
+            label="Typ inwestycji"
+          >
+            <MenuItem
+              value=""
+              sx={{ fontStyle: "italic", color: "gray", fontWeight: "bold" }}
+            >
+              Brak
+            </MenuItem>
+            {clients.map((client) => (
+              <MenuItem key={client._id} value={client._id}>
+                {client.daneKlienta}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
         <Button
           variant="contained"
           sx={{
