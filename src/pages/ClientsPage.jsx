@@ -15,7 +15,6 @@ import AddClientPanel from "../components/AddClientPanel";
 import { GetInformationFromToken } from "../utils/decodeToken";
 import EditClientPanel from "../components/EditClientPanel";
 
-//TODO
 function ClientsPage() {
   const navigate = useNavigate();
   const isAuthenticated = useAuth();
@@ -31,13 +30,10 @@ function ClientsPage() {
     isCollapsed
   );
   const columns = useMemo(() => columnsClientsConfig, []);
-  const [readConfig, setReadConfig] = useState(useReadConfig());
   const backendServer = serverConfig["backend-server"];
   const [page, setPage] = useState(0);
   const [itemsPerPage, setItemsPerPage] = useState(100);
-  const [filters, setFilters] = useState({});
-  const [searchValue, setSearchValue] = useState("");
-  const [orderBy, setOrderBy] = useState("dataUtworzenia");
+  const [orderBy, setOrderBy] = useState("dataZapytania");
   const [order, setOrder] = useState("desc");
   const [openDialogDelete, setopenDialogDelete] = useState(false);
   const [clientIdToDelete, setClientIdToDelete] = useState(null);
@@ -73,20 +69,33 @@ function ClientsPage() {
     }
   }, [token, backendServer, userInformation, userRole]);
 
-  const fetchData = useCallback(async () => {
-    try {
-      const response = await axios.get(`${backendServer}/clients`, {
-        headers: {
-          accept: "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      setRows(response.data["klienci"]);
-      setQuantityClients(response.data["total"]);
-    } catch (error) {
-      console.log("Błąd podczas pobierania danych", error);
+  const fetchData = useCallback(
+    async (
+      currentPage = page,
+      rowsPerValue = itemsPerPage,
+      sortBy = orderBy,
+      sort = order
+    ) => {
+      try {
+        const response = await axios.get(`${backendServer}/clients`, {
+          headers: {
+            accept: "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          params: {
+            page: currentPage,
+            limit: rowsPerValue,
+            sortBy,
+            sort,
+          },
+        });
+        setRows(response.data["klienci"]);
+        setQuantityClients(response.data["total"]);
+      } catch (error) {
+        console.log("Błąd podczas pobierania danych", error);
+      }
     }
-  });
+  );
 
   const handleDeleteClient = async (clientId) => {
     try {
@@ -163,15 +172,15 @@ function ClientsPage() {
   const handlePagination = (currentPage, rowsPerValue) => {
     if (currentPage !== page) setPage(currentPage);
     if (rowsPerValue !== itemsPerPage) setItemsPerPage(rowsPerValue);
-    fetchData(
-      searchValue,
-      filters,
-      readConfig,
-      currentPage,
-      rowsPerValue,
-      orderBy,
-      order
-    );
+    fetchData(currentPage, rowsPerValue, orderBy, order);
+  };
+
+  const handleSort = (currentPage, rowsPerValue, sortBy, sort) => {
+    setPage(currentPage);
+    if (rowsPerValue !== itemsPerPage) setItemsPerPage(rowsPerValue);
+    if (sortBy !== orderBy) setOrderBy(sortBy);
+    if (sort !== order) setOrder(sort);
+    fetchData(currentPage, rowsPerValue, sortBy, sort);
   };
 
   const handleSaveClient = async (clientData) => {
@@ -225,9 +234,9 @@ function ClientsPage() {
         columns={columns}
         selected={selected}
         setSelected={setSelected}
-        readConfig={readConfig}
         quantityClients={quantityClients}
         onPaginationApply={handlePagination}
+        onSortApply={handleSort}
         handleDeleteClientClick={handleDeleteClientClick}
         handleEditClientClick={handleEditClientClick}
       />

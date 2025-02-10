@@ -27,14 +27,14 @@ function ClientsTable({
   columns,
   selected,
   setSelected,
-  readConfig,
   quantityClients,
   onPaginationApply,
+  onSortApply,
   handleDeleteClientClick,
   handleEditClientClick,
 }) {
   const [order, setOrder] = useState("desc");
-  const [orderBy, setOrderBy] = useState("dataUtworzenia");
+  const [orderBy, setOrderBy] = useState("dataZapytania");
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(100);
   const navigate = useNavigate();
@@ -54,7 +54,7 @@ function ClientsTable({
     const isDesc = orderBy === columnId && order === "desc";
     isDesc ? setOrder("asc") : setOrder("desc");
     setOrderBy(columnId);
-    // onSortApply(0, rowsPerPage, columnId, isDesc ? "asc" : "desc");
+    onSortApply(0, rowsPerPage, columnId, isDesc ? "asc" : "desc");
   };
 
   const handleChangePage = (event, newPage) => {
@@ -67,10 +67,6 @@ function ClientsTable({
     setPage(0);
     onPaginationApply(0, parseInt(event.target.value, 10));
   };
-
-  const filteredColumns = columns.filter((column) =>
-    readConfig === 0 ? column.view === "basic" : true
-  );
 
   const getShortType = (type) => {
     switch (type) {
@@ -162,13 +158,13 @@ function ClientsTable({
                   textAlign: "center",
                   fontFamily: "Poppins",
                   padding: "0px",
-                  paddingLeft: "30px",
-                  paddingRight: "30px",
+                  paddingLeft: "5px",
+                  paddingRight: "5px",
                 }}
               >
                 <Tooltip title="Narzędzia">Narzędzia</Tooltip>
               </TableCell>
-              {filteredColumns.map((column, index) => (
+              {columns.map((column, index) => (
                 <TableCell
                   key={column.id}
                   sx={{
