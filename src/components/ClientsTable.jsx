@@ -20,6 +20,7 @@ import { FileCopy, OpenInNew } from "@mui/icons-material";
 import ClientAction from "./ClientAction";
 import clientStatuesConfig from "../config/clientStatuesConfig";
 import clientStandardConfig from "../config/clientStandardConfig";
+import { useNavigate } from "react-router-dom";
 
 function ClientsTable({
   rows,
@@ -36,6 +37,7 @@ function ClientsTable({
   const [orderBy, setOrderBy] = useState("dataUtworzenia");
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(100);
+  const navigate = useNavigate();
 
   const handleSelect = (id) => {
     if (selected.includes(id))
@@ -101,6 +103,10 @@ function ClientsTable({
     textarea.select();
     document.execCommand("copy");
     document.body.removeChild(textarea);
+  };
+
+  const handleMatchClient = (clientId) => {
+    navigate(`/oferty?clientId=${clientId}`);
   };
 
   return (
@@ -287,15 +293,11 @@ function ClientsTable({
                   <CustomTableCell>{row.email || ""}</CustomTableCell>
                   <CustomTableCell>{row.numerGalactica || ""}</CustomTableCell>
                   <CustomTableCell>
-                    {row.nrOfertyLink ? (
-                      <Tooltip title={row.nrOfertyLink || ""}>
-                        <IconButton>
-                          <OpenInNew />
-                        </IconButton>
-                      </Tooltip>
-                    ) : (
-                      ""
-                    )}
+                    <Tooltip title={"Dobierz oferty"}>
+                      <IconButton onClick={() => handleMatchClient(row._id)}>
+                        <OpenInNew />
+                      </IconButton>
+                    </Tooltip>
                   </CustomTableCell>
                   <CustomTableCell
                     sx={{
