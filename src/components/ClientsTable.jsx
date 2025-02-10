@@ -106,7 +106,7 @@ function ClientsTable({
   };
 
   const handleMatchClient = (clientId) => {
-    navigate(`/oferty?clientId=${clientId}`);
+    navigate("/oferty", { state: { clientFilter: clientId } });
   };
 
   return (

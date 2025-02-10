@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback, useMemo } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useAuth, useReadCookie } from "../utils/auth";
 import axios from "axios";
 import qs from "qs";
@@ -67,6 +67,8 @@ function OffersPage() {
   const [isSidebarCollapsedDelayed, setIsSidebarCollapsedDelayed] = useState(
     isCollapsed
   );
+  const location = useLocation();
+  const clientFilter = location.state?.clientFilter || {};
 
   const columns = useMemo(() => columnsOffersConfig, []);
 
@@ -98,7 +100,8 @@ function OffersPage() {
       currentPage = page,
       rowsPerValue = itemsPerPage,
       sortBy = orderBy,
-      sort = order
+      sort = order,
+      clientId = clientFilter
     ) => {
       setLoading(true);
       try {
@@ -114,6 +117,7 @@ function OffersPage() {
             limit: rowsPerValue,
             sortBy,
             sort,
+            clientId,
             ...currentFilters,
           },
           paramsSerializer: (params) => {
