@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Table,
   TableHead,
@@ -7,39 +7,48 @@ import {
   TableBody,
   Tooltip,
   IconButton,
-  Checkbox,
   Skeleton,
+  TableSortLabel,
 } from "@mui/material";
 import { Delete, Edit } from "@mui/icons-material";
+import CustomTableCell from "./CustomTableCell";
 
 function UsersTable({
   users,
-  selected,
   loading,
-  onSelect,
-  onSelectAll,
   onDeleteClick,
   onEditClick,
   columns,
   rowsPerPage,
   page,
+  onSortApply,
 }) {
+  const [order, setOrder] = useState("desc");
+  const [orderBy, setOrderBy] = useState("imie");
+
+  const handleSortRequest = (columnId) => {
+    const isDesc = orderBy === columnId && order === "desc";
+    isDesc ? setOrder("asc") : setOrder("desc");
+    setOrderBy(columnId);
+    onSortApply(columnId, isDesc ? "asc" : "desc");
+  };
+
   return (
     <Table>
       <TableHead style={{ backgroundColor: "#272F3E" }}>
         <TableRow>
           <TableCell
-            padding="checkbox"
-            style={{ color: "white", textAlign: "center" }}
+            key={"narzedzia"}
+            style={{
+              color: "white",
+              textAlign: "center",
+              fontFamily: "Poppins",
+              padding: "0px",
+              paddingLeft: "5px",
+              paddingRight: "5px",
+            }}
           >
-            <Checkbox
-              checked={selected.length === users.length}
-              indeterminate={
-                selected.length > 0 && selected.length < users.length
-              }
-              onChange={onSelectAll}
-              style={{ color: "white" }}
-            />
+            Narzędzia
           </TableCell>
           {columns.map((column) => (
             <TableCell
@@ -48,21 +57,33 @@ function UsersTable({
                 color: "white",
                 textAlign: "center",
                 fontFamily: "Poppins",
+                padding: "0px",
+                paddingLeft: "5px",
+                paddingRight: "5px",
               }}
+              sortDirection={orderBy === column.id ? order : false}
             >
-              {column.label}
+              {column.sortable ? (
+                <TableSortLabel
+                  active={orderBy === column.id}
+                  direction={order === "asc" ? "asc" : "desc"}
+                  onClick={() => handleSortRequest(column.id)}
+                  sx={{
+                    color: "white !important",
+                    fontSize: "13px",
+                    paddingLeft: "20px",
+                    "& .MuiTableSortLabel-icon": {
+                      color: "white !important",
+                    },
+                  }}
+                >
+                  {column.label}
+                </TableSortLabel>
+              ) : (
+                column.label
+              )}
             </TableCell>
           ))}
-          <TableCell
-            key={"narzedzia"}
-            style={{
-              color: "white",
-              textAlign: "center",
-              fontFamily: "Poppins",
-            }}
-          >
-            Narzędzia
-          </TableCell>
         </TableRow>
       </TableHead>
       <TableBody>
@@ -83,25 +104,15 @@ function UsersTable({
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
               .map((user) => (
                 <TableRow key={user.email}>
-                  <TableCell style={{ textAlign: "center", padding: "5px" }}>
-                    <Checkbox
-                      checked={selected.includes(user.email)}
-                      onChange={() => onSelect(user.email)}
-                      sx={{
-                        color: "#272F3E",
-                        "&.Mui-checked": { color: "#272F3E" },
-                      }}
-                    />
-                  </TableCell>
-                  {columns.map((column) => (
-                    <TableCell
-                      key={column.id}
-                      style={{ textAlign: "center", fontFamily: "Poppins" }}
-                    >
-                      {user[column.id]}
-                    </TableCell>
-                  ))}
-                  <TableCell style={{ textAlign: "center" }}>
+                  <TableCell
+                    style={{
+                      textAlign: "center",
+                      padding: "9px",
+                      maxHeight: "60px",
+                      fontFamily: "Poppins",
+                      width: "9.5%",
+                    }}
+                  >
                     <Tooltip title="Usuń">
                       <IconButton
                         sx={{ padding: "4px", color: "#A11D1D" }}
@@ -119,6 +130,14 @@ function UsersTable({
                       </IconButton>
                     </Tooltip>
                   </TableCell>
+                  {columns.map((column) => (
+                    <CustomTableCell
+                      key={column.id}
+                      style={{ textAlign: "center", fontFamily: "Poppins" }}
+                    >
+                      {user[column.id]}
+                    </CustomTableCell>
+                  ))}
                 </TableRow>
               ))}
       </TableBody>
