@@ -33,7 +33,7 @@ function TableControls({
   onSearchChange,
   onFilterApply,
   allUsers,
-  clients,
+  // clients,
 }) {
   const [filters, setFilters] = useState({
     ulica: "",
@@ -1071,7 +1071,7 @@ function TableControls({
             }
           />
         </div>
-        <FormControl
+        {/* <FormControl
           fullWidth
           sx={{
             marginTop: "12px",
@@ -1130,7 +1130,7 @@ function TableControls({
               </MenuItem>
             ))}
           </Select>
-        </FormControl>
+        </FormControl> */}
         <Button
           variant="contained"
           sx={{
