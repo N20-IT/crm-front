@@ -57,7 +57,7 @@ function ClientsPage() {
           Authorization: `Bearer ${token}`,
         },
       });
-      const usersList = response.data;
+      const usersList = response.data["users"];
       const agents = usersList.map((user) => user.imie + " " + user.nazwisko);
       if (userRole === "admin") setUsers(agents);
       else {
