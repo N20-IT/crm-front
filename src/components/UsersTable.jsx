@@ -32,7 +32,6 @@ function UsersTable({
     setOrderBy(columnId);
     onSortApply(columnId, isDesc ? "asc" : "desc");
   };
-
   return (
     <Table>
       <TableHead style={{ backgroundColor: "#272F3E" }}>
@@ -100,46 +99,44 @@ function UsersTable({
                 </TableCell>
               </TableRow>
             ))
-          : users
-              .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-              .map((user) => (
-                <TableRow key={user.email}>
-                  <TableCell
-                    style={{
-                      textAlign: "center",
-                      padding: "9px",
-                      maxHeight: "60px",
-                      fontFamily: "Poppins",
-                      width: "9.5%",
-                    }}
-                  >
-                    <Tooltip title="Usuń">
-                      <IconButton
-                        sx={{ padding: "4px", color: "#A11D1D" }}
-                        onClick={() => onDeleteClick(user)}
-                      >
-                        <Delete />
-                      </IconButton>
-                    </Tooltip>
-                    <Tooltip title="Edytuj">
-                      <IconButton
-                        sx={{ padding: "4px", color: "#6A99C7" }}
-                        onClick={() => onEditClick(user)}
-                      >
-                        <Edit />
-                      </IconButton>
-                    </Tooltip>
-                  </TableCell>
-                  {columns.map((column) => (
-                    <CustomTableCell
-                      key={column.id}
-                      style={{ textAlign: "center", fontFamily: "Poppins" }}
+          : users.map((user) => (
+              <TableRow key={user.email}>
+                <TableCell
+                  style={{
+                    textAlign: "center",
+                    padding: "9px",
+                    maxHeight: "60px",
+                    fontFamily: "Poppins",
+                    width: "9.5%",
+                  }}
+                >
+                  <Tooltip title="Usuń">
+                    <IconButton
+                      sx={{ padding: "4px", color: "#A11D1D" }}
+                      onClick={() => onDeleteClick(user)}
                     >
-                      {user[column.id]}
-                    </CustomTableCell>
-                  ))}
-                </TableRow>
-              ))}
+                      <Delete />
+                    </IconButton>
+                  </Tooltip>
+                  <Tooltip title="Edytuj">
+                    <IconButton
+                      sx={{ padding: "4px", color: "#6A99C7" }}
+                      onClick={() => onEditClick(user)}
+                    >
+                      <Edit />
+                    </IconButton>
+                  </Tooltip>
+                </TableCell>
+                {columns.map((column) => (
+                  <CustomTableCell
+                    key={column.id}
+                    style={{ textAlign: "center", fontFamily: "Poppins" }}
+                  >
+                    {user[column.id]}
+                  </CustomTableCell>
+                ))}
+              </TableRow>
+            ))}
       </TableBody>
     </Table>
   );

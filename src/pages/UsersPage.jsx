@@ -39,6 +39,7 @@ function UsersPage() {
   const [isSidebarCollapsedDelayed, setIsSidebarCollapsedDelayed] = useState(
     isCollapsed
   );
+  const [quantityUsers, setQuantityUsers] = useState(0);
 
   const fetchData = useCallback(
     async (
@@ -61,7 +62,7 @@ function UsersPage() {
             sort,
           },
         });
-        const usersList = response.data;
+        const usersList = response.data["users"];
         const mappedUsersList = usersList.map((user) => ({
           ...user,
           role:
@@ -73,6 +74,7 @@ function UsersPage() {
         }));
 
         setUsers(mappedUsersList);
+        setQuantityUsers(response.data["total"]);
       } catch (error) {
         console.log(error);
       } finally {
@@ -303,7 +305,7 @@ function UsersPage() {
       )}
       <TablePagination
         component="div"
-        count={users.length}
+        count={quantityUsers}
         page={page}
         onPageChange={handleChangePage}
         rowsPerPage={rowsPerPage}
