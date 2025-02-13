@@ -14,6 +14,7 @@ import {
   TableRow,
   TableSortLabel,
   Tooltip,
+  Typography,
 } from "@mui/material";
 import CustomTableCell from "./CustomTableCell";
 import { FileCopy, OpenInNew } from "@mui/icons-material";
@@ -67,6 +68,14 @@ function ClientsTable({
     setPage(0);
     onPaginationApply(0, parseInt(event.target.value, 10));
   };
+
+  const formatNumber = (value) =>
+    value
+      ? value.toLocaleString("pl-PL", {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2,
+        })
+      : "";
 
   const getShortType = (type) => {
     switch (type) {
@@ -310,7 +319,23 @@ function ClientsTable({
                     <strong>{row.agent || ""}</strong>
                   </CustomTableCell>
                   <CustomTableCell>
-                    <strong>{row.lokalizacja || ""}</strong>
+                    <Tooltip
+                      title={
+                        <Typography
+                          sx={{ whiteSpace: "pre-line", fontSize: "14px" }}
+                        >
+                          {row.lokalizacja?.split(",").join("\n")}
+                        </Typography>
+                      }
+                    >
+                      <strong>
+                        {row.lokalizacja
+                          ?.split(",")
+                          .slice(0, 3)
+                          .join(", ")}
+                        {row.lokalizacja?.split(",").length > 3 ? "..." : ""}
+                      </strong>
+                    </Tooltip>
                   </CustomTableCell>
                   <CustomTableCell>
                     <strong>
@@ -319,8 +344,12 @@ function ClientsTable({
                   </CustomTableCell>
                   <CustomTableCell>{row.iloscPokoiOd || ""}</CustomTableCell>
                   <CustomTableCell>{row.iloscPokoiDo || ""}</CustomTableCell>
-                  <CustomTableCell>{row.metrazOd || ""}</CustomTableCell>
-                  <CustomTableCell>{row.metrazDo || ""}</CustomTableCell>
+                  <CustomTableCell>
+                    {formatNumber(row.metrazOd) || ""}
+                  </CustomTableCell>
+                  <CustomTableCell>
+                    {formatNumber(row.metrazDo) || ""}
+                  </CustomTableCell>
                   <CustomTableCell
                     sx={{
                       color:
@@ -331,8 +360,12 @@ function ClientsTable({
                   >
                     <strong>{row.standard || ""}</strong>
                   </CustomTableCell>
-                  <CustomTableCell>{row.budzetOd || ""}</CustomTableCell>
-                  <CustomTableCell>{row.budzetDo || ""}</CustomTableCell>
+                  <CustomTableCell>
+                    {formatNumber(row.budzetOd) || ""}
+                  </CustomTableCell>
+                  <CustomTableCell>
+                    {formatNumber(row.budzetDo) || ""}
+                  </CustomTableCell>
                   <CustomTableCell>
                     {row.ostatniKontakt ? (
                       <>
@@ -397,7 +430,6 @@ function ClientsTable({
             )}
           </TableBody>
         </Table>
-        {/* Do poprawy */}
         <TablePagination
           component="div"
           count={quantityClients}
