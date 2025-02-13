@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import {
   Box,
   Grid2,
@@ -40,11 +40,10 @@ function OfferDetailsPage({
   const [isEditOfferPanelOpen, setEditOfferPanelOpen] = useState(false);
   const token = useReadCookie();
   const backendServer = serverConfig["backend-server"];
-  const [statusesColor, setStatuesColor] = useState("");
   const navigate = useNavigate();
   const isAuthenticated = useAuth();
 
-  const fetchDetailsData = async () => {
+  const fetchDetailsData = useCallback(async () => {
     try {
       const response = await axios.get(`${backendServer}/listings/${id}`, {
         headers: {
@@ -60,7 +59,7 @@ function OfferDetailsPage({
     } finally {
       setLoading(false);
     }
-  };
+  }, [backendServer, id, token]);
 
   const handleEditClick = () => {
     setEditOfferPanelOpen(true);
@@ -70,14 +69,9 @@ function OfferDetailsPage({
   };
 
   useEffect(() => {
-    fetchDetailsData();
-    if (offer.statusOferty) {
-      setStatuesColor(
-        statusesConfig.find((status) => status.value === offer.statusOferty)
-      );
-    }
     if (!isAuthenticated) navigate("/");
-  }, [isAuthenticated, navigate, offer.statusOferty, statusesColor]);
+    fetchDetailsData();
+  }, [isAuthenticated, navigate, fetchDetailsData]);
   return (
     <div className=" fixed inset-0 bg-light-grey bg-opacity-75 flex items-center justify-center z-50">
       <div className="bg-white p-6 rounded-lg shadow-lg w-1/3">
@@ -268,7 +262,13 @@ function OfferDetailsPage({
 
                   <Box
                     component="span"
-                    sx={{ color: statusesColor || "inherit" }}
+                    sx={{
+                      color: offer.statusOferty
+                        ? statusesConfig.find(
+                            (status) => status.value === offer.statusOferty
+                          ).color
+                        : "inherit",
+                    }}
                   >
                     {offer?.statusOferty}
                   </Box>
