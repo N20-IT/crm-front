@@ -47,12 +47,20 @@ function AddClientPanel({ onSave, onCancel, allUsers }) {
       validationErrors.metrazDo =
         "Wartość w polu 'Metraż do' nie może być mniejsza niż w polu 'Metraż od'.";
     }
+    if (!formData.status) validationErrors.status = "Status jest wymagany.";
+    if (!formData.agent) validationErrors.agent = "Agent jest wymagany.";
+    if (!formData.numerGalactica)
+      validationErrors.numerGalactica = "Numer oferty Galactica jest wymagany.";
+    if (formData.lokalizacja.length === 0)
+      validationErrors.lokalizacja = "Lokalizacja jest wymagana.";
+    if (!formData.daneKlienta)
+      validationErrors.daneKlienta = "Dane klienta są wymagane.";
 
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
       const errorMessages = Object.values(validationErrors).join("\n");
       setAlertOpen(true);
-      setAlertMessage("Błąd podczas usuwania ofert: \n" + errorMessages);
+      setAlertMessage("Popraw następujące błędy: \n" + errorMessages);
       setAlertSeverity("error");
       return;
     }

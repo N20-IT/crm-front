@@ -10,20 +10,14 @@ import {
 import { ThemeProvider } from "@mui/material/styles";
 import { customTooltip } from "../styles/CustomTooltip";
 import { Link, useLocation } from "react-router-dom";
-import { GoSidebarCollapse, GoSidebarExpand } from "react-icons/go";
 import { GetInformationFromToken } from "../utils/decodeToken";
 import { Button, Tooltip } from "@mui/material";
 import { useLogout } from "../utils/auth";
-import { useSelector, useDispatch } from "react-redux";
-import { toggleSidebar } from "../redux/sidebarSlice";
 
 const Sidebar = () => {
   const location = useLocation();
   const userRole = GetInformationFromToken("custom:role");
   const logout = useLogout();
-
-  const isCollapsed = useSelector((state) => state.sidebar.isCollapsed);
-  const dispatch = useDispatch();
 
   const getLinkClass = (path) => {
     return location.pathname === path ? "bg-orange" : "hover:bg-dark-blue";
@@ -31,27 +25,13 @@ const Sidebar = () => {
 
   return (
     <ThemeProvider theme={customTooltip}>
-      <aside
-        className={`fixed top-0 left-0 bg-light-grey text-white ${
-          isCollapsed ? "w-16" : "w-48"
-        } h-screen flex flex-col transition-all duration-300`}
-      >
-        <div
-          className={`h-36 flex justify-center items-center ${
-            isCollapsed ? "p-1" : "p-6"
-          } relative`}
-        >
+      <aside className="fixed top-0 left-0 bg-light-grey text-white w-16 h-screen flex flex-col transition-all duration-300">
+        <div className="h-36 flex justify-center items-center p-1 relative">
           <Tooltip title="Strona główna" placement="right">
             <Link to="/homepage" className="w-32">
               <img className={`h-full w-full `} src="/n20logo.png" alt="Logo" />
             </Link>
           </Tooltip>
-          <button
-            onClick={() => dispatch(toggleSidebar())}
-            className="absolute right-[-12px] top-1/2 transform -translate-y-1/2 bg-dark-blue text-white rounded-full p-2 hover:bg-orange"
-          >
-            {isCollapsed ? <GoSidebarCollapse /> : <GoSidebarExpand />}
-          </button>
         </div>
         <nav className="flex-1">
           <ul>
@@ -66,7 +46,6 @@ const Sidebar = () => {
                   className="flex items-center justify-start text-xl ml-4 w-full h-full"
                 >
                   <LocalOffer sx={{ marginRight: "6px" }} />
-                  {!isCollapsed && <span>Oferty</span>}
                 </Link>
               </Tooltip>
             </li>
@@ -81,7 +60,6 @@ const Sidebar = () => {
                   className="flex items-center justify-start text-xl ml-4 w-full h-full"
                 >
                   <Group sx={{ marginRight: "6px" }} />
-                  {!isCollapsed && <span>Klienci</span>}
                 </Link>
               </Tooltip>
             </li>
@@ -97,7 +75,6 @@ const Sidebar = () => {
                   className="flex items-center justify-start text-xl ml-4 w-full h-full"
                 >
                   <Star sx={{ marginRight: "6px" }} />
-                  {!isCollapsed && <span>Ciek. oferty</span>}
                 </Link>
               </Tooltip>
             </li>
@@ -114,7 +91,6 @@ const Sidebar = () => {
                       className="flex items-center justify-start text-xl ml-4 w-full h-full"
                     >
                       <Groups sx={{ marginRight: "6px" }} />
-                      {!isCollapsed && <span>Użytkownicy</span>}
                     </Link>
                   </Tooltip>
                 </li>
@@ -129,7 +105,6 @@ const Sidebar = () => {
                       className="flex items-center justify-start text-xl ml-4 w-full h-full"
                     >
                       <Description sx={{ marginRight: "6px" }} />
-                      {!isCollapsed && <span>Administrator</span>}
                     </Link>
                   </Tooltip>
                 </li>
@@ -137,33 +112,26 @@ const Sidebar = () => {
             )}
           </ul>
         </nav>
-        <div
-          className={`fixed bottom-3 p-4 flex justify-center items-center ${
-            isCollapsed ? "w-16" : "w-39"
-          }`}
-        >
+        <div className="fixed bottom-3 p-4 flex justify-center items-center w-16">
           <Tooltip title="Wyloguj się" placement="right">
             <Button
-              fullWidth={!isCollapsed}
               variant="contained"
               sx={{
                 backgroundColor: "#FC8721",
                 color: "white",
                 borderRadius: "32px",
-                fontSize: isCollapsed ? "0px" : "16px",
+                fontSize: "0px",
                 fontFamily: "Poppins",
                 textTransform: "none",
-                padding: isCollapsed ? "10px" : "10px 20px",
+                padding: "10px",
                 transition: "all 0.3s ease-in-out",
                 "& .MuiButton-startIcon": {
-                  margin: isCollapsed ? 0 : undefined,
+                  margin: 0,
                 },
               }}
               startIcon={<Logout />}
               onClick={logout}
-            >
-              {!isCollapsed && "Wyloguj się"}
-            </Button>
+            />
           </Tooltip>
         </div>
       </aside>

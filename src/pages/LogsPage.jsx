@@ -6,22 +6,11 @@ import { GetInformationFromToken } from "../utils/decodeToken";
 import {
   Box,
   Grid,
-  IconButton,
   Typography,
   Paper,
   Button,
-  Select,
-  MenuItem,
-  FormControl,
-  InputLabel,
   CircularProgress,
-  Table,
-  TableHead,
-  TableRow,
-  TableCell,
-  TableBody,
 } from "@mui/material";
-import RestoreIcon from "@mui/icons-material/Restore";
 import axios from "axios";
 import serverConfig from "../servers.json";
 import Alerts from "../components/Alerts";
@@ -74,64 +63,6 @@ function LogsPage() {
     fetchLogs(filename);
   };
 
-  const fetchDeletedOffers = useCallback(async () => {
-    setLoading(true);
-    try {
-      const response = await axios.get(`${backendServer}/listings/deleted`, {
-        headers: {
-          accept: "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      setDeletedOffers(response.data);
-    } catch (error) {
-      console.error("Error fetching deleted offers:", error);
-    } finally {
-      setLoading(false);
-    }
-  }, [backendServer, token]);
-
-  const handleRestoreOffer = async (offerId) => {
-    try {
-      await axios.post(
-        `${backendServer}/listings/undelete/${offerId}`,
-        {},
-        {
-          headers: {
-            accept: "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      setDeletedOffers((prevOffers) =>
-        prevOffers.filter((offer) => offer.id !== offerId)
-      );
-    } catch (error) {
-      console.error("Error restoring offer:", error);
-    }
-  };
-
-  const handleRestoreOffers = async (type) => {
-    try {
-      const response = await axios.get(`${backendServer}/listings/undelete`, {
-        headers: {
-          accept: "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        params: {
-          type: type,
-        },
-      });
-      setAlertOpen(true);
-      setAlertMessage("Poprawnie przywrócono oferty");
-      setAlertSeverity("success");
-    } catch (error) {
-      setAlertOpen(true);
-      setAlertMessage("Wystąpił błąd podczas odzyskiwania ofert");
-      setAlertSeverity("error");
-    }
-  };
-
   const handleRestoreAll = async () => {
     try {
       const response = await axios.post(
@@ -155,61 +86,21 @@ function LogsPage() {
   };
 
   return (
-    <div className="flex items-start justify-start h-screen ml-48 flex-col">
+    <div className="flex items-start justify-start h-screen ml-16 flex-col">
       <Sidebar />
-      <Box sx={{ flexGrow: 1, marginLeft: "24px", width: "97%" }}>
-        <Typography
-          variant="h3"
-          sx={{
-            fontWeight: "bold",
-            marginBottom: "16px",
-            marginTop: "24px",
-          }}
-        >
-          Panel Administratora
-        </Typography>
-
-        <div className="flex flex-row">
-          <div className="ml-3 w-1/4">
+      <Box
+        sx={{
+          flexGrow: 1,
+          padding: "10px",
+          width: "100%",
+        }}
+      >
+        <div className="flex flex-row justify-center">
+          <div className="w-1/5">
             <Paper elevation={3} sx={{ padding: 3 }}>
               <Typography variant="h5" sx={{ fontWeight: "bold" }}>
                 Przywracanie ofert
               </Typography>
-              {/* <Box sx={{ marginTop: 2, overflowX: "auto" }}>
-                {loading ? (
-                  <CircularProgress size={24} sx={{ color: "#FC8721" }} />
-                ) : deletedOffers.length > 0 ? (
-                  <Table>
-                    <TableHead>
-                      <TableRow>
-                        <TableCell>Ulica</TableCell>
-                        <TableCell>Telefon</TableCell>
-                        <TableCell>Agent</TableCell>
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      {deletedOffers.map((offer) => (
-                        <TableRow key={offer.ulica}>
-                          <TableCell>{offer.telefonWlasciciela}</TableCell>
-                          <TableCell>{offer.agent}</TableCell>
-                          <TableCell>
-                            <IconButton
-                              onClick={() => handleRestoreOffer(offer.id)}
-                              // color="primary"
-                            >
-                              <RestoreIcon />
-                            </IconButton>
-                          </TableCell>
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
-                ) : (
-                  <Typography variant="body2">
-                    Brak usuniętych ofert.
-                  </Typography>
-                )}
-              </Box> */}
               <Button
                 variant="contained"
                 onClick={() => handleRestoreAll()}
@@ -217,36 +108,21 @@ function LogsPage() {
               >
                 Przywróć oferty
               </Button>
-
-              <Button
-                variant="contained"
-                onClick={() => handleRestoreOffers(0)}
-                sx={{ marginTop: 2, backgroundColor: "#FC8721", width: "100%" }}
-              >
-                Ostatnie 24h
-              </Button>
-              <Button
-                variant="contained"
-                onClick={() => handleRestoreOffers(1)}
-                sx={{ marginTop: 2, backgroundColor: "#FC8721", width: "100%" }}
-              >
-                Ostatnie 3 dni
-              </Button>
-              <Button
-                variant="contained"
-                onClick={() => handleRestoreOffers(2)}
-                sx={{ marginTop: 2, backgroundColor: "#FC8721", width: "100%" }}
-              >
-                Ostatnie 7 dni
-              </Button>
             </Paper>
           </div>
-          <div className="ml-3 w-3/4">
+          <div className="ml-3 w-4/5">
             <Paper elevation={3} sx={{ padding: 3, width: "100%" }}>
               <Typography variant="h5" sx={{ fontWeight: "bold" }}>
                 Logi
               </Typography>
-              <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
+              <Box
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: 1,
+                  marginTop: "16px",
+                }}
+              >
                 {Array.from({ length: 8 }, (_, index) => {
                   const daysAgo = 7 - index;
                   const date = new Date();
@@ -298,6 +174,7 @@ function LogsPage() {
                     component="pre"
                     sx={{
                       whiteSpace: "pre-wrap",
+                      wordBreak: "break-word",
                       fontFamily: "Courier New, monospace",
                     }}
                   >
@@ -305,14 +182,6 @@ function LogsPage() {
                   </Typography>
                 )}
               </Box>
-            </Paper>
-          </div>
-          <div className="ml-3 w-1/4">
-            <Paper elevation={3} sx={{ padding: 3, width: "100%" }}>
-              <Typography variant="h5" sx={{ fontWeight: "bold" }}>
-                Zalogowani użytkownicy
-              </Typography>
-              {/* Zalogowani użytkownicy TODO */}
             </Paper>
           </div>
         </div>

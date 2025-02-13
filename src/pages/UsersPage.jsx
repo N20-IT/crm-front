@@ -13,13 +13,15 @@ import AddUserPanel from "../components/AddUserPanel";
 import EditUserPanel from "../components/EditUserPanel";
 import UsersTable from "../components/UsersTable";
 import columnsUsersConfig from "../config/columnsUsersConfig";
+
 function UsersPage() {
   const navigate = useNavigate();
   const token = useReadCookie();
-  const [selected, setSelected] = useState([]);
   const [openDialog, setOpenDialog] = useState(false);
   const isAuthenticated = useAuth();
-  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [rowsPerPage, setRowsPerPage] = useState(100);
+  const [orderBy, setOrderBy] = useState("imie");
+  const [order, setOrder] = useState("desc");
   const [page, setPage] = useState(0);
   const [alertMessage, setAlertMessage] = useState("");
   const [alertSeverity, setAlertSeverity] = useState("");
@@ -33,49 +35,58 @@ function UsersPage() {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  const fetchData = useCallback(async () => {
-    setLoading(true);
-    try {
-      const response = await axios.get(`${backendServer}/users`, {
-        headers: {
-          accept: "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      const usersList = response.data;
-      const mappedUsersList = usersList.map((user) => ({
-        ...user,
-        role:
-          user.role === "admin"
-            ? "Administrator"
-            : user.role === "user"
-            ? "Użytkownik"
-            : user.role,
-      }));
+  const [quantityUsers, setQuantityUsers] = useState(0);
 
-      setUsers(mappedUsersList);
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setLoading(false);
-    }
-  }, [backendServer, token]);
+  const fetchData = useCallback(
+    async (
+      currentPage = page,
+      rowsPerValue = rowsPerPage,
+      sortBy = orderBy,
+      sort = order
+    ) => {
+      setLoading(true);
+      try {
+        const response = await axios.get(`${backendServer}/users`, {
+          headers: {
+            accept: "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          params: {
+            page: currentPage,
+            limit: rowsPerValue,
+            sortBy,
+            sort,
+          },
+        });
+        const usersList = response.data["users"];
+        const mappedUsersList = usersList.map((user) => ({
+          ...user,
+          role:
+            user.role === "admin"
+              ? "Administrator"
+              : user.role === "user"
+              ? "Użytkownik"
+              : user.role,
+        }));
+
+        setUsers(mappedUsersList);
+        setQuantityUsers(response.data["total"]);
+      } catch (error) {
+        console.log(error);
+      } finally {
+        setLoading(false);
+      }
+    },
+    [backendServer, token]
+  );
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
+    fetchData(newPage, rowsPerPage, orderBy, order);
   };
   const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
-  };
-  const handleSelectAll = () => {
-    if (selected.length === users.length) setSelected([]);
-    else setSelected(users.map((user) => user.Email));
-  };
-
-  const handleSelect = (id) => {
-    if (selected.includes(id))
-      setSelected(selected.filter((itemId) => itemId !== id));
-    else setSelected([...selected, id]);
+    fetchData(0, parseInt(event.target.value, 10), orderBy, order);
   };
 
   const handleOpenCloseDialog = () => setOpenDialog(!openDialog);
@@ -154,7 +165,6 @@ function UsersPage() {
       setAlertMessage("Pomyślnie usunięto użytkownika");
       setAlertSeverity("success");
       await fetchData();
-      setSelected([]);
     } catch (error) {
       setAlertOpen(true);
       setAlertMessage("Błąd podczas usuwania ofert: " + error.message);
@@ -208,45 +218,46 @@ function UsersPage() {
     };
   };
 
+  const handleSort = (sortBy, sort) => {
+    setPage(0);
+    if (sortBy !== orderBy) setOrderBy(sortBy);
+    if (sort !== order) setOrder(sort);
+    fetchData(0, rowsPerPage, sortBy, sort);
+  };
+
   useEffect(() => {
     if (!isAuthenticated || userRole !== "admin") navigate("/");
     fetchData();
   }, [isAuthenticated, userRole, navigate, fetchData]);
 
   return (
-    <div className=" flex items-start justify-start h-screen ml-48 flex-col">
+    <div className="flex items-start justify-start h-screen ml-16 flex-col">
       <Sidebar />
-      <h1 className=" font-bold text-5xl font-poppins ml-6 mt-6 mb-4">
-        Użytkownicy
-      </h1>
       <div className="flex justify-center w-full">
-        <TableControlsUsers
-          selectedCount={selected.length}
-          onAddUserClick={handleAddUserClick}
-        />
+        <TableControlsUsers onAddUserClick={handleAddUserClick} />
       </div>
       <TableContainer
+        className="ml-5"
         component={Paper}
         elevation={8}
         style={{
-          width: "100%",
+          width: "99.4%",
           alignSelf: "center",
           borderBottomLeftRadius: "8px",
           borderBottomRightRadius: "8px",
-          maxHeight: "74.765%",
+          maxHeight: "88vh",
+          marginLeft: "10px",
         }}
       >
         <UsersTable
           users={users}
-          selected={selected}
           loading={loading}
-          onSelect={handleSelect}
-          onSelectAll={handleSelectAll}
           onDeleteClick={handleDeleteUserClick}
           onEditClick={handleEditUserClick}
           columns={columnsUsersConfig}
           rowsPerPage={rowsPerPage}
           page={page}
+          onSortApply={handleSort}
         />
       </TableContainer>
 
@@ -279,7 +290,7 @@ function UsersPage() {
       )}
       <TablePagination
         component="div"
-        count={users.length}
+        count={quantityUsers}
         page={page}
         onPageChange={handleChangePage}
         rowsPerPage={rowsPerPage}

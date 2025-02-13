@@ -29,7 +29,7 @@ function LoginPage() {
   const login = useLogin();
 
   useEffect(() => {
-    if (isAuthenticated) navigate("/homepage");
+    if (isAuthenticated) navigate("/oferty");
   }, [isAuthenticated, navigate]);
 
   const LambdaConnection = (email, attribute, apiUrl) => {
