@@ -55,8 +55,6 @@ function AddClientPanel({ onSave, onCancel, allUsers }) {
       validationErrors.lokalizacja = "Lokalizacja jest wymagana.";
     if (!formData.daneKlienta)
       validationErrors.daneKlienta = "Dane klienta są wymagane.";
-    if (!formData.komentarz)
-      validationErrors.komentarz = "Komentarz jest wymagany.";
 
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
