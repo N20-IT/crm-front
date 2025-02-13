@@ -354,7 +354,7 @@ function ClientsTable({
                     sx={{
                       color:
                         clientStandardConfig.find(
-                          (standard) => standard.value == row.standard
+                          (standard) => standard.value === row.standard
                         )?.color || "black",
                     }}
                   >

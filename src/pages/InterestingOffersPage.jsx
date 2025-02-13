@@ -67,6 +67,7 @@ function InterestingOffersPage() {
   const [isSidebarCollapsedDelayed, setIsSidebarCollapsedDelayed] = useState(
     isCollapsed
   );
+  const [clients, setClients] = useState([]);
 
   const columns = useMemo(() => columnsOffersConfig, []);
 
@@ -78,7 +79,7 @@ function InterestingOffersPage() {
           Authorization: `Bearer ${token}`,
         },
       });
-      const usersList = response.data;
+      const usersList = response.data["users"];
       const agents = usersList.map((user) => user.imie + " " + user.nazwisko);
       if (userRole === "admin") setUsers(agents);
       else {
@@ -98,7 +99,8 @@ function InterestingOffersPage() {
       currentPage = page,
       rowsPerValue = itemsPerPage,
       sortBy = orderBy,
-      sort = order
+      sort = order,
+      clientId
     ) => {
       setLoading(true);
       try {
@@ -114,6 +116,7 @@ function InterestingOffersPage() {
             limit: rowsPerValue,
             sortBy,
             sort,
+            clientId,
             ...currentFilters,
             czyCiekawa: true,
           },
@@ -140,6 +143,20 @@ function InterestingOffersPage() {
     },
     [backendServer, token, readConfig]
   );
+
+  const fetchClients = useCallback(async () => {
+    try {
+      const response = await axios.get(`${backendServer}/clients?min=true`, {
+        headers: {
+          accept: "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      setClients(response.data["klienci"]);
+    } catch (error) {
+      console.log("Błąd podczas pobierania klientów: " + error.message);
+    }
+  });
 
   const handleSaveOffer = async (offerData) => {
     try {
@@ -388,6 +405,7 @@ function InterestingOffersPage() {
   useEffect(() => {
     if (!isAuthenticated) navigate("/");
     fetchAgents();
+    fetchClients();
     fetchData(searchQuery);
 
     if (isCollapsed) {
@@ -422,6 +440,7 @@ function InterestingOffersPage() {
             onSearchChange={handleSearchAndFilter}
             onFilterApply={handleSearchAndFilter}
             allUsers={allUsers.length !== 0 ? allUsers : users}
+            clients={clients}
           />
         </div>
         <OffersTable
