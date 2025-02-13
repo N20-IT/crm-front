@@ -14,7 +14,6 @@ import {
 import axios from "axios";
 import serverConfig from "../servers.json";
 import Alerts from "../components/Alerts";
-import { useSelector } from "react-redux";
 
 function LogsPage() {
   const navigate = useNavigate();
@@ -28,20 +27,10 @@ function LogsPage() {
   const [alertSeverity, setAlertSeverity] = useState("");
   const backendServer = serverConfig["backend-server"];
   const [deletedOffers, setDeletedOffers] = useState([]);
-  const isCollapsed = useSelector((state) => state.sidebar.isCollapsed);
-  const [isSidebarCollapsedDelayed, setIsSidebarCollapsedDelayed] = useState(
-    isCollapsed
-  );
 
   useEffect(() => {
     if (!isAuthenticated || userRole !== "admin") navigate("/");
-    if (isCollapsed) {
-      const timer = setTimeout(() => setIsSidebarCollapsedDelayed(true), 300);
-      return () => clearTimeout(timer);
-    } else {
-      setIsSidebarCollapsedDelayed(false);
-    }
-  }, [isAuthenticated, userRole, navigate, isCollapsed]);
+  }, [isAuthenticated, userRole, navigate]);
 
   const fetchLogs = useCallback(
     async (filename) => {
@@ -97,11 +86,7 @@ function LogsPage() {
   };
 
   return (
-    <div
-      className={`flex items-start justify-start h-screen ${
-        isSidebarCollapsedDelayed ? "ml-16" : "ml-48"
-      } flex-col`}
-    >
+    <div className="flex items-start justify-start h-screen ml-16 flex-col">
       <Sidebar />
       <Box
         sx={{

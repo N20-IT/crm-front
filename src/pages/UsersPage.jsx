@@ -13,7 +13,6 @@ import AddUserPanel from "../components/AddUserPanel";
 import EditUserPanel from "../components/EditUserPanel";
 import UsersTable from "../components/UsersTable";
 import columnsUsersConfig from "../config/columnsUsersConfig";
-import { useSelector } from "react-redux";
 
 function UsersPage() {
   const navigate = useNavigate();
@@ -35,10 +34,7 @@ function UsersPage() {
   const backendServer = serverConfig["backend-server"];
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(false);
-  const isCollapsed = useSelector((state) => state.sidebar.isCollapsed);
-  const [isSidebarCollapsedDelayed, setIsSidebarCollapsedDelayed] = useState(
-    isCollapsed
-  );
+
   const [quantityUsers, setQuantityUsers] = useState(0);
 
   const fetchData = useCallback(
@@ -232,21 +228,10 @@ function UsersPage() {
   useEffect(() => {
     if (!isAuthenticated || userRole !== "admin") navigate("/");
     fetchData();
-
-    if (isCollapsed) {
-      const timer = setTimeout(() => setIsSidebarCollapsedDelayed(true), 300);
-      return () => clearTimeout(timer);
-    } else {
-      setIsSidebarCollapsedDelayed(false);
-    }
-  }, [isAuthenticated, userRole, navigate, fetchData, isCollapsed]);
+  }, [isAuthenticated, userRole, navigate, fetchData]);
 
   return (
-    <div
-      className={`flex items-start justify-start h-screen ${
-        isSidebarCollapsedDelayed ? "ml-16" : "ml-48"
-      } flex-col`}
-    >
+    <div className="flex items-start justify-start h-screen ml-16 flex-col">
       <Sidebar />
       <div className="flex justify-center w-full">
         <TableControlsUsers onAddUserClick={handleAddUserClick} />

@@ -2,10 +2,8 @@ import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth, useReadCookie } from "../utils/auth";
 import Sidebar from "../components/Sidebar";
-import { useSelector } from "react-redux";
 import ClientsTable from "../components/ClientsTable";
 import columnsClientsConfig from "../config/columnsClientsConfig";
-import { useReadConfig } from "../config/columnConfig";
 import serverConfig from "../servers.json";
 import axios from "axios";
 import Alerts from "../components/Alerts";
@@ -25,10 +23,6 @@ function ClientsPage() {
   const [alertOpen, setAlertOpen] = useState(false);
   const token = useReadCookie();
   const [quantityClients, setQuantityClients] = useState(0);
-  const isCollapsed = useSelector((state) => state.sidebar.isCollapsed);
-  const [isSidebarCollapsedDelayed, setIsSidebarCollapsedDelayed] = useState(
-    isCollapsed
-  );
   const columns = useMemo(() => columnsClientsConfig, []);
   const backendServer = serverConfig["backend-server"];
   const [page, setPage] = useState(0);
@@ -212,19 +206,9 @@ function ClientsPage() {
     if (!isAuthenticated) navigate("/");
     fetchAgents();
     fetchData();
-    if (isCollapsed) {
-      const timer = setTimeout(() => setIsSidebarCollapsedDelayed(true), 300);
-      return () => clearTimeout(timer);
-    } else {
-      setIsSidebarCollapsedDelayed(false);
-    }
-  }, [isAuthenticated, navigate, isCollapsed, fetchAgents]);
+  }, [isAuthenticated, navigate, fetchAgents]);
   return (
-    <div
-      className={`flex items-start justify-start h-screen ${
-        isSidebarCollapsedDelayed ? "ml-16" : "ml-48"
-      } flex-col`}
-    >
+    <div className="flex items-start justify-start h-screen ml-16 flex-col">
       <Sidebar />
       <div className="flex justify-center w-full">
         <ClientTableControls onAddClientClick={handleAddClientClick} />

@@ -15,7 +15,6 @@ import { useReadConfig } from "../config/columnConfig";
 import OffersTable from "../components/OffersTable";
 import OfferDetailsPage from "./OfferDetailsPage";
 import columnsOffersConfig from "../config/columnsOffersConfig";
-import { useSelector } from "react-redux";
 
 function InterestingOffersPage() {
   const navigate = useNavigate();
@@ -63,10 +62,6 @@ function InterestingOffersPage() {
   const [quantityOffers, setQuantityOffers] = useState(0);
   const [orderBy, setOrderBy] = useState("dataUtworzenia");
   const [order, setOrder] = useState("desc");
-  const isCollapsed = useSelector((state) => state.sidebar.isCollapsed);
-  const [isSidebarCollapsedDelayed, setIsSidebarCollapsedDelayed] = useState(
-    isCollapsed
-  );
   const [clients, setClients] = useState([]);
 
   const columns = useMemo(() => columnsOffersConfig, []);
@@ -407,13 +402,6 @@ function InterestingOffersPage() {
     fetchAgents();
     fetchClients();
     fetchData(searchQuery);
-
-    if (isCollapsed) {
-      const timer = setTimeout(() => setIsSidebarCollapsedDelayed(true), 300);
-      return () => clearTimeout(timer);
-    } else {
-      setIsSidebarCollapsedDelayed(false);
-    }
   }, [
     isAuthenticated,
     navigate,
@@ -421,16 +409,11 @@ function InterestingOffersPage() {
     fetchAgents,
     userInformation,
     userRole,
-    isCollapsed,
   ]);
 
   return (
     <div>
-      <div
-        className={`flex items-start justify-start h-screen ${
-          isSidebarCollapsedDelayed ? "ml-16" : "ml-48"
-        } flex-col`}
-      >
+      <div className="flex items-start justify-start h-screen ml-16 flex-col">
         <Sidebar />
         <div className="flex justify-center w-full">
           <TableControls
