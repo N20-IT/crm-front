@@ -27,8 +27,8 @@ export const useColumnConfig = () => {
   const [, setCookie] = useCookies(["columnConfig"]);
   const setConfig = () => {
     cookiesEnabled()
-      ? setCookie("columnConfig", "0", { path: "/", maxAge: 60 * 60 * 12 })
-      : saveTokenInSessionStorage("0");
+      ? setCookie("columnConfig", "1", { path: "/", maxAge: 60 * 60 * 12 })
+      : saveTokenInSessionStorage("1");
   };
   return setConfig;
 };
