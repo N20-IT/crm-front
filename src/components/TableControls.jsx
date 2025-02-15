@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   MenuItem,
   Button,
@@ -27,6 +27,10 @@ import CustomTextField from "./CustomTextField";
 import { useChangeColumnConfig, useReadConfig } from "../config/columnConfig";
 import dzielniceData from "../dzielnice_poddzielnice.json";
 import statusesConfig from "../config/statusesConfig";
+import {
+  useReadFiltersConfig,
+  useChangeFiltersConfig,
+} from "../config/filtersCookiesConfig";
 
 function TableControls({
   selectedCount,
@@ -37,27 +41,7 @@ function TableControls({
   allUsers,
   clients,
 }) {
-  const [filters, setFilters] = useState({
-    ulica: "",
-    dzielnica: [],
-    poddzielnica: [],
-    miasto: "",
-    typInwestycji: "",
-    rynek: "",
-    minIloscPokoi: "",
-    maxIloscPokoi: "",
-    minMetraz: "",
-    maxMetraz: "",
-    minPrice: "",
-    maxPrice: "",
-    agent: "",
-    statusOferty: "",
-    dataKontaktuOd: "",
-    dataKontaktuDo: "",
-    dataNastepnegoKontaktuOd: "",
-    dataNastepnegoKontaktuDo: "",
-    clientId: "",
-  });
+  const [filters, setFilters] = useState(useReadFiltersConfig());
 
   const [searchValue, setSearchValue] = useState("");
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -88,6 +72,7 @@ function TableControls({
   });
   const open = Boolean(anchorEl);
   const changeColumnConfig = useChangeColumnConfig();
+  const changeFilterConfig = useChangeFiltersConfig();
   const readConfig = useReadConfig();
   const [columnConfig, setColumnConfig] = useState(readConfig);
 
@@ -270,6 +255,7 @@ function TableControls({
       !dateError.contactDate &&
       !dateError.followUpDate
     ) {
+      changeFilterConfig(filters);
       onFilterApply(searchValue, filters, columnConfig);
       toggleFilterPanel();
     }
@@ -301,6 +287,7 @@ function TableControls({
       contactDate: false,
       followUpDate: false,
     });
+    changeFilterConfig({});
     onFilterApply("", {}, readConfig);
     toggleFilterPanel();
   };
@@ -312,6 +299,16 @@ function TableControls({
       onFilterApply(searchValue, filters, newValue);
     }
   };
+
+  const isAnyFilterFilled = (filters) => {
+    return Object.values(filters).some((value) => {
+      if (Array.isArray(value)) {
+        return value.length > 0;
+      }
+      return value !== "";
+    });
+  };
+
   return (
     <ThemeProvider theme={customTooltip}>
       <Box
@@ -371,9 +368,9 @@ function TableControls({
           <Button
             variant="outlined"
             sx={{
-              color: "#6D727F",
+              color: isAnyFilterFilled(filters) ? "#009900" : "#6D727F",
               fontFamily: "Poppins",
-              borderColor: "black",
+              borderColor: isAnyFilterFilled(filters) ? "#009900" : "black",
               width: "180px",
               height: "40px",
               fontSize: "18px",

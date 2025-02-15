@@ -22,6 +22,7 @@ import ClientAction from "./ClientAction";
 import clientStatuesConfig from "../config/clientStatuesConfig";
 import clientStandardConfig from "../config/clientStandardConfig";
 import { useNavigate } from "react-router-dom";
+import { useChangeFiltersConfig } from "../config/filtersCookiesConfig";
 
 function ClientsTable({
   rows,
@@ -39,6 +40,7 @@ function ClientsTable({
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(100);
   const navigate = useNavigate();
+  const changeFiltersConfig = useChangeFiltersConfig();
 
   const handleSelect = (id) => {
     if (selected.includes(id))
@@ -111,7 +113,30 @@ function ClientsTable({
   };
 
   const handleMatchClient = (clientId) => {
-    navigate("/oferty", { state: { clientFilter: clientId } });
+    const clientFilter = {
+      ulica: "",
+      dzielnica: [],
+      poddzielnica: [],
+      miasto: "",
+      typInwestycji: "",
+      rynek: "",
+      minIloscPokoi: "",
+      maxIloscPokoi: "",
+      minMetraz: "",
+      maxMetraz: "",
+      minPrice: "",
+      maxPrice: "",
+      agent: "",
+      statusOferty: "",
+      dataKontaktuOd: "",
+      dataKontaktuDo: "",
+      dataNastepnegoKontaktuOd: "",
+      dataNastepnegoKontaktuDo: "",
+      clientId: clientId,
+    };
+    console.log(clientFilter);
+    changeFiltersConfig(clientFilter);
+    navigate("/oferty");
   };
 
   return (
