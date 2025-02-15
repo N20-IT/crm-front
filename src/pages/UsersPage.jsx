@@ -227,7 +227,7 @@ function UsersPage() {
 
   useEffect(() => {
     if (!isAuthenticated || userRole !== "admin") navigate("/");
-    fetchData();
+    else fetchData();
   }, [isAuthenticated, userRole, navigate, fetchData]);
 
   return (

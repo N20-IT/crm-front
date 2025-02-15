@@ -71,8 +71,7 @@ function AddOfferPanel({ onSave, onCancel, users }) {
           telefonWlasciciela: phoneNumber,
         },
       });
-
-      if (response.data.length > 0) {
+      if (response.data["listings"].length > 0) {
         setPhoneExistsInfo("Oferta z tym numerem telefonu już istnieje.");
       } else {
         setPhoneExistsInfo("");

@@ -27,6 +27,10 @@ import CustomTextField from "./CustomTextField";
 import { useChangeColumnConfig, useReadConfig } from "../config/columnConfig";
 import dzielniceData from "../dzielnice_poddzielnice.json";
 import statusesConfig from "../config/statusesConfig";
+import {
+  useReadFiltersConfig,
+  useChangeFiltersConfig,
+} from "../config/filtersCookiesConfig";
 
 function TableControls({
   selectedCount,
@@ -37,27 +41,7 @@ function TableControls({
   allUsers,
   clients,
 }) {
-  const [filters, setFilters] = useState({
-    ulica: "",
-    dzielnica: [],
-    poddzielnica: [],
-    miasto: "",
-    typInwestycji: "",
-    rynek: "",
-    minIloscPokoi: "",
-    maxIloscPokoi: "",
-    minMetraz: "",
-    maxMetraz: "",
-    minPrice: "",
-    maxPrice: "",
-    agent: "",
-    statusOferty: "",
-    dataKontaktuOd: "",
-    dataKontaktuDo: "",
-    dataNastepnegoKontaktuOd: "",
-    dataNastepnegoKontaktuDo: "",
-    clientId: "",
-  });
+  const [filters, setFilters] = useState(useReadFiltersConfig());
 
   const [searchValue, setSearchValue] = useState("");
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -88,6 +72,7 @@ function TableControls({
   });
   const open = Boolean(anchorEl);
   const changeColumnConfig = useChangeColumnConfig();
+  const changeFilterConfig = useChangeFiltersConfig();
   const readConfig = useReadConfig();
   const [columnConfig, setColumnConfig] = useState(readConfig);
 
@@ -247,7 +232,7 @@ function TableControls({
   };
 
   const subdistricts =
-    filters.dzielnica.length > 0
+    filters?.dzielnica.length > 0
       ? [
           ...new Set(
             filters.dzielnica.flatMap(
@@ -270,6 +255,7 @@ function TableControls({
       !dateError.contactDate &&
       !dateError.followUpDate
     ) {
+      changeFilterConfig(filters);
       onFilterApply(searchValue, filters, columnConfig);
       toggleFilterPanel();
     }
@@ -301,6 +287,7 @@ function TableControls({
       contactDate: false,
       followUpDate: false,
     });
+    changeFilterConfig({});
     onFilterApply("", {}, readConfig);
     toggleFilterPanel();
   };
@@ -312,6 +299,20 @@ function TableControls({
       onFilterApply(searchValue, filters, newValue);
     }
   };
+
+  const isAnyFilterFilled = (filters) => {
+    if (!filters || typeof filters !== "object") {
+      return false;
+    }
+
+    return Object.values(filters).some((value) => {
+      if (Array.isArray(value)) {
+        return value.length > 0;
+      }
+      return value !== "";
+    });
+  };
+
   return (
     <ThemeProvider theme={customTooltip}>
       <Box
@@ -371,9 +372,9 @@ function TableControls({
           <Button
             variant="outlined"
             sx={{
-              color: "#6D727F",
+              color: isAnyFilterFilled(filters) ? "#009900" : "#6D727F",
               fontFamily: "Poppins",
-              borderColor: "black",
+              borderColor: isAnyFilterFilled(filters) ? "#009900" : "black",
               width: "180px",
               height: "40px",
               fontSize: "18px",
@@ -474,7 +475,7 @@ function TableControls({
           </Typography>
           <CustomTextField
             label="Ulica"
-            value={filters.ulica}
+            value={filters?.ulica}
             onChange={(e) => updateFilters("ulica", e.target.value)}
             fullWidth
             sx={{ marginTop: "12px" }}
@@ -523,7 +524,7 @@ function TableControls({
             <InputLabel id="district-label">Dzielnica</InputLabel>
             <Select
               labelId="district-label"
-              value={filters.dzielnica}
+              value={filters?.dzielnica}
               onChange={handleDzielnicaChange}
               multiple
               id="demo-multiple-checkbox"
@@ -551,7 +552,7 @@ function TableControls({
                     "& .Mui-checked": { color: "#FC8721" },
                   }}
                 >
-                  <Checkbox checked={filters.dzielnica.includes(district)} />
+                  <Checkbox checked={filters?.dzielnica.includes(district)} />
                   <ListItemText primary={district} />
                 </MenuItem>
               ))}
@@ -601,7 +602,7 @@ function TableControls({
             <InputLabel id="district-label">Poddzielnica</InputLabel>
             <Select
               labelId="district-label"
-              value={filters.poddzielnica}
+              value={filters?.poddzielnica}
               onChange={handlePoddzielnicaChange}
               multiple
               id="demo-multiple-checkbox"
@@ -641,7 +642,7 @@ function TableControls({
           </FormControl>
           <CustomTextField
             label="Miasto/Wieś"
-            value={filters.miasto}
+            value={filters?.miasto}
             onChange={(e) => updateFilters("miasto", e.target.value)}
             fullWidth
             sx={{ marginTop: "12px" }}
@@ -690,7 +691,7 @@ function TableControls({
             >
               <InputLabel>Typ inwestycji</InputLabel>
               <Select
-                value={filters.typInwestycji}
+                value={filters?.typInwestycji}
                 onChange={(e) => updateFilters("typInwestycji", e.target.value)}
                 label="Typ inwestycji"
               >
@@ -753,7 +754,7 @@ function TableControls({
             >
               <InputLabel>Rynek</InputLabel>
               <Select
-                value={filters.rynek}
+                value={filters?.rynek}
                 onChange={(e) => updateFilters("rynek", e.target.value)}
                 label="Rynek"
               >
@@ -775,7 +776,7 @@ function TableControls({
           <div className="flex justify-end space-x-4 mt-3">
             <CustomTextField
               label="Min ilość pokoi"
-              value={filters.minIloscPokoi}
+              value={filters?.minIloscPokoi}
               onChange={(e) => updateFilters("minIloscPokoi", e.target.value)}
               onBlur={handleMinIloscPokoiBlur}
               fullWidth
@@ -787,7 +788,7 @@ function TableControls({
             />
             <CustomTextField
               label="Max ilość pokoi"
-              value={filters.maxIloscPokoi}
+              value={filters?.maxIloscPokoi}
               onChange={(e) => updateFilters("maxIloscPokoi", e.target.value)}
               onBlur={handleMaxIloscPokoiBlur}
               fullWidth
@@ -801,7 +802,7 @@ function TableControls({
           <div className="flex justify-end space-x-4 mt-3">
             <CustomTextField
               label="Min metraż"
-              value={filters.minMetraz}
+              value={filters?.minMetraz}
               onChange={(e) => updateFilters("minMetraz", e.target.value)}
               onBlur={handleMinMetrazBlur}
               fullWidth
@@ -813,7 +814,7 @@ function TableControls({
             />
             <CustomTextField
               label="Max metraż"
-              value={filters.maxMetraz}
+              value={filters?.maxMetraz}
               onChange={(e) => updateFilters("maxMetraz", e.target.value)}
               onBlur={handleMaxMetrazBlur}
               fullWidth
@@ -827,7 +828,7 @@ function TableControls({
           <div className="flex justify-end space-x-4 mt-3">
             <CustomTextField
               label="Min cena"
-              value={filters.minPrice}
+              value={filters?.minPrice}
               onChange={(e) => updateFilters("minPrice", e.target.value)}
               onBlur={handleMinPriceBlur}
               fullWidth
@@ -839,7 +840,7 @@ function TableControls({
             />
             <CustomTextField
               label="Max cena"
-              value={filters.maxPrice}
+              value={filters?.maxPrice}
               onChange={(e) => updateFilters("maxPrice", e.target.value)}
               onBlur={handleMaxPriceBlur}
               fullWidth
@@ -853,7 +854,7 @@ function TableControls({
           <div className="flex justify-end space-x-4 mt-3">
             <CustomTextField
               label="Min zł/m2"
-              value={filters.minZlM2}
+              value={filters?.minZlM2}
               onChange={(e) => updateFilters("minZlM2", e.target.value)}
               onBlur={handleMinZlM2Blur}
               fullWidth
@@ -864,7 +865,7 @@ function TableControls({
             />
             <CustomTextField
               label="Max zł/m2"
-              value={filters.maxZlM2}
+              value={filters?.maxZlM2}
               onChange={(e) => updateFilters("maxZlM2", e.target.value)}
               onBlur={handleMaxZlM2Blur}
               fullWidth
@@ -932,7 +933,7 @@ function TableControls({
                     label="Agent"
                   />
                 }
-                value={filters.agent}
+                value={filters?.agent}
                 onChange={(e) => updateFilters("agent", e.target.value)}
                 fullWidth
               >
@@ -998,7 +999,7 @@ function TableControls({
             >
               <InputLabel>Status</InputLabel>
               <Select
-                value={filters.statusOferty}
+                value={filters?.statusOferty}
                 onChange={(e) => updateFilters("statusOferty", e.target.value)}
                 label="Status"
               >
@@ -1023,7 +1024,7 @@ function TableControls({
               label="Kontakt od"
               name="dataKontaktuOd"
               type="date"
-              value={filters.dataKontaktuOd}
+              value={filters?.dataKontaktuOd}
               onChange={(e) => updateFilters("dataKontaktuOd", e.target.value)}
               variant="outlined"
               fullWidth
@@ -1039,7 +1040,7 @@ function TableControls({
               label="Kontakt do"
               name="dataKontaktuDo"
               type="date"
-              value={filters.dataKontaktuDo}
+              value={filters?.dataKontaktuDo}
               onChange={(e) => updateFilters("dataKontaktuDo", e.target.value)}
               variant="outlined"
               fullWidth
@@ -1057,7 +1058,7 @@ function TableControls({
               label="Następny od"
               name="dataNastepnegoKontaktuOd"
               type="date"
-              value={filters.dataNastepnegoKontaktuOd}
+              value={filters?.dataNastepnegoKontaktuOd}
               onChange={(e) =>
                 updateFilters("dataNastepnegoKontaktuOd", e.target.value)
               }
@@ -1075,7 +1076,7 @@ function TableControls({
               label="Następny do"
               name="dataNastepnegoKontaktuDo"
               type="date"
-              value={filters.dataNastepnegoKontaktuDo}
+              value={filters?.dataNastepnegoKontaktuDo}
               onChange={(e) =>
                 updateFilters("dataNastepnegoKontaktuDo", e.target.value)
               }
@@ -1133,7 +1134,7 @@ function TableControls({
           >
             <InputLabel>Klient</InputLabel>
             <Select
-              value={filters.clientId}
+              value={filters?.clientId}
               onChange={(e) => updateFilters("clientId", e.target.value)}
               label="Typ inwestycji"
             >

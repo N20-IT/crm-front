@@ -70,7 +70,7 @@ function OfferDetailsPage({
 
   useEffect(() => {
     if (!isAuthenticated) navigate("/");
-    fetchDetailsData();
+    else fetchDetailsData();
   }, [isAuthenticated, navigate, fetchDetailsData]);
   return (
     <div className=" fixed inset-0 bg-light-grey bg-opacity-75 flex items-center justify-center z-50">

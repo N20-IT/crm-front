@@ -204,8 +204,10 @@ function ClientsPage() {
 
   useEffect(() => {
     if (!isAuthenticated) navigate("/");
-    fetchAgents();
-    fetchData();
+    else {
+      fetchAgents();
+      fetchData();
+    }
   }, [isAuthenticated, navigate, fetchAgents]);
   return (
     <div className="flex items-start justify-start h-screen ml-16 flex-col">

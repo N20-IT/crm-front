@@ -15,6 +15,7 @@ import { useReadConfig } from "../config/columnConfig";
 import OffersTable from "../components/OffersTable";
 import OfferDetailsPage from "./OfferDetailsPage";
 import columnsOffersConfig from "../config/columnsOffersConfig";
+import { useReadFiltersConfig } from "../config/filtersCookiesConfig";
 
 function OffersPage() {
   const navigate = useNavigate();
@@ -57,7 +58,7 @@ function OffersPage() {
   const [readConfig, setReadConfig] = useState(useReadConfig());
   const [page, setPage] = useState(0);
   const [itemsPerPage, setItemsPerPage] = useState(100);
-  const [filters, setFilters] = useState({});
+  const [filters, setFilters] = useState(useReadFiltersConfig());
   const [searchValue, setSearchValue] = useState("");
   const [quantityOffers, setQuantityOffers] = useState(0);
   const [orderBy, setOrderBy] = useState("dataUtworzenia");
@@ -396,9 +397,11 @@ function OffersPage() {
 
   useEffect(() => {
     if (!isAuthenticated) navigate("/");
-    fetchAgents();
-    fetchClients();
-    fetchData(searchQuery);
+    else {
+      fetchAgents();
+      fetchClients();
+      fetchData(searchQuery);
+    }
   }, [
     isAuthenticated,
     navigate,
