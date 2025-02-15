@@ -102,7 +102,6 @@ function OffersPage() {
       clientId = clientFilter
     ) => {
       setLoading(true);
-      console.log(clientId);
       try {
         const response = await axios.get(`${backendServer}/listings`, {
           headers: {
@@ -398,9 +397,11 @@ function OffersPage() {
 
   useEffect(() => {
     if (!isAuthenticated) navigate("/");
-    fetchAgents();
-    fetchClients();
-    fetchData(searchQuery);
+    else {
+      fetchAgents();
+      fetchClients();
+      fetchData(searchQuery);
+    }
   }, [
     isAuthenticated,
     navigate,
