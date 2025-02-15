@@ -399,9 +399,11 @@ function InterestingOffersPage() {
 
   useEffect(() => {
     if (!isAuthenticated) navigate("/");
-    fetchAgents();
-    fetchClients();
-    fetchData(searchQuery);
+    else {
+      fetchAgents();
+      fetchClients();
+      fetchData(searchQuery);
+    }
   }, [
     isAuthenticated,
     navigate,
