@@ -15,6 +15,8 @@ import { useReadConfig } from "../config/columnConfig";
 import OffersTable from "../components/OffersTable";
 import OfferDetailsPage from "./OfferDetailsPage";
 import columnsOffersConfig from "../config/columnsOffersConfig";
+import { useReadFiltersConfig } from "../config/filtersCookiesConfig";
+import LoadingCircularProgress from "../components/LoadingCircularProgress";
 
 function InterestingOffersPage() {
   const navigate = useNavigate();
@@ -57,7 +59,7 @@ function InterestingOffersPage() {
   const [readConfig, setReadConfig] = useState(useReadConfig());
   const [page, setPage] = useState(0);
   const [itemsPerPage, setItemsPerPage] = useState(100);
-  const [filters, setFilters] = useState({});
+  const [filters, setFilters] = useState(useReadFiltersConfig());
   const [searchValue, setSearchValue] = useState("");
   const [quantityOffers, setQuantityOffers] = useState(0);
   const [orderBy, setOrderBy] = useState("dataUtworzenia");
@@ -65,219 +67,6 @@ function InterestingOffersPage() {
   const [clients, setClients] = useState([]);
 
   const columns = useMemo(() => columnsOffersConfig, []);
-
-  const fetchAgents = useCallback(async () => {
-    try {
-      const response = await axios.get(`${backendServer}/users`, {
-        headers: {
-          accept: "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      const usersList = response.data["users"];
-      const agents = usersList.map((user) => user.imie + " " + user.nazwisko);
-      if (userRole === "admin") setUsers(agents);
-      else {
-        setUsers([userInformation]);
-        setAllUsers(agents);
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  }, [token, backendServer, userInformation, userRole]);
-
-  const fetchData = useCallback(
-    async (
-      searchQuery = searchValue,
-      currentFilters = filters,
-      columnConfig = readConfig,
-      currentPage = page,
-      rowsPerValue = itemsPerPage,
-      sortBy = orderBy,
-      sort = order,
-      clientId
-    ) => {
-      setLoading(true);
-      try {
-        const response = await axios.get(`${backendServer}/listings`, {
-          headers: {
-            accept: "application/json",
-            Authorization: `Bearer ${token}`,
-            columnConfig: columnConfig,
-          },
-          params: {
-            search: searchQuery,
-            page: currentPage,
-            limit: rowsPerValue,
-            sortBy,
-            sort,
-            clientId,
-            ...currentFilters,
-            czyCiekawa: true,
-          },
-          paramsSerializer: (params) => {
-            const serializedParams = {
-              ...params,
-              dzielnica: params.dzielnica
-                ? params.dzielnica.join(",")
-                : undefined,
-              poddzielnica: params.poddzielnica
-                ? params.poddzielnica.join(",")
-                : undefined,
-            };
-            return qs.stringify(serializedParams, { arrayFormat: "repeat" });
-          },
-        });
-        setRows(response.data["listings"]);
-        setQuantityOffers(response.data["total"]);
-      } catch (error) {
-        console.error("Błąd pobierania danych:", error);
-      } finally {
-        setLoading(false);
-      }
-    },
-    [backendServer, token, readConfig]
-  );
-
-  const fetchClients = useCallback(async () => {
-    try {
-      const response = await axios.get(`${backendServer}/clients?min=true`, {
-        headers: {
-          accept: "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      setClients(response.data["klienci"]);
-    } catch (error) {
-      console.log("Błąd podczas pobierania klientów: " + error.message);
-    }
-  });
-
-  const handleSaveOffer = async (offerData) => {
-    try {
-      const modifiedOfferData = {
-        ...offerData,
-        czyCiekawa: true,
-      };
-
-      await axios.post(`${backendServer}/listings`, modifiedOfferData, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      handleAddOfferClick();
-      await fetchData();
-      setAlertOpen(true);
-      setAlertMessage("Dodano ofertę pomyślnie");
-      setAlertSeverity("success");
-    } catch (error) {
-      setAlertOpen(true);
-      setAlertMessage(error.message);
-      setAlertSeverity("error");
-    }
-  };
-
-  const handleDeleteOffer = async (offerId) => {
-    try {
-      const response = await axios.delete(`${backendServer}/listings`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-        data: { ids: offerId },
-      });
-      setAlertOpen(true);
-      setAlertMessage(response.data.message);
-      setAlertSeverity("success");
-      if (isOfferDetailsPanelOpen)
-        setIsOfferDetailsPanelOpen(!isOfferDetailsPanelOpen);
-      await fetchData();
-      setSelected([]);
-    } catch (error) {
-      setAlertOpen(true);
-      setAlertMessage("Błąd podczas usuwania ofert: " + error.message);
-      setAlertSeverity("error");
-    }
-  };
-
-  const handleSaveEditedOffer = async (updatedOfferData) => {
-    try {
-      await axios.put(
-        `${backendServer}/listings/${updatedOfferData._id}`,
-        updatedOfferData,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      setAlertOpen(true);
-      setAlertMessage("Zaktualizowano pomyślnie");
-      setAlertSeverity("success");
-      setEditOfferPanelOpen(false);
-      if (isOfferDetailsPanelOpen)
-        setIsOfferDetailsPanelOpen(!isOfferDetailsPanelOpen);
-      await fetchData();
-    } catch (error) {
-      setAlertOpen(true);
-      setAlertMessage("Błąd podczas aktualizowania oferty: " + error.message);
-      setAlertSeverity("error");
-    }
-  };
-
-  const handleConfirmOfferAssignment = async () => {
-    try {
-      const updatedData = { agent: userInformation };
-      await axios.put(
-        `${backendServer}/listings/${offerIdToUpdateAgent}`,
-        updatedData,
-        {
-          headers: {
-            accept: "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      setAlertOpen(true);
-      setAlertMessage("Pomyślnie zaktualizowano ofertę");
-      setAlertSeverity("success");
-      setOpenDialogConfirmOfferAssignment(false);
-      if (isOfferDetailsPanelOpen)
-        setIsOfferDetailsPanelOpen(!isOfferDetailsPanelOpen);
-      await fetchData();
-    } catch (error) {
-      setAlertOpen(true);
-      setAlertMessage("Błąd podczas aktualizowania oferty: " + error.message);
-      setAlertSeverity("error");
-    }
-  };
-
-  const handleChangeOfferInterest = async () => {
-    const editedOffer = offerToChangeOfferInterest;
-    editedOffer.czyCiekawa = !editedOffer.czyCiekawa;
-    try {
-      await axios.put(
-        `${backendServer}/listings/${editedOffer._id}`,
-        editedOffer,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
-      setAlertOpen(true);
-      setAlertMessage("Pomyślnie zaktualizowano ofertę");
-      setAlertSeverity("success");
-      setOpenDialogChangeOfferInterest(false);
-      if (isOfferDetailsPanelOpen)
-        setIsOfferDetailsPanelOpen(!isOfferDetailsPanelOpen);
-      await fetchData();
-    } catch (error) {
-      setAlertOpen(true);
-      setAlertMessage("Błąd podczas aktualizowania oferty: " + error.message);
-      setAlertSeverity("error");
-    }
-  };
 
   const handleOpenOfferDetailsPanel = (offerId) => {
     setOfferDetailsId(offerId);
@@ -397,6 +186,243 @@ function InterestingOffersPage() {
     window.open(googleCalendarUrl, "_blank");
   };
 
+  const fetchAgents = useCallback(async () => {
+    try {
+      const response = await axios.get(`${backendServer}/users`, {
+        headers: {
+          accept: "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      const usersList = response.data["users"];
+      const agents = usersList.map((user) => user.imie + " " + user.nazwisko);
+      if (userRole === "admin") setUsers(agents);
+      else {
+        setUsers([userInformation]);
+        setAllUsers(agents);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }, [token, backendServer, userInformation, userRole]);
+
+  const fetchData = useCallback(
+    async (
+      searchQuery = searchValue,
+      currentFilters = filters,
+      columnConfig = readConfig,
+      currentPage = page,
+      rowsPerValue = itemsPerPage,
+      sortBy = orderBy,
+      sort = order,
+      clientId
+    ) => {
+      setLoading(true);
+      try {
+        const response = await axios.get(`${backendServer}/listings`, {
+          headers: {
+            accept: "application/json",
+            Authorization: `Bearer ${token}`,
+            columnConfig: columnConfig,
+          },
+          params: {
+            search: searchQuery,
+            page: currentPage,
+            limit: rowsPerValue,
+            sortBy,
+            sort,
+            clientId,
+            ...currentFilters,
+            czyCiekawa: true,
+          },
+          paramsSerializer: (params) => {
+            const serializedParams = {
+              ...params,
+              dzielnica: params.dzielnica
+                ? params.dzielnica.join(",")
+                : undefined,
+              poddzielnica: params.poddzielnica
+                ? params.poddzielnica.join(",")
+                : undefined,
+            };
+            return qs.stringify(serializedParams, { arrayFormat: "repeat" });
+          },
+        });
+        setRows(response.data["listings"]);
+        setQuantityOffers(response.data["total"]);
+      } catch (error) {
+        console.error("Błąd pobierania danych:", error);
+      } finally {
+        setLoading(false);
+      }
+    },
+    [backendServer, token, readConfig]
+  );
+
+  const fetchClients = useCallback(async () => {
+    try {
+      const response = await axios.get(`${backendServer}/clients?min=true`, {
+        headers: {
+          accept: "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      setClients(response.data["klienci"]);
+    } catch (error) {
+      console.log("Błąd podczas pobierania klientów: " + error.message);
+    }
+  });
+
+  const handleSaveOffer = useCallback(
+    async (offerData) => {
+      setLoading(true);
+      try {
+        const modifiedOfferData = {
+          ...offerData,
+          czyCiekawa: true,
+        };
+
+        await axios.post(`${backendServer}/listings`, modifiedOfferData, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        handleAddOfferClick();
+        await fetchData();
+        setAlertOpen(true);
+        setAlertMessage("Dodano ofertę pomyślnie");
+        setAlertSeverity("success");
+      } catch (error) {
+        setAlertOpen(true);
+        setAlertMessage(error.message);
+        setAlertSeverity("error");
+      } finally {
+        setLoading(false);
+      }
+    },
+    [backendServer, token, fetchData, handleAddOfferClick]
+  );
+
+  const handleDeleteOffer = useCallback(
+    async (offerId) => {
+      setLoading(true);
+      try {
+        const response = await axios.delete(`${backendServer}/listings`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          data: { ids: offerId },
+        });
+        setAlertOpen(true);
+        setAlertMessage(response.data.message);
+        setAlertSeverity("success");
+        if (isOfferDetailsPanelOpen)
+          setIsOfferDetailsPanelOpen(!isOfferDetailsPanelOpen);
+        await fetchData();
+        setSelected([]);
+      } catch (error) {
+        setAlertOpen(true);
+        setAlertMessage("Błąd podczas usuwania ofert: " + error.message);
+        setAlertSeverity("error");
+      } finally {
+        setLoading(false);
+      }
+    },
+    [backendServer, token, fetchData]
+  );
+
+  const handleSaveEditedOffer = useCallback(
+    async (updatedOfferData) => {
+      setLoading(true);
+      try {
+        await axios.put(
+          `${backendServer}/listings/${updatedOfferData._id}`,
+          updatedOfferData,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        setAlertOpen(true);
+        setAlertMessage("Zaktualizowano pomyślnie");
+        setAlertSeverity("success");
+        setEditOfferPanelOpen(false);
+        if (isOfferDetailsPanelOpen)
+          setIsOfferDetailsPanelOpen(!isOfferDetailsPanelOpen);
+        await fetchData();
+      } catch (error) {
+        setAlertOpen(true);
+        setAlertMessage("Błąd podczas aktualizowania oferty: " + error.message);
+        setAlertSeverity("error");
+      } finally {
+        setLoading(false);
+      }
+    },
+    [backendServer, token, fetchData]
+  );
+
+  const handleConfirmOfferAssignment = useCallback(async () => {
+    setLoading(true);
+    try {
+      const updatedData = { agent: userInformation };
+      await axios.put(
+        `${backendServer}/listings/${offerIdToUpdateAgent}`,
+        updatedData,
+        {
+          headers: {
+            accept: "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      setAlertOpen(true);
+      setAlertMessage("Pomyślnie zaktualizowano ofertę");
+      setAlertSeverity("success");
+      setOpenDialogConfirmOfferAssignment(false);
+      if (isOfferDetailsPanelOpen)
+        setIsOfferDetailsPanelOpen(!isOfferDetailsPanelOpen);
+      await fetchData();
+    } catch (error) {
+      setAlertOpen(true);
+      setAlertMessage("Błąd podczas aktualizowania oferty: " + error.message);
+      setAlertSeverity("error");
+    } finally {
+      setLoading(false);
+    }
+  }, [backendServer, token, fetchData]);
+
+  const handleChangeOfferInterest = useCallback(async () => {
+    setLoading(true);
+    const editedOffer = offerToChangeOfferInterest;
+    editedOffer.czyCiekawa = !editedOffer.czyCiekawa;
+    try {
+      await axios.put(
+        `${backendServer}/listings/${editedOffer._id}`,
+        editedOffer,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      setAlertOpen(true);
+      setAlertMessage("Pomyślnie zaktualizowano ofertę");
+      setAlertSeverity("success");
+      setOpenDialogChangeOfferInterest(false);
+      if (isOfferDetailsPanelOpen)
+        setIsOfferDetailsPanelOpen(!isOfferDetailsPanelOpen);
+      await fetchData();
+    } catch (error) {
+      setAlertOpen(true);
+      setAlertMessage("Błąd podczas aktualizowania oferty: " + error.message);
+      setAlertSeverity("error");
+    } finally {
+      setLoading(false);
+    }
+  }, [backendServer, token, fetchData]);
+
   useEffect(() => {
     if (!isAuthenticated) navigate("/");
     else {
@@ -417,6 +443,7 @@ function InterestingOffersPage() {
     <div>
       <div className="flex items-start justify-start h-screen ml-16 flex-col">
         <Sidebar />
+        {loading && <LoadingCircularProgress />}
         <div className="flex justify-center w-full">
           <TableControls
             selectedCount={selected.length}

@@ -17,12 +17,14 @@ function EditClientPanel({ initialData, onSave, onCancel, allUsers }) {
 
   const parsedInitialData = {
     ...initialData,
-    dataZapytania: formatDateForInput(initialData.dataZapytania),
-    ostatniKontakt: formatDateForInput(initialData.ostatniKontakt),
+    dataZapytania: formatDateForInput(initialData?.dataZapytania ?? ""),
+    ostatniKontakt: formatDateForInput(initialData?.ostatniKontakt ?? ""),
     dataNastepnegoKontaktu: formatDateForInput(
-      initialData.dataNastepnegoKontaktu
+      initialData?.dataNastepnegoKontaktu ?? ""
     ),
-    lokalizacja: initialData.lokalizacja.split(","),
+    lokalizacja: initialData?.lokalizacja
+      ? initialData.lokalizacja.split(",")
+      : [],
   };
   const [formData, setFormData] = useState(parsedInitialData);
   const [errors, setErrors] = useState({});
