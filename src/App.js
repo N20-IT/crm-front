@@ -22,7 +22,7 @@ function App() {
       <Route path="/logi" element={<LogsPage />} />
       <Route path="/uzytkownicy" element={<UsersPage />} />
       <Route path="/zapomniane-haslo" element={<ForgottenPasswordPage />} />
-      <Route path="/oferta/:id" element={<OfferDetailsPage />} />
+      <Route path="/oferty/:id" element={<OffersPage />} />
     </Routes>
   );
 }
