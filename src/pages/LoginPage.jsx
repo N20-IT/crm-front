@@ -16,6 +16,7 @@ import { Amplify } from "aws-amplify";
 import awsExports from "../aws-exports";
 import { useLogin, useAuth } from "../utils/auth";
 import { useNavigate } from "react-router-dom";
+import LoadingCircularProgress from "../components/LoadingCircularProgress";
 Amplify.configure(awsExports);
 
 function LoginPage() {
@@ -27,6 +28,7 @@ function LoginPage() {
   const navigate = useNavigate();
   const isAuthenticated = useAuth();
   const login = useLogin();
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (isAuthenticated) navigate("/oferty");
@@ -66,6 +68,7 @@ function LoginPage() {
   };
 
   const handleLogin = async (event) => {
+    setLoading(true);
     event.preventDefault();
     try {
       await signIn({
@@ -94,6 +97,8 @@ function LoginPage() {
     } catch (error) {
       setError(error.message || "An error occurred during sign in");
       setOpen(true);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -128,6 +133,7 @@ function LoginPage() {
       className=" h-screen flex justify-center items-center bg-white bg-cover bg-center font-poppins flex-col"
       style={{ backgroundImage: "url('/real-estate.jpg')" }}
     >
+      {loading && <LoadingCircularProgress />}
       <div className="absolute max-w-36 top-8 left-28">
         <img src="/n20logoCzarne.png" />
       </div>

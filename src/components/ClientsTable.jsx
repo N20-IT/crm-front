@@ -15,6 +15,7 @@ import {
   TableSortLabel,
   Tooltip,
   Typography,
+  Skeleton,
 } from "@mui/material";
 import CustomTableCell from "./CustomTableCell";
 import { FileCopy, OpenInNew } from "@mui/icons-material";
@@ -34,6 +35,7 @@ function ClientsTable({
   onSortApply,
   handleDeleteClientClick,
   handleEditClientClick,
+  loading,
 }) {
   const [order, setOrder] = useState("desc");
   const [orderBy, setOrderBy] = useState("dataZapytania");
@@ -237,6 +239,23 @@ function ClientsTable({
             </TableRow>
           </TableHead>
           <TableBody>
+            {loading
+              ? [...Array(rowsPerPage)].map((_, index) => (
+                  <TableRow key={index}>
+                    <TableCell key={"checkbox"}>
+                      <Skeleton variant="rounded" width="100%" height={16} />
+                    </TableCell>
+                    <TableCell key={"narzedzia"}>
+                      <Skeleton variant="rounded" width="100%" height={16} />
+                    </TableCell>
+                    {columns.map((column) => (
+                      <TableCell key={column.id}>
+                        <Skeleton variant="rounded" width="100%" height={16} />
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                ))
+              : true}
             {Array.isArray(rows) && rows.length > 0 ? (
               rows.map((row, index) => (
                 <TableRow

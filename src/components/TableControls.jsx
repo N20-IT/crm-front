@@ -42,7 +42,27 @@ function TableControls({
   clients,
 }) {
   const [filters, setFilters] = useState(useReadFiltersConfig());
-
+  const [cleanFilters] = useState({
+    ulica: "",
+    dzielnica: [],
+    poddzielnica: [],
+    miasto: "",
+    typInwestycji: "",
+    rynek: "",
+    minIloscPokoi: "",
+    maxIloscPokoi: "",
+    minMetraz: "",
+    maxMetraz: "",
+    minPrice: "",
+    maxPrice: "",
+    agent: "",
+    statusOferty: "",
+    dataKontaktuOd: "",
+    dataKontaktuDo: "",
+    dataNastepnegoKontaktuOd: "",
+    dataNastepnegoKontaktuDo: "",
+    clientId: "",
+  });
   const [searchValue, setSearchValue] = useState("");
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [isFilterPanelOpen, setIsFilterPanelOpen] = useState(false);
@@ -262,33 +282,13 @@ function TableControls({
   };
 
   const clearFilters = () => {
-    setFilters({
-      ulica: "",
-      dzielnica: [],
-      poddzielnica: [],
-      miasto: "",
-      typInwestycji: "",
-      rynek: "",
-      minIloscPokoi: "",
-      maxIloscPokoi: "",
-      minMetraz: "",
-      maxMetraz: "",
-      minPrice: "",
-      maxPrice: "",
-      agent: "",
-      statusOferty: "",
-      dataKontaktuOd: "",
-      dataKontaktuDo: "",
-      dataNastepnegoKontaktuOd: "",
-      dataNastepnegoKontaktuDo: "",
-      clientId: "",
-    });
+    setFilters(cleanFilters);
     setDateError({
       contactDate: false,
       followUpDate: false,
     });
-    changeFilterConfig({});
-    onFilterApply("", {}, readConfig);
+    changeFilterConfig(cleanFilters);
+    onFilterApply("", cleanFilters, readConfig);
     toggleFilterPanel();
   };
 

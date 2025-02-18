@@ -12,6 +12,7 @@ import ClientTableControls from "../components/ClientTableControls";
 import AddClientPanel from "../components/AddClientPanel";
 import { GetInformationFromToken } from "../utils/decodeToken";
 import EditClientPanel from "../components/EditClientPanel";
+import LoadingCircularProgress from "../components/LoadingCircularProgress";
 
 function ClientsPage() {
   const navigate = useNavigate();
@@ -42,101 +43,7 @@ function ClientsPage() {
     GetInformationFromToken("family_name");
   const userRole = GetInformationFromToken("custom:role");
   const [clientToEdit, setClientToEdit] = useState(null);
-
-  const fetchAgents = useCallback(async () => {
-    try {
-      const response = await axios.get(`${backendServer}/users`, {
-        headers: {
-          accept: "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      const usersList = response.data["users"];
-      const agents = usersList.map((user) => user.imie + " " + user.nazwisko);
-      if (userRole === "admin") setUsers(agents);
-      else {
-        setUsers([userInformation]);
-        setAllUsers(agents);
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  }, [token, backendServer, userInformation, userRole]);
-
-  const fetchData = useCallback(
-    async (
-      currentPage = page,
-      rowsPerValue = itemsPerPage,
-      sortBy = orderBy,
-      sort = order
-    ) => {
-      try {
-        const response = await axios.get(`${backendServer}/clients`, {
-          headers: {
-            accept: "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          params: {
-            page: currentPage,
-            limit: rowsPerValue,
-            sortBy,
-            sort,
-          },
-        });
-        setRows(response.data["klienci"]);
-        setQuantityClients(response.data["total"]);
-      } catch (error) {
-        console.log("Błąd podczas pobierania danych", error);
-      }
-    }
-  );
-
-  const handleDeleteClient = async (clientId) => {
-    try {
-      const response = await axios.delete(
-        `${backendServer}/clients/${clientId}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      setAlertOpen(true);
-      setAlertMessage("Pomyślnie usunięto klienta");
-      setAlertSeverity("success");
-      if (isClientPanelOpen) setIsClientPanelOpen(!isClientPanelOpen);
-      await fetchData();
-      setSelected([]);
-    } catch (error) {
-      setAlertOpen(true);
-      setAlertMessage("Błąd podczas usuwania ofert: " + error.message);
-      setAlertSeverity("error");
-    }
-  };
-
-  const handleEditClient = async (updatedClientDate) => {
-    try {
-      await axios.put(
-        `${backendServer}/clients/${updatedClientDate._id}`,
-        updatedClientDate,
-        {
-          headers: {
-            accept: "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      handleEditClientClick();
-      setAlertOpen(true);
-      setAlertMessage("Pomyślnie edytowano klienta");
-      setAlertSeverity("success");
-      await fetchData();
-    } catch (error) {
-      setAlertOpen(true);
-      setAlertMessage("Błąd podczas edytowania klienta: " + error.message);
-      setAlertSeverity("error");
-    }
-  };
+  const [loading, setLoading] = useState(true);
 
   const handleEditClientClickCancel = () => {
     setClientToEdit("");
@@ -177,30 +84,147 @@ function ClientsPage() {
     fetchData(currentPage, rowsPerValue, sortBy, sort);
   };
 
-  const handleSaveClient = async (clientData) => {
+  const handleAddClientClick = () => {
+    setIsAddClientPanelOpen(!isAddClientPanelOpen);
+  };
+
+  const fetchAgents = useCallback(async () => {
     try {
-      await axios.post(`${backendServer}/clients`, clientData, {
+      const response = await axios.get(`${backendServer}/users`, {
         headers: {
           accept: "application/json",
           Authorization: `Bearer ${token}`,
         },
       });
-      handleAddClientClick();
-      await fetchData();
-      setAlertOpen(true);
-      setAlertMessage("Dodano klienta pomyślnie");
-      setAlertSeverity("success");
+      const usersList = response.data["users"];
+      const agents = usersList.map((user) => user.imie + " " + user.nazwisko);
+      if (userRole === "admin") setUsers(agents);
+      else {
+        setUsers([userInformation]);
+        setAllUsers(agents);
+      }
     } catch (error) {
-      setAlertOpen(true);
-      setAlertMessage("Wystąpił błąd podczas dodawania klienta");
-      setAlertSeverity("error");
-      console.log(error.message);
+      console.log(error);
     }
-  };
+  }, [token, backendServer, userInformation, userRole]);
 
-  const handleAddClientClick = () => {
-    setIsAddClientPanelOpen(!isAddClientPanelOpen);
-  };
+  const fetchData = useCallback(
+    async (
+      currentPage = page,
+      rowsPerValue = itemsPerPage,
+      sortBy = orderBy,
+      sort = order
+    ) => {
+      setLoading(true);
+      try {
+        const response = await axios.get(`${backendServer}/clients`, {
+          headers: {
+            accept: "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          params: {
+            page: currentPage,
+            limit: rowsPerValue,
+            sortBy,
+            sort,
+          },
+        });
+        setRows(response.data["klienci"]);
+        setQuantityClients(response.data["total"]);
+      } catch (error) {
+        console.log("Błąd podczas pobierania danych", error);
+      } finally {
+        setLoading(false);
+      }
+    },
+    [backendServer, token]
+  );
+
+  const handleDeleteClient = useCallback(
+    async (clientId) => {
+      setLoading(true);
+      try {
+        const response = await axios.delete(
+          `${backendServer}/clients/${clientId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        setAlertOpen(true);
+        setAlertMessage("Pomyślnie usunięto klienta");
+        setAlertSeverity("success");
+        if (isClientPanelOpen) setIsClientPanelOpen(!isClientPanelOpen);
+        await fetchData();
+        setSelected([]);
+      } catch (error) {
+        setAlertOpen(true);
+        setAlertMessage("Błąd podczas usuwania ofert: " + error.message);
+        setAlertSeverity("error");
+      } finally {
+        setLoading(false);
+      }
+    },
+    [backendServer, token, fetchData]
+  );
+
+  const handleEditClient = useCallback(
+    async (updatedClientDate) => {
+      setLoading(true);
+      try {
+        await axios.put(
+          `${backendServer}/clients/${updatedClientDate._id}`,
+          updatedClientDate,
+          {
+            headers: {
+              accept: "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        handleEditClientClick();
+        setAlertOpen(true);
+        setAlertMessage("Pomyślnie edytowano klienta");
+        setAlertSeverity("success");
+        await fetchData();
+      } catch (error) {
+        setAlertOpen(true);
+        setAlertMessage("Błąd podczas edytowania klienta: " + error.message);
+        setAlertSeverity("error");
+      } finally {
+        setLoading(false);
+      }
+    },
+    [backendServer, token, fetchData, handleEditClientClick]
+  );
+
+  const handleSaveClient = useCallback(
+    async (clientData) => {
+      setLoading(true);
+      try {
+        await axios.post(`${backendServer}/clients`, clientData, {
+          headers: {
+            accept: "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        handleAddClientClick();
+        await fetchData();
+        setAlertOpen(true);
+        setAlertMessage("Dodano klienta pomyślnie");
+        setAlertSeverity("success");
+      } catch (error) {
+        setAlertOpen(true);
+        setAlertMessage("Wystąpił błąd podczas dodawania klienta");
+        setAlertSeverity("error");
+        console.log(error.message);
+      } finally {
+        setLoading(false);
+      }
+    },
+    [backendServer, token, fetchData, handleAddClientClick]
+  );
 
   useEffect(() => {
     if (!isAuthenticated) navigate("/");
@@ -212,6 +236,7 @@ function ClientsPage() {
   return (
     <div className="flex items-start justify-start h-screen ml-16 flex-col">
       <Sidebar />
+      {loading && <LoadingCircularProgress />}
       <div className="flex justify-center w-full">
         <ClientTableControls onAddClientClick={handleAddClientClick} />
       </div>
@@ -225,6 +250,7 @@ function ClientsPage() {
         onSortApply={handleSort}
         handleDeleteClientClick={handleDeleteClientClick}
         handleEditClientClick={handleEditClientClick}
+        loading={loading}
       />
       <Alerts
         message={alertMessage}

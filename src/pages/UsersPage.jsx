@@ -13,6 +13,7 @@ import AddUserPanel from "../components/AddUserPanel";
 import EditUserPanel from "../components/EditUserPanel";
 import UsersTable from "../components/UsersTable";
 import columnsUsersConfig from "../config/columnsUsersConfig";
+import LoadingCircularProgress from "../components/LoadingCircularProgress";
 
 function UsersPage() {
   const navigate = useNavigate();
@@ -110,6 +111,7 @@ function UsersPage() {
   };
 
   const handleEditUser = async (updatedUserData) => {
+    setLoading(true);
     try {
       await axios.put(
         `${backendServer}/users/${updatedUserData._id}`,
@@ -130,6 +132,8 @@ function UsersPage() {
       setAlertOpen(true);
       setAlertMessage("Błąd podczas edytowania użytkownika: " + error.message);
       setAlertSeverity("error");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -139,6 +143,7 @@ function UsersPage() {
   };
 
   const handleDeleteUser = async (user) => {
+    setLoading(true);
     try {
       await axios.delete(`${backendServer}/users/${user._id}`, {
         headers: {
@@ -169,10 +174,13 @@ function UsersPage() {
       setAlertOpen(true);
       setAlertMessage("Błąd podczas usuwania ofert: " + error.message);
       setAlertSeverity("error");
+    } finally {
+      setLoading(false);
     }
   };
 
   const handleSaveUser = async (userData) => {
+    setLoading(true);
     try {
       await axios.post(`${backendServer}/users`, userData, {
         headers: {
@@ -202,6 +210,8 @@ function UsersPage() {
       setAlertOpen(true);
       setAlertMessage(error.message);
       setAlertSeverity("error");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -233,6 +243,7 @@ function UsersPage() {
   return (
     <div className="flex items-start justify-start h-screen ml-16 flex-col">
       <Sidebar />
+      {loading && <LoadingCircularProgress />}
       <div className="flex justify-center w-full">
         <TableControlsUsers onAddUserClick={handleAddUserClick} />
       </div>
