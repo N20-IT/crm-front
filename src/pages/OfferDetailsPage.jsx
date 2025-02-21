@@ -105,38 +105,35 @@ function OfferDetailsPage({
         </Box>
         <Divider sx={{ marginBottom: "16px" }} />
         {loading ? (
-          <Grid2 container spacing={10} flexWrap={"nowrap"}>
-            <Grid2 xs={12} md={6}>
+          <Grid2>
+            <Grid2
+              sx={{ justifyContent: "center", alignItems: "center" }}
+              xs={12}
+              md={6}
+              container
+              spacing={2}
+            >
               <Skeleton
                 variant="rounded"
-                height={238}
+                height={150}
                 width={300}
                 animation="wave"
               />
-            </Grid2>
-
-            <Grid2 xs={12} md={6}>
               <Skeleton
                 variant="rounded"
-                height={238}
+                height={150}
                 width={300}
                 animation="wave"
               />
-            </Grid2>
-
-            <Grid2 xs={12} md={6}>
               <Skeleton
                 variant="rounded"
-                height={238}
+                height={150}
                 width={300}
                 animation="wave"
               />
-            </Grid2>
-
-            <Grid2 xs={12} md={6}>
               <Skeleton
                 variant="rounded"
-                height={238}
+                height={150}
                 width={300}
                 animation="wave"
               />

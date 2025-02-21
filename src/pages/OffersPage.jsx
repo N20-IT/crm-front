@@ -17,8 +17,10 @@ import OfferDetailsPage from "./OfferDetailsPage";
 import columnsOffersConfig from "../config/columnsOffersConfig";
 import { useReadFiltersConfig } from "../config/filtersCookiesConfig";
 import LoadingCircularProgress from "../components/LoadingCircularProgress";
+import { useParams } from "react-router-dom";
 
 function OffersPage() {
+  const { id } = useParams();
   const navigate = useNavigate();
   const token = useReadCookie();
   const isAuthenticated = useAuth();
@@ -422,13 +424,20 @@ function OffersPage() {
   }, [backendServer, token, fetchData]);
 
   useEffect(() => {
-    if (!isAuthenticated) navigate("/");
-    else {
-      fetchAgents();
-      fetchClients();
-      fetchData();
+    if (!isAuthenticated) {
+      navigate("/");
+      return;
     }
-  }, [isAuthenticated, fetchAgents, fetchClients, fetchData]);
+
+    if (id !== undefined) {
+      setIsOfferDetailsPanelOpen(true);
+      setOfferDetailsId(id);
+    }
+
+    fetchAgents();
+    fetchClients();
+    fetchData();
+  }, [isAuthenticated, id, fetchAgents, fetchClients, fetchData]);
 
   return (
     <div>
