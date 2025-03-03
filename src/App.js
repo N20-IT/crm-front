@@ -1,7 +1,6 @@
 import React from "react";
 import { Routes, Route } from "react-router-dom";
 import "./styles/custom.css";
-import HomePage from "./pages/HomePage";
 import LoginPage from "./pages/LoginPage";
 import OffersPage from "./pages/OffersPage";
 import ClientsPage from "./pages/ClientsPage";
@@ -9,7 +8,6 @@ import InterestingOffersPage from "./pages/InterestingOffersPage";
 import LogsPage from "./pages/LogsPage";
 import UsersPage from "./pages/UsersPage";
 import ForgottenPasswordPage from "./pages/ForgottenPasswordPage";
-import OfferDetailsPage from "./pages/OfferDetailsPage";
 function App() {
   return (
     <Routes>
