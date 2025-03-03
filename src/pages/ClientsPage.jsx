@@ -13,8 +13,11 @@ import AddClientPanel from "../components/AddClientPanel";
 import { GetInformationFromToken } from "../utils/decodeToken";
 import EditClientPanel from "../components/EditClientPanel";
 import LoadingCircularProgress from "../components/LoadingCircularProgress";
+import ClientDetails from "../components/ClientDetails";
+import { useParams } from "react-router-dom";
 
 function ClientsPage() {
+  const { id } = useParams();
   const navigate = useNavigate();
   const isAuthenticated = useAuth();
   const [selected, setSelected] = useState([]);
@@ -32,9 +35,12 @@ function ClientsPage() {
   const [order, setOrder] = useState("desc");
   const [openDialogDelete, setopenDialogDelete] = useState(false);
   const [clientIdToDelete, setClientIdToDelete] = useState(null);
-  const [isClientPanelOpen, setIsClientPanelOpen] = useState(false);
   const [isAddClientPanelOpen, setIsAddClientPanelOpen] = useState(false);
   const [isEditClientPanelOpen, setIsEditClientPanelOpen] = useState(false);
+  const [isClientDetailsPanelOpen, setIsClientDetailsPanelOpen] = useState(
+    false
+  );
+  const [clientDetailsId, setClientDetailsId] = useState(null);
   const [users, setUsers] = useState([]);
   const [allUsers, setAllUsers] = useState([]);
   const userInformation =
@@ -68,7 +74,17 @@ function ClientsPage() {
     setIsEditClientPanelOpen(!isEditClientPanelOpen);
   };
 
+  const handleOpenClientDetailsPanel = (clientId) => {
+    setClientDetailsId(clientId);
+    setIsClientDetailsPanelOpen(!isClientDetailsPanelOpen);
+  };
+
   const handleOpenCloseDialog = () => setopenDialogDelete(!openDialogDelete);
+
+  const handleCloseClientDetailsPanel = () => {
+    setIsClientDetailsPanelOpen(!isClientDetailsPanelOpen);
+    setClientDetailsId(null);
+  };
 
   const handlePagination = (currentPage, rowsPerValue) => {
     if (currentPage !== page) setPage(currentPage);
@@ -155,7 +171,8 @@ function ClientsPage() {
         setAlertOpen(true);
         setAlertMessage("Pomyślnie usunięto klienta");
         setAlertSeverity("success");
-        if (isClientPanelOpen) setIsClientPanelOpen(!isClientPanelOpen);
+        if (isClientDetailsPanelOpen)
+          setIsClientDetailsPanelOpen(!isClientDetailsPanelOpen);
         await fetchData();
         setSelected([]);
       } catch (error) {
@@ -183,10 +200,12 @@ function ClientsPage() {
             },
           }
         );
-        handleEditClientClick();
         setAlertOpen(true);
         setAlertMessage("Pomyślnie edytowano klienta");
         setAlertSeverity("success");
+        setIsEditClientPanelOpen(false);
+        if (isClientDetailsPanelOpen)
+          setIsClientDetailsPanelOpen(!isClientDetailsPanelOpen);
         await fetchData();
       } catch (error) {
         setAlertOpen(true);
@@ -228,11 +247,15 @@ function ClientsPage() {
 
   useEffect(() => {
     if (!isAuthenticated) navigate("/");
-    else {
-      fetchAgents();
-      fetchData();
+
+    if (id !== undefined) {
+      setIsClientDetailsPanelOpen(true);
+      setClientDetailsId(id);
     }
-  }, [isAuthenticated, navigate, fetchAgents]);
+
+    fetchAgents();
+    fetchData();
+  }, [isAuthenticated, id, navigate, fetchAgents, fetchData]);
   return (
     <div className="flex items-start justify-start h-screen ml-16 flex-col">
       <Sidebar />
@@ -251,6 +274,7 @@ function ClientsPage() {
         handleDeleteClientClick={handleDeleteClientClick}
         handleEditClientClick={handleEditClientClick}
         loading={loading}
+        handleGoToClientDetails={handleOpenClientDetailsPanel}
       />
       <Alerts
         message={alertMessage}
@@ -282,6 +306,15 @@ function ClientsPage() {
           onSave={handleEditClient}
           onCancel={handleEditClientClickCancel}
           allUsers={allUsers.length !== 0 ? allUsers : users}
+        />
+      )}
+      {isClientDetailsPanelOpen && (
+        <ClientDetails
+          id={clientDetailsId}
+          onClose={handleCloseClientDetailsPanel}
+          handleSaveEditedClient={handleEditClient}
+          handleDeleteClientClick={handleDeleteClientClick}
+          users={users}
         />
       )}
     </div>

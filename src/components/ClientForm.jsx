@@ -137,6 +137,7 @@ function ClientForm({ formData, onChange, allUsers }) {
           variant="outlined"
           fullWidth
           margin="normal"
+          type="number"
         />
         <FormControl
           fullWidth

@@ -1,8 +1,14 @@
-import { Delete, Edit } from "@mui/icons-material";
+import { Delete, Edit, Info } from "@mui/icons-material";
 import { IconButton, TableCell, Tooltip } from "@mui/material";
 import React from "react";
 
-function ClientAction({ row, handleDeleteClientClick, handleEditClientClick }) {
+function ClientAction({
+  row,
+  handleDeleteClientClick,
+  handleEditClientClick,
+  showDetailsIcon,
+  handleGoToClientDetails,
+}) {
   return (
     <TableCell
       style={{
@@ -30,6 +36,16 @@ function ClientAction({ row, handleDeleteClientClick, handleEditClientClick }) {
         >
           <Edit />
         </IconButton>
+      </Tooltip>
+      <Tooltip title="Szczegóły klienta">
+        {showDetailsIcon && (
+          <IconButton
+            sx={{ padding: "4px", color: "#777" }}
+            onClick={() => handleGoToClientDetails(row._id)}
+          >
+            <Info />
+          </IconButton>
+        )}
       </Tooltip>
     </TableCell>
   );

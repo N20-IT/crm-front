@@ -68,6 +68,14 @@ function OfferDetailsPage({
     setEditOfferPanelOpen(!isEditOfferPanelOpen);
   };
 
+  const formatNumber = (value) =>
+    value
+      ? value.toLocaleString("pl-PL", {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2,
+        })
+      : "";
+
   useEffect(() => {
     if (!isAuthenticated) navigate("/");
     else fetchDetailsData();
@@ -189,17 +197,18 @@ function OfferDetailsPage({
               )}
               {offer.metraz && (
                 <CustomTypography sx={{ fontSize: "1rem" }}>
-                  <strong>Metraż:</strong> {offer.metraz} m²
+                  <strong>Metraż:</strong> {formatNumber(offer.metraz)} m²
                 </CustomTypography>
               )}
               {offer.powDzialki && (
                 <CustomTypography sx={{ fontSize: "1rem" }}>
-                  <strong>Powierzchnia działki:</strong> {offer.powDzialki}
+                  <strong>Powierzchnia działki:</strong>{" "}
+                  {formatNumber(offer.powDzialki)}
                 </CustomTypography>
               )}
               {offer.cena && (
                 <CustomTypography sx={{ fontSize: "1rem" }}>
-                  <strong>Cena:</strong> {offer.cena} zł
+                  <strong>Cena:</strong> {formatNumber(offer.cena)} zł
                 </CustomTypography>
               )}
               {offer.linkOferta && (
@@ -278,7 +287,7 @@ function OfferDetailsPage({
               )}
               {offer.zlM2 && (
                 <CustomTypography sx={{ fontSize: "1rem" }}>
-                  <strong>Zł/m²:</strong> {offer.zlM2}
+                  <strong>Zł/m²:</strong> {formatNumber(offer.zlM2)}
                 </CustomTypography>
               )}
               <br></br>
