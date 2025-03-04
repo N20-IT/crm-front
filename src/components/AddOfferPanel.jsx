@@ -15,7 +15,7 @@ import { useReadCookie } from "../utils/auth";
 import { debounce } from "lodash";
 import statusesConfig from "../config/statusesConfig";
 
-function AddOfferPanel({ onSave, onCancel, users }) {
+function AddOfferPanel({ onSave, onCancel, users, userInformation }) {
   const backendServer = serverConfig["backend-server"];
   const token = useReadCookie();
   const [formData, setFormData] = useState({
@@ -32,7 +32,7 @@ function AddOfferPanel({ onSave, onCancel, users }) {
     telefonWlasciciela: "",
     linkOferta: "",
     komentarz: "",
-    agent: "",
+    agent: userInformation,
     statusOferty: "",
   });
   const [isSubdistrictDisabled, setIsSubdistrictDisabled] = useState(true);
@@ -59,6 +59,10 @@ function AddOfferPanel({ onSave, onCancel, users }) {
     "Podgórze Duchackie",
     "Bieżanów - Prokocim",
   ];
+
+  const usersWithCurrentAgent = users.includes(userInformation)
+    ? users
+    : [userInformation, ...users];
 
   const checkIfPhoneExists = async (phoneNumber) => {
     try {
@@ -134,24 +138,16 @@ function AddOfferPanel({ onSave, onCancel, users }) {
   const validateForm = () => {
     const newErrors = {};
 
-    if (formData.statusOferty === "Zajęty" && !formData.komentarz) {
-      newErrors.komentarz =
-        "Komentarz jest wymagany, gdy status jest 'Zajęty'.";
-    }
     if (
-      formData.statusOferty === "W kontakcie" &&
-      (!formData.komentarz || !formData.dataNastepnegoKontaktu)
-    ) {
-      if (!formData.komentarz)
-        newErrors.komentarz =
-          "Komentarz jest wymagany, gdy status jest 'W kontakcie'.";
-      if (!formData.dataNastepnegoKontaktu)
-        newErrors.dataNastepnegoKontaktu =
-          "Data następnego kontaktu jest wymagana przy statusie 'W kontakcie'.";
-    }
-    if (formData.statusOferty === "Był kontakt" && !formData.komentarz) {
-      newErrors.komentarz =
-        "Komentarz jest wymagany, gdy status to 'Był kontakt'.";
+      (formData.statusOferty === "W kontakcie" ||
+        formData.statusOferty === "Spotkanie") &&
+      !formData.dataNastepnegoKontaktu
+    )
+      newErrors.dataNastepnegoKontaktu =
+        "Data następnego kontaktu jest wymagana.";
+
+    if (formData.komentarz === "") {
+      newErrors.komentarz = "Komentarz nie może być pusty.";
     }
 
     setErrors(newErrors);
@@ -665,7 +661,7 @@ function AddOfferPanel({ onSave, onCancel, users }) {
                     label="Agent"
                   />
                 }
-                value={formData.agent}
+                value={formData?.agent}
                 onChange={(e) =>
                   handleChange({
                     target: {
@@ -687,7 +683,7 @@ function AddOfferPanel({ onSave, onCancel, users }) {
                 >
                   Brak
                 </MenuItem>
-                {users.map((user) => (
+                {usersWithCurrentAgent.map((user) => (
                   <MenuItem key={user} value={user}>
                     {user}
                   </MenuItem>

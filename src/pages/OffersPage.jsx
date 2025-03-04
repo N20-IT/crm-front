@@ -485,6 +485,7 @@ function OffersPage() {
             onSave={handleSaveOffer}
             onCancel={handleAddOfferClick}
             users={users}
+            userInformation={userInformation}
           />
         )}
         <ConfirmDialog
