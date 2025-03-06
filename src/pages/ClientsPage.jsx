@@ -171,8 +171,7 @@ function ClientsPage() {
         setAlertOpen(true);
         setAlertMessage("Pomyślnie usunięto klienta");
         setAlertSeverity("success");
-        if (isClientDetailsPanelOpen)
-          setIsClientDetailsPanelOpen(!isClientDetailsPanelOpen);
+        if (isClientDetailsPanelOpen) setIsClientDetailsPanelOpen(false);
         await fetchData();
         setSelected([]);
       } catch (error) {
