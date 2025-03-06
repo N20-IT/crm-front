@@ -7,6 +7,13 @@ const columnsOffersConfig = [
     view: "extended",
   },
   {
+    id: "dataUtworzenia",
+    label: "Data Utworzenia",
+    shortLabel: "Utworz.",
+    sortable: true,
+    view: "extended",
+  },
+  {
     id: "dataNastepnegoKontaktu",
     label: "Data następnego kontaktu",
     shortLabel: "Następny",

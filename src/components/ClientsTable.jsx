@@ -36,6 +36,7 @@ function ClientsTable({
   handleDeleteClientClick,
   handleEditClientClick,
   loading,
+  handleGoToClientDetails,
 }) {
   const [order, setOrder] = useState("desc");
   const [orderBy, setOrderBy] = useState("dataZapytania");
@@ -136,7 +137,6 @@ function ClientsTable({
       dataNastepnegoKontaktuDo: "",
       clientId: clientId,
     };
-    console.log(clientFilter);
     changeFiltersConfig(clientFilter);
     navigate("/oferty");
   };
@@ -194,8 +194,8 @@ function ClientsTable({
                   textAlign: "center",
                   fontFamily: "Poppins",
                   padding: "0px",
-                  paddingLeft: "5px",
-                  paddingRight: "5px",
+                  paddingLeft: "15px",
+                  paddingRight: "15px",
                 }}
               >
                 <Tooltip title="Narzędzia">Narzędzia</Tooltip>
@@ -290,6 +290,8 @@ function ClientsTable({
                     row={row}
                     handleDeleteClientClick={handleDeleteClientClick}
                     handleEditClientClick={handleEditClientClick}
+                    handleGoToClientDetails={handleGoToClientDetails}
+                    showDetailsIcon={true}
                   />
                   <CustomTableCell>
                     {row.dataZapytania ? (
