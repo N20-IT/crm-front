@@ -27,6 +27,7 @@ This modern CRM system for a real estate agency streamlines the agent-client rel
 
 - **Frontend:** [React](https://react.dev/)  
 - **Backend:** [Node.js](https://nodejs.org/) with [Express](https://expressjs.com/)  
+- **Database:** [MongoDB](https://www.mongodb.com/)
 - **Styling:** [Tailwind CSS](https://tailwindcss.com/)  
 - **Animations:** [AOS (Animate on Scroll)](https://michalsnik.github.io/aos/)  
 - **Fonts:** [Google Fonts](https://fonts.google.com/)  
