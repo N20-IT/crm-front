@@ -1,70 +1,106 @@
-# Getting Started with Create React App
+# **N20 CRM - real estate agency CRM**
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Modern CRM system for real estate agencies containing basic functionalities in the agent-client relationship.
 
-## Available Scripts
+## **Table of Contents**
 
-In the project directory, you can run:
+1. [Project Overview](#project-overview)
+2. [Features](#features)
+3. [Technologies Used](#technologies-used)
+4. [Deployment](#deployment)
+5. [Screenshots](#screenshots)
+6. [System Requirements](#system-requirements)
+7. [Installation and Setup](#installation-and-setup)
+8. [Contributors](#contributors)
 
-### `npm start`
+## **Project Overview**
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+This modern CRM system for a real estate agency streamlines the agent-client relationship by providing essential functionalities. The application is built using Node.js and React, leveraging AWS cloud services for scalability and reliability.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## **Features**
 
-### `npm test`
+- **Property Listings & Client Management** – A structured database with tables for property listings and client records.  
+- **Admin Panel** – A dedicated interface for administrators to manage real estate agents.  
+- **Automation & Integrations** – Automated processes for sending SMS and emails, as well as system logs, backups, and CI/CD pipelines for seamless deployment.  
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## **Technologies Used**
 
-### `npm run build`
+- **Frontend:** [React](https://react.dev/)  
+- **Backend:** [Node.js](https://nodejs.org/) with [Express](https://expressjs.com/)  
+- **Styling:** [Tailwind CSS](https://tailwindcss.com/)  
+- **Animations:** [AOS (Animate on Scroll)](https://michalsnik.github.io/aos/)  
+- **Fonts:** [Google Fonts](https://fonts.google.com/)  
+- **Hosting:** [AWS EC2](https://aws.amazon.com/ec2/), [AWS Amplify](https://aws.amazon.com/amplify/)  
+- **Cloud Services:** [AWS Lambda](https://aws.amazon.com/lambda/), [AWS Cognito](https://aws.amazon.com/cognito/), [AWS IAM](https://aws.amazon.com/iam/), [AWS API Gateway](https://aws.amazon.com/api-gateway/)  
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## Deployment
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+The website is deployed and hosted using AWS Amplify.
+Backend services are hosted on AWS EC2 VPS with Amazon Linux installed.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## **Screenshots**
 
-### `npm run eject`
+### Login page
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+![image](https://github.com/user-attachments/assets/ab674f41-5233-47c9-86b9-fdb0982f0bb2)
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+## Listings/Clients
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+![image](https://github.com/user-attachments/assets/1b27f454-1256-4384-8bbb-8222c903f7fe)
 
-## Learn More
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+## Admin panel
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+![image](https://github.com/user-attachments/assets/d459bcc2-7329-427b-aae7-dade07514583)
 
-### Code Splitting
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+## **System Requirements**
 
-### Analyzing the Bundle Size
+### Frontend
+- Node.js version 14.x or newer.
+- npm or yarn package manager.
+### Backend
+- Docker
+- Backend services image
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+## **Installation and Setup**
 
-### Making a Progressive Web App
+1. **Clone the repository**:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+   ```bash
+   git clone https://github.com/N20-IT/crm-front.git
+   cd your-repo-name
+   ```
 
-### Advanced Configuration
+2. **Install dependencies**:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+   ```bash
+   npm install
+   # or
+   yarn install
+   ```
 
-### Deployment
+3. **Run the project locally**:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+   ```bash
+   npm run dev
+   # or
+   yarn dev
+   ```
+4. **Run backend image using Docker**:  
+   To get access to backend image sample please contact with **Damian Kaniewski** [GitHub](https://github.com/damiankaniewski)
+   
+6. **Open the application in your browser**:  
+   The application will be available at [http://localhost:3020](http://localhost:3020).
 
-### `npm run build` fails to minify
+## **Contributors**
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+- **Rafał Ciupek**: [GitHub](https://github.com/ruffaaw) - Frontend Developer, UX/UI Designer
+- **Damian Kaniewski**: [GitHub](https://github.com/damiankaniewski) - Software Developer, Project Manager
+- **Jakub Szostak**: [GitHub](https://github.com/jszostakk) - DevOps, Automation Lead
+- **Maciej Krzyszkowski**: [LinkedIn](https://www.linkedin.com/in/maciej-krzyszkowski-1778ba259/) - DevOps, Automation Lead
+
+
+This project was developed under the company [Policrafts](https://www.linkedin.com/company/policrafts/) .
+All rights reserved. This project is legally owned by **Policrafts** and is governed by the terms and conditions of the company's policies.
