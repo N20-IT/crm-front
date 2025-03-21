@@ -103,7 +103,7 @@ function EditClientPanel({ initialData, onSave, onCancel, allUsers }) {
 
   return (
     <div className="fixed inset-0 bg-light-grey bg-opacity-75 flex items-center justify-center z-50">
-      <div className="bg-white p-6 rounded-lg shadow-lg w-1/3">
+      <div className="bg-white p-6 rounded-lg shadow-lg w-1/3 max-h-[90%] overflow-auto">
         <h2 className="text-4xl font-bold mb-4 font-poppins">Edytuj klienta</h2>
         <form>
           <div className="w-full">
