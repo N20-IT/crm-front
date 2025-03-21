@@ -143,7 +143,6 @@ function ClientForm({ formData, onChange, allUsers }) {
           fullWidth
           margin="normal"
           sx={{
-            marginTop: "12px",
             "& .MuiOutlinedInput-root": {
               borderRadius: "6px",
               fontFamily: "Poppins",
