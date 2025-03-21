@@ -279,7 +279,11 @@ function ClientsTable({
                       maxHeight: "60px",
                     },
                     width: "100%",
-                    background: index % 2 === 1 ? "#f5f5f5" : "white",
+                    background: row.czyNoweOferty
+                      ? "#E6FFD7"
+                      : index % 2 === 1
+                      ? "#f5f5f5"
+                      : "white",
                   }}
                 >
                   <TableCell
