@@ -16,6 +16,7 @@ import {
   Tooltip,
   Typography,
   Skeleton,
+  Badge,
 } from "@mui/material";
 import CustomTableCell from "./CustomTableCell";
 import { FileCopy, OpenInNew } from "@mui/icons-material";
@@ -188,6 +189,19 @@ function ClientsTable({
                 />
               </TableCell>
               <TableCell
+                key="nrOfertyLink"
+                sx={{
+                  color: "white",
+                  textAlign: "center",
+                  fontFamily: "Poppins",
+                  padding: "0px",
+                  paddingLeft: "15px",
+                  paddingRight: "15px",
+                }}
+              >
+                <Tooltip title="Wybrane oferty">Oferty</Tooltip>
+              </TableCell>
+              <TableCell
                 key="narzedzia"
                 sx={{
                   color: "white",
@@ -265,7 +279,11 @@ function ClientsTable({
                       maxHeight: "60px",
                     },
                     width: "100%",
-                    background: index % 2 === 1 ? "#f5f5f5" : "white",
+                    background: row.czyNoweOferty
+                      ? "#E6FFD7"
+                      : index % 2 === 1
+                      ? "#f5f5f5"
+                      : "white",
                   }}
                 >
                   <TableCell
@@ -286,6 +304,25 @@ function ClientsTable({
                       }}
                     />
                   </TableCell>
+                  <CustomTableCell style={{ whiteSpace: "nowrap" }}>
+                    <Tooltip title={"Dobierz oferty"}>
+                      <IconButton onClick={() => handleMatchClient(row._id)}>
+                        <Badge
+                          badgeContent={row.listings.length}
+                          max={1000}
+                          sx={{
+                            "& .MuiBadge-badge": {
+                              backgroundColor: "#FC8721",
+                              color: "white",
+                            },
+                          }}
+                        >
+                          <OpenInNew />
+                        </Badge>
+                      </IconButton>
+                    </Tooltip>
+                  </CustomTableCell>
+
                   <ClientAction
                     row={row}
                     handleDeleteClientClick={handleDeleteClientClick}
@@ -322,34 +359,36 @@ function ClientsTable({
                   <CustomTableCell>{row.daneKlienta || ""}</CustomTableCell>
                   <CustomTableCell sx={{ whiteSpace: "nowrap" }}>
                     <strong>
-                      <span style={{ whiteSpace: "nowrap" }}>
-                        {formatPhoneNumber(row.numerTelefonu || "")}
-                      </span>
-                      {row.numerTelefonu && (
-                        <Tooltip title="Skopiuj numer">
-                          <IconButton
-                            onClick={() =>
-                              copyToClipboard(row.numerTelefonu || "")
-                            }
-                            sx={{
-                              padding: "6px",
+                      {Array.isArray(row.numerTelefonu) &&
+                      row.numerTelefonu.length > 0 ? (
+                        row.numerTelefonu.map((number, index) => (
+                          <div
+                            key={index}
+                            style={{
+                              display: "flex",
+                              alignItems: "center",
+                              gap: "4px",
                             }}
                           >
-                            <FileCopy />
-                          </IconButton>
-                        </Tooltip>
+                            <span>{formatPhoneNumber(number)}</span>
+                            <Tooltip title="Skopiuj numer">
+                              <IconButton
+                                onClick={() => copyToClipboard(number)}
+                                sx={{ padding: "6px" }}
+                              >
+                                <FileCopy />
+                              </IconButton>
+                            </Tooltip>
+                          </div>
+                        ))
+                      ) : (
+                        <span>Brak numeru</span>
                       )}
                     </strong>
                   </CustomTableCell>
+
                   <CustomTableCell>{row.email || ""}</CustomTableCell>
                   <CustomTableCell>{row.numerGalactica || ""}</CustomTableCell>
-                  <CustomTableCell>
-                    <Tooltip title={"Dobierz oferty"}>
-                      <IconButton onClick={() => handleMatchClient(row._id)}>
-                        <OpenInNew />
-                      </IconButton>
-                    </Tooltip>
-                  </CustomTableCell>
                   <CustomTableCell
                     sx={{
                       color:

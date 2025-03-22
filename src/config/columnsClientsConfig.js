@@ -40,14 +40,6 @@ const columnsClientsConfig = [
     view: "basic",
   },
   {
-    id: "nrOfertyLink",
-    label: "Wybrana oferta",
-    shortLabel: "Oferta",
-    type: "button", // Przycisk/link do oferty
-    sortable: false,
-    view: "basic",
-  },
-  {
     id: "status",
     label: "Status",
     shortLabel: "Status",

@@ -6,14 +6,24 @@ import {
   MenuItem,
   OutlinedInput,
   Select,
+  IconButton,
 } from "@mui/material";
+import { AddCircle, RemoveCircle } from "@mui/icons-material";
+
 import CustomTextField from "./CustomTextField";
 import clientStatuesConfig from "../config/clientStatuesConfig";
 import dzielniceData from "../dzielnice_poddzielnice.json";
 import clientStandardConfig from "../config/clientStandardConfig";
 import { useState } from "react";
 
-function ClientForm({ formData, onChange, allUsers }) {
+function ClientForm({
+  formData,
+  onChange,
+  onPhoneNumbersChange,
+  addPhoneField,
+  removePhoneField,
+  allUsers,
+}) {
   const [errors, setErrors] = useState({});
 
   const handleLokalizacjaChange = (district) => {
@@ -107,18 +117,6 @@ function ClientForm({ formData, onChange, allUsers }) {
           margin="normal"
         />
         <CustomTextField
-          label="Numer telefonu"
-          name="numerTelefonu"
-          value={formData.numerTelefonu}
-          onChange={onChange}
-          variant="outlined"
-          fullWidth
-          margin="normal"
-          type="number"
-        />
-      </div>
-      <div className="flex justify-end space-x-4">
-        <CustomTextField
           label="Adres e-mail"
           name="email"
           value={formData.email}
@@ -127,6 +125,36 @@ function ClientForm({ formData, onChange, allUsers }) {
           fullWidth
           margin="normal"
         />
+      </div>
+      <div className="flex flex-col">
+        {formData.numerTelefonu.map((phone, index) => (
+          <div key={index} className="flex items-center space-x-2">
+            <CustomTextField
+              label={`Numer telefonu ${index + 1}`}
+              variant="outlined"
+              fullWidth
+              margin="normal"
+              type="number"
+              value={phone}
+              onChange={(e) => onPhoneNumbersChange(index, e.target.value)}
+            />
+            <IconButton
+              onClick={() => removePhoneField(index)}
+              disabled={formData.numerTelefonu.length === 1}
+              sx={{ marginTop: "8px" }}
+            >
+              <RemoveCircle
+                color={
+                  formData.numerTelefonu.length === 1 ? "disabled" : "error"
+                }
+              />
+            </IconButton>
+          </div>
+        ))}
+
+        <IconButton onClick={addPhoneField} color="primary">
+          <AddCircle sx={{ color: "#FC8721" }} />
+        </IconButton>
       </div>
       <div className="flex justify-end space-x-4">
         <CustomTextField
@@ -143,7 +171,6 @@ function ClientForm({ formData, onChange, allUsers }) {
           fullWidth
           margin="normal"
           sx={{
-            marginTop: "12px",
             "& .MuiOutlinedInput-root": {
               borderRadius: "6px",
               fontFamily: "Poppins",
@@ -209,93 +236,103 @@ function ClientForm({ formData, onChange, allUsers }) {
           </Select>
         </FormControl>
       </div>
-      <FormControl
+
+      <CustomTextField
+        label="Komentarz"
+        name="komentarz"
+        value={formData.komentarz}
+        onChange={onChange}
+        variant="outlined"
         fullWidth
         margin="normal"
-        sx={{
-          marginTop: "12px",
-          "& .MuiOutlinedInput-root": {
-            borderRadius: "6px",
-            fontFamily: "Poppins",
-            fontSize: "16px",
-            height: "40px",
-            "& input": {
-              padding: "8px",
-              height: "16px",
-            },
-          },
-          "& .MuiFormLabel-root": {
-            fontFamily: "Poppins",
-            fontSize: "16px",
-            color: "#535968",
-            transform: "translate(14px, 9px) scale(1)",
-          },
-          "& .MuiInputLabel-root.MuiInputLabel-shrink": {
-            transform: "translate(14px, -9px) scale(0.75)",
-          },
-          "& .MuiInputLabel-root.Mui-focused": {
-            color: "#535968",
-          },
-          "& .MuiOutlinedInput-notchedOutline": {
-            borderColor: "#535968",
-          },
-          "&:hover .MuiOutlinedInput-notchedOutline": {
-            borderColor: "#535968",
-          },
-          "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-            borderColor: "#535968",
-          },
-          "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline": {
-            borderColor: "#535968",
-          },
-        }}
-      >
-        <InputLabel>Agent</InputLabel>
-        <Select
-          value={formData.agent}
-          input={
-            <OutlinedInput
-              sx={{
-                "& .MuiOutlinedInput-notchedOutline": {
-                  borderColor: "#535968",
-                },
-
-                "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                  borderColor: "#535968",
-                },
-              }}
-              label="Agent"
-            />
-          }
-          onChange={(e) =>
-            onChange({
-              target: {
-                name: "agent",
-                value: e.target.value,
-              },
-            })
-          }
-          label="Agent"
-        >
-          <MenuItem
-            key={"null"}
-            value={""}
-            sx={{
-              fontStyle: "italic",
-              color: "gray",
-              fontWeight: "bold",
-            }}
-          >
-            Brak
-          </MenuItem>
-          {allUsers.map((user) => (
-            <MenuItem key={user} value={user}>
-              {user}
-            </MenuItem>
-          ))}
-        </Select>
-      </FormControl>
+      />
       <div className="flex justify-end space-x-4">
+        <FormControl
+          fullWidth
+          margin="normal"
+          sx={{
+            marginTop: "12px",
+            "& .MuiOutlinedInput-root": {
+              borderRadius: "6px",
+              fontFamily: "Poppins",
+              fontSize: "16px",
+              height: "40px",
+              "& input": {
+                padding: "8px",
+                height: "16px",
+              },
+            },
+            "& .MuiFormLabel-root": {
+              fontFamily: "Poppins",
+              fontSize: "16px",
+              color: "#535968",
+              transform: "translate(14px, 9px) scale(1)",
+            },
+            "& .MuiInputLabel-root.MuiInputLabel-shrink": {
+              transform: "translate(14px, -9px) scale(0.75)",
+            },
+            "& .MuiInputLabel-root.Mui-focused": {
+              color: "#535968",
+            },
+            "& .MuiOutlinedInput-notchedOutline": {
+              borderColor: "#535968",
+            },
+            "&:hover .MuiOutlinedInput-notchedOutline": {
+              borderColor: "#535968",
+            },
+            "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+              borderColor: "#535968",
+            },
+            "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline": {
+              borderColor: "#535968",
+            },
+          }}
+        >
+          <InputLabel>Agent</InputLabel>
+          <Select
+            value={formData.agent}
+            input={
+              <OutlinedInput
+                sx={{
+                  "& .MuiOutlinedInput-notchedOutline": {
+                    borderColor: "#535968",
+                  },
+
+                  "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                    borderColor: "#535968",
+                  },
+                }}
+                label="Agent"
+              />
+            }
+            onChange={(e) =>
+              onChange({
+                target: {
+                  name: "agent",
+                  value: e.target.value,
+                },
+              })
+            }
+            label="Agent"
+          >
+            <MenuItem
+              key={"null"}
+              value={""}
+              sx={{
+                fontStyle: "italic",
+                color: "gray",
+                fontWeight: "bold",
+              }}
+            >
+              Brak
+            </MenuItem>
+            {allUsers.map((user) => (
+              <MenuItem key={user} value={user}>
+                {user}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
         <FormControl
           fullWidth
           margin="normal"
