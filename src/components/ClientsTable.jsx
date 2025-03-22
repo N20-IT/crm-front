@@ -359,25 +359,34 @@ function ClientsTable({
                   <CustomTableCell>{row.daneKlienta || ""}</CustomTableCell>
                   <CustomTableCell sx={{ whiteSpace: "nowrap" }}>
                     <strong>
-                      <span style={{ whiteSpace: "nowrap" }}>
-                        {formatPhoneNumber(row.numerTelefonu || "")}
-                      </span>
-                      {row.numerTelefonu && (
-                        <Tooltip title="Skopiuj numer">
-                          <IconButton
-                            onClick={() =>
-                              copyToClipboard(row.numerTelefonu || "")
-                            }
-                            sx={{
-                              padding: "6px",
+                      {Array.isArray(row.numerTelefonu) &&
+                      row.numerTelefonu.length > 0 ? (
+                        row.numerTelefonu.map((number, index) => (
+                          <div
+                            key={index}
+                            style={{
+                              display: "flex",
+                              alignItems: "center",
+                              gap: "4px",
                             }}
                           >
-                            <FileCopy />
-                          </IconButton>
-                        </Tooltip>
+                            <span>{formatPhoneNumber(number)}</span>
+                            <Tooltip title="Skopiuj numer">
+                              <IconButton
+                                onClick={() => copyToClipboard(number)}
+                                sx={{ padding: "6px" }}
+                              >
+                                <FileCopy />
+                              </IconButton>
+                            </Tooltip>
+                          </div>
+                        ))
+                      ) : (
+                        <span>Brak numeru</span>
                       )}
                     </strong>
                   </CustomTableCell>
+
                   <CustomTableCell>{row.email || ""}</CustomTableCell>
                   <CustomTableCell>{row.numerGalactica || ""}</CustomTableCell>
                   <CustomTableCell

@@ -4,8 +4,11 @@ import { useState } from "react";
 import Alerts from "./Alerts";
 
 function AddClientPanel({ onSave, onCancel, allUsers }) {
-  const [formData, setFormData] = useState({ lokalizacja: [] });
-  const [errors, setErrors] = useState({});
+  const [formData, setFormData] = useState({
+    lokalizacja: [],
+    numerTelefonu: [""],
+  });
+  const [, setErrors] = useState({});
   const [alertMessage, setAlertMessage] = useState("");
   const [alertSeverity, setAlertSeverity] = useState("");
   const [alertOpen, setAlertOpen] = useState(false);
@@ -78,9 +81,31 @@ function AddClientPanel({ onSave, onCancel, allUsers }) {
     }
   };
 
+  const handlePhoneNumbersChange = (index, value) => {
+    setFormData((prevData) => {
+      const newPhones = [...prevData.numerTelefonu];
+      newPhones[index] = value;
+      return { ...prevData, numerTelefonu: newPhones };
+    });
+  };
+
+  const addPhoneField = () => {
+    setFormData((prevData) => ({
+      ...prevData,
+      numerTelefonu: [...prevData.numerTelefonu, ""],
+    }));
+  };
+
+  const removePhoneField = (index) => {
+    setFormData((prevData) => ({
+      ...prevData,
+      numerTelefonu: prevData.numerTelefonu.filter((_, i) => i !== index),
+    }));
+  };
+
   return (
     <div className="fixed inset-0 bg-light-grey bg-opacity-75 flex items-center justify-center z-50">
-      <div className="bg-white p-6 rounded-lg shadow-lg w-1/3 max-h-[90%] overflow-auto">
+      <div className="bg-white p-6 rounded-lg shadow-lg w-1/3 max-h-[95%] overflow-auto">
         <h2 className="text-4xl font-bold mb-4 font-poppins">
           Dodaj nowego klienta
         </h2>
@@ -89,6 +114,9 @@ function AddClientPanel({ onSave, onCancel, allUsers }) {
             <ClientForm
               formData={formData}
               onChange={handleChange}
+              onPhoneNumbersChange={handlePhoneNumbersChange}
+              addPhoneField={addPhoneField}
+              removePhoneField={removePhoneField}
               allUsers={allUsers}
             />
             <div className="flex justify-end space-x-4 mt-4">
