@@ -6,6 +6,7 @@ import {
   OutlinedInput,
   Select,
   InputLabel,
+  IconButton,
 } from "@mui/material";
 import CustomTextField from "./CustomTextField";
 import dzielniceData from "../dzielnice_poddzielnice.json";
@@ -14,6 +15,7 @@ import serverConfig from "../servers.json";
 import { useReadCookie } from "../utils/auth";
 import { debounce } from "lodash";
 import statusesConfig from "../config/statusesConfig";
+import { AddCircle, RemoveCircle } from "@mui/icons-material";
 
 function AddOfferPanel({ onSave, onCancel, users, userInformation }) {
   const backendServer = serverConfig["backend-server"];
@@ -29,7 +31,7 @@ function AddOfferPanel({ onSave, onCancel, users, userInformation }) {
     metraz: "",
     cena: "",
     daneWlasciciela: "",
-    telefonWlasciciela: "",
+    telefonWlasciciela: [""],
     linkOferta: "",
     komentarz: "",
     agent: userInformation,
@@ -37,7 +39,7 @@ function AddOfferPanel({ onSave, onCancel, users, userInformation }) {
   });
   const [isSubdistrictDisabled, setIsSubdistrictDisabled] = useState(true);
   const [errors, setErrors] = useState({});
-  const [phoneExistsInfo, setPhoneExistsInfo] = useState("");
+  const [phoneExistsInfo, setPhoneExistsInfo] = useState([""]);
 
   const krakowDistricts = [
     "Stare Miasto",
@@ -64,21 +66,25 @@ function AddOfferPanel({ onSave, onCancel, users, userInformation }) {
     ? users
     : [userInformation, ...users];
 
-  const checkIfPhoneExists = async (phoneNumber) => {
+  const checkIfPhoneExists = async (index, phoneNumber) => {
     try {
-      const response = await axios.get(`${backendServer}/listings`, {
-        headers: {
-          accept: "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        params: {
-          telefonWlasciciela: phoneNumber,
-        },
-      });
-      if (response.data["listings"].length > 0) {
-        setPhoneExistsInfo("Oferta z tym numerem telefonu już istnieje.");
+      const response = await axios.get(
+        `${backendServer}/listings/check-phone/${phoneNumber}`,
+        {
+          headers: {
+            accept: "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      if (response.data.exists) {
+        const updatedInfo = [...phoneExistsInfo];
+        updatedInfo[index] = "Oferta z tym numerem telefonu już istnieje.";
+        setPhoneExistsInfo(updatedInfo);
       } else {
-        setPhoneExistsInfo("");
+        const updatedInfo = [...phoneExistsInfo];
+        updatedInfo[index] = "";
+        setPhoneExistsInfo(updatedInfo);
       }
     } catch (error) {
       console.error("Błąd podczas sprawdzania numeru telefonu:", error);
@@ -126,9 +132,9 @@ function AddOfferPanel({ onSave, onCancel, users, userInformation }) {
     if (name === "telefonWlasciciela") {
       sanitizedValue = sanitizedValue.replace(/\s/g, "");
     }
-    if (name === "telefonWlasciciela" && sanitizedValue.length === 9) {
-      await debouncedCheckIfPhoneExists(sanitizedValue);
-    }
+    // if (name === "telefonWlasciciela" && sanitizedValue.length === 9) {
+    //   await debouncedCheckIfPhoneExists(sanitizedValue);
+    // }
     setFormData({
       ...formData,
       [name]: sanitizedValue,
@@ -163,9 +169,35 @@ function AddOfferPanel({ onSave, onCancel, users, userInformation }) {
     }
   };
 
+  const handlePhoneNumbersChange = async (index, value) => {
+    if (value.length === 9) await debouncedCheckIfPhoneExists(index, value);
+    setFormData((prevData) => {
+      const newPhones = [...prevData.telefonWlasciciela];
+      newPhones[index] = value;
+      return { ...prevData, telefonWlasciciela: newPhones };
+    });
+  };
+
+  const addPhoneField = () => {
+    setFormData((prevData) => ({
+      ...prevData,
+      telefonWlasciciela: [...prevData.telefonWlasciciela, ""],
+    }));
+  };
+
+  const removePhoneField = (index) => {
+    setFormData((prevData) => ({
+      ...prevData,
+      telefonWlasciciela: prevData.telefonWlasciciela.filter(
+        (_, i) => i !== index
+      ),
+    }));
+    setPhoneExistsInfo((prevInfo) => prevInfo.filter((_, i) => i !== index));
+  };
+
   return (
     <div className=" fixed inset-0 bg-light-grey bg-opacity-75 flex items-center justify-center z-50">
-      <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md md:max-w-lg lg:max-w-xl h-3/4 overflow-auto">
+      <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md md:max-w-lg lg:max-w-xl max-h-[95%] overflow-auto">
         <h2 className="text-4xl font-bold mb-4 font-poppins">
           Dodaj nową ofertę
         </h2>
@@ -534,36 +566,18 @@ function AddOfferPanel({ onSave, onCancel, users, userInformation }) {
               </FormControl>
             </div>
           </div>
-          <div className="flex flex-col md:flex-row justify-end space-y-4 md:space-x-4 md:space-y-0">
-            <div className="w-full">
-              <CustomTextField
-                label="Dane właściciela"
-                name="daneWlasciciela"
-                value={formData.daneWlasciciela}
-                onChange={handleChange}
-                variant="outlined"
-                fullWidth
-                margin="normal"
-              />
-            </div>
-            <div className="w-full">
-              <CustomTextField
-                label="Telefon do właściciela"
-                name="telefonWlasciciela"
-                value={formData.telefonWlasciciela}
-                onChange={handleChange}
-                variant="outlined"
-                fullWidth
-                margin="normal"
-              />
-              {phoneExistsInfo && (
-                <p style={{ color: "blue", fontFamily: "Poppins" }}>
-                  {phoneExistsInfo}
-                </p>
-              )}
-            </div>
+          <div className="w-full">
+            <CustomTextField
+              label="Dane właściciela"
+              name="daneWlasciciela"
+              value={formData.daneWlasciciela}
+              onChange={handleChange}
+              variant="outlined"
+              fullWidth
+              margin="normal"
+            />
           </div>
-          <div className="flex justify-end space-x-4">
+          <div className="w-full">
             <CustomTextField
               label="Komentarz"
               name="komentarz"
@@ -574,7 +588,48 @@ function AddOfferPanel({ onSave, onCancel, users, userInformation }) {
               margin="normal"
               error={!!errors.komentarz}
               helperText={errors.komentarz}
+              multiline
+              maxRows={4}
             />
+          </div>
+          <div className="flex flex-col">
+            {formData.telefonWlasciciela.map((phone, index) => (
+              <div className="flex flex-col">
+                <div key={index} className="flex items-center space-x-2">
+                  <CustomTextField
+                    label={`Telefon ${index + 1}`}
+                    variant="outlined"
+                    fullWidth
+                    margin="normal"
+                    onChange={(e) =>
+                      handlePhoneNumbersChange(index, e.target.value)
+                    }
+                    value={phone}
+                  />
+                  <IconButton
+                    onClick={() => removePhoneField(index)}
+                    disabled={formData.telefonWlasciciela.length === 1}
+                    sx={{ marginTop: "8px" }}
+                  >
+                    <RemoveCircle
+                      color={
+                        formData.telefonWlasciciela.length === 1
+                          ? "disabled"
+                          : "error"
+                      }
+                    />
+                  </IconButton>
+                </div>
+                {phoneExistsInfo[index] && (
+                  <p style={{ color: "blue", fontFamily: "Poppins" }}>
+                    {phoneExistsInfo[index]}
+                  </p>
+                )}
+              </div>
+            ))}
+            <IconButton onClick={addPhoneField} color="primary">
+              <AddCircle sx={{ color: "#FC8721" }} />
+            </IconButton>
           </div>
           <div className="flex justify-end space-x-4">
             <CustomTextField
