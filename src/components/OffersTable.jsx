@@ -410,22 +410,34 @@ function OffersTable({
                   )}
                   <CustomTableCell sx={{ whiteSpace: "nowrap" }}>
                     <strong>
-                      <span style={{ whiteSpace: "nowrap" }}>
-                        {formatPhoneNumber(row.telefonWlasciciela || "")}
-                      </span>
-                      {row.telefonWlasciciela && (
-                        <Tooltip title="Skopiuj numer">
-                          <IconButton
-                            onClick={() =>
-                              copyToClipboard(row.telefonWlasciciela || "")
-                            }
-                            sx={{
-                              padding: "6px",
+                      {Array.isArray(row.telefonWlasciciela) &&
+                      row.telefonWlasciciela.length > 0 ? (
+                        row.telefonWlasciciela.map((number, index) => (
+                          <div
+                            key={index}
+                            style={{
+                              display: "flex",
+                              alignItems: "center",
+                              gap: "4px",
                             }}
                           >
-                            <FileCopy />
-                          </IconButton>
-                        </Tooltip>
+                            <span style={{ whiteSpace: "nowrap" }}>
+                              {formatPhoneNumber(number)}
+                            </span>
+                            <Tooltip title="Skopiuj numer">
+                              <IconButton
+                                onClick={() => copyToClipboard(number)}
+                                sx={{
+                                  padding: "6px",
+                                }}
+                              >
+                                <FileCopy />
+                              </IconButton>
+                            </Tooltip>
+                          </div>
+                        ))
+                      ) : (
+                        <span>Brak numeru</span>
                       )}
                     </strong>
                   </CustomTableCell>

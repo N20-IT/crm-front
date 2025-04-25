@@ -7,7 +7,7 @@ const CustomTextField = ({ sx = {}, children, ...rest }) => (
         borderRadius: "6px",
         fontFamily: "Poppins",
         fontSize: "16px",
-        height: "40px",
+        height: rest.multiline ? "auto" : "40px",
         "& input": {
           padding: "8px",
           height: "16px",

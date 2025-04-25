@@ -35,7 +35,7 @@ const columnsClientsConfig = [
     id: "numerGalactica",
     label: "Numer oferty w Galactice",
     shortLabel: "Galact.",
-    type: "string", // Do ustalenia
+    type: "string",
     sortable: false,
     view: "basic",
   },
@@ -43,7 +43,7 @@ const columnsClientsConfig = [
     id: "status",
     label: "Status",
     shortLabel: "Status",
-    type: "dictionary", // Słownik: WOLNY, ZAJĘTY, DO ZBRIFOWANIA
+    type: "dictionary",
     sortable: false,
     view: "basic",
   },
@@ -51,15 +51,22 @@ const columnsClientsConfig = [
     id: "agent",
     label: "Agent",
     shortLabel: "Agent",
-    type: "dictionary", // Słownik: lista agentów
+    type: "dictionary",
     sortable: true,
+    view: "basic",
+  },
+  {
+    id: "komentarz",
+    label: "Komentarz",
+    shortLabel: "Koment.",
+    sortable: false,
     view: "basic",
   },
   {
     id: "lokalizacja",
     label: "Lokalizacja",
     shortLabel: "Lok.",
-    type: "dictionary", // Słownik: dzielnice (bez poddzielnic)
+    type: "dictionary",
     sortable: false,
     view: "basic",
   },
@@ -67,7 +74,7 @@ const columnsClientsConfig = [
     id: "rodzajNieruchomosci",
     label: "Rodzaj nieruchomości",
     shortLabel: "Typ",
-    type: "dictionary", // Słownik: M/D
+    type: "dictionary",
     sortable: false,
     view: "basic",
   },

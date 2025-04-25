@@ -6,7 +6,10 @@ import {
   OutlinedInput,
   Select,
   InputLabel,
+  IconButton,
 } from "@mui/material";
+import { AddCircle, RemoveCircle } from "@mui/icons-material";
+
 import CustomTextField from "./CustomTextField";
 import dzielniceData from "../dzielnice_poddzielnice.json";
 import statusesConfig from "../config/statusesConfig";
@@ -86,9 +89,33 @@ const EditOfferPanel = ({ offerData, onSave, onCancel, users }) => {
     onSave(formData);
   };
 
+  const handlePhoneNumbersChange = async (index, value) => {
+    setFormData((prevData) => {
+      const newPhones = [...prevData.telefonWlasciciela];
+      newPhones[index] = value;
+      return { ...prevData, telefonWlasciciela: newPhones };
+    });
+  };
+
+  const addPhoneField = () => {
+    setFormData((prevData) => ({
+      ...prevData,
+      telefonWlasciciela: [...prevData.telefonWlasciciela, ""],
+    }));
+  };
+
+  const removePhoneField = (index) => {
+    setFormData((prevData) => ({
+      ...prevData,
+      telefonWlasciciela: prevData.telefonWlasciciela.filter(
+        (_, i) => i !== index
+      ),
+    }));
+  };
+
   return (
     <div className=" fixed inset-0 bg-light-grey bg-opacity-75 flex items-center justify-center z-50">
-      <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md md:max-w-lg lg:max-w-xl h-3/4 overflow-auto">
+      <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md md:max-w-lg lg:max-w-xl max-h-[95%] overflow-auto">
         <h2 className=" text-4xl font-bold mb-4 font-poppins">Edytuj ofertę</h2>
         <form>
           <div className="flex flex-col md:flex-row justify-end space-y-4 md:space-x-4 md:space-y-0">
@@ -444,32 +471,52 @@ const EditOfferPanel = ({ offerData, onSave, onCancel, users }) => {
               </FormControl>
             </div>
           </div>
-
-          <div className="flex flex-col md:flex-row justify-end space-y-4 md:space-x-4 md:space-y-0">
-            <div className="w-full">
-              <CustomTextField
-                label="Dane właściciela"
-                name="daneWlasciciela"
-                value={formData.daneWlasciciela}
-                onChange={handleChange}
-                variant="outlined"
-                fullWidth
-                margin="normal"
-              />
-            </div>
-            <div className="w-full">
-              <CustomTextField
-                label="Telefon do właściciela"
-                name="telefonWlasciciela"
-                value={formData.telefonWlasciciela}
-                onChange={handleChange}
-                variant="outlined"
-                fullWidth
-                margin="normal"
-              />
-            </div>
+          <div className="w-full">
+            <CustomTextField
+              label="Dane właściciela"
+              name="daneWlasciciela"
+              value={formData.daneWlasciciela}
+              onChange={handleChange}
+              variant="outlined"
+              fullWidth
+              margin="normal"
+            />
           </div>
-          <div className="flex flex-col md:flex-row justify-end space-y-4 md:space-x-4 md:space-y-0">
+          <div className="flex flex-col">
+            {formData.telefonWlasciciela.map((phone, index) => (
+              <div className="flex flex-col">
+                <div key={index} className="flex items-center space-x-2">
+                  <CustomTextField
+                    label={`Telefon ${index + 1}`}
+                    variant="outlined"
+                    fullWidth
+                    margin="normal"
+                    onChange={(e) =>
+                      handlePhoneNumbersChange(index, e.target.value)
+                    }
+                    value={phone}
+                  />
+                  <IconButton
+                    onClick={() => removePhoneField(index)}
+                    disabled={formData.telefonWlasciciela.length === 1}
+                    sx={{ marginTop: "8px" }}
+                  >
+                    <RemoveCircle
+                      color={
+                        formData.telefonWlasciciela.length === 1
+                          ? "disabled"
+                          : "error"
+                      }
+                    />
+                  </IconButton>
+                </div>
+              </div>
+            ))}
+            <IconButton onClick={addPhoneField} color="primary">
+              <AddCircle sx={{ color: "#FC8721" }} />
+            </IconButton>
+          </div>
+          <div className="w-full">
             <CustomTextField
               label="Komentarz"
               name="komentarz"
@@ -478,6 +525,8 @@ const EditOfferPanel = ({ offerData, onSave, onCancel, users }) => {
               variant="outlined"
               fullWidth
               margin="normal"
+              multiline
+              maxRows={4}
             />
           </div>
           <div className="flex flex-col md:flex-row justify-end space-y-4 md:space-x-4 md:space-y-0">
