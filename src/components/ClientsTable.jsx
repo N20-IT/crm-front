@@ -279,11 +279,12 @@ function ClientsTable({
                       maxHeight: "60px",
                     },
                     width: "100%",
-                    background: row.czyNoweOferty
-                      ? "#E6FFD7"
-                      : index % 2 === 1
-                      ? "#f5f5f5"
-                      : "white",
+                    background:
+                      row.noweOfertyLiczba > 0
+                        ? "#E6FFD7"
+                        : index % 2 === 1
+                        ? "#f5f5f5"
+                        : "white",
                   }}
                 >
                   <TableCell
@@ -308,12 +309,13 @@ function ClientsTable({
                     <Tooltip title={"Dobierz oferty"}>
                       <IconButton onClick={() => handleMatchClient(row._id)}>
                         <Badge
-                          badgeContent={row.listings.length}
+                          badgeContent={row.noweOfertyLiczba}
                           max={1000}
                           sx={{
                             "& .MuiBadge-badge": {
                               backgroundColor: "#FC8721",
                               color: "white",
+                              zIndex: 0,
                             },
                           }}
                         >
