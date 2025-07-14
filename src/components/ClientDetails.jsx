@@ -113,7 +113,7 @@ function ClientDetails({
         const updatedAssignedOffers = client.przypisaneOferty.filter(
           (offerId) => offerId !== offerIdToRemove
         );
-        console.log(clientId, offerIdToRemove);
+        
         const updatedData = { przypisaneOferty: updatedAssignedOffers };
 
         await axios.put(`${backendServer}/clients/${clientId}`, updatedData, {
