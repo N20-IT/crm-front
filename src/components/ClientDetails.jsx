@@ -6,6 +6,15 @@ import {
   IconButton,
   Divider,
   Skeleton,
+  ThemeProvider,
+  TableContainer,
+  Paper,
+  Table,
+  TableHead,
+  TableCell,
+  Tooltip,
+  TableBody,
+  TableRow,
 } from "@mui/material";
 
 import axios from "axios";
@@ -15,10 +24,12 @@ import Alerts from "../components/Alerts";
 import ClientAction from "./ClientAction";
 import { useAuth } from "../utils/auth";
 import CustomTypography from "./CustomTypography";
-import { Close } from "@mui/icons-material";
+import { Close, DoDisturbOn, Info } from "@mui/icons-material";
 import clientStatuesConfig from "../config/clientStatuesConfig";
 import clientStandardConfig from "../config/clientStandardConfig";
 import EditClientPanel from "./EditClientPanel";
+import { customTooltip } from "../styles/CustomTooltip";
+import CustomTableCell from "./CustomTableCell";
 
 function ClientDetails({
   id,
@@ -36,7 +47,7 @@ function ClientDetails({
   const [loading, setLoading] = useState(true);
   const isAuthenticated = useAuth();
   const [isEditClientPanelOpen, setIsEditClientPanelOpen] = useState(false);
-
+  const [assignedOffersDetails, setAssignedOffersDetails] = useState([]);
   const formatPhoneNumber = (number) => {
     return String(number).replace(/(\d{3})(?=\d)/g, "$1 ");
   };
@@ -50,22 +61,82 @@ function ClientDetails({
       : "";
 
   const fetchDetailsData = useCallback(async () => {
+    setLoading(true);
     try {
-      const response = await axios.get(`${backendServer}/clients/${id}`, {
+      // Pobieramy dane klienta
+      const clientResponse = await axios.get(`${backendServer}/clients/${id}`, {
         headers: {
           accept: "application/json",
           Authorization: `Bearer ${token}`,
         },
       });
-      setClient(response.data);
+      const clientData = clientResponse.data;
+      setClient(clientData);
+      if (
+        clientData.przypisaneOferty &&
+        clientData.przypisaneOferty.length > 0
+      ) {
+        const offersPromises = clientData.przypisaneOferty.map((offerId) =>
+          axios
+            .get(`${backendServer}/listings/${offerId}`, {
+              headers: {
+                accept: "application/json",
+                Authorization: `Bearer ${token}`,
+              },
+            })
+            .then((res) => res.data)
+            .catch((error) => {
+              console.error(`Błąd przy pobieraniu oferty ${offerId}:`, error);
+              return null;
+            })
+        );
+
+        const offersData = await Promise.all(offersPromises);
+        const validOffers = offersData.filter((offer) => offer !== null);
+
+        setAssignedOffersDetails(validOffers);
+      }
     } catch (error) {
       setAlertOpen(true);
       setAlertMessage(error.message);
       setAlertSeverity("error");
+      console.error("Błąd podczas pobierania danych:", error);
     } finally {
       setLoading(false);
     }
   }, [backendServer, id, token]);
+
+  const handleRemoveOfferFromClient = useCallback(
+    async (clientId, offerIdToRemove) => {
+      setLoading(true);
+      try {
+        const updatedAssignedOffers = client.przypisaneOferty.filter(
+          (offerId) => offerId !== offerIdToRemove
+        );
+        console.log(clientId, offerIdToRemove);
+        const updatedData = { przypisaneOferty: updatedAssignedOffers };
+
+        await axios.put(`${backendServer}/clients/${clientId}`, updatedData, {
+          headers: {
+            accept: "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        setAlertOpen(true);
+        setAlertMessage("Usunięto ofertę pomyślnie");
+        setAlertSeverity("success");
+
+        fetchDetailsData();
+      } catch (error) {
+        setAlertOpen(true);
+        setAlertMessage("Błąd podczas usuwania oferty: " + error.message);
+        setAlertSeverity("error");
+      } finally {
+        setLoading(false);
+      }
+    },
+    [token, backendServer, client]
+  );
 
   const handleCloseEditPanel = () => {
     setIsEditClientPanelOpen(!isEditClientPanelOpen);
@@ -309,6 +380,183 @@ function ClientDetails({
               )}
             </Grid2>
           </Grid2>
+        )}
+        <br></br>
+        {!loading ? (
+          <div>
+            <Typography
+              variant="h6"
+              sx={{
+                fontFamily: "Poppins",
+                fontWeight: 500,
+                fontSize: "1.2rem",
+              }}
+            >
+              Przypisane oferty
+            </Typography>
+            <ThemeProvider theme={customTooltip}>
+              <TableContainer
+                className="ml-5"
+                component={Paper}
+                elevation={8}
+                style={{
+                  width: "99.4%",
+                  alignSelf: "center",
+                  borderBottomLeftRadius: "8px",
+                  borderBottomRightRadius: "8px",
+                  maxHeight: "88vh",
+                  marginLeft: "0px",
+                  marginTop: "6px",
+                }}
+              >
+                <Table>
+                  <TableHead
+                    style={{
+                      backgroundColor: "#272F3E",
+                      position: "sticky",
+                      top: 0,
+                      zIndex: 1,
+                    }}
+                  >
+                    <TableCell
+                      key="ulica"
+                      sx={{
+                        color: "white",
+                        textAlign: "center",
+                        fontFamily: "Poppins",
+                        padding: "0px",
+                        paddingLeft: "15px",
+                        paddingRight: "15px",
+                      }}
+                    >
+                      <Tooltip title="Ulica">Ulica</Tooltip>
+                    </TableCell>
+                    <TableCell
+                      key="dzielnica"
+                      sx={{
+                        color: "white",
+                        textAlign: "center",
+                        fontFamily: "Poppins",
+                        padding: "0px",
+                        paddingLeft: "15px",
+                        paddingRight: "15px",
+                      }}
+                    >
+                      <Tooltip title="Dzielnica">Dzielnica</Tooltip>
+                    </TableCell>
+                    <TableCell
+                      key="metraz"
+                      sx={{
+                        color: "white",
+                        textAlign: "center",
+                        fontFamily: "Poppins",
+                        padding: "0px",
+                        paddingLeft: "15px",
+                        paddingRight: "15px",
+                      }}
+                    >
+                      <Tooltip title="Metraż">Metraż</Tooltip>
+                    </TableCell>
+                    {/* <TableCell
+                      key="szczegoly"
+                      sx={{
+                        color: "white",
+                        textAlign: "center",
+                        fontFamily: "Poppins",
+                        padding: "0px",
+                        paddingLeft: "15px",
+                        paddingRight: "15px",
+                      }}
+                    >
+                      <Tooltip title="Szczegóły oferty">
+                        Szczegóły oferty
+                      </Tooltip>
+                    </TableCell> */}
+                    <TableCell
+                      key="odstap_oferte"
+                      sx={{
+                        color: "white",
+                        textAlign: "center",
+                        fontFamily: "Poppins",
+                        padding: "0px",
+                        paddingLeft: "15px",
+                        paddingRight: "15px",
+                      }}
+                    >
+                      <Tooltip title="Odstąp ofertę">Odstąp ofertę</Tooltip>
+                    </TableCell>
+                  </TableHead>
+                  <TableBody>
+                    {Array.isArray(assignedOffersDetails) &&
+                    client.przypisaneOferty.length > 0 ? (
+                      assignedOffersDetails.map((row, index) => (
+                        <TableRow
+                          key={row._id}
+                          style={{
+                            "& .MuiTableRowRoot": {
+                              maxHeight: "60px",
+                            },
+                            width: "100%",
+                            background:
+                              row.noweOfertyLiczba > 0
+                                ? "#E6FFD7"
+                                : index % 2 === 1
+                                ? "#f5f5f5"
+                                : "white",
+                          }}
+                        >
+                          <CustomTableCell>
+                            <strong>{row.ulica || ""}</strong>
+                          </CustomTableCell>
+                          <CustomTableCell>
+                            <strong>{row.dzielnica || ""}</strong>
+                          </CustomTableCell>
+                          <CustomTableCell>
+                            <strong>{formatNumber(row.metraz) || ""}</strong>
+                          </CustomTableCell>
+                          {/* <CustomTableCell>
+                            <Tooltip title="Zobacz szczegóły">
+                              <IconButton>
+                                <Info />
+                              </IconButton>
+                            </Tooltip>
+                          </CustomTableCell> */}
+                          <CustomTableCell>
+                            <Tooltip title="Zobacz szczegóły">
+                              <IconButton
+                                onClick={() =>
+                                  handleRemoveOfferFromClient(
+                                    client._id,
+                                    row._id
+                                  )
+                                }
+                                sx={{
+                                  color: "#A11D1D",
+                                }}
+                              >
+                                <DoDisturbOn />
+                              </IconButton>
+                            </Tooltip>
+                          </CustomTableCell>
+                        </TableRow>
+                      ))
+                    ) : (
+                      <TableRow>
+                        <TableCell
+                          colSpan={5}
+                          style={{ textAlign: "center", width: "100%" }}
+                        >
+                          Brak danych do wyświetlenia
+                        </TableCell>
+                      </TableRow>
+                    )}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            </ThemeProvider>
+          </div>
+        ) : (
+          <div></div>
         )}
         <Box
           className="flex justify-end mt-6"
