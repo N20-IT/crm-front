@@ -78,7 +78,7 @@ function OfferActions({
       </Tooltip>
 
       {filters.clientId && (
-        <Tooltip title="Przypisz klienta">
+        <Tooltip title="Przypisz ofertę klientowi">
           <IconButton
             onClick={() =>
               handleAssignmentOfferToClientClick(filters.clientId, row._id)
@@ -128,7 +128,7 @@ function OfferActions({
         </Tooltip>
       )}
 
-      <Tooltip title="Przypisz ofertę">
+      <Tooltip title="Przypisz ofertę agentowi">
         <IconButton
           onClick={() => handleUpdateOfferAgentClick(row._id)}
           sx={{
