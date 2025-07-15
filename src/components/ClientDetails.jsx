@@ -30,6 +30,10 @@ import clientStandardConfig from "../config/clientStandardConfig";
 import EditClientPanel from "./EditClientPanel";
 import { customTooltip } from "../styles/CustomTooltip";
 import CustomTableCell from "./CustomTableCell";
+import { GetInformationFromToken } from "../utils/decodeToken";
+import { useReadConfig } from "../config/columnConfig";
+import EditOfferPanel from "./EditOfferPanel";
+import OfferDetailsFromClient from "./OfferDetailsFromClient";
 
 function ClientDetails({
   id,
@@ -51,6 +55,12 @@ function ClientDetails({
   const formatPhoneNumber = (number) => {
     return String(number).replace(/(\d{3})(?=\d)/g, "$1 ");
   };
+  const [isOfferDetailsPanelOpen, setIsOfferDetailsPanelOpen] = useState(false);
+  const [offerDetailsId, setOfferDetailsId] = useState(null);
+  const userRole = GetInformationFromToken("custom:role");
+  const [readConfig, setReadConfig] = useState(useReadConfig());
+  const [isEditOfferPanelOpen, setEditOfferPanelOpen] = useState(false);
+  const [editOfferData, setEditOfferData] = useState(null);
 
   const formatNumber = (value) =>
     value
@@ -113,7 +123,7 @@ function ClientDetails({
         const updatedAssignedOffers = client.przypisaneOferty.filter(
           (offerId) => offerId !== offerIdToRemove
         );
-        
+
         const updatedData = { przypisaneOferty: updatedAssignedOffers };
 
         await axios.put(`${backendServer}/clients/${clientId}`, updatedData, {
@@ -138,12 +148,53 @@ function ClientDetails({
     [token, backendServer, client]
   );
 
+  const handleSaveEditedOffer = useCallback(
+    async (updatedOfferData) => {
+      setLoading(true);
+      try {
+        await axios.put(
+          `${backendServer}/listings/${updatedOfferData._id}`,
+          updatedOfferData,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        setAlertOpen(true);
+        setAlertMessage("Zaktualizowano pomyślnie");
+        setAlertSeverity("success");
+        setEditOfferPanelOpen(false);
+        if (isOfferDetailsPanelOpen)
+          setIsOfferDetailsPanelOpen(!isOfferDetailsPanelOpen);
+        await fetchDetailsData();
+      } catch (error) {
+        setAlertOpen(true);
+        setAlertMessage("Błąd podczas aktualizowania oferty: " + error.message);
+        setAlertSeverity("error");
+      } finally {
+        setLoading(false);
+      }
+    },
+    [backendServer, token, fetchDetailsData]
+  );
+
   const handleCloseEditPanel = () => {
     setIsEditClientPanelOpen(!isEditClientPanelOpen);
   };
 
   const handleEditClick = () => {
     setIsEditClientPanelOpen(true);
+  };
+
+  const handleCloseOfferDetailsPanel = () => {
+    setIsOfferDetailsPanelOpen(!isOfferDetailsPanelOpen);
+    setOfferDetailsId(null);
+  };
+
+  const handleOpenOfferDetailsPanel = (offerId) => {
+    setOfferDetailsId(offerId);
+    setIsOfferDetailsPanelOpen(!isOfferDetailsPanelOpen);
   };
 
   useEffect(() => {
@@ -457,7 +508,7 @@ function ClientDetails({
                     >
                       <Tooltip title="Metraż">Metraż</Tooltip>
                     </TableCell>
-                    {/* <TableCell
+                    <TableCell
                       key="szczegoly"
                       sx={{
                         color: "white",
@@ -471,7 +522,7 @@ function ClientDetails({
                       <Tooltip title="Szczegóły oferty">
                         Szczegóły oferty
                       </Tooltip>
-                    </TableCell> */}
+                    </TableCell>
                     <TableCell
                       key="odstap_oferte"
                       sx={{
@@ -514,15 +565,19 @@ function ClientDetails({
                           <CustomTableCell>
                             <strong>{formatNumber(row.metraz) || ""}</strong>
                           </CustomTableCell>
-                          {/* <CustomTableCell>
+                          <CustomTableCell>
                             <Tooltip title="Zobacz szczegóły">
-                              <IconButton>
+                              <IconButton
+                                onClick={() =>
+                                  handleOpenOfferDetailsPanel(row._id)
+                                }
+                              >
                                 <Info />
                               </IconButton>
                             </Tooltip>
-                          </CustomTableCell> */}
+                          </CustomTableCell>
                           <CustomTableCell>
-                            <Tooltip title="Zobacz szczegóły">
+                            <Tooltip title="Odstąp ofertę">
                               <IconButton
                                 onClick={() =>
                                   handleRemoveOfferFromClient(
@@ -585,6 +640,23 @@ function ClientDetails({
             onSave={handleSaveEditedClient}
             onCancel={handleCloseEditPanel}
             allUsers={users}
+          />
+        )}
+        {isEditOfferPanelOpen && (
+          <EditOfferPanel
+            offerData={editOfferData}
+            onSave={handleSaveEditedOffer}
+            onCancel={() => setEditOfferPanelOpen(false)}
+            users={users}
+          />
+        )}
+        {isOfferDetailsPanelOpen && (
+          <OfferDetailsFromClient
+            id={offerDetailsId}
+            onClose={handleCloseOfferDetailsPanel}
+            userRole={userRole}
+            readConfig={readConfig}
+            handleSaveEditedOffer={handleSaveEditedOffer}
           />
         )}
       </div>
