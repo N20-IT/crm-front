@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { TableCell, IconButton, Tooltip } from "@mui/material";
 import {
   Delete,
@@ -8,8 +8,9 @@ import {
   Map,
   AssignmentInd,
   Info,
+  Assignment,
 } from "@mui/icons-material";
-
+import { useReadFiltersConfig } from "../config/filtersCookiesConfig";
 function OfferActions({
   row,
   userRole,
@@ -21,7 +22,10 @@ function OfferActions({
   handleGoToOfferDetailsPage,
   showDetailsIcon,
   handleChangeOfferInterestClick,
+  handleAssignmentOfferToClientClick,
 }) {
+  const [filters] = useState(useReadFiltersConfig());
+
   return (
     <TableCell
       style={{
@@ -73,6 +77,22 @@ function OfferActions({
         </IconButton>
       </Tooltip>
 
+      {filters.clientId && (
+        <Tooltip title="Przypisz ofertę klientowi">
+          <IconButton
+            onClick={() =>
+              handleAssignmentOfferToClientClick(filters.clientId, row._id)
+            }
+            sx={{
+              padding: "4px",
+              color: "#ffbd00",
+            }}
+          >
+            <Assignment />
+          </IconButton>
+        </Tooltip>
+      )}
+
       {readConfig === 1 && (
         <Tooltip title="Dodaj do kalendarza">
           <IconButton
@@ -108,7 +128,7 @@ function OfferActions({
         </Tooltip>
       )}
 
-      <Tooltip title="Przypisz ofertę">
+      <Tooltip title="Przypisz ofertę agentowi">
         <IconButton
           onClick={() => handleUpdateOfferAgentClick(row._id)}
           sx={{

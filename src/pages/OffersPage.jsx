@@ -40,6 +40,12 @@ function OffersPage() {
     openDialogChangeOfferInterest,
     setOpenDialogChangeOfferInterest,
   ] = useState(false);
+  const [
+    openDialogAssignmentOfferToClient,
+    setOpenDialogAssignmentOfferToClient,
+  ] = useState(false);
+  const [clientIdToAssign, setClientIdToAssign] = useState(null);
+  const [offerIdToAssign, setOfferIdToAssign] = useState(null);
   const [offerIdToDelete, setOfferIdToDelete] = useState(null);
   const [offerIdToUpdateAgent, setOfferIdToUpdateAgent] = useState(null);
   const [offerToChangeOfferInterest, setOfferToChangeOfferInterest] = useState(
@@ -111,6 +117,9 @@ function OffersPage() {
   const handleOpenCloseDialogConfirmOfferAssignment = () =>
     setOpenDialogConfirmOfferAssignment(!openDialogConfirmOfferAssignment);
 
+  const handleOpenCloseDialogAssignmentOfferToClient = () =>
+    setOpenDialogAssignmentOfferToClient(!openDialogAssignmentOfferToClient);
+
   const handleEditClick = (offer) => {
     setEditOfferData(offer);
     setEditOfferPanelOpen(true);
@@ -126,6 +135,12 @@ function OffersPage() {
   const handleSearchAndFilter = (searchQuery, currentFilters, columnConfig) => {
     setReadConfig(columnConfig);
     fetchData(searchQuery, currentFilters, columnConfig);
+  };
+
+  const handleAssignmentOfferToClientClick = (clientId, offerId) => {
+    setClientIdToAssign(clientId);
+    setOfferIdToAssign(offerId);
+    setOpenDialogAssignmentOfferToClient(true);
   };
 
   const handlePagination = (currentPage, rowsPerValue) => {
@@ -362,6 +377,70 @@ function OffersPage() {
     [backendServer, token, fetchData]
   );
 
+  const handleAssigmentOfferToClient = useCallback(async () => {
+    setLoading(true);
+
+    try {
+      const response = await axios.get(
+        `${backendServer}/clients/${clientIdToAssign}`,
+        {
+          headers: {
+            accept: "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      const currentClientData = response.data;
+
+      if (currentClientData.przypisaneOferty.includes(offerIdToAssign)) {
+        setAlertOpen(true);
+        setAlertMessage("Ta oferta jest już przypisana do tego klienta");
+        setAlertSeverity("warning");
+        if (openDialogAssignmentOfferToClient)
+          setOpenDialogAssignmentOfferToClient(
+            !openDialogAssignmentOfferToClient
+          );
+
+        setLoading(false);
+        return;
+      }
+
+      const updatedAssignedOffers = [
+        ...currentClientData.przypisaneOferty,
+        offerIdToAssign,
+      ];
+
+      const updatedData = { przypisaneOferty: updatedAssignedOffers };
+
+      await axios.put(
+        `${backendServer}/clients/${clientIdToAssign}`,
+        updatedData,
+        {
+          headers: {
+            accept: "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      setAlertOpen(true);
+      setAlertMessage("Zaktualizowano pomyślnie");
+      setAlertSeverity("success");
+      setEditOfferPanelOpen(false);
+      if (openDialogAssignmentOfferToClient)
+        setOpenDialogAssignmentOfferToClient(
+          !openDialogAssignmentOfferToClient
+        );
+      await fetchData();
+    } catch (error) {
+      setAlertOpen(true);
+      setAlertMessage("Błąd podczas aktualizowania oferty: " + error.message);
+      setAlertSeverity("error");
+    } finally {
+      setLoading(false);
+    }
+  });
+
   const handleConfirmOfferAssignment = useCallback(async () => {
     setLoading(true);
     try {
@@ -437,7 +516,7 @@ function OffersPage() {
     fetchAgents();
     fetchClients();
     fetchData();
-  }, [isAuthenticated, id, fetchAgents, fetchClients, fetchData]);
+  }, [isAuthenticated, id, fetchAgents, fetchClients, fetchData, filters]);
 
   return (
     <div>
@@ -473,6 +552,9 @@ function OffersPage() {
           onSortApply={handleSort}
           quantityOffers={quantityOffers}
           handleChangeOfferInterest={handleChangeOfferInterest}
+          handleAssignmentOfferToClientClick={
+            handleAssignmentOfferToClientClick
+          }
         />
         <Alerts
           message={alertMessage}
@@ -499,6 +581,21 @@ function OffersPage() {
           buttonText={"Usuń"}
           buttonColor={"error"}
         />
+
+        <ConfirmDialog
+          open={openDialogAssignmentOfferToClient}
+          onClose={handleOpenCloseDialogAssignmentOfferToClient}
+          onConfirm={handleAssigmentOfferToClient}
+          dialogTitle={"Potwierdzenie przypisania oferty klientowi"}
+          dialogContent={
+            "Czy na pewno chcesz przypisać tę ofertę klientowi:\n" +
+            clients.find((client) => client._id === clientIdToAssign)
+              ?.daneKlienta
+          }
+          buttonText={"Potwierdź"}
+          buttonColor={"warning"}
+        />
+
         {offerToChangeOfferInterest && (
           <ConfirmDialog
             open={openDialogChangeOfferInterest}

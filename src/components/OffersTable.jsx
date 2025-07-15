@@ -39,6 +39,7 @@ function OffersTable({
   onPaginationApply,
   onSortApply,
   quantityOffers,
+  handleAssignmentOfferToClientClick,
 }) {
   const [order, setOrder] = useState("desc");
   const [orderBy, setOrderBy] = useState("dataUtworzenia");
@@ -276,6 +277,9 @@ function OffersTable({
                     handleChangeOfferInterestClick={
                       handleChangeOfferInterestClick
                     }
+                    handleAssignmentOfferToClientClick={
+                      handleAssignmentOfferToClientClick
+                    }
                   />
                   {readConfig === 1 ? (
                     <CustomTableCell>
@@ -412,30 +416,34 @@ function OffersTable({
                     <strong>
                       {Array.isArray(row.telefonWlasciciela) &&
                       row.telefonWlasciciela.length > 0 ? (
-                        row.telefonWlasciciela.map((number, index) => (
-                          <div
-                            key={index}
-                            style={{
-                              display: "flex",
-                              alignItems: "center",
-                              gap: "4px",
-                            }}
-                          >
-                            <span style={{ whiteSpace: "nowrap" }}>
-                              {formatPhoneNumber(number)}
-                            </span>
-                            <Tooltip title="Skopiuj numer">
-                              <IconButton
-                                onClick={() => copyToClipboard(number)}
-                                sx={{
-                                  padding: "6px",
-                                }}
-                              >
-                                <FileCopy />
-                              </IconButton>
-                            </Tooltip>
-                          </div>
-                        ))
+                        row.telefonWlasciciela.map((number, index) =>
+                          number !== "" ? (
+                            <div
+                              key={index}
+                              style={{
+                                display: "flex",
+                                alignItems: "center",
+                                gap: "4px",
+                              }}
+                            >
+                              <span style={{ whiteSpace: "nowrap" }}>
+                                {formatPhoneNumber(number)}
+                              </span>
+                              <Tooltip title="Skopiuj numer">
+                                <IconButton
+                                  onClick={() => copyToClipboard(number)}
+                                  sx={{
+                                    padding: "6px",
+                                  }}
+                                >
+                                  <FileCopy />
+                                </IconButton>
+                              </Tooltip>
+                            </div>
+                          ) : (
+                            <span>Brak numeru</span>
+                          )
+                        )
                       ) : (
                         <span>Brak numeru</span>
                       )}
