@@ -57,8 +57,8 @@ const columnsOffersConfig = [
   },
   {
     id: "telefonDoWlasciciela",
-    label: "Telefon",
-    shortLabel: "Tel.",
+    label: "Telefon/Email",
+    shortLabel: "Tel/Email",
     sortable: false,
     view: "basic",
   },
