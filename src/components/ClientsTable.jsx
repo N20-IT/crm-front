@@ -168,27 +168,6 @@ function ClientsTable({
           >
             <TableRow>
               <TableCell
-                padding="checkbox"
-                style={{
-                  color: "white",
-                  textAlign: "center",
-                }}
-              >
-                <Checkbox
-                  checked={selected.length === rows.length}
-                  indeterminate={
-                    selected.length > 0 && selected.length < rows.length
-                  }
-                  onChange={handleSelectAll}
-                  style={{
-                    color: "white",
-                    padding: "0px",
-                    paddingLeft: "5px",
-                    paddingRight: "5px",
-                  }}
-                />
-              </TableCell>
-              <TableCell
                 key="nrOfertyLink"
                 sx={{
                   color: "white",
@@ -287,24 +266,6 @@ function ClientsTable({
                         : "white",
                   }}
                 >
-                  <TableCell
-                    style={{
-                      textAlign: "center",
-                      padding: "5px",
-                      maxHeight: "60px",
-                    }}
-                  >
-                    <Checkbox
-                      checked={selected.includes(row._id)}
-                      onChange={() => handleSelect(row._id)}
-                      sx={{
-                        color: "#272F3E",
-                        "&.Mui-checked": {
-                          color: "#272F3E",
-                        },
-                      }}
-                    />
-                  </TableCell>
                   <CustomTableCell style={{ whiteSpace: "nowrap" }}>
                     <Tooltip title={"Dobierz oferty"}>
                       <IconButton onClick={() => handleMatchClient(row._id)}>

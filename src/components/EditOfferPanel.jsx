@@ -487,7 +487,7 @@ const EditOfferPanel = ({ offerData, onSave, onCancel, users }) => {
               <div className="flex flex-col">
                 <div key={index} className="flex items-center space-x-2">
                   <CustomTextField
-                    label={`Telefon ${index + 1}`}
+                    label={`Telefon/Email ${index + 1}`}
                     variant="outlined"
                     fullWidth
                     margin="normal"

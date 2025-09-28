@@ -1,6 +1,7 @@
-import { Delete, Edit, Info } from "@mui/icons-material";
+import { Delete, Edit, Info, RestoreFromTrash } from "@mui/icons-material";
 import { IconButton, TableCell, Tooltip } from "@mui/material";
 import React from "react";
+import { useLocation } from "react-router-dom";
 
 function ClientAction({
   row,
@@ -9,6 +10,8 @@ function ClientAction({
   showDetailsIcon,
   handleGoToClientDetails,
 }) {
+  const location = useLocation();
+
   return (
     <TableCell
       style={{
@@ -18,17 +21,31 @@ function ClientAction({
         fontFamily: "Poppins",
       }}
     >
-      <Tooltip title="Usuń">
-        <IconButton
-          onClick={() => handleDeleteClientClick([row._id])}
-          sx={{
-            padding: "4px",
-            color: "#A11D1D",
-          }}
-        >
-          <Delete />
-        </IconButton>
-      </Tooltip>
+      {location.pathname == "/klienci" ? (
+        <Tooltip title="Usuń">
+          <IconButton
+            onClick={() => handleDeleteClientClick(row)}
+            sx={{
+              padding: "4px",
+              color: "#A11D1D",
+            }}
+          >
+            <Delete />
+          </IconButton>
+        </Tooltip>
+      ) : (
+        <Tooltip title="Przywróć klienta">
+          <IconButton
+            onClick={() => handleDeleteClientClick(row)}
+            sx={{
+              padding: "4px",
+              color: "#A11D1D",
+            }}
+          >
+            <RestoreFromTrash />
+          </IconButton>
+        </Tooltip>
+      )}
       <Tooltip title="Edytuj">
         <IconButton
           sx={{ padding: "4px", color: "#6A99C7" }}

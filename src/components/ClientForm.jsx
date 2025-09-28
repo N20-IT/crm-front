@@ -687,6 +687,12 @@ function ClientForm({
           fullWidth
           margin="normal"
           InputLabelProps={{ shrink: true }}
+          inputProps={{
+            min: new Date().toISOString().slice(0, 16),
+            max: new Date(Date.now() + 10 * 24 * 60 * 60 * 1000)
+              .toISOString()
+              .slice(0, 16),
+          }}
         />
       </div>
     </form>

@@ -6,6 +6,7 @@ import {
   Groups,
   Description,
   Logout,
+  PersonRemove,
 } from "@mui/icons-material";
 import { ThemeProvider } from "@mui/material/styles";
 import { customTooltip } from "../styles/CustomTooltip";
@@ -51,6 +52,21 @@ const Sidebar = () => {
             </li>
             <li
               className={`w-full h-14 flex justify-start items-center ${getLinkClass(
+                "/ciekawe-oferty"
+              )}`}
+            >
+              {" "}
+              <Tooltip title="Ciekawe oferty" placement="right">
+                <Link
+                  to="/ciekawe-oferty"
+                  className="flex items-center justify-start text-xl ml-4 w-full h-full"
+                >
+                  <Star sx={{ marginRight: "6px" }} />
+                </Link>
+              </Tooltip>
+            </li>
+            <li
+              className={`w-full h-14 flex justify-start items-center ${getLinkClass(
                 "/klienci"
               )}`}
             >
@@ -63,18 +79,18 @@ const Sidebar = () => {
                 </Link>
               </Tooltip>
             </li>
+
             <li
               className={`w-full h-14 flex justify-start items-center ${getLinkClass(
-                "/ciekawe-oferty"
+                "/kosz-klientow"
               )}`}
             >
-              {" "}
-              <Tooltip title="Ciekawe oferty" placement="right">
+              <Tooltip title="Kosz klientów" placement="right">
                 <Link
-                  to="/ciekawe-oferty"
+                  to="/kosz-klientow"
                   className="flex items-center justify-start text-xl ml-4 w-full h-full"
                 >
-                  <Star sx={{ marginRight: "6px" }} />
+                  <PersonRemove sx={{ marginRight: "6px" }} />
                 </Link>
               </Tooltip>
             </li>

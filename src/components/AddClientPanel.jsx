@@ -52,6 +52,10 @@ function AddClientPanel({ onSave, onCancel, allUsers }) {
     }
     if (!formData.status) validationErrors.status = "Status jest wymagany.";
     if (!formData.agent) validationErrors.agent = "Agent jest wymagany.";
+    if (formData.status === "Zajęty" && !formData.komentarz)
+      validationErrors.komentarz = "Komentarz jest wymagany.";
+    if (formData.status === "Zajęty" && !formData.dataNastepnegoKontaktu)
+      validationErrors.komentarz = "Data następnego kontaktu jest wymagana.";
     if (!formData.numerGalactica)
       validationErrors.numerGalactica = "Numer oferty Galactica jest wymagany.";
     if (formData.lokalizacja.length === 0)
