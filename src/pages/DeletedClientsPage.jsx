@@ -16,7 +16,7 @@ import LoadingCircularProgress from "../components/LoadingCircularProgress";
 import ClientDetails from "../components/ClientDetails";
 import { useParams } from "react-router-dom";
 
-function ClientsPage() {
+function DeletedClientsPage() {
   const { id } = useParams();
   const navigate = useNavigate();
   const isAuthenticated = useAuth();
@@ -34,7 +34,7 @@ function ClientsPage() {
   const [orderBy, setOrderBy] = useState("dataZapytania");
   const [order, setOrder] = useState("desc");
   const [openDialogDelete, setopenDialogDelete] = useState(false);
-  const [clientToDelete, setClientToDelete] = useState(null);
+  const [clientIdToDelete, setClientIdToDelete] = useState(null);
   const [isAddClientPanelOpen, setIsAddClientPanelOpen] = useState(false);
   const [isEditClientPanelOpen, setIsEditClientPanelOpen] = useState(false);
   const [isClientDetailsPanelOpen, setIsClientDetailsPanelOpen] = useState(
@@ -57,15 +57,15 @@ function ClientsPage() {
   };
 
   const handleConfirmDelete = async () => {
-    if (clientToDelete) {
-      await handleDeleteClient(clientToDelete);
-      setClientToDelete(null);
+    if (clientIdToDelete) {
+      await handleRestoreClient(clientIdToDelete);
+      setClientIdToDelete(null);
     }
     setopenDialogDelete(false);
   };
 
-  const handleDeleteClientClick = (client) => {
-    setClientToDelete(client);
+  const handleDeleteClientClick = (clientId) => {
+    setClientIdToDelete(clientId);
     setopenDialogDelete(true);
   };
 
@@ -143,7 +143,7 @@ function ClientsPage() {
             limit: rowsPerValue,
             sortBy,
             sort,
-            czyUsuniety: false,
+            czyUsuniety: true,
           },
         });
         setRows(response.data["klienci"]);
@@ -155,38 +155,6 @@ function ClientsPage() {
       }
     },
     [backendServer, token]
-  );
-
-  const handleDeleteClient = useCallback(
-    async (editedClient) => {
-      setLoading(true);
-      editedClient.czyUsuniety = true;
-      try {
-        await axios.put(
-          `${backendServer}/clients/${editedClient._id}`,
-          editedClient,
-          {
-            headers: {
-              accept: "application/json",
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-        setAlertOpen(true);
-        setAlertMessage("Pomyślnie usunięto klienta");
-        setAlertSeverity("success");
-        if (isClientDetailsPanelOpen) setIsClientDetailsPanelOpen(false);
-        await fetchData();
-        setSelected([]);
-      } catch (error) {
-        setAlertOpen(true);
-        setAlertMessage("Błąd podczas usuwania ofert: " + error.message);
-        setAlertSeverity("error");
-      } finally {
-        setLoading(false);
-      }
-    },
-    [backendServer, token, fetchData]
   );
 
   // const handleDeleteClient = useCallback(
@@ -217,6 +185,36 @@ function ClientsPage() {
   //   },
   //   [backendServer, token, fetchData]
   // );
+
+  const handleRestoreClient = useCallback(async (updatedClientDate) => {
+    setLoading(true);
+    updatedClientDate.czyUsuniety = false;
+    try {
+      await axios.put(
+        `${backendServer}/clients/${updatedClientDate._id}`,
+        updatedClientDate,
+        {
+          headers: {
+            accept: "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      setAlertOpen(true);
+      setAlertMessage("Pomyślnie przywrócono klienta");
+      setAlertSeverity("success");
+      setIsEditClientPanelOpen(false);
+      if (isClientDetailsPanelOpen)
+        setIsClientDetailsPanelOpen(!isClientDetailsPanelOpen);
+      await fetchData();
+    } catch (error) {
+      setAlertOpen(true);
+      setAlertMessage("Błąd podczas przywracania klienta: " + error.message);
+      setAlertSeverity("error");
+    } finally {
+      setLoading(false);
+    }
+  });
 
   const handleEditClient = useCallback(
     async (updatedClientDate) => {
@@ -289,12 +287,10 @@ function ClientsPage() {
     fetchData();
   }, [isAuthenticated, id, navigate, fetchAgents, fetchData]);
   return (
-    <div className="flex items-start justify-start h-screen ml-16 flex-col">
+    <div className="flex items-start justify-start h-screen ml-16 mt-[10px] flex-col">
       <Sidebar />
       {loading && <LoadingCircularProgress />}
-      <div className="flex justify-center w-full">
-        <ClientTableControls onAddClientClick={handleAddClientClick} />
-      </div>
+
       <ClientsTable
         rows={rows}
         columns={columns}
@@ -318,8 +314,8 @@ function ClientsPage() {
         open={openDialogDelete}
         onClose={handleOpenCloseDialog}
         onConfirm={handleConfirmDelete}
-        dialogTitle={"Potwierdzenie usunięcia"}
-        dialogContent={"Czy na pewno chcesz usunąć?"}
+        dialogTitle={"Potwierdzenie przywrócenia klienta"}
+        dialogContent={"Czy na pewno chcesz przywrócić tego klienta?"}
         buttonText={"Usuń"}
         buttonColor={"error"}
       />
@@ -351,4 +347,4 @@ function ClientsPage() {
   );
 }
 
-export default ClientsPage;
+export default DeletedClientsPage;
