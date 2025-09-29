@@ -15,8 +15,8 @@ import { useReadConfig } from "../config/columnConfig";
 import OffersTable from "../components/OffersTable";
 import OfferDetailsPage from "./OfferDetailsPage";
 import columnsOffersConfig from "../config/columnsOffersConfig";
-import { useReadFiltersConfig } from "../config/filtersCookiesConfig";
 import LoadingCircularProgress from "../components/LoadingCircularProgress";
+import { useFiltersStore } from "../store/filtersStore";
 
 function InterestingOffersPage() {
   const navigate = useNavigate();
@@ -59,7 +59,7 @@ function InterestingOffersPage() {
   const [readConfig, setReadConfig] = useState(useReadConfig());
   const [page, setPage] = useState(0);
   const [itemsPerPage, setItemsPerPage] = useState(100);
-  const [filters, setFilters] = useState(useReadFiltersConfig());
+  const { filters, setFilters, clearFilters } = useFiltersStore();
   const [searchValue, setSearchValue] = useState("");
   const [quantityOffers, setQuantityOffers] = useState(0);
   const [orderBy, setOrderBy] = useState("dataUtworzenia");
@@ -393,9 +393,20 @@ function InterestingOffersPage() {
   }, [backendServer, token, fetchData]);
 
   const handleChangeOfferInterest = useCallback(async () => {
+    if (!offerToChangeOfferInterest) {
+      console.error("offerToChangeOfferInterest is null - cannot proceed");
+      setAlertOpen(true);
+      setAlertMessage("Błąd: Brak oferty do aktualizacji");
+      setAlertSeverity("error");
+      setOpenDialogChangeOfferInterest(false);
+      return;
+    }
+
     setLoading(true);
-    const editedOffer = offerToChangeOfferInterest;
-    editedOffer.czyCiekawa = !editedOffer.czyCiekawa;
+    const editedOffer = {
+      ...offerToChangeOfferInterest,
+      czyCiekawa: false,
+    };
     try {
       await axios.put(
         `${backendServer}/listings/${editedOffer._id}`,
@@ -421,7 +432,13 @@ function InterestingOffersPage() {
     } finally {
       setLoading(false);
     }
-  }, [backendServer, token, fetchData]);
+  }, [
+    backendServer,
+    token,
+    fetchData,
+    offerToChangeOfferInterest,
+    isOfferDetailsPanelOpen,
+  ]);
 
   useEffect(() => {
     if (!isAuthenticated) navigate("/");
@@ -438,6 +455,12 @@ function InterestingOffersPage() {
     userInformation,
     userRole,
   ]);
+
+  useEffect(() => {
+    return () => {
+      clearFilters();
+    };
+  }, []);
 
   return (
     <div>

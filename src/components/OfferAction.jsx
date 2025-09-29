@@ -1,4 +1,3 @@
-import React, { useState } from "react";
 import { TableCell, IconButton, Tooltip } from "@mui/material";
 import {
   Delete,
@@ -10,7 +9,8 @@ import {
   Info,
   Assignment,
 } from "@mui/icons-material";
-import { useReadFiltersConfig } from "../config/filtersCookiesConfig";
+import { useFiltersStore } from "../store/filtersStore";
+
 function OfferActions({
   row,
   userRole,
@@ -24,7 +24,7 @@ function OfferActions({
   handleChangeOfferInterestClick,
   handleAssignmentOfferToClientClick,
 }) {
-  const [filters] = useState(useReadFiltersConfig());
+  const { filters } = useFiltersStore();
 
   return (
     <TableCell

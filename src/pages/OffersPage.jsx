@@ -15,9 +15,9 @@ import { useReadConfig } from "../config/columnConfig";
 import OffersTable from "../components/OffersTable";
 import OfferDetailsPage from "./OfferDetailsPage";
 import columnsOffersConfig from "../config/columnsOffersConfig";
-import { useReadFiltersConfig } from "../config/filtersCookiesConfig";
 import LoadingCircularProgress from "../components/LoadingCircularProgress";
 import { useParams } from "react-router-dom";
+import { useFiltersStore } from "../store/filtersStore";
 
 function OffersPage() {
   const { id } = useParams();
@@ -66,7 +66,8 @@ function OffersPage() {
   const [readConfig, setReadConfig] = useState(useReadConfig());
   const [page, setPage] = useState(0);
   const [itemsPerPage, setItemsPerPage] = useState(100);
-  const [filters, setFilters] = useState(useReadFiltersConfig());
+  const { filters, updateFilter, setFilters, clearFilters } = useFiltersStore();
+
   const [searchValue, setSearchValue] = useState("");
   const [quantityOffers, setQuantityOffers] = useState(0);
   const [orderBy, setOrderBy] = useState("dataUtworzenia");
@@ -472,9 +473,20 @@ function OffersPage() {
   }, [backendServer, token, fetchData]);
 
   const handleChangeOfferInterest = useCallback(async () => {
+    if (!offerToChangeOfferInterest) {
+      console.error("offerToChangeOfferInterest is null - cannot proceed");
+      setAlertOpen(true);
+      setAlertMessage("Błąd: Brak oferty do aktualizacji");
+      setAlertSeverity("error");
+      setOpenDialogChangeOfferInterest(false);
+      return;
+    }
+
     setLoading(true);
-    const editedOffer = offerToChangeOfferInterest;
-    editedOffer.czyCiekawa = !editedOffer.czyCiekawa;
+    const editedOffer = {
+      ...offerToChangeOfferInterest,
+      czyCiekawa: true,
+    };
     try {
       await axios.put(
         `${backendServer}/listings/${editedOffer._id}`,
@@ -500,7 +512,13 @@ function OffersPage() {
     } finally {
       setLoading(false);
     }
-  }, [backendServer, token, fetchData]);
+  }, [
+    backendServer,
+    token,
+    fetchData,
+    offerToChangeOfferInterest,
+    isOfferDetailsPanelOpen,
+  ]);
 
   useEffect(() => {
     if (!isAuthenticated) {
@@ -516,7 +534,13 @@ function OffersPage() {
     fetchAgents();
     fetchClients();
     fetchData();
-  }, [isAuthenticated, id, fetchAgents, fetchClients, fetchData, filters]);
+  }, [isAuthenticated, id, fetchAgents, fetchClients, fetchData]);
+
+  useEffect(() => {
+    return () => {
+      clearFilters();
+    };
+  }, []);
 
   return (
     <div>
