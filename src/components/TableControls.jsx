@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   MenuItem,
   Button,
@@ -27,10 +27,7 @@ import CustomTextField from "./CustomTextField";
 import { useChangeColumnConfig, useReadConfig } from "../config/columnConfig";
 import dzielniceData from "../dzielnice_poddzielnice.json";
 import statusesConfig from "../config/statusesConfig";
-import {
-  useReadFiltersConfig,
-  useChangeFiltersConfig,
-} from "../config/filtersCookiesConfig";
+import { useFiltersStore } from "../store/filtersStore";
 
 function TableControls({
   selectedCount,
@@ -41,28 +38,15 @@ function TableControls({
   allUsers,
   clients,
 }) {
-  const [filters, setFilters] = useState(useReadFiltersConfig());
-  const [cleanFilters] = useState({
-    ulica: "",
-    dzielnica: [],
-    poddzielnica: [],
-    miasto: "",
-    typInwestycji: "",
-    rynek: "",
-    minIloscPokoi: "",
-    maxIloscPokoi: "",
-    minMetraz: "",
-    maxMetraz: "",
-    minPrice: "",
-    maxPrice: "",
-    agent: "",
-    statusOferty: "",
-    dataKontaktuOd: "",
-    dataKontaktuDo: "",
-    dataNastepnegoKontaktuOd: "",
-    dataNastepnegoKontaktuDo: "",
-    clientId: "",
-  });
+  const {
+    filters: appliedFilters,
+    setFilters,
+    clearFilters: clearGlobalFilters,
+  } = useFiltersStore();
+
+  // LOKALNY stan dla formularza filtrów
+  const [localFilters, setLocalFilters] = useState(appliedFilters);
+
   const [searchValue, setSearchValue] = useState("");
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [isFilterPanelOpen, setIsFilterPanelOpen] = useState(false);
@@ -92,7 +76,6 @@ function TableControls({
   });
   const open = Boolean(anchorEl);
   const changeColumnConfig = useChangeColumnConfig();
-  const changeFilterConfig = useChangeFiltersConfig();
   const readConfig = useReadConfig();
   const [columnConfig, setColumnConfig] = useState(readConfig);
 
@@ -107,10 +90,10 @@ function TableControls({
     const value = e.target.value;
     setSearchValue(value);
     if (value.length > 2 && value !== searchValue) {
-      const updatedFilters = { ...filters };
+      const updatedFilters = { ...localFilters };
       onSearchChange(value, updatedFilters, columnConfig);
     } else if (value.length === 0 && value !== searchValue) {
-      const updatedFilters = { ...filters };
+      const updatedFilters = { ...localFilters };
       onSearchChange(value, updatedFilters, columnConfig);
     }
   };
@@ -122,14 +105,15 @@ function TableControls({
 
   const validateDates = () => {
     const contactDateInvalid =
-      filters.dataKontaktuOd &&
-      filters.dataKontaktuDo &&
-      new Date(filters.dataKontaktuOd) > new Date(filters.dataKontaktuDo);
+      localFilters.dataKontaktuOd &&
+      localFilters.dataKontaktuDo &&
+      new Date(localFilters.dataKontaktuOd) >
+        new Date(localFilters.dataKontaktuDo);
     const followUpDateInvalid =
-      filters.dataNastepnegoKontaktuOd &&
-      filters.dataNastepnegoKontaktuDo &&
-      new Date(filters.dataNastepnegoKontaktuOd) >
-        new Date(filters.dataNastepnegoKontaktuDo);
+      localFilters.dataNastepnegoKontaktuOd &&
+      localFilters.dataNastepnegoKontaktuDo &&
+      new Date(localFilters.dataNastepnegoKontaktuOd) >
+        new Date(localFilters.dataNastepnegoKontaktuDo);
     setDateError({
       contactDate: contactDateInvalid,
       followUpDate: followUpDateInvalid,
@@ -145,9 +129,9 @@ function TableControls({
 
   const validateMetraz = () => {
     if (
-      filters.minMetraz !== "" &&
-      filters.maxMetraz !== "" &&
-      Number(filters.minMetraz) > Number(filters.maxMetraz)
+      localFilters.minMetraz !== "" &&
+      localFilters.maxMetraz !== "" &&
+      Number(localFilters.minMetraz) > Number(localFilters.maxMetraz)
     )
       setMetrazError(true);
     else setMetrazError(false);
@@ -165,9 +149,9 @@ function TableControls({
 
   const validateIloscPokoi = () => {
     if (
-      filters.minIloscPokoi !== "" &&
-      filters.maxIloscPokoi !== "" &&
-      Number(filters.minIloscPokoi) > Number(filters.maxIloscPokoi)
+      localFilters.minIloscPokoi !== "" &&
+      localFilters.maxIloscPokoi !== "" &&
+      Number(localFilters.minIloscPokoi) > Number(localFilters.maxIloscPokoi)
     )
       setIloscPokoiError(true);
     else setIloscPokoiError(false);
@@ -184,9 +168,9 @@ function TableControls({
 
   const validateZlM2 = () => {
     if (
-      filters.minZlM2 !== "" &&
-      filters.maxZlM2 !== "" &&
-      Number(filters.minZlM2) > Number(filters.maxZlM2)
+      localFilters.minZlM2 !== "" &&
+      localFilters.maxZlM2 !== "" &&
+      Number(localFilters.minZlM2) > Number(localFilters.maxZlM2)
     )
       setZlM2Error(true);
     else setZlM2Error(false);
@@ -204,9 +188,9 @@ function TableControls({
 
   const validatePrices = () => {
     if (
-      filters.minPrice !== "" &&
-      filters.maxPrice !== "" &&
-      Number(filters.minPrice) > Number(filters.maxPrice)
+      localFilters.minPrice !== "" &&
+      localFilters.maxPrice !== "" &&
+      Number(localFilters.minPrice) > Number(localFilters.maxPrice)
     ) {
       setPriceError(true);
     } else {
@@ -227,20 +211,20 @@ function TableControls({
   const handleDzielnicaChange = (event) => {
     const selectedDistricts = event.target.value;
 
-    const removedDistricts = filters.dzielnica.filter(
+    const removedDistricts = localFilters.dzielnica.filter(
       (district) => !selectedDistricts.includes(district)
     );
 
-    updateFilters("dzielnica", selectedDistricts);
+    handleLocalFilterChange("dzielnica", selectedDistricts);
 
     if (removedDistricts.length > 0) {
       const subdistrictsToRemove = removedDistricts.flatMap(
         (district) => dzielniceData.Dzielnice[district] || []
       );
-      const newPoddzielnica = filters.poddzielnica.filter(
+      const newPoddzielnica = localFilters.poddzielnica.filter(
         (subdistrict) => !subdistrictsToRemove.includes(subdistrict)
       );
-      updateFilters("poddzielnica", newPoddzielnica);
+      handleLocalFilterChange("poddzielnica", newPoddzielnica);
     }
   };
 
@@ -248,23 +232,19 @@ function TableControls({
     const selectedSubdistricts = Array.isArray(event.target.value)
       ? event.target.value
       : [];
-    updateFilters("poddzielnica", selectedSubdistricts);
+    handleLocalFilterChange("poddzielnica", selectedSubdistricts);
   };
 
   const subdistricts =
-    filters?.dzielnica.length > 0
+    localFilters?.dzielnica.length > 0
       ? [
           ...new Set(
-            filters.dzielnica.flatMap(
+            localFilters.dzielnica.flatMap(
               (district) => dzielniceData.Dzielnice[district]
             )
           ),
         ].sort()
       : [];
-
-  const updateFilters = (key, value) => {
-    setFilters((prev) => ({ ...prev, [key]: value }));
-  };
 
   const handleFilter = () => {
     if (
@@ -275,42 +255,75 @@ function TableControls({
       !dateError.contactDate &&
       !dateError.followUpDate
     ) {
-      changeFilterConfig(filters);
-      onFilterApply(searchValue, filters, columnConfig);
+      setFilters(localFilters);
+
+      onFilterApply(searchValue, localFilters, columnConfig);
       toggleFilterPanel();
     }
-  };
-
-  const clearFilters = () => {
-    setFilters(cleanFilters);
-    setDateError({
-      contactDate: false,
-      followUpDate: false,
-    });
-    changeFilterConfig(cleanFilters);
-    onFilterApply("", cleanFilters, readConfig);
-    toggleFilterPanel();
   };
 
   const handleViewChange = async (event, newValue) => {
     if (newValue !== null) {
       setColumnConfig(newValue);
       changeColumnConfig(newValue);
-      onFilterApply(searchValue, filters, newValue);
+      onFilterApply(searchValue, localFilters, newValue);
     }
   };
 
-  const isAnyFilterFilled = (filters) => {
-    if (!filters || typeof filters !== "object") {
+  const isAnyFilterFilled = (localFilters) => {
+    if (!localFilters || typeof localFilters !== "object") {
       return false;
     }
 
-    return Object.values(filters).some((value) => {
+    return Object.values(localFilters).some((value) => {
       if (Array.isArray(value)) {
         return value.length > 0;
       }
       return value !== "";
     });
+  };
+
+  const handleClearFilters = () => {
+    const emptyFilters = {
+      ulica: "",
+      dzielnica: [],
+      poddzielnica: [],
+      miasto: "",
+      typInwestycji: "",
+      rynek: "",
+      minIloscPokoi: "",
+      maxIloscPokoi: "",
+      minMetraz: "",
+      maxMetraz: "",
+      minPrice: "",
+      maxPrice: "",
+      agent: "",
+      statusOferty: "",
+      dataKontaktuOd: "",
+      dataKontaktuDo: "",
+      dataNastepnegoKontaktuOd: "",
+      dataNastepnegoKontaktuDo: "",
+      clientId: "",
+    };
+
+    // Wyczyść lokalne filtry
+    setLocalFilters(emptyFilters);
+    // Wyczyść globalne filtry
+    clearGlobalFilters();
+
+    toggleFilterPanel();
+  };
+
+  useEffect(() => {
+    setLocalFilters(appliedFilters);
+  }, [appliedFilters]);
+
+  // Zmiana lokalnych filtrów - NIE wywołuje requestów
+  const handleLocalFilterChange = (name, value) => {
+    setLocalFilters((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
   };
 
   return (
@@ -372,9 +385,11 @@ function TableControls({
           <Button
             variant="outlined"
             sx={{
-              color: isAnyFilterFilled(filters) ? "#009900" : "#6D727F",
+              color: isAnyFilterFilled(localFilters) ? "#009900" : "#6D727F",
               fontFamily: "Poppins",
-              borderColor: isAnyFilterFilled(filters) ? "#009900" : "black",
+              borderColor: isAnyFilterFilled(localFilters)
+                ? "#009900"
+                : "black",
               width: "180px",
               height: "40px",
               fontSize: "18px",
@@ -475,8 +490,8 @@ function TableControls({
           </Typography>
           <CustomTextField
             label="Ulica"
-            value={filters?.ulica}
-            onChange={(e) => updateFilters("ulica", e.target.value)}
+            value={localFilters?.ulica}
+            onChange={(e) => handleLocalFilterChange("ulica", e.target.value)}
             fullWidth
             sx={{ marginTop: "12px" }}
           />
@@ -524,7 +539,7 @@ function TableControls({
             <InputLabel id="district-label">Dzielnica</InputLabel>
             <Select
               labelId="district-label"
-              value={filters?.dzielnica}
+              value={localFilters?.dzielnica}
               onChange={handleDzielnicaChange}
               multiple
               id="demo-multiple-checkbox"
@@ -552,7 +567,9 @@ function TableControls({
                     "& .Mui-checked": { color: "#FC8721" },
                   }}
                 >
-                  <Checkbox checked={filters?.dzielnica.includes(district)} />
+                  <Checkbox
+                    checked={localFilters?.dzielnica.includes(district)}
+                  />
                   <ListItemText primary={district} />
                 </MenuItem>
               ))}
@@ -602,7 +619,7 @@ function TableControls({
             <InputLabel id="district-label">Poddzielnica</InputLabel>
             <Select
               labelId="district-label"
-              value={filters?.poddzielnica}
+              value={localFilters?.poddzielnica}
               onChange={handlePoddzielnicaChange}
               multiple
               id="demo-multiple-checkbox"
@@ -633,7 +650,7 @@ function TableControls({
                   }}
                 >
                   <Checkbox
-                    checked={filters.poddzielnica.includes(subdistrict)}
+                    checked={localFilters.poddzielnica.includes(subdistrict)}
                   />
                   <ListItemText primary={subdistrict} />
                 </MenuItem>
@@ -642,8 +659,8 @@ function TableControls({
           </FormControl>
           <CustomTextField
             label="Miasto/Wieś"
-            value={filters?.miasto}
-            onChange={(e) => updateFilters("miasto", e.target.value)}
+            value={localFilters?.miasto}
+            onChange={(e) => handleLocalFilterChange("miasto", e.target.value)}
             fullWidth
             sx={{ marginTop: "12px" }}
           />
@@ -691,8 +708,10 @@ function TableControls({
             >
               <InputLabel>Typ inwestycji</InputLabel>
               <Select
-                value={filters?.typInwestycji}
-                onChange={(e) => updateFilters("typInwestycji", e.target.value)}
+                value={localFilters?.typInwestycji}
+                onChange={(e) =>
+                  handleLocalFilterChange("typInwestycji", e.target.value)
+                }
                 label="Typ inwestycji"
               >
                 <MenuItem
@@ -754,8 +773,10 @@ function TableControls({
             >
               <InputLabel>Rynek</InputLabel>
               <Select
-                value={filters?.rynek}
-                onChange={(e) => updateFilters("rynek", e.target.value)}
+                value={localFilters?.rynek}
+                onChange={(e) =>
+                  handleLocalFilterChange("rynek", e.target.value)
+                }
                 label="Rynek"
               >
                 <MenuItem
@@ -776,25 +797,31 @@ function TableControls({
           <div className="flex justify-end space-x-4 mt-3">
             <CustomTextField
               label="Min ilość pokoi"
-              value={filters?.minIloscPokoi}
-              onChange={(e) => updateFilters("minIloscPokoi", e.target.value)}
+              value={localFilters?.minIloscPokoi}
+              onChange={(e) =>
+                handleLocalFilterChange("minIloscPokoi", e.target.value)
+              }
               onBlur={handleMinIloscPokoiBlur}
               fullWidth
               type="number"
               error={
                 iloscPokoiError &&
-                Number(filters.maxIloscPokoi) < Number(filters.minIloscPokoi)
+                Number(localFilters.maxIloscPokoi) <
+                  Number(localFilters.minIloscPokoi)
               }
             />
             <CustomTextField
               label="Max ilość pokoi"
-              value={filters?.maxIloscPokoi}
-              onChange={(e) => updateFilters("maxIloscPokoi", e.target.value)}
+              value={localFilters?.maxIloscPokoi}
+              onChange={(e) =>
+                handleLocalFilterChange("maxIloscPokoi", e.target.value)
+              }
               onBlur={handleMaxIloscPokoiBlur}
               fullWidth
               error={
                 iloscPokoiError &&
-                Number(filters.maxIloscPokoi) < Number(filters.minIloscPokoi)
+                Number(localFilters.maxIloscPokoi) <
+                  Number(localFilters.minIloscPokoi)
               }
               type="number"
             />
@@ -802,25 +829,29 @@ function TableControls({
           <div className="flex justify-end space-x-4 mt-3">
             <CustomTextField
               label="Min metraż"
-              value={filters?.minMetraz}
-              onChange={(e) => updateFilters("minMetraz", e.target.value)}
+              value={localFilters?.minMetraz}
+              onChange={(e) =>
+                handleLocalFilterChange("minMetraz", e.target.value)
+              }
               onBlur={handleMinMetrazBlur}
               fullWidth
               type="number"
               error={
                 metrazError &&
-                Number(filters.maxMetraz) < Number(filters.minMetraz)
+                Number(localFilters.maxMetraz) < Number(localFilters.minMetraz)
               }
             />
             <CustomTextField
               label="Max metraż"
-              value={filters?.maxMetraz}
-              onChange={(e) => updateFilters("maxMetraz", e.target.value)}
+              value={localFilters?.maxMetraz}
+              onChange={(e) =>
+                handleLocalFilterChange("maxMetraz", e.target.value)
+              }
               onBlur={handleMaxMetrazBlur}
               fullWidth
               error={
                 metrazError &&
-                Number(filters.maxMetraz) < Number(filters.minMetraz)
+                Number(localFilters.maxMetraz) < Number(localFilters.minMetraz)
               }
               type="number"
             />
@@ -828,25 +859,29 @@ function TableControls({
           <div className="flex justify-end space-x-4 mt-3">
             <CustomTextField
               label="Min cena"
-              value={filters?.minPrice}
-              onChange={(e) => updateFilters("minPrice", e.target.value)}
+              value={localFilters?.minPrice}
+              onChange={(e) =>
+                handleLocalFilterChange("minPrice", e.target.value)
+              }
               onBlur={handleMinPriceBlur}
               fullWidth
               type="number"
               error={
                 priceError &&
-                Number(filters.maxPrice) < Number(filters.minPrice)
+                Number(localFilters.maxPrice) < Number(localFilters.minPrice)
               }
             />
             <CustomTextField
               label="Max cena"
-              value={filters?.maxPrice}
-              onChange={(e) => updateFilters("maxPrice", e.target.value)}
+              value={localFilters?.maxPrice}
+              onChange={(e) =>
+                handleLocalFilterChange("maxPrice", e.target.value)
+              }
               onBlur={handleMaxPriceBlur}
               fullWidth
               error={
                 priceError &&
-                Number(filters.maxPrice) < Number(filters.minPrice)
+                Number(localFilters.maxPrice) < Number(localFilters.minPrice)
               }
               type="number"
             />
@@ -854,24 +889,30 @@ function TableControls({
           <div className="flex justify-end space-x-4 mt-3">
             <CustomTextField
               label="Min zł/m2"
-              value={filters?.minZlM2}
-              onChange={(e) => updateFilters("minZlM2", e.target.value)}
+              value={localFilters?.minZlM2}
+              onChange={(e) =>
+                handleLocalFilterChange("minZlM2", e.target.value)
+              }
               onBlur={handleMinZlM2Blur}
               fullWidth
               type="number"
               error={
-                zlM2Error && Number(filters.maxZlM2) < Number(filters.minZlM2)
+                zlM2Error &&
+                Number(localFilters.maxZlM2) < Number(localFilters.minZlM2)
               }
             />
             <CustomTextField
               label="Max zł/m2"
-              value={filters?.maxZlM2}
-              onChange={(e) => updateFilters("maxZlM2", e.target.value)}
+              value={localFilters?.maxZlM2}
+              onChange={(e) =>
+                handleLocalFilterChange("maxZlM2", e.target.value)
+              }
               onBlur={handleMaxZlM2Blur}
               fullWidth
               type="number"
               error={
-                zlM2Error && Number(filters.maxZlM2) < Number(filters.minZlM2)
+                zlM2Error &&
+                Number(localFilters.maxZlM2) < Number(localFilters.minZlM2)
               }
             />
           </div>
@@ -933,8 +974,10 @@ function TableControls({
                     label="Agent"
                   />
                 }
-                value={filters?.agent}
-                onChange={(e) => updateFilters("agent", e.target.value)}
+                value={localFilters?.agent}
+                onChange={(e) =>
+                  handleLocalFilterChange("agent", e.target.value)
+                }
                 fullWidth
               >
                 <MenuItem
@@ -999,8 +1042,10 @@ function TableControls({
             >
               <InputLabel>Status</InputLabel>
               <Select
-                value={filters?.statusOferty}
-                onChange={(e) => updateFilters("statusOferty", e.target.value)}
+                value={localFilters?.statusOferty}
+                onChange={(e) =>
+                  handleLocalFilterChange("statusOferty", e.target.value)
+                }
                 label="Status"
               >
                 {statusesConfig.map((status) => (
@@ -1024,32 +1069,36 @@ function TableControls({
               label="Kontakt od"
               name="dataKontaktuOd"
               type="date"
-              value={filters?.dataKontaktuOd}
-              onChange={(e) => updateFilters("dataKontaktuOd", e.target.value)}
+              value={localFilters?.dataKontaktuOd}
+              onChange={(e) =>
+                handleLocalFilterChange("dataKontaktuOd", e.target.value)
+              }
               variant="outlined"
               fullWidth
               InputLabelProps={{ shrink: true }}
               onBlur={handleContactDateBlur}
               error={
                 dateError.contactDate &&
-                new Date(filters.dataKontaktuOd) >
-                  new Date(filters.dataKontaktuDo)
+                new Date(localFilters.dataKontaktuOd) >
+                  new Date(localFilters.dataKontaktuDo)
               }
             />
             <CustomTextField
               label="Kontakt do"
               name="dataKontaktuDo"
               type="date"
-              value={filters?.dataKontaktuDo}
-              onChange={(e) => updateFilters("dataKontaktuDo", e.target.value)}
+              value={localFilters?.dataKontaktuDo}
+              onChange={(e) =>
+                handleLocalFilterChange("dataKontaktuDo", e.target.value)
+              }
               variant="outlined"
               fullWidth
               InputLabelProps={{ shrink: true }}
               onBlur={handleContactDateBlur}
               error={
                 dateError.contactDate &&
-                new Date(filters.dataKontaktuOd) >
-                  new Date(filters.dataKontaktuDo)
+                new Date(localFilters.dataKontaktuOd) >
+                  new Date(localFilters.dataKontaktuDo)
               }
             />
           </div>
@@ -1058,9 +1107,12 @@ function TableControls({
               label="Następny od"
               name="dataNastepnegoKontaktuOd"
               type="date"
-              value={filters?.dataNastepnegoKontaktuOd}
+              value={localFilters?.dataNastepnegoKontaktuOd}
               onChange={(e) =>
-                updateFilters("dataNastepnegoKontaktuOd", e.target.value)
+                handleLocalFilterChange(
+                  "dataNastepnegoKontaktuOd",
+                  e.target.value
+                )
               }
               variant="outlined"
               fullWidth
@@ -1068,17 +1120,20 @@ function TableControls({
               onBlur={handleFollowUpDateBlur}
               error={
                 dateError.followUpDate &&
-                new Date(filters.dataNastepnegoKontaktuOd) >
-                  new Date(filters.dataNastepnegoKontaktuDo)
+                new Date(localFilters.dataNastepnegoKontaktuOd) >
+                  new Date(localFilters.dataNastepnegoKontaktuDo)
               }
             />
             <CustomTextField
               label="Następny do"
               name="dataNastepnegoKontaktuDo"
               type="date"
-              value={filters?.dataNastepnegoKontaktuDo}
+              value={localFilters?.dataNastepnegoKontaktuDo}
               onChange={(e) =>
-                updateFilters("dataNastepnegoKontaktuDo", e.target.value)
+                handleLocalFilterChange(
+                  "dataNastepnegoKontaktuDo",
+                  e.target.value
+                )
               }
               variant="outlined"
               fullWidth
@@ -1086,8 +1141,8 @@ function TableControls({
               onBlur={handleFollowUpDateBlur}
               error={
                 dateError.followUpDate &&
-                new Date(filters.dataNastepnegoKontaktuOd) >
-                  new Date(filters.dataNastepnegoKontaktuDo)
+                new Date(localFilters.dataNastepnegoKontaktuOd) >
+                  new Date(localFilters.dataNastepnegoKontaktuDo)
               }
             />
           </div>
@@ -1134,8 +1189,10 @@ function TableControls({
           >
             <InputLabel>Klient</InputLabel>
             <Select
-              value={filters?.clientId}
-              onChange={(e) => updateFilters("clientId", e.target.value)}
+              value={localFilters?.clientId}
+              onChange={(e) =>
+                handleLocalFilterChange("clientId", e.target.value)
+              }
               label="Typ inwestycji"
             >
               <MenuItem
@@ -1167,7 +1224,7 @@ function TableControls({
           </Button>
           <Button
             variant="outlined"
-            onClick={clearFilters}
+            onClick={handleClearFilters}
             sx={{
               marginTop: "25px",
               fontFamily: "Poppins",
