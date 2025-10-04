@@ -429,6 +429,42 @@ function ClientDetails({
                   })}
                 </CustomTypography>
               )}
+              <Typography
+                variant="h6"
+                sx={{
+                  fontFamily: "Poppins",
+                  fontWeight: 500,
+                  fontSize: "1.2rem",
+                }}
+              >
+                Informacje sytemowe
+              </Typography>
+
+              <CustomTypography sx={{ fontSize: "1rem" }}>
+                <strong>Utworzono:</strong>{" "}
+                {client.dataUtworzenia
+                  ? `${new Date(client.dataUtworzenia).toLocaleString("pl-PL", {
+                      year: "numeric",
+                      month: "2-digit",
+                      day: "2-digit",
+                      hour: "2-digit",
+                      minute: "2-digit",
+                    })} ${client.tworca ? `przez ${client.tworca}` : ""}`
+                  : "Brak danych"}
+              </CustomTypography>
+
+              {client.dataModyfikacji && (
+                <CustomTypography sx={{ fontSize: "1rem" }}>
+                  <strong>Zmodyfikowano:</strong>{" "}
+                  {`${new Date(client.dataModyfikacji).toLocaleString("pl-PL", {
+                    year: "numeric",
+                    month: "2-digit",
+                    day: "2-digit",
+                    hour: "2-digit",
+                    minute: "2-digit",
+                  })} ${client.editor ? `przez ${client.edytor}` : ""} `}
+                </CustomTypography>
+              )}
             </Grid2>
           </Grid2>
         )}
