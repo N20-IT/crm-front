@@ -63,6 +63,12 @@ const columnsClientsConfig = [
     view: "basic",
   },
   {
+    id: "portal",
+    label: "Portal",
+    shortLabel: "Portal",
+    view: "basic",
+  },
+  {
     id: "lokalizacja",
     label: "Lokalizacja",
     shortLabel: "Lok.",

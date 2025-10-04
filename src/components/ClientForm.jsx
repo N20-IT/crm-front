@@ -15,6 +15,7 @@ import clientStatuesConfig from "../config/clientStatuesConfig";
 import dzielniceData from "../dzielnice_poddzielnice.json";
 import clientStandardConfig from "../config/clientStandardConfig";
 import { useState } from "react";
+import clientPortalConfig from "../config/clientPortalConfig";
 
 function ClientForm({
   formData,
@@ -424,7 +425,6 @@ function ClientForm({
           fullWidth
           margin="normal"
           sx={{
-            marginTop: "12px",
             "& .MuiOutlinedInput-root": {
               borderRadius: "6px",
               fontFamily: "Poppins",
@@ -494,7 +494,6 @@ function ClientForm({
           fullWidth
           margin="normal"
           sx={{
-            marginTop: "12px",
             "& .MuiOutlinedInput-root": {
               borderRadius: "6px",
               fontFamily: "Poppins",
@@ -584,7 +583,101 @@ function ClientForm({
             ))}
           </Select>
         </FormControl>
+        <FormControl
+          fullWidth
+          margin="normal"
+          sx={{
+            "& .MuiOutlinedInput-root": {
+              borderRadius: "6px",
+              fontFamily: "Poppins",
+              fontSize: "16px",
+              height: "40px",
+              "& input": {
+                padding: "8px",
+                height: "16px",
+              },
+            },
+            "& .MuiFormLabel-root": {
+              fontFamily: "Poppins",
+              fontSize: "16px",
+              color: "#535968",
+              transform: "translate(14px, 9px) scale(1)",
+            },
+            "& .MuiInputLabel-root.MuiInputLabel-shrink": {
+              transform: "translate(14px, -9px) scale(0.75)",
+            },
+            "& .MuiInputLabel-root.Mui-focused": {
+              color: "#535968",
+            },
+            "& .MuiOutlinedInput-notchedOutline": {
+              borderColor: "#535968",
+            },
+            "&:hover .MuiOutlinedInput-notchedOutline": {
+              borderColor: "#535968",
+            },
+            "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+              borderColor: "#535968",
+            },
+            "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline": {
+              borderColor: "#535968",
+            },
+          }}
+        >
+          <InputLabel>Portal</InputLabel>
+          <Select
+            value={formData.portal}
+            input={
+              <OutlinedInput
+                sx={{
+                  "& .MuiOutlinedInput-notchedOutline": {
+                    borderColor: "#535968",
+                  },
+
+                  "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                    borderColor: "#535968",
+                  },
+                }}
+                label="Portal"
+              />
+            }
+            onChange={(e) =>
+              onChange({
+                target: {
+                  name: "portal",
+                  value: e.target.value,
+                },
+              })
+            }
+            label="Portal"
+          >
+            <MenuItem
+              key={"null"}
+              value={""}
+              sx={{
+                fontStyle: "italic",
+                color: "gray",
+                fontWeight: "bold",
+              }}
+            >
+              Brak
+            </MenuItem>
+            {clientPortalConfig.map((portal) => (
+              <MenuItem
+                key={portal}
+                value={portal === "Brak" ? "" : portal}
+                sx={{
+                  fontStyle: portal === "Brak" ? "italic" : "normal",
+                  color: portal === "Brak" ? "gray" : "inherit",
+                  fontWeight: portal === "Brak" ? "bold" : "poppins",
+                }}
+              >
+                {portal}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
       </div>
+
       <div className="flex justify-end space-x-4">
         <CustomTextField
           label="Ilość pokoi od"

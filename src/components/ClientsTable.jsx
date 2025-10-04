@@ -355,6 +355,9 @@ function ClientsTable({
                     )}
                   </CustomTableCell>
                   <CustomTableCell>
+                    <strong>{row.portal || ""}</strong>
+                  </CustomTableCell>
+                  <CustomTableCell>
                     <Tooltip
                       title={
                         <Typography
