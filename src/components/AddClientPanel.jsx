@@ -123,33 +123,35 @@ function AddClientPanel({ onSave, onCancel, allUsers }) {
               removePhoneField={removePhoneField}
               allUsers={allUsers}
             />
-            <div className="flex justify-end space-x-4 mt-4">
-              <Button
-                variant="contained"
-                onClick={handleSave}
-                sx={{
-                  color: "white",
-                  backgroundColor: "#FC8721",
-                  fontFamily: "Poppins",
-                  fontSize: "20px",
-                  width: "100%",
-                }}
-              >
-                Zapisz
-              </Button>
-              <Button
-                variant="contained"
-                onClick={onCancel}
-                sx={{
-                  backgroundColor: "#6D727F",
-                  color: "white",
-                  fontFamily: "Poppins",
-                  fontSize: "20px",
-                  width: "100%",
-                }}
-              >
-                Anuluj
-              </Button>
+            <div className="sticky bottom-0 bg-white border-t border-gray-200 py-2 px-2">
+              <div className="flex justify-end space-x-4 mt-4">
+                <Button
+                  variant="contained"
+                  onClick={handleSave}
+                  sx={{
+                    color: "white",
+                    backgroundColor: "#FC8721",
+                    fontFamily: "Poppins",
+                    fontSize: "20px",
+                    width: "100%",
+                  }}
+                >
+                  Zapisz
+                </Button>
+                <Button
+                  variant="contained"
+                  onClick={onCancel}
+                  sx={{
+                    backgroundColor: "#6D727F",
+                    color: "white",
+                    fontFamily: "Poppins",
+                    fontSize: "20px",
+                    width: "100%",
+                  }}
+                >
+                  Anuluj
+                </Button>
+              </div>
             </div>
           </div>
         </form>
