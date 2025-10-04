@@ -2,8 +2,10 @@ import { Button } from "@mui/material";
 import ClientForm from "./ClientForm";
 import { useState } from "react";
 import Alerts from "./Alerts";
+import { GetInformationFromToken } from "../utils/decodeToken";
 
 function EditClientPanel({ initialData, onSave, onCancel, allUsers }) {
+  const userRole = GetInformationFromToken("custom:role");
   const formatDateForInput = (dateString) => {
     if (!dateString) return "";
 
@@ -70,18 +72,35 @@ function EditClientPanel({ initialData, onSave, onCancel, allUsers }) {
         "Wartość w polu 'Metraż do' nie może być mniejsza niż w polu 'Metraż od'.";
     }
 
-    if (!formData.status) validationErrors.status = "Status jest wymagany.";
-    if (!formData.agent) validationErrors.agent = "Agent jest wymagany.";
-    if (formData.status === "Zajęty" && !formData.komentarz)
+    if (!formData.komentarz && userRole !== "admin")
       validationErrors.komentarz = "Komentarz jest wymagany.";
-    if (formData.status === "Zajęty" && !formData.dataNastepnegoKontaktu)
-      validationErrors.komentarz = "Data następnego kontaktu jest wymagana.";
-    if (!formData.numerGalactica)
-      validationErrors.numerGalactica = "Numer oferty Galactica jest wymagany.";
-    if (formData.lokalizacja.length === 0)
+    if (
+      formData.dataNastepnegoKontaktu &&
+      !formData.komentarzData &&
+      userRole !== "admin"
+    )
+      validationErrors.komentarzData =
+        "Komentarz do daty następnego kontaktu jest wymagany.";
+    if (formData.lokalizacja.length === 0 && userRole !== "admin")
       validationErrors.lokalizacja = "Lokalizacja jest wymagana.";
-    if (!formData.daneKlienta)
-      validationErrors.daneKlienta = "Dane klienta są wymagane.";
+    if (!formData.rodzajNieruchomosci && userRole !== "admin")
+      validationErrors.rodzajNieruchomosci =
+        "Rodzaj nieruchomości jest wymagany.";
+    if (
+      !formData.iloscPokoiOd &&
+      !formData.iloscPokoiDo &&
+      userRole !== "admin"
+    )
+      validationErrors.iloscPokoi = "Ilość pokoi jest wymagana.";
+    if (!formData.budzetOd && !formData.budzetDo && userRole !== "admin")
+      validationErrors.budzet = "Przedział budżetu jest wymagany.";
+    if (
+      !formData.email &&
+      formData.numerTelefonu[0] === "" &&
+      userRole !== "admin"
+    )
+      validationErrors.contact =
+        "Przynajmniej jeden kontakt jest wymagany - email lub numer telefonu.";
 
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
