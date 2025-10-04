@@ -411,7 +411,29 @@ function ClientsTable({
                     </strong>
                   </CustomTableCell>
 
-                  <CustomTableCell>{row.email || ""}</CustomTableCell>
+                  <CustomTableCell>
+                    {row.email ? (
+                      <a
+                        href={`mailto:${row.email}`}
+                        style={{
+                          color: "#1976d2",
+                          textDecoration: "none",
+                          fontWeight: "500",
+                          cursor: "pointer",
+                        }}
+                        onMouseEnter={(e) =>
+                          (e.currentTarget.style.textDecoration = "underline")
+                        }
+                        onMouseLeave={(e) =>
+                          (e.currentTarget.style.textDecoration = "none")
+                        }
+                      >
+                        {row.email}
+                      </a>
+                    ) : (
+                      ""
+                    )}
+                  </CustomTableCell>
                   <CustomTableCell>
                     {row.komentarzData && row.komentarzData.length > 50 ? (
                       <Tooltip arrow title={row.komentarzData}>
