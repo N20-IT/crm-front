@@ -360,7 +360,6 @@ function ClientForm({
             "& .MuiInputLabel-root.MuiInputLabel-shrink": {
               transform: "translate(14px, -9px) scale(0.75)",
             },
-
             "& .MuiInputLabel-root.Mui-focused": {
               color: "#535968",
             },
@@ -412,6 +411,10 @@ function ClientForm({
                   checked={formData.lokalizacja?.includes(district) || false}
                   onChange={(event) => {
                     handleLokalizacjaChange(district);
+                  }}
+                  sx={{
+                    color: "#FC8721",
+                    "&.Mui-checked": { color: "#FC8721" },
                   }}
                 />
                 <ListItemText primary={district} />
@@ -494,6 +497,7 @@ function ClientForm({
             <MenuItem value="Szeregowy">Szeregowy</MenuItem>
           </Select>
         </FormControl>
+
         <FormControl
           fullWidth
           margin="normal"
@@ -517,6 +521,7 @@ function ClientForm({
             "& .MuiInputLabel-root.MuiInputLabel-shrink": {
               transform: "translate(14px, -9px) scale(0.75)",
             },
+
             "& .MuiInputLabel-root.Mui-focused": {
               color: "#535968",
             },
@@ -536,21 +541,8 @@ function ClientForm({
         >
           <InputLabel>Standard</InputLabel>
           <Select
-            value={formData.standard}
-            input={
-              <OutlinedInput
-                sx={{
-                  "& .MuiOutlinedInput-notchedOutline": {
-                    borderColor: "#535968",
-                  },
-
-                  "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                    borderColor: "#535968",
-                  },
-                }}
-                label="Standard"
-              />
-            }
+            multiple
+            value={formData.standard || []}
             onChange={(e) =>
               onChange({
                 target: {
@@ -559,34 +551,45 @@ function ClientForm({
                 },
               })
             }
-            label="Standard"
-          >
-            <MenuItem
-              key={"null"}
-              value={""}
-              sx={{
-                fontStyle: "italic",
-                color: "gray",
-                fontWeight: "bold",
-              }}
-            >
-              Brak
-            </MenuItem>
-            {clientStandardConfig.map((standard) => (
-              <MenuItem
-                key={standard.value}
-                value={standard.value === "Brak" ? "" : standard.value}
+            input={
+              <OutlinedInput
+                label="Standard"
                 sx={{
-                  fontStyle: standard.value === "Brak" ? "italic" : "normal",
-                  color: standard.value === "Brak" ? "gray" : "inherit",
-                  fontWeight: standard.value === "Brak" ? "bold" : "poppins",
+                  "& .MuiOutlinedInput-notchedOutline": {
+                    borderColor: "#535968",
+                  },
+                  "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                    borderColor: "#535968",
+                  },
                 }}
-              >
-                {standard.label}
+              />
+            }
+            renderValue={(selected) => selected.join(", ")} // jak mają być wyświetlane wybrane opcje
+          >
+            {clientStandardConfig.map((standard) => (
+              <MenuItem key={standard.value} value={standard.value}>
+                <Checkbox
+                  checked={formData.standard?.includes(standard.value)}
+                  sx={{
+                    color: "#FC8721",
+                    "&.Mui-checked": { color: "#FC8721" },
+                  }}
+                />
+                <ListItemText
+                  primary={standard.label}
+                  sx={{
+                    fontFamily: "Poppins",
+                    fontSize: "16px",
+                    color: standard.value === "Brak" ? "gray" : "inherit",
+                    fontStyle: standard.value === "Brak" ? "italic" : "normal",
+                    fontWeight: standard.value === "Brak" ? "bold" : "normal",
+                  }}
+                />
               </MenuItem>
             ))}
           </Select>
         </FormControl>
+
         <FormControl
           fullWidth
           margin="normal"

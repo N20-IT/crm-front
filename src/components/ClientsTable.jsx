@@ -157,7 +157,9 @@ function ClientsTable({
                   paddingRight: "15px",
                 }}
               >
-                <Tooltip title="Wybrane oferty">Oferty</Tooltip>
+                <Tooltip arrow title="Wybrane oferty">
+                  Oferty
+                </Tooltip>
               </TableCell>
               <TableCell
                 key="narzedzia"
@@ -170,7 +172,9 @@ function ClientsTable({
                   paddingRight: "15px",
                 }}
               >
-                <Tooltip title="Narzędzia">Narzędzia</Tooltip>
+                <Tooltip arrow title="Narzędzia">
+                  Narzędzia
+                </Tooltip>
               </TableCell>
               {columns.map((column, index) => (
                 <TableCell
@@ -199,12 +203,14 @@ function ClientsTable({
                         },
                       }}
                     >
-                      <Tooltip title={column.label}>
+                      <Tooltip arrow title={column.label}>
                         {column.shortLabel}
                       </Tooltip>
                     </TableSortLabel>
                   ) : (
-                    <Tooltip title={column.label}>{column.shortLabel}</Tooltip>
+                    <Tooltip arrow title={column.label}>
+                      {column.shortLabel}
+                    </Tooltip>
                   )}
                 </TableCell>
               ))}
@@ -246,7 +252,7 @@ function ClientsTable({
                   }}
                 >
                   <CustomTableCell style={{ whiteSpace: "nowrap" }}>
-                    <Tooltip title={"Dobierz oferty"}>
+                    <Tooltip arrow title={"Dobierz oferty"}>
                       <IconButton onClick={() => handleMatchClient(row._id)}>
                         <Badge
                           badgeContent={row.noweOfertyLiczba}
@@ -313,7 +319,7 @@ function ClientsTable({
                             }}
                           >
                             <span>{formatPhoneNumber(number)}</span>
-                            <Tooltip title="Skopiuj numer">
+                            <Tooltip arrow title="Skopiuj numer">
                               <IconButton
                                 onClick={() => copyToClipboard(number)}
                                 sx={{ padding: "6px" }}
@@ -347,7 +353,7 @@ function ClientsTable({
                   </CustomTableCell>
                   <CustomTableCell>
                     {row.komentarz && row.komentarz.length > 50 ? (
-                      <Tooltip title={row.komentarz}>
+                      <Tooltip arrow title={row.komentarz}>
                         <span>{row.komentarz.slice(0, 50)} ...</span>
                       </Tooltip>
                     ) : (
@@ -359,6 +365,7 @@ function ClientsTable({
                   </CustomTableCell>
                   <CustomTableCell>
                     <Tooltip
+                      arrow
                       title={
                         <Typography
                           sx={{ whiteSpace: "pre-line", fontSize: "14px" }}
@@ -389,15 +396,65 @@ function ClientsTable({
                   <CustomTableCell>
                     {formatNumber(row.metrazDo) || ""}
                   </CustomTableCell>
-                  <CustomTableCell
-                    sx={{
-                      color:
-                        clientStandardConfig.find(
-                          (standard) => standard.value === row.standard
-                        )?.color || "black",
-                    }}
-                  >
-                    <strong>{row.standard || ""}</strong>
+                  <CustomTableCell>
+                    {(() => {
+                      // Ujednolicamy format danych (string -> array)
+                      const standards = Array.isArray(row.standard)
+                        ? row.standard
+                        : typeof row.standard === "string"
+                        ? row.standard.split(",").map((s) => s.trim())
+                        : [];
+
+                      // Przygotowujemy kolory i etykiety
+                      const coloredStandards = standards.map((standard) => {
+                        const color =
+                          clientStandardConfig.find((s) => s.value === standard)
+                            ?.color || "black";
+                        return { label: standard, color };
+                      });
+
+                      // Tworzymy zawartość do wyświetlenia (max 3 elementy)
+                      const visibleStandards = coloredStandards.slice(0, 3);
+                      const hiddenStandards = coloredStandards.slice(3);
+
+                      return (
+                        <Tooltip
+                          arrow
+                          title={
+                            hiddenStandards.length > 0 ? (
+                              <div
+                                style={{
+                                  fontFamily: "Poppins",
+                                  fontSize: "14px",
+                                }}
+                              >
+                                {coloredStandards.map((s, i) => (
+                                  <div key={i} style={{ color: s.color }}>
+                                    {s.label}
+                                  </div>
+                                ))}
+                              </div>
+                            ) : (
+                              ""
+                            )
+                          }
+                          placement="top"
+                        >
+                          <strong>
+                            {visibleStandards.map((s, i) => (
+                              <span
+                                key={i}
+                                style={{ color: s.color, marginRight: "6px" }}
+                              >
+                                {s.label}
+                                {i < visibleStandards.length - 1 && ", "}
+                              </span>
+                            ))}
+                            {hiddenStandards.length > 0 && <span>...</span>}
+                          </strong>
+                        </Tooltip>
+                      );
+                    })()}
                   </CustomTableCell>
                   <CustomTableCell>
                     {formatNumber(row.budzetOd) || ""}
@@ -457,7 +514,7 @@ function ClientsTable({
                   </CustomTableCell>
                   <CustomTableCell>
                     {row.komentarzData && row.komentarzData.length > 50 ? (
-                      <Tooltip title={row.komentarzData}>
+                      <Tooltip arrow title={row.komentarzData}>
                         <span>{row.komentarzData.slice(0, 50)} ...</span>
                       </Tooltip>
                     ) : (

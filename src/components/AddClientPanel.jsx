@@ -7,6 +7,7 @@ function AddClientPanel({ onSave, onCancel, allUsers }) {
   const [formData, setFormData] = useState({
     lokalizacja: [],
     numerTelefonu: [""],
+    standard: [],
   });
   const [, setErrors] = useState({});
   const [alertMessage, setAlertMessage] = useState("");
