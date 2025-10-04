@@ -279,6 +279,32 @@ function ClientsTable({
                     showDetailsIcon={true}
                   />
                   <CustomTableCell>
+                    {row.dataUtworzenia ? (
+                      <>
+                        {new Date(row.dataUtworzenia).toLocaleDateString(
+                          "pl-PL",
+                          {
+                            year: "numeric",
+                            month: "2-digit",
+                            day: "2-digit",
+                          }
+                        )}{" "}
+                        <strong>
+                          <br />
+                          {new Date(row.dataUtworzenia).toLocaleTimeString(
+                            "pl-PL",
+                            {
+                              hour: "2-digit",
+                              minute: "2-digit",
+                            }
+                          )}
+                        </strong>
+                      </>
+                    ) : (
+                      ""
+                    )}
+                  </CustomTableCell>
+                  <CustomTableCell>
                     {row.dataZapytania ? (
                       <>
                         {new Date(row.dataZapytania).toLocaleDateString(
@@ -292,6 +318,56 @@ function ClientsTable({
                         <strong>
                           <br />
                           {new Date(row.dataZapytania).toLocaleTimeString(
+                            "pl-PL",
+                            {
+                              hour: "2-digit",
+                              minute: "2-digit",
+                            }
+                          )}
+                        </strong>
+                      </>
+                    ) : (
+                      ""
+                    )}
+                  </CustomTableCell>
+                  <CustomTableCell>
+                    {row.dataNastepnegoKontaktu ? (
+                      <>
+                        {new Date(
+                          row.dataNastepnegoKontaktu
+                        ).toLocaleDateString("pl-PL", {
+                          year: "numeric",
+                          month: "2-digit",
+                          day: "2-digit",
+                        })}{" "}
+                        <strong>
+                          <br />
+                          {new Date(
+                            row.dataNastepnegoKontaktu
+                          ).toLocaleTimeString("pl-PL", {
+                            hour: "2-digit",
+                            minute: "2-digit",
+                          })}
+                        </strong>
+                      </>
+                    ) : (
+                      ""
+                    )}
+                  </CustomTableCell>
+                  <CustomTableCell>
+                    {row.ostatniKontakt ? (
+                      <>
+                        {new Date(row.ostatniKontakt).toLocaleDateString(
+                          "pl-PL",
+                          {
+                            year: "numeric",
+                            month: "2-digit",
+                            day: "2-digit",
+                          }
+                        )}{" "}
+                        <strong>
+                          <br />
+                          {new Date(row.ostatniKontakt).toLocaleTimeString(
                             "pl-PL",
                             {
                               hour: "2-digit",
@@ -336,6 +412,15 @@ function ClientsTable({
                   </CustomTableCell>
 
                   <CustomTableCell>{row.email || ""}</CustomTableCell>
+                  <CustomTableCell>
+                    {row.komentarzData && row.komentarzData.length > 50 ? (
+                      <Tooltip arrow title={row.komentarzData}>
+                        <span>{row.komentarzData.slice(0, 50)} ...</span>
+                      </Tooltip>
+                    ) : (
+                      row.komentarzData || ""
+                    )}
+                  </CustomTableCell>
                   <CustomTableCell>{row.numerGalactica || ""}</CustomTableCell>
                   <CustomTableCell
                     sx={{
@@ -461,65 +546,6 @@ function ClientsTable({
                   </CustomTableCell>
                   <CustomTableCell>
                     {formatNumber(row.budzetDo) || ""}
-                  </CustomTableCell>
-                  <CustomTableCell>
-                    {row.ostatniKontakt ? (
-                      <>
-                        {new Date(row.ostatniKontakt).toLocaleDateString(
-                          "pl-PL",
-                          {
-                            year: "numeric",
-                            month: "2-digit",
-                            day: "2-digit",
-                          }
-                        )}{" "}
-                        <strong>
-                          <br />
-                          {new Date(row.ostatniKontakt).toLocaleTimeString(
-                            "pl-PL",
-                            {
-                              hour: "2-digit",
-                              minute: "2-digit",
-                            }
-                          )}
-                        </strong>
-                      </>
-                    ) : (
-                      ""
-                    )}
-                  </CustomTableCell>
-                  <CustomTableCell>
-                    {row.dataNastepnegoKontaktu ? (
-                      <>
-                        {new Date(
-                          row.dataNastepnegoKontaktu
-                        ).toLocaleDateString("pl-PL", {
-                          year: "numeric",
-                          month: "2-digit",
-                          day: "2-digit",
-                        })}{" "}
-                        <strong>
-                          <br />
-                          {new Date(
-                            row.dataNastepnegoKontaktu
-                          ).toLocaleTimeString("pl-PL", {
-                            hour: "2-digit",
-                            minute: "2-digit",
-                          })}
-                        </strong>
-                      </>
-                    ) : (
-                      ""
-                    )}
-                  </CustomTableCell>
-                  <CustomTableCell>
-                    {row.komentarzData && row.komentarzData.length > 50 ? (
-                      <Tooltip arrow title={row.komentarzData}>
-                        <span>{row.komentarzData.slice(0, 50)} ...</span>
-                      </Tooltip>
-                    ) : (
-                      row.komentarzData || ""
-                    )}
                   </CustomTableCell>
                 </TableRow>
               ))
