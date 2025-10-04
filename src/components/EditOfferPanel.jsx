@@ -396,6 +396,8 @@ const EditOfferPanel = ({ offerData, onSave, onCancel, users }) => {
                   <MenuItem value="Mieszkanie">Mieszkanie</MenuItem>
                   <MenuItem value="Lokal">Lokal</MenuItem>
                   <MenuItem value="Działka">Działka</MenuItem>
+                  <MenuItem value="Bliźniak">Bliźniak</MenuItem>
+                  <MenuItem value="Szeregowy">Szeregowy</MenuItem>
                 </Select>
               </FormControl>
             </div>

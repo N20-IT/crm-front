@@ -488,6 +488,10 @@ function ClientForm({
             </MenuItem>
             <MenuItem value="Dom">Dom</MenuItem>
             <MenuItem value="Mieszkanie">Mieszkanie</MenuItem>
+            <MenuItem value="Lokal">Lokal</MenuItem>
+            <MenuItem value="Działka">Działka</MenuItem>
+            <MenuItem value="Bliźniak">Bliźniak</MenuItem>
+            <MenuItem value="Szeregowy">Szeregowy</MenuItem>
           </Select>
         </FormControl>
         <FormControl
