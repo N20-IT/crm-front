@@ -455,6 +455,15 @@ function ClientsTable({
                       ""
                     )}
                   </CustomTableCell>
+                  <CustomTableCell>
+                    {row.komentarzData && row.komentarzData.length > 50 ? (
+                      <Tooltip title={row.komentarzData}>
+                        <span>{row.komentarzData.slice(0, 50)} ...</span>
+                      </Tooltip>
+                    ) : (
+                      row.komentarzData || ""
+                    )}
+                  </CustomTableCell>
                 </TableRow>
               ))
             ) : (

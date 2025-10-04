@@ -109,10 +109,12 @@ function AddClientPanel({ onSave, onCancel, allUsers }) {
 
   return (
     <div className="fixed inset-0 bg-light-grey bg-opacity-75 flex items-center justify-center z-50">
-      <div className="bg-white p-6 rounded-lg shadow-lg w-1/3 max-h-[95%] overflow-auto">
-        <h2 className="text-4xl font-bold mb-4 font-poppins">
-          Dodaj nowego klienta
-        </h2>
+      <div className="bg-white px-6 rounded-lg shadow-lg w-1/3 max-h-[95%] overflow-auto">
+        <div className="sticky top-0 bg-white pt-6 pb-2 px-2 z-20">
+          <h2 className="text-4xl font-bold mb-4 font-poppins">
+            Dodaj nowego klienta
+          </h2>
+        </div>
         <form>
           <div className="w-full">
             <ClientForm
@@ -123,7 +125,7 @@ function AddClientPanel({ onSave, onCancel, allUsers }) {
               removePhoneField={removePhoneField}
               allUsers={allUsers}
             />
-            <div className="sticky bottom-0 bg-white border-t border-gray-200 py-2 px-2">
+            <div className="sticky bottom-0 bg-white py-2 px-2 z-20">
               <div className="flex justify-end space-x-4 mt-4">
                 <Button
                   variant="contained"

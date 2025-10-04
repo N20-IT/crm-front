@@ -788,6 +788,17 @@ function ClientForm({
           }}
         />
       </div>
+      <CustomTextField
+        label="Komentarz dot. natępnego kontaktu"
+        name="komentarzData"
+        value={formData.komentarzData}
+        onChange={onChange}
+        variant="outlined"
+        fullWidth
+        margin="normal"
+        multiline
+        maxRows={4}
+      />
     </form>
   );
 }

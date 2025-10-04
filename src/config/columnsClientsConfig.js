@@ -156,6 +156,13 @@ const columnsClientsConfig = [
     sortable: true,
     view: "basic",
   },
+  {
+    id: "komentarzData",
+    label: "Komentarz dot. następnego kontaktu",
+    shortLabel: "Koment. nast. k.",
+    sortable: false,
+    view: "basic",
+  },
 ];
 
 export default columnsClientsConfig;
