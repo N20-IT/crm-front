@@ -40,7 +40,7 @@ function ClientsTable({
   handleGoToClientDetails,
 }) {
   const [order, setOrder] = useState("desc");
-  const [orderBy, setOrderBy] = useState("dataZapytania");
+  const [orderBy, setOrderBy] = useState("dataUtworzenia");
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(100);
   const navigate = useNavigate();
