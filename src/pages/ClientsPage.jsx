@@ -326,6 +326,7 @@ function ClientsPage() {
           onAddClientClick={handleAddClientClick}
           onSearchFilterApply={handleSearchAndFilter}
           allUsers={allUsers.length !== 0 ? allUsers : users}
+          userRole={userRole}
         />
       </div>
       <ClientsTable
@@ -340,6 +341,7 @@ function ClientsPage() {
         handleEditClientClick={handleEditClientClick}
         loading={loading}
         handleGoToClientDetails={handleOpenClientDetailsPanel}
+        userRole={userRole}
       />
       <Alerts
         message={alertMessage}

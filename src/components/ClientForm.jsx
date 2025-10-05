@@ -24,6 +24,7 @@ function ClientForm({
   addPhoneField,
   removePhoneField,
   allUsers,
+  userRole,
 }) {
   const [errors, setErrors] = useState({});
 
@@ -795,12 +796,16 @@ function ClientForm({
           fullWidth
           margin="normal"
           InputLabelProps={{ shrink: true }}
-          inputProps={{
-            min: new Date().toISOString().split("T")[0],
-            max: new Date(Date.now() + 10 * 24 * 60 * 60 * 1000)
-              .toISOString()
-              .split("T")[0],
-          }}
+          inputProps={
+            userRole !== "admin"
+              ? {
+                  min: new Date().toISOString().split("T")[0],
+                  max: new Date(Date.now() + 10 * 24 * 60 * 60 * 1000)
+                    .toISOString()
+                    .split("T")[0],
+                }
+              : {}
+          }
         />
       </div>
       <CustomTextField
@@ -813,6 +818,7 @@ function ClientForm({
         margin="normal"
         multiline
         maxRows={4}
+        disabled={userRole === "admin" ? false : true}
       />
     </form>
   );

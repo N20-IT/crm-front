@@ -38,6 +38,7 @@ function ClientsTable({
   handleEditClientClick,
   loading,
   handleGoToClientDetails,
+  userRole,
 }) {
   const [order, setOrder] = useState("desc");
   const [orderBy, setOrderBy] = useState("dataUtworzenia");
@@ -277,6 +278,7 @@ function ClientsTable({
                     handleEditClientClick={handleEditClientClick}
                     handleGoToClientDetails={handleGoToClientDetails}
                     showDetailsIcon={true}
+                    userRole={userRole}
                   />
                   <CustomTableCell>
                     {row.dataUtworzenia
