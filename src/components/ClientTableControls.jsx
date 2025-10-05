@@ -1,15 +1,65 @@
-import { KeyboardArrowDown, ViewList, ViewModule } from "@mui/icons-material";
+import {
+  Clear,
+  KeyboardArrowDown,
+  ViewList,
+  ViewModule,
+} from "@mui/icons-material";
 import {
   Box,
   Button,
+  IconButton,
+  InputAdornment,
   Stack,
   ToggleButton,
   ToggleButtonGroup,
   Tooltip,
 } from "@mui/material";
 import CustomTextField from "./CustomTextField";
+import { useClientFiltersStore } from "../store/clientFilterStore";
+import { useEffect, useState } from "react";
+import ClientFilters from "./ClientFilters";
 
-function ClientTableControls({ onAddClientClick }) {
+function ClientTableControls({
+  onAddClientClick,
+  onSearchFilterApply,
+  allUsers,
+}) {
+  const {
+    filters,
+    clearFilters,
+    changeFilterPanelOpen,
+  } = useClientFiltersStore();
+  const [searchValue, setSearchValue] = useState("");
+
+  const isAnyFilterFilled = (localFilters) => {
+    if (!localFilters || typeof localFilters !== "object") {
+      return false;
+    }
+
+    return Object.values(localFilters).some((value) => {
+      if (Array.isArray(value)) {
+        return value.length > 0;
+      }
+      return value !== "";
+    });
+  };
+
+  const handleSearchChange = (e) => {
+    const value = e.target.value;
+    setSearchValue(value);
+    if (value.length > 2 && value !== searchValue) {
+      const updatedFilters = { ...filters };
+      onSearchFilterApply(value, updatedFilters);
+    } else if (value.length === 0 && value !== searchValue) {
+      const updatedFilters = { ...filters };
+      onSearchFilterApply(value, updatedFilters);
+    }
+  };
+
+  const handleFilterChange = (newFilters) => {
+    onSearchFilterApply(searchValue, newFilters);
+  };
+
   return (
     <Box
       sx={{
@@ -26,35 +76,37 @@ function ClientTableControls({ onAddClientClick }) {
         alignItems="center"
         justifyContent="flex-end"
       >
-        {/* <Button
-          aria-haspopup="true"
-          variant="outlined"
-          endIcon={<KeyboardArrowDown />}
-          sx={{
-            color: "#6D727F",
-            fontFamily: "Poppins",
-            borderColor: "black",
-            width: "180px",
-            height: "40px",
-          }}
-        >
-          Zaznaczono
-        </Button>
         <Button
           variant="outlined"
           sx={{
-            color: "#6D727F",
+            color: isAnyFilterFilled(filters) ? "#009900" : "#6D727F",
             fontFamily: "Poppins",
-            borderColor: "black",
+            borderColor: isAnyFilterFilled(filters) ? "#009900" : "black",
             width: "180px",
             height: "40px",
             fontSize: "18px",
           }}
+          onClick={changeFilterPanelOpen}
         >
           Filtruj
         </Button>
         <CustomTextField
           label="Szukaj..."
+          value={searchValue}
+          onChange={handleSearchChange}
+          InputProps={{
+            endAdornment: searchValue && (
+              <InputAdornment position="end">
+                <IconButton
+                  onClick={() => handleSearchChange({ target: { value: "" } })}
+                  edge="end"
+                  size="small"
+                >
+                  <Clear />
+                </IconButton>
+              </InputAdornment>
+            ),
+          }}
           sx={{
             flex: 1,
             "& .MuiOutlinedInput-root": {
@@ -67,24 +119,7 @@ function ClientTableControls({ onAddClientClick }) {
               transform: "translate(14px, -9px) scale(0.75)",
             },
           }}
-        /> */}
-        {/* <ToggleButtonGroup
-          exclusive
-          aria-label="view selection"
-          sx={{ height: "40px" }}
-        >
-          <Tooltip title="Widok podstawowy">
-            <ToggleButton value={0} aria-label="basic view">
-              <ViewList sx={{ color: "#FC8721" }} />
-            </ToggleButton>
-          </Tooltip>
-          <Tooltip title="Widok rozszerzony">
-            <ToggleButton value={1} aria-label="expanded view">
-              <ViewModule sx={{ color: "default" }} />
-            </ToggleButton>
-          </Tooltip>
-        </ToggleButtonGroup> */}
-
+        />
         <Button
           variant="contained"
           sx={{
@@ -98,6 +133,7 @@ function ClientTableControls({ onAddClientClick }) {
           Dodaj Klienta
         </Button>
       </Stack>
+      <ClientFilters onFilterApply={handleFilterChange} allUsers={allUsers} />
     </Box>
   );
 }
