@@ -98,8 +98,10 @@ function ClientForm({
         <CustomTextField
           label="Data zapytania"
           name="dataZapytania"
-          type="datetime-local"
-          value={formData.dataZapytania}
+          type="date"
+          value={
+            formData.dataZapytania ? formData.dataZapytania.split("T")[0] : ""
+          }
           onChange={onChange}
           variant="outlined"
           fullWidth
@@ -769,8 +771,10 @@ function ClientForm({
         <CustomTextField
           label="Ostatni kontakt"
           name="ostatniKontakt"
-          type="datetime-local"
-          value={formData.ostatniKontakt}
+          type="date"
+          value={
+            formData.ostatniKontakt ? formData.ostatniKontakt.split("T")[0] : ""
+          }
           onChange={onChange}
           variant="outlined"
           fullWidth
@@ -780,18 +784,22 @@ function ClientForm({
         <CustomTextField
           label="Data następnego kontaktu"
           name="dataNastepnegoKontaktu"
-          type="datetime-local"
-          value={formData.dataNastepnegoKontaktu}
+          type="date"
+          value={
+            formData.dataNastepnegoKontaktu
+              ? formData.dataNastepnegoKontaktu.split("T")[0]
+              : ""
+          }
           onChange={onChange}
           variant="outlined"
           fullWidth
           margin="normal"
           InputLabelProps={{ shrink: true }}
           inputProps={{
-            min: new Date().toISOString().slice(0, 16),
+            min: new Date().toISOString().split("T")[0],
             max: new Date(Date.now() + 10 * 24 * 60 * 60 * 1000)
               .toISOString()
-              .slice(0, 16),
+              .split("T")[0],
           }}
         />
       </div>
