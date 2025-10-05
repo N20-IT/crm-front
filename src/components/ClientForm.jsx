@@ -94,7 +94,7 @@ function ClientForm({
   };
 
   return (
-    <form>
+    <>
       <div className="flex justify-end space-x-4">
         <CustomTextField
           label="Data zapytania"
@@ -820,7 +820,7 @@ function ClientForm({
         maxRows={4}
         disabled={userRole === "admin" ? false : true}
       />
-    </form>
+    </>
   );
 }
 

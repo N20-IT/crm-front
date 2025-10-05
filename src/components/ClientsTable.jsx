@@ -159,7 +159,7 @@ function ClientsTable({
                 }}
               >
                 <Tooltip arrow title="Wybrane oferty">
-                  Oferty
+                  <span>Oferty</span>
                 </Tooltip>
               </TableCell>
               <TableCell
@@ -174,7 +174,7 @@ function ClientsTable({
                 }}
               >
                 <Tooltip arrow title="Narzędzia">
-                  Narzędzia
+                  <span>Narzędzia</span>
                 </Tooltip>
               </TableCell>
               {columns.map((column, index) => (
@@ -205,12 +205,12 @@ function ClientsTable({
                       }}
                     >
                       <Tooltip arrow title={column.label}>
-                        {column.shortLabel}
+                        <span>{column.shortLabel}</span>
                       </Tooltip>
                     </TableSortLabel>
                   ) : (
                     <Tooltip arrow title={column.label}>
-                      {column.shortLabel}
+                      <span>{column.shortLabel}</span>
                     </Tooltip>
                   )}
                 </TableCell>
@@ -234,7 +234,7 @@ function ClientsTable({
                     ))}
                   </TableRow>
                 ))
-              : true}
+              : null}
             {Array.isArray(rows) && rows.length > 0 ? (
               rows.map((row, index) => (
                 <TableRow
@@ -435,7 +435,9 @@ function ClientsTable({
                           ?.split(",")
                           .slice(0, 3)
                           .join(", ")}
-                        {row.lokalizacja?.split(",").length > 3 ? "..." : ""}
+                        <span>
+                          {row.lokalizacja?.split(",").length > 3 ? "..." : ""}
+                        </span>
                       </strong>
                     </Tooltip>
                   </CustomTableCell>
@@ -477,7 +479,7 @@ function ClientsTable({
                         <Tooltip
                           arrow
                           title={
-                            hiddenStandards.length > 0 ? (
+                            hiddenStandards.length > 0 && (
                               <div
                                 style={{
                                   fontFamily: "Poppins",
@@ -486,12 +488,10 @@ function ClientsTable({
                               >
                                 {coloredStandards.map((s, i) => (
                                   <div key={i} style={{ color: s.color }}>
-                                    {s.label}
+                                    <span>{s.label}</span>
                                   </div>
                                 ))}
                               </div>
-                            ) : (
-                              ""
                             )
                           }
                           placement="top"
@@ -502,8 +502,10 @@ function ClientsTable({
                                 key={i}
                                 style={{ color: s.color, marginRight: "6px" }}
                               >
-                                {s.label}
-                                {i < visibleStandards.length - 1 && ", "}
+                                <span>{s.label}</span>
+                                <span>
+                                  {i < visibleStandards.length - 1 && ", "}
+                                </span>
                               </span>
                             ))}
                             {hiddenStandards.length > 0 && <span>...</span>}

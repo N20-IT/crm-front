@@ -269,7 +269,7 @@ function AddOfferPanel({ onSave, onCancel, users, userInformation }) {
                   }
                 >
                   {Object.keys(dzielniceData.Dzielnice).map((district) => (
-                    <MenuItem keys={district} value={district}>
+                    <MenuItem key={district} value={district}>
                       {district}
                     </MenuItem>
                   ))}
@@ -489,12 +489,24 @@ function AddOfferPanel({ onSave, onCancel, users, userInformation }) {
                   >
                     Brak
                   </MenuItem>
-                  <MenuItem value="Dom">Dom</MenuItem>
-                  <MenuItem value="Mieszkanie">Mieszkanie</MenuItem>
-                  <MenuItem value="Lokal">Lokal</MenuItem>
-                  <MenuItem value="Działka">Działka</MenuItem>
-                  <MenuItem value="Bliźniak">Bliźniak</MenuItem>
-                  <MenuItem value="Szeregowy">Szeregowy</MenuItem>
+                  <MenuItem key="Dom" value="Dom">
+                    Dom
+                  </MenuItem>
+                  <MenuItem key="Mieszkanie" value="Mieszkanie">
+                    Mieszkanie
+                  </MenuItem>
+                  <MenuItem key="Lokal" value="Lokal">
+                    Lokal
+                  </MenuItem>
+                  <MenuItem key="Działka" value="Działka">
+                    Działka
+                  </MenuItem>
+                  <MenuItem key="Bliźniak" value="Bliźniak">
+                    Bliźniak
+                  </MenuItem>
+                  <MenuItem key="Szeregowy" value="Szeregowy">
+                    Szeregowy
+                  </MenuItem>
                 </Select>
               </FormControl>
             </div>
@@ -564,8 +576,12 @@ function AddOfferPanel({ onSave, onCancel, users, userInformation }) {
                   >
                     Brak
                   </MenuItem>
-                  <MenuItem value="Pierwotny">Pierwotny</MenuItem>
-                  <MenuItem value="Wtórny">Wtórny</MenuItem>
+                  <MenuItem key="Pierwotny" value="Pierwotny">
+                    Pierwotny
+                  </MenuItem>
+                  <MenuItem key="Wtórny" value="Wtórny">
+                    Wtórny
+                  </MenuItem>
                 </Select>
               </FormControl>
             </div>
@@ -598,8 +614,8 @@ function AddOfferPanel({ onSave, onCancel, users, userInformation }) {
           </div>
           <div className="flex flex-col">
             {formData.telefonWlasciciela.map((phone, index) => (
-              <div className="flex flex-col">
-                <div key={index} className="flex items-center space-x-2">
+              <div key={index} className="flex flex-col">
+                <div className="flex items-center space-x-2">
                   <CustomTextField
                     label={`Telefon/Email ${index + 1}`}
                     variant="outlined"

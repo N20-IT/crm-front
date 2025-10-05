@@ -303,6 +303,7 @@ function DeletedClientsPage() {
         handleEditClientClick={handleEditClientClick}
         loading={loading}
         handleGoToClientDetails={handleOpenClientDetailsPanel}
+        userRole={userRole}
       />
       <Alerts
         message={alertMessage}
