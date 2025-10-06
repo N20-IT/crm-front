@@ -662,6 +662,7 @@ function ClientDetails({
             handleDeleteClientClick={handleDeleteClientClick}
             handleEditClientClick={handleEditClick}
             showDetailsIcon={false}
+            userRole={userRole}
           />
         </Box>
         <Alerts
