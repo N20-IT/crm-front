@@ -397,8 +397,6 @@ function ClientDetails({
                     year: "numeric",
                     month: "2-digit",
                     day: "2-digit",
-                    hour: "2-digit",
-                    minute: "2-digit",
                   })}
                 </CustomTypography>
               )}
@@ -411,8 +409,6 @@ function ClientDetails({
                       year: "numeric",
                       month: "2-digit",
                       day: "2-digit",
-                      hour: "2-digit",
-                      minute: "2-digit",
                     }
                   )}
                 </CustomTypography>
@@ -424,8 +420,6 @@ function ClientDetails({
                     year: "numeric",
                     month: "2-digit",
                     day: "2-digit",
-                    hour: "2-digit",
-                    minute: "2-digit",
                   })}
                 </CustomTypography>
               )}
@@ -447,8 +441,6 @@ function ClientDetails({
                       year: "numeric",
                       month: "2-digit",
                       day: "2-digit",
-                      hour: "2-digit",
-                      minute: "2-digit",
                     })} ${client.tworca ? `przez ${client.tworca}` : ""}`
                   : "Brak danych"}
               </CustomTypography>
@@ -460,9 +452,7 @@ function ClientDetails({
                     year: "numeric",
                     month: "2-digit",
                     day: "2-digit",
-                    hour: "2-digit",
-                    minute: "2-digit",
-                  })} ${client.editor ? `przez ${client.edytor}` : ""} `}
+                  })} ${client.edytor ? `przez ${client.edytor}` : ""} `}
                 </CustomTypography>
               )}
             </Grid2>
