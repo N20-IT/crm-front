@@ -25,6 +25,7 @@ function ClientForm({
   removePhoneField,
   allUsers,
   userRole,
+  action,
 }) {
   const [errors, setErrors] = useState({});
 
@@ -818,7 +819,7 @@ function ClientForm({
         margin="normal"
         multiline
         maxRows={4}
-        disabled={userRole === "admin" ? false : true}
+        disabled={action === "add" || userRole === "admin" ? false : true}
       />
     </>
   );

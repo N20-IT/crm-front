@@ -143,6 +143,7 @@ function AddClientPanel({ onSave, onCancel, allUsers }) {
               removePhoneField={removePhoneField}
               allUsers={allUsers}
               userRole={userRole}
+              action="add"
             />
             <div className="sticky bottom-0 bg-white py-2 px-2 z-20">
               <div className="flex justify-end space-x-4 mt-4">
