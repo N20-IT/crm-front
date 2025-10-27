@@ -15,9 +15,13 @@ import EditClientPanel from "../components/EditClientPanel";
 import LoadingCircularProgress from "../components/LoadingCircularProgress";
 import ClientDetails from "../components/ClientDetails";
 import { useParams } from "react-router-dom";
+import { useClientFiltersStore } from "../store/clientFilterStore";
+import qs from "qs";
 
 function ClientsPage() {
   const { id } = useParams();
+  const { filters, clearFilters } = useClientFiltersStore();
+  const [searchValue, setSearchValue] = useState("");
   const navigate = useNavigate();
   const isAuthenticated = useAuth();
   const [selected, setSelected] = useState([]);
@@ -86,10 +90,14 @@ function ClientsPage() {
     setClientDetailsId(null);
   };
 
+  const handleSearchAndFilter = (searchQuery, currentFilters) => {
+    fetchData(searchQuery, currentFilters);
+  };
+
   const handlePagination = (currentPage, rowsPerValue) => {
     if (currentPage !== page) setPage(currentPage);
     if (rowsPerValue !== itemsPerPage) setItemsPerPage(rowsPerValue);
-    fetchData(currentPage, rowsPerValue, orderBy, order);
+    fetchData(searchValue, filters, currentPage, rowsPerValue, orderBy, order);
   };
 
   const handleSort = (currentPage, rowsPerValue, sortBy, sort) => {
@@ -97,7 +105,7 @@ function ClientsPage() {
     if (rowsPerValue !== itemsPerPage) setItemsPerPage(rowsPerValue);
     if (sortBy !== orderBy) setOrderBy(sortBy);
     if (sort !== order) setOrder(sort);
-    fetchData(currentPage, rowsPerValue, sortBy, sort);
+    fetchData(searchValue, filters, currentPage, rowsPerValue, sortBy, sort);
   };
 
   const handleAddClientClick = () => {
@@ -126,6 +134,8 @@ function ClientsPage() {
 
   const fetchData = useCallback(
     async (
+      searchQuery = searchValue,
+      currentFilters = filters,
       currentPage = page,
       rowsPerValue = itemsPerPage,
       sortBy = orderBy,
@@ -139,11 +149,23 @@ function ClientsPage() {
             Authorization: `Bearer ${token}`,
           },
           params: {
+            search: searchQuery,
             page: currentPage,
             limit: rowsPerValue,
             sortBy,
             sort,
             czyUsuniety: false,
+            ...currentFilters,
+          },
+          paramsSerializer: (params) => {
+            const serializedParams = {
+              ...params,
+              lokalizacja: params.lokalizacja
+                ? params.lokalizacja.join(",")
+                : undefined,
+              standard: params.standard ? params.standard.join(",") : undefined,
+            };
+            return qs.stringify(serializedParams, { arrayFormat: "repeat" });
           },
         });
         setRows(response.data["klienci"]);
@@ -288,12 +310,24 @@ function ClientsPage() {
     fetchAgents();
     fetchData();
   }, [isAuthenticated, id, navigate, fetchAgents, fetchData]);
+
+  useEffect(() => {
+    return () => {
+      clearFilters();
+    };
+  }, []);
+
   return (
     <div className="flex items-start justify-start h-screen ml-16 flex-col">
       <Sidebar />
       {loading && <LoadingCircularProgress />}
       <div className="flex justify-center w-full">
-        <ClientTableControls onAddClientClick={handleAddClientClick} />
+        <ClientTableControls
+          onAddClientClick={handleAddClientClick}
+          onSearchFilterApply={handleSearchAndFilter}
+          allUsers={allUsers.length !== 0 ? allUsers : users}
+          userRole={userRole}
+        />
       </div>
       <ClientsTable
         rows={rows}
@@ -307,6 +341,7 @@ function ClientsPage() {
         handleEditClientClick={handleEditClientClick}
         loading={loading}
         handleGoToClientDetails={handleOpenClientDetailsPanel}
+        userRole={userRole}
       />
       <Alerts
         message={alertMessage}

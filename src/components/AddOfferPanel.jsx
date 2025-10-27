@@ -197,10 +197,12 @@ function AddOfferPanel({ onSave, onCancel, users, userInformation }) {
 
   return (
     <div className=" fixed inset-0 bg-light-grey bg-opacity-75 flex items-center justify-center z-50">
-      <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md md:max-w-lg lg:max-w-xl max-h-[95%] overflow-auto">
-        <h2 className="text-4xl font-bold mb-4 font-poppins">
-          Dodaj nową ofertę
-        </h2>
+      <div className="bg-white px-6 rounded-lg shadow-lg w-full max-w-md md:max-w-lg lg:max-w-xl max-h-[95%] overflow-auto">
+        <div className="sticky top-0 bg-white pt-6 pb-2 px-2 z-20">
+          <h2 className="text-4xl font-bold mb-4 font-poppins">
+            Dodaj nową ofertę
+          </h2>
+        </div>
         <form>
           <div className="flex flex-col md:flex-row justify-end space-y-4 md:space-x-4 md:space-y-0">
             <div className="w-full">
@@ -267,7 +269,7 @@ function AddOfferPanel({ onSave, onCancel, users, userInformation }) {
                   }
                 >
                   {Object.keys(dzielniceData.Dzielnice).map((district) => (
-                    <MenuItem keys={district} value={district}>
+                    <MenuItem key={district} value={district}>
                       {district}
                     </MenuItem>
                   ))}
@@ -487,10 +489,24 @@ function AddOfferPanel({ onSave, onCancel, users, userInformation }) {
                   >
                     Brak
                   </MenuItem>
-                  <MenuItem value="Dom">Dom</MenuItem>
-                  <MenuItem value="Mieszkanie">Mieszkanie</MenuItem>
-                  <MenuItem value="Lokal">Lokal</MenuItem>
-                  <MenuItem value="Działka">Działka</MenuItem>
+                  <MenuItem key="Dom" value="Dom">
+                    Dom
+                  </MenuItem>
+                  <MenuItem key="Mieszkanie" value="Mieszkanie">
+                    Mieszkanie
+                  </MenuItem>
+                  <MenuItem key="Lokal" value="Lokal">
+                    Lokal
+                  </MenuItem>
+                  <MenuItem key="Działka" value="Działka">
+                    Działka
+                  </MenuItem>
+                  <MenuItem key="Bliźniak" value="Bliźniak">
+                    Bliźniak
+                  </MenuItem>
+                  <MenuItem key="Szeregowy" value="Szeregowy">
+                    Szeregowy
+                  </MenuItem>
                 </Select>
               </FormControl>
             </div>
@@ -560,8 +576,12 @@ function AddOfferPanel({ onSave, onCancel, users, userInformation }) {
                   >
                     Brak
                   </MenuItem>
-                  <MenuItem value="Pierwotny">Pierwotny</MenuItem>
-                  <MenuItem value="Wtórny">Wtórny</MenuItem>
+                  <MenuItem key="Pierwotny" value="Pierwotny">
+                    Pierwotny
+                  </MenuItem>
+                  <MenuItem key="Wtórny" value="Wtórny">
+                    Wtórny
+                  </MenuItem>
                 </Select>
               </FormControl>
             </div>
@@ -594,8 +614,8 @@ function AddOfferPanel({ onSave, onCancel, users, userInformation }) {
           </div>
           <div className="flex flex-col">
             {formData.telefonWlasciciela.map((phone, index) => (
-              <div className="flex flex-col">
-                <div key={index} className="flex items-center space-x-2">
+              <div key={index} className="flex flex-col">
+                <div className="flex items-center space-x-2">
                   <CustomTextField
                     label={`Telefon/Email ${index + 1}`}
                     variant="outlined"
@@ -823,34 +843,35 @@ function AddOfferPanel({ onSave, onCancel, users, userInformation }) {
             fullWidth
             margin="normal"
           />
-
-          <div className="flex justify-end space-x-4 mt-4">
-            <Button
-              variant="contained"
-              onClick={handleSave}
-              sx={{
-                color: "white",
-                backgroundColor: "#FC8721",
-                fontFamily: "Poppins",
-                fontSize: "20px",
-                width: "100%",
-              }}
-            >
-              Zapisz
-            </Button>
-            <Button
-              variant="contained"
-              onClick={onCancel}
-              sx={{
-                backgroundColor: "#6D727F",
-                color: "white",
-                fontFamily: "Poppins",
-                fontSize: "20px",
-                width: "100%",
-              }}
-            >
-              Anuluj
-            </Button>
+          <div className="sticky bottom-0 bg-white py-2 px-2 z-20">
+            <div className="flex justify-end space-x-4 mt-4">
+              <Button
+                variant="contained"
+                onClick={handleSave}
+                sx={{
+                  color: "white",
+                  backgroundColor: "#FC8721",
+                  fontFamily: "Poppins",
+                  fontSize: "20px",
+                  width: "100%",
+                }}
+              >
+                Zapisz
+              </Button>
+              <Button
+                variant="contained"
+                onClick={onCancel}
+                sx={{
+                  backgroundColor: "#6D727F",
+                  color: "white",
+                  fontFamily: "Poppins",
+                  fontSize: "20px",
+                  width: "100%",
+                }}
+              >
+                Anuluj
+              </Button>
+            </div>
           </div>
         </form>
       </div>

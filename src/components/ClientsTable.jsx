@@ -38,9 +38,10 @@ function ClientsTable({
   handleEditClientClick,
   loading,
   handleGoToClientDetails,
+  userRole,
 }) {
   const [order, setOrder] = useState("desc");
-  const [orderBy, setOrderBy] = useState("dataZapytania");
+  const [orderBy, setOrderBy] = useState("dataUtworzenia");
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(100);
   const navigate = useNavigate();
@@ -157,7 +158,9 @@ function ClientsTable({
                   paddingRight: "15px",
                 }}
               >
-                <Tooltip title="Wybrane oferty">Oferty</Tooltip>
+                <Tooltip arrow title="Wybrane oferty">
+                  <span>Oferty</span>
+                </Tooltip>
               </TableCell>
               <TableCell
                 key="narzedzia"
@@ -170,7 +173,9 @@ function ClientsTable({
                   paddingRight: "15px",
                 }}
               >
-                <Tooltip title="Narzędzia">Narzędzia</Tooltip>
+                <Tooltip arrow title="Narzędzia">
+                  <span>Narzędzia</span>
+                </Tooltip>
               </TableCell>
               {columns.map((column, index) => (
                 <TableCell
@@ -199,12 +204,14 @@ function ClientsTable({
                         },
                       }}
                     >
-                      <Tooltip title={column.label}>
-                        {column.shortLabel}
+                      <Tooltip arrow title={column.label}>
+                        <span>{column.shortLabel}</span>
                       </Tooltip>
                     </TableSortLabel>
                   ) : (
-                    <Tooltip title={column.label}>{column.shortLabel}</Tooltip>
+                    <Tooltip arrow title={column.label}>
+                      <span>{column.shortLabel}</span>
+                    </Tooltip>
                   )}
                 </TableCell>
               ))}
@@ -227,7 +234,7 @@ function ClientsTable({
                     ))}
                   </TableRow>
                 ))
-              : true}
+              : null}
             {Array.isArray(rows) && rows.length > 0 ? (
               rows.map((row, index) => (
                 <TableRow
@@ -246,7 +253,7 @@ function ClientsTable({
                   }}
                 >
                   <CustomTableCell style={{ whiteSpace: "nowrap" }}>
-                    <Tooltip title={"Dobierz oferty"}>
+                    <Tooltip arrow title={"Dobierz oferty"}>
                       <IconButton onClick={() => handleMatchClient(row._id)}>
                         <Badge
                           badgeContent={row.noweOfertyLiczba}
@@ -271,32 +278,56 @@ function ClientsTable({
                     handleEditClientClick={handleEditClientClick}
                     handleGoToClientDetails={handleGoToClientDetails}
                     showDetailsIcon={true}
+                    userRole={userRole}
                   />
                   <CustomTableCell>
-                    {row.dataZapytania ? (
-                      <>
-                        {new Date(row.dataZapytania).toLocaleDateString(
+                    {row.dataUtworzenia
+                      ? new Date(row.dataUtworzenia).toLocaleDateString(
                           "pl-PL",
                           {
                             year: "numeric",
                             month: "2-digit",
                             day: "2-digit",
                           }
-                        )}{" "}
-                        <strong>
-                          <br />
-                          {new Date(row.dataZapytania).toLocaleTimeString(
-                            "pl-PL",
-                            {
-                              hour: "2-digit",
-                              minute: "2-digit",
-                            }
-                          )}
-                        </strong>
-                      </>
-                    ) : (
-                      ""
-                    )}
+                        )
+                      : ""}
+                  </CustomTableCell>
+
+                  <CustomTableCell>
+                    {row.dataZapytania
+                      ? new Date(row.dataZapytania).toLocaleDateString(
+                          "pl-PL",
+                          {
+                            year: "numeric",
+                            month: "2-digit",
+                            day: "2-digit",
+                          }
+                        )
+                      : ""}
+                  </CustomTableCell>
+                  <CustomTableCell>
+                    {row.dataNastepnegoKontaktu
+                      ? new Date(row.dataNastepnegoKontaktu).toLocaleDateString(
+                          "pl-PL",
+                          {
+                            year: "numeric",
+                            month: "2-digit",
+                            day: "2-digit",
+                          }
+                        )
+                      : ""}
+                  </CustomTableCell>
+                  <CustomTableCell>
+                    {row.ostatniKontakt
+                      ? new Date(row.ostatniKontakt).toLocaleDateString(
+                          "pl-PL",
+                          {
+                            year: "numeric",
+                            month: "2-digit",
+                            day: "2-digit",
+                          }
+                        )
+                      : ""}
                   </CustomTableCell>
                   <CustomTableCell>{row.daneKlienta || ""}</CustomTableCell>
                   <CustomTableCell sx={{ whiteSpace: "nowrap" }}>
@@ -313,7 +344,7 @@ function ClientsTable({
                             }}
                           >
                             <span>{formatPhoneNumber(number)}</span>
-                            <Tooltip title="Skopiuj numer">
+                            <Tooltip arrow title="Skopiuj numer">
                               <IconButton
                                 onClick={() => copyToClipboard(number)}
                                 sx={{ padding: "6px" }}
@@ -329,7 +360,38 @@ function ClientsTable({
                     </strong>
                   </CustomTableCell>
 
-                  <CustomTableCell>{row.email || ""}</CustomTableCell>
+                  <CustomTableCell>
+                    {row.email ? (
+                      <a
+                        href={`mailto:${row.email}`}
+                        style={{
+                          color: "#1976d2",
+                          textDecoration: "none",
+                          fontWeight: "500",
+                          cursor: "pointer",
+                        }}
+                        onMouseEnter={(e) =>
+                          (e.currentTarget.style.textDecoration = "underline")
+                        }
+                        onMouseLeave={(e) =>
+                          (e.currentTarget.style.textDecoration = "none")
+                        }
+                      >
+                        {row.email}
+                      </a>
+                    ) : (
+                      ""
+                    )}
+                  </CustomTableCell>
+                  <CustomTableCell>
+                    {row.komentarzData && row.komentarzData.length > 50 ? (
+                      <Tooltip arrow title={row.komentarzData}>
+                        <span>{row.komentarzData.slice(0, 50)} ...</span>
+                      </Tooltip>
+                    ) : (
+                      row.komentarzData || ""
+                    )}
+                  </CustomTableCell>
                   <CustomTableCell>{row.numerGalactica || ""}</CustomTableCell>
                   <CustomTableCell
                     sx={{
@@ -347,7 +409,7 @@ function ClientsTable({
                   </CustomTableCell>
                   <CustomTableCell>
                     {row.komentarz && row.komentarz.length > 50 ? (
-                      <Tooltip title={row.komentarz}>
+                      <Tooltip arrow title={row.komentarz}>
                         <span>{row.komentarz.slice(0, 50)} ...</span>
                       </Tooltip>
                     ) : (
@@ -355,7 +417,11 @@ function ClientsTable({
                     )}
                   </CustomTableCell>
                   <CustomTableCell>
+                    <strong>{row.portal || ""}</strong>
+                  </CustomTableCell>
+                  <CustomTableCell>
                     <Tooltip
+                      arrow
                       title={
                         <Typography
                           sx={{ whiteSpace: "pre-line", fontSize: "14px" }}
@@ -369,7 +435,9 @@ function ClientsTable({
                           ?.split(",")
                           .slice(0, 3)
                           .join(", ")}
-                        {row.lokalizacja?.split(",").length > 3 ? "..." : ""}
+                        <span>
+                          {row.lokalizacja?.split(",").length > 3 ? "..." : ""}
+                        </span>
                       </strong>
                     </Tooltip>
                   </CustomTableCell>
@@ -386,71 +454,71 @@ function ClientsTable({
                   <CustomTableCell>
                     {formatNumber(row.metrazDo) || ""}
                   </CustomTableCell>
-                  <CustomTableCell
-                    sx={{
-                      color:
-                        clientStandardConfig.find(
-                          (standard) => standard.value === row.standard
-                        )?.color || "black",
-                    }}
-                  >
-                    <strong>{row.standard || ""}</strong>
+                  <CustomTableCell>
+                    {(() => {
+                      // Ujednolicamy format danych (string -> array)
+                      const standards = Array.isArray(row.standard)
+                        ? row.standard
+                        : typeof row.standard === "string"
+                        ? row.standard.split(",").map((s) => s.trim())
+                        : [];
+
+                      // Przygotowujemy kolory i etykiety
+                      const coloredStandards = standards.map((standard) => {
+                        const color =
+                          clientStandardConfig.find((s) => s.value === standard)
+                            ?.color || "black";
+                        return { label: standard, color };
+                      });
+
+                      // Tworzymy zawartość do wyświetlenia (max 3 elementy)
+                      const visibleStandards = coloredStandards.slice(0, 3);
+                      const hiddenStandards = coloredStandards.slice(3);
+
+                      return (
+                        <Tooltip
+                          arrow
+                          title={
+                            hiddenStandards.length > 0 && (
+                              <div
+                                style={{
+                                  fontFamily: "Poppins",
+                                  fontSize: "14px",
+                                }}
+                              >
+                                {coloredStandards.map((s, i) => (
+                                  <div key={i} style={{ color: s.color }}>
+                                    <span>{s.label}</span>
+                                  </div>
+                                ))}
+                              </div>
+                            )
+                          }
+                          placement="top"
+                        >
+                          <strong>
+                            {visibleStandards.map((s, i) => (
+                              <span
+                                key={i}
+                                style={{ color: s.color, marginRight: "6px" }}
+                              >
+                                <span>{s.label}</span>
+                                <span>
+                                  {i < visibleStandards.length - 1 && ", "}
+                                </span>
+                              </span>
+                            ))}
+                            {hiddenStandards.length > 0 && <span>...</span>}
+                          </strong>
+                        </Tooltip>
+                      );
+                    })()}
                   </CustomTableCell>
                   <CustomTableCell>
                     {formatNumber(row.budzetOd) || ""}
                   </CustomTableCell>
                   <CustomTableCell>
                     {formatNumber(row.budzetDo) || ""}
-                  </CustomTableCell>
-                  <CustomTableCell>
-                    {row.ostatniKontakt ? (
-                      <>
-                        {new Date(row.ostatniKontakt).toLocaleDateString(
-                          "pl-PL",
-                          {
-                            year: "numeric",
-                            month: "2-digit",
-                            day: "2-digit",
-                          }
-                        )}{" "}
-                        <strong>
-                          <br />
-                          {new Date(row.ostatniKontakt).toLocaleTimeString(
-                            "pl-PL",
-                            {
-                              hour: "2-digit",
-                              minute: "2-digit",
-                            }
-                          )}
-                        </strong>
-                      </>
-                    ) : (
-                      ""
-                    )}
-                  </CustomTableCell>
-                  <CustomTableCell>
-                    {row.dataNastepnegoKontaktu ? (
-                      <>
-                        {new Date(
-                          row.dataNastepnegoKontaktu
-                        ).toLocaleDateString("pl-PL", {
-                          year: "numeric",
-                          month: "2-digit",
-                          day: "2-digit",
-                        })}{" "}
-                        <strong>
-                          <br />
-                          {new Date(
-                            row.dataNastepnegoKontaktu
-                          ).toLocaleTimeString("pl-PL", {
-                            hour: "2-digit",
-                            minute: "2-digit",
-                          })}
-                        </strong>
-                      </>
-                    ) : (
-                      ""
-                    )}
                   </CustomTableCell>
                 </TableRow>
               ))

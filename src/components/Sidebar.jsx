@@ -80,22 +80,22 @@ const Sidebar = () => {
               </Tooltip>
             </li>
 
-            <li
-              className={`w-full h-14 flex justify-start items-center ${getLinkClass(
-                "/kosz-klientow"
-              )}`}
-            >
-              <Tooltip title="Kosz klientów" placement="right">
-                <Link
-                  to="/kosz-klientow"
-                  className="flex items-center justify-start text-xl ml-4 w-full h-full"
-                >
-                  <PersonRemove sx={{ marginRight: "6px" }} />
-                </Link>
-              </Tooltip>
-            </li>
             {userRole === "admin" && (
               <>
+                <li
+                  className={`w-full h-14 flex justify-start items-center ${getLinkClass(
+                    "/kosz-klientow"
+                  )}`}
+                >
+                  <Tooltip title="Kosz klientów" placement="right">
+                    <Link
+                      to="/kosz-klientow"
+                      className="flex items-center justify-start text-xl ml-4 w-full h-full"
+                    >
+                      <PersonRemove sx={{ marginRight: "6px" }} />
+                    </Link>
+                  </Tooltip>
+                </li>
                 <li
                   className={`w-full h-14 flex justify-start items-center ${getLinkClass(
                     "/uzytkownicy"

@@ -276,7 +276,7 @@ function DeletedClientsPage() {
   );
 
   useEffect(() => {
-    if (!isAuthenticated) navigate("/");
+    if (!isAuthenticated || userRole !== "admin") navigate("/");
 
     if (id !== undefined) {
       setIsClientDetailsPanelOpen(true);
@@ -285,7 +285,7 @@ function DeletedClientsPage() {
 
     fetchAgents();
     fetchData();
-  }, [isAuthenticated, id, navigate, fetchAgents, fetchData]);
+  }, [isAuthenticated, userRole, id, navigate, fetchAgents, fetchData]);
   return (
     <div className="flex items-start justify-start h-screen ml-16 mt-[10px] flex-col">
       <Sidebar />
@@ -303,6 +303,7 @@ function DeletedClientsPage() {
         handleEditClientClick={handleEditClientClick}
         loading={loading}
         handleGoToClientDetails={handleOpenClientDetailsPanel}
+        userRole={userRole}
       />
       <Alerts
         message={alertMessage}

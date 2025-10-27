@@ -46,12 +46,12 @@ function LoginPage() {
       redirect: "follow",
     };
 
-    console.log("Calling Lambda: ", apiUrl);
+    // console.log("Calling Lambda: ", apiUrl);
 
     return fetch(apiUrl, requestOptions)
       .then((response) => response.json())
       .then((result) => {
-        console.log("Attribute checked: ", result);
+        // console.log("Attribute checked: ", result);
 
         let cleanedBody = result.body.replace(/"/g, "");
 
@@ -86,7 +86,7 @@ function LoginPage() {
         url
       );
 
-      console.log(requirePasswordChange);
+      // console.log(requirePasswordChange);
       if (requirePasswordChange === true) {
         navigate("/zapomniane-haslo");
       }
@@ -122,7 +122,7 @@ function LoginPage() {
   const handleForgottenPassword = () => {
     setError("Zapomnialem hasla");
     setOpen(true);
-    console.log(username, password);
+    // console.log(username, password);
     navigate("/zapomniane-haslo");
   };
 

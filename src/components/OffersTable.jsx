@@ -177,7 +177,9 @@ function OffersTable({
                   paddingRight: "30px",
                 }}
               >
-                <Tooltip title="Narzędzia">Narzędzia</Tooltip>
+                <Tooltip title="Narzędzia">
+                  <span>Narzędzia</span>
+                </Tooltip>
               </TableCell>
               {filteredColumns.map((column, index) => (
                 <TableCell
@@ -207,11 +209,13 @@ function OffersTable({
                       }}
                     >
                       <Tooltip title={column.label}>
-                        {column.shortLabel}
+                        <span> {column.shortLabel}</span>
                       </Tooltip>
                     </TableSortLabel>
                   ) : (
-                    <Tooltip title={column.label}>{column.shortLabel}</Tooltip>
+                    <Tooltip title={column.label}>
+                      <span>{column.shortLabel}</span>
+                    </Tooltip>
                   )}
                 </TableCell>
               ))}
@@ -263,7 +267,7 @@ function OffersTable({
                         },
                       }}
                     />
-                  </TableCell>{" "}
+                  </TableCell>
                   <OfferActions
                     row={row}
                     userRole={userRole}
@@ -281,7 +285,7 @@ function OffersTable({
                       handleAssignmentOfferToClientClick
                     }
                   />
-                  {readConfig === 1 ? (
+                  {readConfig === 1 && (
                     <CustomTableCell>
                       {row.linkOferta ? (
                         <Link href={row.linkOferta} target="_blank">
@@ -293,10 +297,8 @@ function OffersTable({
                         ""
                       )}
                     </CustomTableCell>
-                  ) : (
-                    true
                   )}
-                  {readConfig === 1 ? (
+                  {readConfig === 1 && (
                     <CustomTableCell>
                       {new Date(row.dataUtworzenia).toLocaleDateString(
                         "pl-PL",
@@ -305,7 +307,7 @@ function OffersTable({
                           month: "2-digit",
                           day: "2-digit",
                         }
-                      )}{" "}
+                      )}
                       <strong>
                         <br />
                         {new Date(row.dataUtworzenia).toLocaleTimeString(
@@ -317,10 +319,8 @@ function OffersTable({
                         )}
                       </strong>
                     </CustomTableCell>
-                  ) : (
-                    true
                   )}
-                  {readConfig === 1 ? (
+                  {readConfig === 1 && (
                     <CustomTableCell>
                       {row.dataNastepnegoKontaktu ? (
                         <>
@@ -345,10 +345,8 @@ function OffersTable({
                         ""
                       )}
                     </CustomTableCell>
-                  ) : (
-                    true
                   )}
-                  {readConfig === 1 ? (
+                  {readConfig === 1 && (
                     <CustomTableCell>
                       {row.dataKontaktu ? (
                         <>
@@ -375,8 +373,6 @@ function OffersTable({
                         ""
                       )}
                     </CustomTableCell>
-                  ) : (
-                    true
                   )}
                   <CustomTableCell
                     sx={{
@@ -392,7 +388,7 @@ function OffersTable({
                   <CustomTableCell>
                     <strong>{row.agent || ""}</strong>
                   </CustomTableCell>
-                  {readConfig === 1 ? (
+                  {readConfig === 1 && (
                     <CustomTableCell>
                       {row.komentarz && row.komentarz.length > 50 ? (
                         <Tooltip title={row.komentarz}>
@@ -402,15 +398,11 @@ function OffersTable({
                         row.komentarz || ""
                       )}
                     </CustomTableCell>
-                  ) : (
-                    true
                   )}
-                  {readConfig === 1 ? (
+                  {readConfig === 1 && (
                     <CustomTableCell>
                       {row.daneWlasciciela || ""}
                     </CustomTableCell>
-                  ) : (
-                    true
                   )}
                   <CustomTableCell sx={{ whiteSpace: "nowrap" }}>
                     <strong>
@@ -449,22 +441,18 @@ function OffersTable({
                       )}
                     </strong>
                   </CustomTableCell>
-                  {readConfig === 1 ? (
+                  {readConfig === 1 && (
                     <CustomTableCell>
                       {formatNumber(row.zlM2) || ""}
                     </CustomTableCell>
-                  ) : (
-                    true
                   )}
                   <CustomTableCell>
                     {formatNumber(row.cena) || ""}
                   </CustomTableCell>
-                  {readConfig === 1 ? (
+                  {readConfig === 1 && (
                     <CustomTableCell>
                       {formatNumber(row.powDzialki) || ""}
                     </CustomTableCell>
-                  ) : (
-                    true
                   )}
                   <CustomTableCell>
                     {formatNumber(row.metraz) || ""}
@@ -473,25 +461,19 @@ function OffersTable({
                   <CustomTableCell>
                     <strong>{getShortType(row.typInwestycji)}</strong>
                   </CustomTableCell>
-                  {readConfig === 1 ? (
+                  {readConfig === 1 && (
                     <CustomTableCell>
                       {getShortType(row.rynek) || ""}
                     </CustomTableCell>
-                  ) : (
-                    true
                   )}
-                  {readConfig === 1 ? (
+                  {readConfig === 1 && (
                     <CustomTableCell>{row.miasto || ""}</CustomTableCell>
-                  ) : (
-                    true
                   )}
                   <CustomTableCell>
                     <strong>{row.dzielnica || ""}</strong>
                   </CustomTableCell>
-                  {readConfig === 1 ? (
+                  {readConfig === 1 && (
                     <CustomTableCell>{row.poddzielnica || ""}</CustomTableCell>
-                  ) : (
-                    true
                   )}
                   <CustomTableCell>
                     <strong>{row.ulica || ""}</strong>

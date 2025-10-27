@@ -182,7 +182,7 @@ const EditOfferPanel = ({ offerData, onSave, onCancel, users }) => {
                   }
                 >
                   {Object.keys(dzielniceData.Dzielnice).map((district) => (
-                    <MenuItem keys={district} value={district}>
+                    <MenuItem key={district} value={district}>
                       {district}
                     </MenuItem>
                   ))}
@@ -267,7 +267,7 @@ const EditOfferPanel = ({ offerData, onSave, onCancel, users }) => {
               <CustomTextField
                 label="Ulica"
                 name="ulica"
-                value={formData.ulica}
+                value={formData.ulica ?? ""}
                 onChange={handleChange}
                 variant="outlined"
                 fullWidth
@@ -278,7 +278,7 @@ const EditOfferPanel = ({ offerData, onSave, onCancel, users }) => {
               <CustomTextField
                 label="Miasto/Wieś"
                 name="miasto"
-                value={formData.miasto}
+                value={formData.miasto ?? ""}
                 onChange={handleChange}
                 variant="outlined"
                 fullWidth
@@ -292,7 +292,7 @@ const EditOfferPanel = ({ offerData, onSave, onCancel, users }) => {
                 label="Metraż"
                 name="metraz"
                 type="number"
-                value={formData.metraz}
+                value={formData.metraz ?? ""}
                 onChange={handleChange}
                 variant="outlined"
                 fullWidth
@@ -304,7 +304,7 @@ const EditOfferPanel = ({ offerData, onSave, onCancel, users }) => {
                 label="Pow. działki"
                 name="powDzialki"
                 type="number"
-                value={formData.powDzialki}
+                value={formData.powDzialki ?? ""}
                 onChange={handleChange}
                 variant="outlined"
                 fullWidth
@@ -316,7 +316,7 @@ const EditOfferPanel = ({ offerData, onSave, onCancel, users }) => {
                 label="Ilość pokoi"
                 name="iloscPokoi"
                 type="number"
-                value={formData.iloscPokoi}
+                value={formData.iloscPokoi ?? ""}
                 onChange={handleChange}
                 variant="outlined"
                 fullWidth
@@ -328,7 +328,7 @@ const EditOfferPanel = ({ offerData, onSave, onCancel, users }) => {
                 label="Cena"
                 name="cena"
                 type="number"
-                value={formData.cena}
+                value={formData.cena ?? ""}
                 onChange={handleChange}
                 variant="outlined"
                 fullWidth
@@ -392,10 +392,24 @@ const EditOfferPanel = ({ offerData, onSave, onCancel, users }) => {
                   }
                   label="Typ inwestycji"
                 >
-                  <MenuItem value="Dom">Dom</MenuItem>
-                  <MenuItem value="Mieszkanie">Mieszkanie</MenuItem>
-                  <MenuItem value="Lokal">Lokal</MenuItem>
-                  <MenuItem value="Działka">Działka</MenuItem>
+                  <MenuItem key="Dom" value="Dom">
+                    Dom
+                  </MenuItem>
+                  <MenuItem key="Mieszkanie" value="Mieszkanie">
+                    Mieszkanie
+                  </MenuItem>
+                  <MenuItem key="Lokal" value="Lokal">
+                    Lokal
+                  </MenuItem>
+                  <MenuItem key="Działka" value="Działka">
+                    Działka
+                  </MenuItem>
+                  <MenuItem key="Bliźniak" value="Bliźniak">
+                    Bliźniak
+                  </MenuItem>
+                  <MenuItem key="Szeregowy" value="Szeregowy">
+                    Szeregowy
+                  </MenuItem>
                 </Select>
               </FormControl>
             </div>
@@ -465,8 +479,12 @@ const EditOfferPanel = ({ offerData, onSave, onCancel, users }) => {
                   >
                     Brak
                   </MenuItem>
-                  <MenuItem value="Pierwotny">Pierwotny</MenuItem>
-                  <MenuItem value="Wtórny">Wtórny</MenuItem>
+                  <MenuItem key="Pierwotny" value="Pierwotny">
+                    Pierwotny
+                  </MenuItem>
+                  <MenuItem key="Wtórny" value="Wtórny">
+                    Wtórny
+                  </MenuItem>
                 </Select>
               </FormControl>
             </div>
@@ -475,7 +493,7 @@ const EditOfferPanel = ({ offerData, onSave, onCancel, users }) => {
             <CustomTextField
               label="Dane właściciela"
               name="daneWlasciciela"
-              value={formData.daneWlasciciela}
+              value={formData.daneWlasciciela ?? ""}
               onChange={handleChange}
               variant="outlined"
               fullWidth
@@ -484,8 +502,8 @@ const EditOfferPanel = ({ offerData, onSave, onCancel, users }) => {
           </div>
           <div className="flex flex-col">
             {formData.telefonWlasciciela.map((phone, index) => (
-              <div className="flex flex-col">
-                <div key={index} className="flex items-center space-x-2">
+              <div key={index} className="flex flex-col">
+                <div className="flex items-center space-x-2">
                   <CustomTextField
                     label={`Telefon/Email ${index + 1}`}
                     variant="outlined"
@@ -520,7 +538,7 @@ const EditOfferPanel = ({ offerData, onSave, onCancel, users }) => {
             <CustomTextField
               label="Komentarz"
               name="komentarz"
-              value={formData.komentarz}
+              value={formData.komentarz ?? ""}
               onChange={handleChange}
               variant="outlined"
               fullWidth
@@ -739,7 +757,7 @@ const EditOfferPanel = ({ offerData, onSave, onCancel, users }) => {
           <CustomTextField
             label="Link do oferty"
             name="linkOferta"
-            value={formData.linkOferta}
+            value={formData.linkOferta ?? ""}
             onChange={handleChange}
             variant="outlined"
             fullWidth

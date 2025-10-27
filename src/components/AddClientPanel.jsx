@@ -2,11 +2,14 @@ import { Button } from "@mui/material";
 import ClientForm from "./ClientForm";
 import { useState } from "react";
 import Alerts from "./Alerts";
+import { GetInformationFromToken } from "../utils/decodeToken";
 
 function AddClientPanel({ onSave, onCancel, allUsers }) {
+  const userRole = GetInformationFromToken("custom:role");
   const [formData, setFormData] = useState({
     lokalizacja: [],
     numerTelefonu: [""],
+    standard: [],
   });
   const [, setErrors] = useState({});
   const [alertMessage, setAlertMessage] = useState("");
@@ -23,7 +26,6 @@ function AddClientPanel({ onSave, onCancel, allUsers }) {
 
   const handleSave = async () => {
     const validationErrors = {};
-
     if (
       formData.budzetOd &&
       formData.budzetDo &&
@@ -50,19 +52,35 @@ function AddClientPanel({ onSave, onCancel, allUsers }) {
       validationErrors.metrazDo =
         "Wartość w polu 'Metraż do' nie może być mniejsza niż w polu 'Metraż od'.";
     }
-    if (!formData.status) validationErrors.status = "Status jest wymagany.";
-    if (!formData.agent) validationErrors.agent = "Agent jest wymagany.";
-    if (formData.status === "Zajęty" && !formData.komentarz)
+    if (!formData.komentarz && userRole !== "admin")
       validationErrors.komentarz = "Komentarz jest wymagany.";
-    if (formData.status === "Zajęty" && !formData.dataNastepnegoKontaktu)
-      validationErrors.komentarz = "Data następnego kontaktu jest wymagana.";
-    if (!formData.numerGalactica)
-      validationErrors.numerGalactica = "Numer oferty Galactica jest wymagany.";
-    if (formData.lokalizacja.length === 0)
+    if (
+      formData.dataNastepnegoKontaktu &&
+      !formData.komentarzData &&
+      userRole !== "admin"
+    )
+      validationErrors.komentarzData =
+        "Komentarz do daty następnego kontaktu jest wymagany.";
+    if (formData.lokalizacja.length === 0 && userRole !== "admin")
       validationErrors.lokalizacja = "Lokalizacja jest wymagana.";
-    if (!formData.daneKlienta)
-      validationErrors.daneKlienta = "Dane klienta są wymagane.";
-
+    if (!formData.rodzajNieruchomosci && userRole !== "admin")
+      validationErrors.rodzajNieruchomosci =
+        "Rodzaj nieruchomości jest wymagany.";
+    if (
+      !formData.iloscPokoiOd &&
+      !formData.iloscPokoiDo &&
+      userRole !== "admin"
+    )
+      validationErrors.iloscPokoi = "Ilość pokoi jest wymagana.";
+    if (!formData.budzetOd && !formData.budzetDo && userRole !== "admin")
+      validationErrors.budzet = "Przedział budżetu jest wymagany.";
+    if (
+      !formData.email &&
+      formData.numerTelefonu[0] === "" &&
+      userRole !== "admin"
+    )
+      validationErrors.contact =
+        "Przynajmniej jeden kontakt jest wymagany - email lub numer telefonu.";
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
       const errorMessages = Object.values(validationErrors).join("\n");
@@ -109,10 +127,12 @@ function AddClientPanel({ onSave, onCancel, allUsers }) {
 
   return (
     <div className="fixed inset-0 bg-light-grey bg-opacity-75 flex items-center justify-center z-50">
-      <div className="bg-white p-6 rounded-lg shadow-lg w-1/3 max-h-[95%] overflow-auto">
-        <h2 className="text-4xl font-bold mb-4 font-poppins">
-          Dodaj nowego klienta
-        </h2>
+      <div className="bg-white px-6 rounded-lg shadow-lg w-1/3 max-h-[95%] overflow-auto">
+        <div className="sticky top-0 bg-white pt-6 pb-2 px-2 z-20">
+          <h2 className="text-4xl font-bold mb-4 font-poppins">
+            Dodaj nowego klienta
+          </h2>
+        </div>
         <form>
           <div className="w-full">
             <ClientForm
@@ -122,34 +142,38 @@ function AddClientPanel({ onSave, onCancel, allUsers }) {
               addPhoneField={addPhoneField}
               removePhoneField={removePhoneField}
               allUsers={allUsers}
+              userRole={userRole}
+              action="add"
             />
-            <div className="flex justify-end space-x-4 mt-4">
-              <Button
-                variant="contained"
-                onClick={handleSave}
-                sx={{
-                  color: "white",
-                  backgroundColor: "#FC8721",
-                  fontFamily: "Poppins",
-                  fontSize: "20px",
-                  width: "100%",
-                }}
-              >
-                Zapisz
-              </Button>
-              <Button
-                variant="contained"
-                onClick={onCancel}
-                sx={{
-                  backgroundColor: "#6D727F",
-                  color: "white",
-                  fontFamily: "Poppins",
-                  fontSize: "20px",
-                  width: "100%",
-                }}
-              >
-                Anuluj
-              </Button>
+            <div className="sticky bottom-0 bg-white py-2 px-2 z-20">
+              <div className="flex justify-end space-x-4 mt-4">
+                <Button
+                  variant="contained"
+                  onClick={handleSave}
+                  sx={{
+                    color: "white",
+                    backgroundColor: "#FC8721",
+                    fontFamily: "Poppins",
+                    fontSize: "20px",
+                    width: "100%",
+                  }}
+                >
+                  Zapisz
+                </Button>
+                <Button
+                  variant="contained"
+                  onClick={onCancel}
+                  sx={{
+                    backgroundColor: "#6D727F",
+                    color: "white",
+                    fontFamily: "Poppins",
+                    fontSize: "20px",
+                    width: "100%",
+                  }}
+                >
+                  Anuluj
+                </Button>
+              </div>
             </div>
           </div>
         </form>

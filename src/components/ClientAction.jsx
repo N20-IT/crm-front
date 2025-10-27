@@ -9,6 +9,7 @@ function ClientAction({
   handleEditClientClick,
   showDetailsIcon,
   handleGoToClientDetails,
+  userRole,
 }) {
   const location = useLocation();
 
@@ -21,31 +22,33 @@ function ClientAction({
         fontFamily: "Poppins",
       }}
     >
-      {location.pathname == "/klienci" ? (
-        <Tooltip title="Usuń">
-          <IconButton
-            onClick={() => handleDeleteClientClick(row)}
-            sx={{
-              padding: "4px",
-              color: "#A11D1D",
-            }}
-          >
-            <Delete />
-          </IconButton>
-        </Tooltip>
-      ) : (
-        <Tooltip title="Przywróć klienta">
-          <IconButton
-            onClick={() => handleDeleteClientClick(row)}
-            sx={{
-              padding: "4px",
-              color: "#A11D1D",
-            }}
-          >
-            <RestoreFromTrash />
-          </IconButton>
-        </Tooltip>
-      )}
+      {userRole === "admin" &&
+        (location.pathname === "/klienci" ? (
+          <Tooltip title="Usuń">
+            <IconButton
+              onClick={() => handleDeleteClientClick(row)}
+              sx={{
+                padding: "4px",
+                color: "#A11D1D",
+              }}
+            >
+              <Delete />
+            </IconButton>
+          </Tooltip>
+        ) : (
+          <Tooltip title="Przywróć klienta">
+            <IconButton
+              onClick={() => handleDeleteClientClick(row)}
+              sx={{
+                padding: "4px",
+                color: "#A11D1D",
+              }}
+            >
+              <RestoreFromTrash />
+            </IconButton>
+          </Tooltip>
+        ))}
+
       <Tooltip title="Edytuj">
         <IconButton
           sx={{ padding: "4px", color: "#6A99C7" }}

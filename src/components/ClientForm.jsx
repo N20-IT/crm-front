@@ -15,6 +15,7 @@ import clientStatuesConfig from "../config/clientStatuesConfig";
 import dzielniceData from "../dzielnice_poddzielnice.json";
 import clientStandardConfig from "../config/clientStandardConfig";
 import { useState } from "react";
+import clientPortalConfig from "../config/clientPortalConfig";
 
 function ClientForm({
   formData,
@@ -23,6 +24,8 @@ function ClientForm({
   addPhoneField,
   removePhoneField,
   allUsers,
+  userRole,
+  action,
 }) {
   const [errors, setErrors] = useState({});
 
@@ -92,13 +95,15 @@ function ClientForm({
   };
 
   return (
-    <form>
+    <>
       <div className="flex justify-end space-x-4">
         <CustomTextField
           label="Data zapytania"
           name="dataZapytania"
-          type="datetime-local"
-          value={formData.dataZapytania}
+          type="date"
+          value={
+            formData.dataZapytania ? formData.dataZapytania.split("T")[0] : ""
+          }
           onChange={onChange}
           variant="outlined"
           fullWidth
@@ -359,7 +364,6 @@ function ClientForm({
             "& .MuiInputLabel-root.MuiInputLabel-shrink": {
               transform: "translate(14px, -9px) scale(0.75)",
             },
-
             "& .MuiInputLabel-root.Mui-focused": {
               color: "#535968",
             },
@@ -412,6 +416,10 @@ function ClientForm({
                   onChange={(event) => {
                     handleLokalizacjaChange(district);
                   }}
+                  sx={{
+                    color: "#FC8721",
+                    "&.Mui-checked": { color: "#FC8721" },
+                  }}
                 />
                 <ListItemText primary={district} />
               </MenuItem>
@@ -424,7 +432,6 @@ function ClientForm({
           fullWidth
           margin="normal"
           sx={{
-            marginTop: "12px",
             "& .MuiOutlinedInput-root": {
               borderRadius: "6px",
               fontFamily: "Poppins",
@@ -488,13 +495,109 @@ function ClientForm({
             </MenuItem>
             <MenuItem value="Dom">Dom</MenuItem>
             <MenuItem value="Mieszkanie">Mieszkanie</MenuItem>
+            <MenuItem value="Lokal">Lokal</MenuItem>
+            <MenuItem value="Działka">Działka</MenuItem>
+            <MenuItem value="Bliźniak">Bliźniak</MenuItem>
+            <MenuItem value="Szeregowy">Szeregowy</MenuItem>
           </Select>
         </FormControl>
+
         <FormControl
           fullWidth
           margin="normal"
           sx={{
-            marginTop: "12px",
+            "& .MuiOutlinedInput-root": {
+              borderRadius: "6px",
+              fontFamily: "Poppins",
+              fontSize: "16px",
+              height: "40px",
+              "& input": {
+                padding: "8px",
+                height: "16px",
+              },
+            },
+            "& .MuiFormLabel-root": {
+              fontFamily: "Poppins",
+              fontSize: "16px",
+              color: "#535968",
+              transform: "translate(14px, 9px) scale(1)",
+            },
+            "& .MuiInputLabel-root.MuiInputLabel-shrink": {
+              transform: "translate(14px, -9px) scale(0.75)",
+            },
+
+            "& .MuiInputLabel-root.Mui-focused": {
+              color: "#535968",
+            },
+            "& .MuiOutlinedInput-notchedOutline": {
+              borderColor: "#535968",
+            },
+            "&:hover .MuiOutlinedInput-notchedOutline": {
+              borderColor: "#535968",
+            },
+            "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+              borderColor: "#535968",
+            },
+            "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline": {
+              borderColor: "#535968",
+            },
+          }}
+        >
+          <InputLabel>Standard</InputLabel>
+          <Select
+            multiple
+            value={formData.standard || []}
+            onChange={(e) =>
+              onChange({
+                target: {
+                  name: "standard",
+                  value: e.target.value,
+                },
+              })
+            }
+            input={
+              <OutlinedInput
+                label="Standard"
+                sx={{
+                  "& .MuiOutlinedInput-notchedOutline": {
+                    borderColor: "#535968",
+                  },
+                  "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                    borderColor: "#535968",
+                  },
+                }}
+              />
+            }
+            renderValue={(selected) => selected.join(", ")} // jak mają być wyświetlane wybrane opcje
+          >
+            {clientStandardConfig.map((standard) => (
+              <MenuItem key={standard.value} value={standard.value}>
+                <Checkbox
+                  checked={formData.standard?.includes(standard.value)}
+                  sx={{
+                    color: "#FC8721",
+                    "&.Mui-checked": { color: "#FC8721" },
+                  }}
+                />
+                <ListItemText
+                  primary={standard.label}
+                  sx={{
+                    fontFamily: "Poppins",
+                    fontSize: "16px",
+                    color: standard.value === "Brak" ? "gray" : "inherit",
+                    fontStyle: standard.value === "Brak" ? "italic" : "normal",
+                    fontWeight: standard.value === "Brak" ? "bold" : "normal",
+                  }}
+                />
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+
+        <FormControl
+          fullWidth
+          margin="normal"
+          sx={{
             "& .MuiOutlinedInput-root": {
               borderRadius: "6px",
               fontFamily: "Poppins",
@@ -531,9 +634,9 @@ function ClientForm({
             },
           }}
         >
-          <InputLabel>Standard</InputLabel>
+          <InputLabel>Portal</InputLabel>
           <Select
-            value={formData.standard}
+            value={formData.portal}
             input={
               <OutlinedInput
                 sx={{
@@ -545,18 +648,18 @@ function ClientForm({
                     borderColor: "#535968",
                   },
                 }}
-                label="Standard"
+                label="Portal"
               />
             }
             onChange={(e) =>
               onChange({
                 target: {
-                  name: "standard",
+                  name: "portal",
                   value: e.target.value,
                 },
               })
             }
-            label="Standard"
+            label="Portal"
           >
             <MenuItem
               key={"null"}
@@ -569,22 +672,23 @@ function ClientForm({
             >
               Brak
             </MenuItem>
-            {clientStandardConfig.map((standard) => (
+            {clientPortalConfig.map((portal) => (
               <MenuItem
-                key={standard.value}
-                value={standard.value === "Brak" ? "" : standard.value}
+                key={portal}
+                value={portal === "Brak" ? "" : portal}
                 sx={{
-                  fontStyle: standard.value === "Brak" ? "italic" : "normal",
-                  color: standard.value === "Brak" ? "gray" : "inherit",
-                  fontWeight: standard.value === "Brak" ? "bold" : "poppins",
+                  fontStyle: portal === "Brak" ? "italic" : "normal",
+                  color: portal === "Brak" ? "gray" : "inherit",
+                  fontWeight: portal === "Brak" ? "bold" : "poppins",
                 }}
               >
-                {standard.label}
+                {portal}
               </MenuItem>
             ))}
           </Select>
         </FormControl>
       </div>
+
       <div className="flex justify-end space-x-4">
         <CustomTextField
           label="Ilość pokoi od"
@@ -669,8 +773,10 @@ function ClientForm({
         <CustomTextField
           label="Ostatni kontakt"
           name="ostatniKontakt"
-          type="datetime-local"
-          value={formData.ostatniKontakt}
+          type="date"
+          value={
+            formData.ostatniKontakt ? formData.ostatniKontakt.split("T")[0] : ""
+          }
           onChange={onChange}
           variant="outlined"
           fullWidth
@@ -680,22 +786,42 @@ function ClientForm({
         <CustomTextField
           label="Data następnego kontaktu"
           name="dataNastepnegoKontaktu"
-          type="datetime-local"
-          value={formData.dataNastepnegoKontaktu}
+          type="date"
+          value={
+            formData.dataNastepnegoKontaktu
+              ? formData.dataNastepnegoKontaktu.split("T")[0]
+              : ""
+          }
           onChange={onChange}
           variant="outlined"
           fullWidth
           margin="normal"
           InputLabelProps={{ shrink: true }}
-          inputProps={{
-            min: new Date().toISOString().slice(0, 16),
-            max: new Date(Date.now() + 10 * 24 * 60 * 60 * 1000)
-              .toISOString()
-              .slice(0, 16),
-          }}
+          inputProps={
+            userRole !== "admin"
+              ? {
+                  min: new Date().toISOString().split("T")[0],
+                  max: new Date(Date.now() + 10 * 24 * 60 * 60 * 1000)
+                    .toISOString()
+                    .split("T")[0],
+                }
+              : {}
+          }
         />
       </div>
-    </form>
+      <CustomTextField
+        label="Komentarz dot. natępnego kontaktu"
+        name="komentarzData"
+        value={formData.komentarzData}
+        onChange={onChange}
+        variant="outlined"
+        fullWidth
+        margin="normal"
+        multiline
+        maxRows={4}
+        disabled={action === "add" || userRole === "admin" ? false : true}
+      />
+    </>
   );
 }
 
