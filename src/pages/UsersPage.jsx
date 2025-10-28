@@ -69,8 +69,7 @@ function UsersPage() {
               ? "Użytkownik"
               : user.role,
         }));
-
-        setUsers(mappedUsersList);
+        setUsers(usersList);
         setQuantityUsers(response.data["total"]);
       } catch (error) {
         console.log(error);
@@ -123,6 +122,20 @@ function UsersPage() {
           },
         }
       );
+    } catch (error) {
+      setAlertOpen(true);
+      setAlertMessage("Błąd podczas edytowania użytkownika: " + error.message);
+      setAlertSeverity("error");
+    }
+    try {
+      const transformedData = transformUserData(updatedUserData);
+
+      await axios.put(`${backendServer}/edit-user`, transformedData, {
+        headers: {
+          accept: "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
       handleEditUserClickCancel();
       setAlertOpen(true);
       setAlertMessage("Pomyslnie edytowano użytkownika");
@@ -224,7 +237,7 @@ function UsersPage() {
       email: data.email || "",
       name: data.imie || "",
       family_name: data.nazwisko || "",
-      "custom:role": data.role || "",
+      role: data.role || "",
     };
   };
 
