@@ -17,7 +17,6 @@ function EditUserPanel({ initialData, onSave, onCancel }) {
     try {
       const updatedFormData = {
         ...formData,
-        role: formData.role === "Administrator" ? "admin" : "user",
       };
       await onSave(updatedFormData);
     } catch (error) {

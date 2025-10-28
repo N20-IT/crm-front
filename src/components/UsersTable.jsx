@@ -132,7 +132,11 @@ function UsersTable({
                     key={column.id}
                     style={{ textAlign: "center", fontFamily: "Poppins" }}
                   >
-                    {user[column.id]}
+                    {user[column.id] === "admin"
+                      ? "Administrator"
+                      : user[column.id] === "user"
+                      ? "Użytkownik"
+                      : user[column.id]}
                   </CustomTableCell>
                 ))}
               </TableRow>

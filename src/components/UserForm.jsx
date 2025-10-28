@@ -1,4 +1,3 @@
-import React from "react";
 import CustomTextField from "./CustomTextField";
 import columnsUsersConfig from "../config/columnsUsersConfig";
 import { FormControl, MenuItem, InputLabel, Select } from "@mui/material";
