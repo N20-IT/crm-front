@@ -819,7 +819,7 @@ function ClientForm({
         margin="normal"
         multiline
         maxRows={4}
-        disabled={action === "add" || userRole === "admin" ? false : true}
+        // disabled={action === "add" || userRole === "admin" ? false : true}
       />
     </>
   );
