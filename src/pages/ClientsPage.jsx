@@ -35,7 +35,7 @@ function ClientsPage() {
   const backendServer = serverConfig["backend-server"];
   const [page, setPage] = useState(0);
   const [itemsPerPage, setItemsPerPage] = useState(100);
-  const [orderBy, setOrderBy] = useState("dataZapytania");
+  const [orderBy, setOrderBy] = useState("dataUtworzenia");
   const [order, setOrder] = useState("desc");
   const [openDialogDelete, setopenDialogDelete] = useState(false);
   const [clientToDelete, setClientToDelete] = useState(null);
@@ -114,7 +114,7 @@ function ClientsPage() {
 
   const fetchAgents = useCallback(async () => {
     try {
-      const response = await axios.get(`${backendServer}/users`, {
+      const response = await axios.get(`${backendServer}/users?min=true`, {
         headers: {
           accept: "application/json",
           Authorization: `Bearer ${token}`,
