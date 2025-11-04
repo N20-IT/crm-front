@@ -88,8 +88,8 @@ const columnsClientsConfig = [
   },
   {
     id: "komentarz",
-    label: "Komentarz",
-    shortLabel: "Koment.",
+    label: "Opis klienta",
+    shortLabel: "Opis",
     sortable: false,
     view: "basic",
   },
