@@ -202,7 +202,7 @@ function OffersPage() {
 
   const fetchAgents = useCallback(async () => {
     try {
-      const response = await axios.get(`${backendServer}/users`, {
+      const response = await axios.get(`${backendServer}/users?min=true`, {
         headers: {
           accept: "application/json",
           Authorization: `Bearer ${token}`,
