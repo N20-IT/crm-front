@@ -152,7 +152,7 @@ const columnsClientsConfig = [
     label: "Standard",
     shortLabel: "Stand.",
     type: "dictionary", // Słownik: Do wejścia, Do remontu, Deweloperski, Do odświeżenia
-    sortable: true,
+    sortable: false,
     view: "basic",
   },
   {
