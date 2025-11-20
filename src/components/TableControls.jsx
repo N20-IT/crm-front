@@ -28,6 +28,7 @@ import { useChangeColumnConfig, useReadConfig } from "../config/columnConfig";
 import dzielniceData from "../dzielnice_poddzielnice.json";
 import statusesConfig from "../config/statusesConfig";
 import { useFiltersStore } from "../store/filtersStore";
+import { GetInformationFromToken } from "../utils/decodeToken";
 
 function TableControls({
   selectedCount,
@@ -78,6 +79,7 @@ function TableControls({
   const changeColumnConfig = useChangeColumnConfig();
   const readConfig = useReadConfig();
   const [columnConfig, setColumnConfig] = useState(readConfig);
+  const userRole = GetInformationFromToken("custom:role");
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -342,50 +344,57 @@ function TableControls({
           spacing={2}
           alignItems="center"
         >
+          {userRole === "admin" && (
+            <>
+              <Button
+                aria-controls={open ? "basic-menu" : undefined}
+                aria-haspopup="true"
+                aria-expanded={open ? "true" : undefined}
+                onClick={handleClick}
+                variant="outlined"
+                endIcon={<KeyboardArrowDown />}
+                sx={{
+                  color: "#6D727F",
+                  fontFamily: "Poppins",
+                  borderColor: "black",
+                  width: "180px",
+                  height: "40px",
+                }}
+              >
+                Zaznaczono {selectedCount}
+              </Button>
+              <Menu
+                id="basic-menu"
+                anchorEl={anchorEl}
+                open={open}
+                onClose={handleClose}
+                MenuListProps={{
+                  "aria-labelledby": "basic-button",
+                }}
+              >
+                <MenuItem
+                  onClick={() => {
+                    deleteMultipleOffersClick();
+                    handleClose();
+                  }}
+                >
+                  <Delete />
+                  Usuń
+                </MenuItem>
+                <MenuItem>
+                  <Star />
+                  Dodaj do ciekawych ofert
+                </MenuItem>
+              </Menu>
+            </>
+          )}
           <Button
-            aria-controls={open ? "basic-menu" : undefined}
-            aria-haspopup="true"
-            aria-expanded={open ? "true" : undefined}
-            onClick={handleClick}
-            variant="outlined"
-            endIcon={<KeyboardArrowDown />}
-            sx={{
-              color: "#6D727F",
-              fontFamily: "Poppins",
-              borderColor: "black",
-              width: "180px",
-              height: "40px",
-            }}
-          >
-            Zaznaczono {selectedCount}
-          </Button>
-          <Menu
-            id="basic-menu"
-            anchorEl={anchorEl}
-            open={open}
-            onClose={handleClose}
-            MenuListProps={{
-              "aria-labelledby": "basic-button",
-            }}
-          >
-            <MenuItem
-              onClick={() => {
-                deleteMultipleOffersClick();
-                handleClose();
-              }}
-            >
-              <Delete />
-              Usuń
-            </MenuItem>
-            <MenuItem>
-              <Star />
-              Dodaj do ciekawych ofert
-            </MenuItem>
-          </Menu>
-          <Button
             variant="outlined"
             sx={{
-              color: isAnyFilterFilled(localFilters) ? "#009900" : "#6D727F",
+              color: isAnyFilterFilled(localFilters) ? "white" : "#6D727F",
+              backgroundColor: isAnyFilterFilled(localFilters)
+                ? "#009900"
+                : "white",
               fontFamily: "Poppins",
               borderColor: isAnyFilterFilled(localFilters)
                 ? "#009900"

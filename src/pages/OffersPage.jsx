@@ -65,7 +65,7 @@ function OffersPage() {
   const userRole = GetInformationFromToken("custom:role");
   const [readConfig, setReadConfig] = useState(useReadConfig());
   const [page, setPage] = useState(0);
-  const [itemsPerPage, setItemsPerPage] = useState(100);
+  const [itemsPerPage, setItemsPerPage] = useState(25);
   const { filters, updateFilter, setFilters, clearFilters } = useFiltersStore();
 
   const [searchValue, setSearchValue] = useState("");

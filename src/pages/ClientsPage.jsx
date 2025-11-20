@@ -34,7 +34,7 @@ function ClientsPage() {
   const columns = useMemo(() => columnsClientsConfig, []);
   const backendServer = serverConfig["backend-server"];
   const [page, setPage] = useState(0);
-  const [itemsPerPage, setItemsPerPage] = useState(100);
+  const [itemsPerPage, setItemsPerPage] = useState(25);
   const [orderBy, setOrderBy] = useState("dataUtworzenia");
   const [order, setOrder] = useState("desc");
   const [openDialogDelete, setopenDialogDelete] = useState(false);

@@ -211,6 +211,11 @@ function OfferDetailsPage({
                   <strong>Cena:</strong> {formatNumber(offer.cena)} zł
                 </CustomTypography>
               )}
+              {offer.zlM2 && (
+                <CustomTypography sx={{ fontSize: "1rem" }}>
+                  <strong>Zł/m²:</strong> {formatNumber(offer.zlM2)}
+                </CustomTypography>
+              )}
               {offer.linkOferta && (
                 <CustomTypography sx={{ fontSize: "1rem" }}>
                   <strong>Link do oferty:</strong>{" "}
@@ -285,11 +290,7 @@ function OfferDetailsPage({
                   <strong>Komentarz:</strong> {offer.komentarz}
                 </CustomTypography>
               )}
-              {offer.zlM2 && (
-                <CustomTypography sx={{ fontSize: "1rem" }}>
-                  <strong>Zł/m²:</strong> {formatNumber(offer.zlM2)}
-                </CustomTypography>
-              )}
+
               <br></br>
               <Typography
                 variant="h6"

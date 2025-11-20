@@ -1,4 +1,10 @@
-import { Delete, Edit, Info, RestoreFromTrash } from "@mui/icons-material";
+import {
+  CalendarMonth,
+  Delete,
+  Edit,
+  Info,
+  RestoreFromTrash,
+} from "@mui/icons-material";
 import { IconButton, TableCell, Tooltip } from "@mui/material";
 import React from "react";
 import { useLocation } from "react-router-dom";
@@ -10,6 +16,7 @@ function ClientAction({
   showDetailsIcon,
   handleGoToClientDetails,
   userRole,
+  handleAddToCalendar,
 }) {
   const location = useLocation();
 
@@ -57,6 +64,21 @@ function ClientAction({
           <Edit />
         </IconButton>
       </Tooltip>
+
+      {row.dataNastepnegoKontaktu && row.daneKlienta && (
+        <Tooltip title="Dodaj do kalendarza">
+          <IconButton
+            onClick={() => handleAddToCalendar(row)}
+            sx={{
+              padding: "4px",
+              color: "#6A9F6C",
+            }}
+          >
+            <CalendarMonth />
+          </IconButton>
+        </Tooltip>
+      )}
+
       <Tooltip title="Szczegóły klienta">
         {showDetailsIcon && (
           <IconButton

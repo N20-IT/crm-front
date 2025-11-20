@@ -317,22 +317,76 @@ function ClientDetails({
                   </Box>
                 </CustomTypography>
               )}
+              {client.komentarz && (
+                <CustomTypography sx={{ fontSize: "1rem" }}>
+                  <strong>Opis klienta:</strong> {client.komentarz}
+                </CustomTypography>
+              )}
               {client.standard && (
                 <CustomTypography sx={{ fontSize: "1rem" }}>
                   <strong>Standard: </strong>
-                  <Box
-                    component="span"
-                    sx={{
-                      color:
-                        clientStandardConfig.find(
-                          (standard) => standard.value === client.standard
-                        )?.color || "inherit",
-                    }}
-                  >
-                    {client.standard}
-                  </Box>
+
+                  {(() => {
+                    // Normalizacja formatu (string -> array)
+                    const standards = Array.isArray(client.standard)
+                      ? client.standard
+                      : typeof client.standard === "string"
+                      ? client.standard.split(",").map((s) => s.trim())
+                      : [];
+
+                    // Przygotowanie kolorów
+                    const coloredStandards = standards.map((standard) => {
+                      const color =
+                        clientStandardConfig.find((s) => s.value === standard)
+                          ?.color || "black";
+
+                      return { label: standard, color };
+                    });
+
+                    // 3 widoczne, reszta ukryta
+                    const visible = coloredStandards.slice(0, 3);
+                    const hidden = coloredStandards.slice(3);
+
+                    return (
+                      <Tooltip
+                        arrow
+                        placement="top"
+                        title={
+                          hidden.length > 0 && (
+                            <div
+                              style={{
+                                fontFamily: "Poppins",
+                                fontSize: "14px",
+                              }}
+                            >
+                              {coloredStandards.map((s, i) => (
+                                <div key={i} style={{ color: s.color }}>
+                                  {s.label}
+                                </div>
+                              ))}
+                            </div>
+                          )
+                        }
+                      >
+                        <span>
+                          {visible.map((s, i) => (
+                            <Box
+                              key={i}
+                              component="span"
+                              sx={{ color: s.color, marginRight: "6px" }}
+                            >
+                              {s.label}
+                              {i < visible.length - 1 && ", "}
+                            </Box>
+                          ))}
+                          {hidden.length > 0 && <span>...</span>}
+                        </span>
+                      </Tooltip>
+                    );
+                  })()}
                 </CustomTypography>
               )}
+
               {client.agent && (
                 <CustomTypography sx={{ fontSize: "1rem" }}>
                   <strong>Agent:</strong> {client.agent}
@@ -411,6 +465,12 @@ function ClientDetails({
                       day: "2-digit",
                     }
                   )}
+                </CustomTypography>
+              )}
+              {client.komentarzData && (
+                <CustomTypography sx={{ fontSize: "1rem" }}>
+                  <strong>Komentarz dot. natępnego kontaktu:</strong>{" "}
+                  {client.komentarzData}
                 </CustomTypography>
               )}
               {client.dataZapytania && (
@@ -522,6 +582,19 @@ function ClientDetails({
                       <Tooltip title="Dzielnica">Dzielnica</Tooltip>
                     </TableCell>
                     <TableCell
+                      key="cena"
+                      sx={{
+                        color: "white",
+                        textAlign: "center",
+                        fontFamily: "Poppins",
+                        padding: "0px",
+                        paddingLeft: "15px",
+                        paddingRight: "15px",
+                      }}
+                    >
+                      <Tooltip title="Cena">Cena</Tooltip>
+                    </TableCell>
+                    <TableCell
                       key="metraz"
                       sx={{
                         color: "white",
@@ -587,6 +660,9 @@ function ClientDetails({
                           </CustomTableCell>
                           <CustomTableCell>
                             <strong>{row.dzielnica || ""}</strong>
+                          </CustomTableCell>
+                          <CustomTableCell>
+                            <strong>{formatNumber(row.cena) || ""}</strong>
                           </CustomTableCell>
                           <CustomTableCell>
                             <strong>{formatNumber(row.metraz) || ""}</strong>

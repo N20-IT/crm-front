@@ -170,10 +170,15 @@ function AddOfferPanel({ onSave, onCancel, users, userInformation }) {
   };
 
   const handlePhoneNumbersChange = async (index, value) => {
-    if (value.length === 9) await debouncedCheckIfPhoneExists(index, value);
+    const cleanedValue = value.replace(/\s+/g, "");
+
+    if (cleanedValue.length === 9) {
+      await debouncedCheckIfPhoneExists(index, cleanedValue);
+    }
+
     setFormData((prevData) => {
       const newPhones = [...prevData.telefonWlasciciela];
-      newPhones[index] = value;
+      newPhones[index] = cleanedValue;
       return { ...prevData, telefonWlasciciela: newPhones };
     });
   };

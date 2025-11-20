@@ -20,7 +20,7 @@ function UsersPage() {
   const token = useReadCookie();
   const [openDialog, setOpenDialog] = useState(false);
   const isAuthenticated = useAuth();
-  const [rowsPerPage, setRowsPerPage] = useState(100);
+  const [rowsPerPage, setRowsPerPage] = useState(25);
   const [orderBy, setOrderBy] = useState("imie");
   const [order, setOrder] = useState("desc");
   const [page, setPage] = useState(0);
@@ -57,6 +57,7 @@ function UsersPage() {
             limit: rowsPerValue,
             sortBy,
             sort,
+            isDeleted: false,
           },
         });
         const usersList = response.data["users"];

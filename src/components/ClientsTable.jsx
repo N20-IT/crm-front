@@ -43,7 +43,7 @@ function ClientsTable({
   const [order, setOrder] = useState("desc");
   const [orderBy, setOrderBy] = useState("dataUtworzenia");
   const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(100);
+  const [rowsPerPage, setRowsPerPage] = useState(25);
   const navigate = useNavigate();
   const { setClientId } = useFiltersStore();
 
@@ -120,6 +120,30 @@ function ClientsTable({
   const handleMatchClient = (clientId) => {
     setClientId(clientId);
     navigate("/oferty");
+  };
+
+  const handleAddToCalendar = (row) => {
+    const eventTitle = row.daneKlienta + " " + row.numerTelefonu;
+
+    const startDate = new Date(row.dataNastepnegoKontaktu);
+    startDate.setHours(12, 0, 0, 0);
+    const endDate = new Date(startDate);
+    endDate.setHours(startDate.getHours() + 1);
+
+    const formatDateForCalendar = (date) =>
+      date
+        .toISOString()
+        .replace(/[-:.]/g, "")
+        .slice(0, 15) + "Z";
+
+    const formattedStartDate = formatDateForCalendar(startDate);
+    const formattedEndDate = formatDateForCalendar(endDate);
+
+    const googleCalendarUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(
+      eventTitle
+    )}&dates=${formattedStartDate}/${formattedEndDate}&sf=true&output=xml`;
+
+    window.open(googleCalendarUrl, "_blank");
   };
 
   return (
@@ -279,6 +303,7 @@ function ClientsTable({
                     handleGoToClientDetails={handleGoToClientDetails}
                     showDetailsIcon={true}
                     userRole={userRole}
+                    handleAddToCalendar={handleAddToCalendar}
                   />
                   <CustomTableCell>
                     {row.dataUtworzenia
