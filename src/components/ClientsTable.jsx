@@ -576,7 +576,7 @@ function ClientsTable({
             position: "fixed",
             bottom: 0,
             right: 43.2,
-            zIndex: 1000,
+            zIndex: 30,
             width: "50%",
           }}
         />
