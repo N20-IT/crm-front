@@ -409,14 +409,26 @@ function ClientsTable({
                     )}
                   </CustomTableCell>
                   <CustomTableCell>
-                    {row.komentarzData && row.komentarzData.length > 50 ? (
-                      <Tooltip arrow title={row.komentarzData}>
-                        <span>{row.komentarzData.slice(0, 50)} ...</span>
-                      </Tooltip>
+                    {Array.isArray(row.komentarzDataList) &&
+                    row.komentarzDataList.at(-1)?.tekst ? (
+                      row.komentarzDataList.at(-1).tekst.length > 50 ? (
+                        <Tooltip
+                          arrow
+                          title={row.komentarzDataList.at(-1).tekst}
+                        >
+                          <span>
+                            {row.komentarzDataList.at(-1).tekst.slice(0, 50)}{" "}
+                            ...
+                          </span>
+                        </Tooltip>
+                      ) : (
+                        row.komentarzDataList.at(-1).tekst
+                      )
                     ) : (
-                      row.komentarzData || ""
+                      ""
                     )}
                   </CustomTableCell>
+
                   <CustomTableCell>{row.numerGalactica || ""}</CustomTableCell>
                   <CustomTableCell
                     sx={{

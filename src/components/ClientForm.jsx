@@ -23,6 +23,9 @@ function ClientForm({
   onPhoneNumbersChange,
   addPhoneField,
   removePhoneField,
+  onCommentsChange,
+  addCommentField,
+  removeCommentField,
   allUsers,
   userRole,
   action,
@@ -96,22 +99,20 @@ function ClientForm({
 
   return (
     <>
-      <div className="flex justify-end space-x-4">
-        <CustomTextField
-          label="Data zapytania"
-          name="dataZapytania"
-          type="date"
-          value={
-            formData.dataZapytania ? formData.dataZapytania.split("T")[0] : ""
-          }
-          onChange={onChange}
-          variant="outlined"
-          fullWidth
-          margin="normal"
-          InputLabelProps={{ shrink: true }}
-        />
-      </div>
-      <div className="flex justify-end space-x-4">
+      <CustomTextField
+        label="Data zapytania"
+        name="dataZapytania"
+        type="date"
+        value={
+          formData.dataZapytania ? formData.dataZapytania.split("T")[0] : ""
+        }
+        onChange={onChange}
+        variant="outlined"
+        fullWidth
+        margin="dense"
+        InputLabelProps={{ shrink: true }}
+      />
+      <div className="flex justify-end space-x-2">
         <CustomTextField
           label="Dane klienta"
           name="daneKlienta"
@@ -119,7 +120,7 @@ function ClientForm({
           onChange={onChange}
           variant="outlined"
           fullWidth
-          margin="normal"
+          margin="dense"
         />
         <CustomTextField
           label="Adres e-mail"
@@ -128,7 +129,7 @@ function ClientForm({
           onChange={onChange}
           variant="outlined"
           fullWidth
-          margin="normal"
+          margin="dense"
         />
       </div>
       <div className="flex flex-col">
@@ -138,15 +139,15 @@ function ClientForm({
               label={`Numer telefonu ${index + 1}`}
               variant="outlined"
               fullWidth
-              margin="normal"
-              type="number"
+              margin="dense"
+              type="tel"
               value={phone}
               onChange={(e) => onPhoneNumbersChange(index, e.target.value)}
             />
             <IconButton
               onClick={() => removePhoneField(index)}
               disabled={formData.numerTelefonu.length === 1}
-              sx={{ marginTop: "8px" }}
+              sx={{ marginTop: "8px", marginBottom: "4px" }}
             >
               <RemoveCircle
                 color={
@@ -161,7 +162,7 @@ function ClientForm({
           <AddCircle sx={{ color: "#FC8721" }} />
         </IconButton>
       </div>
-      <div className="flex justify-end space-x-4">
+      <div className="flex justify-end space-x-2">
         <CustomTextField
           label="Numer oferty w Galactice"
           name="numerGalactica"
@@ -169,12 +170,12 @@ function ClientForm({
           onChange={onChange}
           variant="outlined"
           fullWidth
-          margin="normal"
+          margin="dense"
           type="number"
         />
         <FormControl
           fullWidth
-          margin="normal"
+          margin="dense"
           sx={{
             "& .MuiOutlinedInput-root": {
               borderRadius: "6px",
@@ -249,16 +250,15 @@ function ClientForm({
         onChange={onChange}
         variant="outlined"
         fullWidth
-        margin="normal"
+        margin="dense"
         multiline
         maxRows={4}
       />
-      <div className="flex justify-end space-x-4">
+      <div className="flex justify-end space-x-2">
         <FormControl
           fullWidth
-          margin="normal"
+          margin="dense"
           sx={{
-            marginTop: "12px",
             "& .MuiOutlinedInput-root": {
               borderRadius: "6px",
               fontFamily: "Poppins",
@@ -342,9 +342,8 @@ function ClientForm({
         </FormControl>
         <FormControl
           fullWidth
-          margin="normal"
+          margin="dense"
           sx={{
-            marginTop: "12px",
             "& .MuiOutlinedInput-root": {
               borderRadius: "6px",
               fontFamily: "Poppins",
@@ -427,10 +426,10 @@ function ClientForm({
           </Select>
         </FormControl>
       </div>
-      <div className="flex justify-end space-x-4">
+      <div className="flex justify-end space-x-2">
         <FormControl
           fullWidth
-          margin="normal"
+          margin="dense"
           sx={{
             "& .MuiOutlinedInput-root": {
               borderRadius: "6px",
@@ -504,7 +503,7 @@ function ClientForm({
 
         <FormControl
           fullWidth
-          margin="normal"
+          margin="dense"
           sx={{
             "& .MuiOutlinedInput-root": {
               borderRadius: "6px",
@@ -596,7 +595,7 @@ function ClientForm({
 
         <FormControl
           fullWidth
-          margin="normal"
+          margin="dense"
           sx={{
             "& .MuiOutlinedInput-root": {
               borderRadius: "6px",
@@ -689,7 +688,7 @@ function ClientForm({
         </FormControl>
       </div>
 
-      <div className="flex justify-end space-x-4">
+      <div className="flex justify-end space-x-2">
         <CustomTextField
           label="Ilość pokoi od"
           name="iloscPokoiOd"
@@ -699,7 +698,7 @@ function ClientForm({
           onBlur={handleBlur}
           variant="outlined"
           fullWidth
-          margin="normal"
+          margin="dense"
           error={errors.iloscPokoiDo}
         />
         <CustomTextField
@@ -711,12 +710,12 @@ function ClientForm({
           onBlur={handleBlur}
           variant="outlined"
           fullWidth
-          margin="normal"
+          margin="dense"
           error={errors.iloscPokoiDo}
         />
       </div>
 
-      <div className="flex justify-end space-x-4">
+      <div className="flex justify-end space-x-2">
         <CustomTextField
           label="Metraż od"
           name="metrazOd"
@@ -726,7 +725,7 @@ function ClientForm({
           onBlur={handleBlur}
           variant="outlined"
           fullWidth
-          margin="normal"
+          margin="dense"
           error={errors.metrazDo}
         />
         <CustomTextField
@@ -738,12 +737,12 @@ function ClientForm({
           onBlur={handleBlur}
           variant="outlined"
           fullWidth
-          margin="normal"
+          margin="dense"
           error={errors.metrazDo}
         />
       </div>
 
-      <div className="flex justify-end space-x-4">
+      <div className="flex justify-end space-x-2">
         <CustomTextField
           label="Budżet od"
           name="budzetOd"
@@ -753,7 +752,7 @@ function ClientForm({
           onBlur={handleBlur}
           variant="outlined"
           fullWidth
-          margin="normal"
+          margin="dense"
           error={errors.budzetDo}
         />
         <CustomTextField
@@ -765,11 +764,11 @@ function ClientForm({
           onBlur={handleBlur}
           variant="outlined"
           fullWidth
-          margin="normal"
+          margin="dense"
           error={errors.budzetDo}
         />
       </div>
-      <div className="flex justify-end space-x-4">
+      <div className="flex justify-end space-x-2">
         <CustomTextField
           label="Ostatni kontakt"
           name="ostatniKontakt"
@@ -780,7 +779,7 @@ function ClientForm({
           onChange={onChange}
           variant="outlined"
           fullWidth
-          margin="normal"
+          margin="dense"
           InputLabelProps={{ shrink: true }}
         />
         <CustomTextField
@@ -795,7 +794,7 @@ function ClientForm({
           onChange={onChange}
           variant="outlined"
           fullWidth
-          margin="normal"
+          margin="dense"
           InputLabelProps={{ shrink: true }}
           inputProps={
             userRole !== "admin"
@@ -816,11 +815,44 @@ function ClientForm({
         onChange={onChange}
         variant="outlined"
         fullWidth
-        margin="normal"
+        margin="dense"
         multiline
         maxRows={4}
         // disabled={action === "add" || userRole === "admin" ? false : true}
       />
+
+      <div className="flex flex-col">
+        {formData.komentarzDataList.map((komentarz, index) => (
+          <div key={index} className="flex items-start space-x-2">
+            <CustomTextField
+              label={`Komentarz ${index + 1}`}
+              value={komentarz.tekst}
+              onChange={(e) => onCommentsChange(index, e.target.value)}
+              variant="outlined"
+              fullWidth
+              margin="dense"
+              multiline
+              maxRows={4}
+            />
+
+            <IconButton
+              onClick={() => removeCommentField(index)}
+              disabled={formData.komentarzDataList.length === 1}
+              sx={{ marginTop: "8px" }}
+            >
+              <RemoveCircle
+                color={
+                  formData.komentarzDataList.length === 1 ? "disabled" : "error"
+                }
+              />
+            </IconButton>
+          </div>
+        ))}
+
+        <IconButton onClick={addCommentField}>
+          <AddCircle sx={{ color: "#FC8721" }} />
+        </IconButton>
+      </div>
     </>
   );
 }

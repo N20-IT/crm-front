@@ -209,414 +209,390 @@ function AddOfferPanel({ onSave, onCancel, users, userInformation }) {
           </h2>
         </div>
         <form>
-          <div className="flex flex-col md:flex-row justify-end space-y-4 md:space-x-4 md:space-y-0">
-            <div className="w-full">
-              <FormControl
-                fullWidth
-                sx={{
-                  marginTop: "12px",
-                  "& .MuiOutlinedInput-root": {
-                    borderRadius: "6px",
-                    fontFamily: "Poppins",
-                    fontSize: "16px",
-                    height: "40px",
-                    "& input": {
-                      padding: "8px",
-                      height: "16px",
-                    },
+          <div className="flex justify-end space-x-2">
+            <FormControl
+              fullWidth
+              margin="dense"
+              sx={{
+                "& .MuiOutlinedInput-root": {
+                  borderRadius: "6px",
+                  fontFamily: "Poppins",
+                  fontSize: "16px",
+                  height: "40px",
+                  "& input": {
+                    padding: "8px",
+                    height: "16px",
                   },
-                  "& .MuiInputLabel-root.MuiInputLabel-shrink": {
-                    transform: "translate(14px, -9px) scale(0.75)",
-                  },
+                },
+                "& .MuiInputLabel-root.MuiInputLabel-shrink": {
+                  transform: "translate(14px, -9px) scale(0.75)",
+                },
 
-                  "& .MuiFormLabel-root": {
-                    fontFamily: "Poppins",
-                    fontSize: "16px",
-                    color: "#535968",
-                    transform: "translate(14px, 9px) scale(1)",
-                  },
-                  "& .MuiInputLabel-root.Mui-focused": {
-                    color: "#535968",
-                  },
-                  "& .MuiOutlinedInput-notchedOutline": {
-                    borderColor: "#535968",
-                  },
-                  "&:hover .MuiOutlinedInput-notchedOutline": {
-                    borderColor: "#535968",
-                  },
-                  "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                    borderColor: "#535968",
-                  },
-                  "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                    borderColor: "#535968",
-                  },
-                }}
-              >
-                <InputLabel id="district-label">Dzielnica</InputLabel>
-                <Select
-                  labelId="district-label"
-                  name="dzielnica"
-                  value={formData.dzielnica || ""}
-                  onChange={handleDistrictChange}
-                  input={
-                    <OutlinedInput
-                      sx={{
-                        "& .MuiOutlinedInput-notchedOutline": {
-                          borderColor: "#535968",
-                        },
-
-                        "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                          borderColor: "#535968",
-                        },
-                      }}
-                      label="Dzielnica/Gmina"
-                    />
-                  }
-                >
-                  {Object.keys(dzielniceData.Dzielnice).map((district) => (
-                    <MenuItem key={district} value={district}>
-                      {district}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            </div>
-            <div className="w-full">
-              <FormControl
-                fullWidth
-                sx={{
-                  marginTop: "12px",
-                  "& .MuiOutlinedInput-root": {
-                    borderRadius: "6px",
-                    fontFamily: "Poppins",
-                    fontSize: "16px",
-                    height: "40px",
-                    "& input": {
-                      padding: "8px",
-                      height: "16px",
-                    },
-                  },
-                  "& .MuiFormLabel-root": {
-                    fontFamily: "Poppins",
-                    fontSize: "16px",
-                    color: "#535968",
-                    transform: "translate(14px, 9px) scale(1)",
-                  },
-                  "& .MuiInputLabel-root.MuiInputLabel-shrink": {
-                    transform: "translate(14px, -9px) scale(0.75)",
-                  },
-
-                  "& .MuiInputLabel-root.Mui-focused": {
-                    color: "#535968",
-                  },
-                  "& .MuiOutlinedInput-notchedOutline": {
-                    borderColor: "#535968",
-                  },
-                  "&:hover .MuiOutlinedInput-notchedOutline": {
-                    borderColor: "#535968",
-                  },
-                  "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                    borderColor: "#535968",
-                  },
-                  "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                    borderColor: "#535968",
-                  },
-                }}
-                disabled={!formData.dzielnica || isSubdistrictDisabled}
-              >
-                <InputLabel id="subdistrict-label">Poddzielnica</InputLabel>
-                <Select
-                  labelId="subdistrict-label"
-                  value={formData.poddzielnica}
-                  onChange={handleSubdistrictChange}
-                  input={
-                    <OutlinedInput
-                      sx={{
-                        "& .MuiOutlinedInput-notchedOutline": {
-                          borderColor: "#535968",
-                        },
-
-                        "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                          borderColor: "#535968",
-                        },
-                      }}
-                      label="Poddzielnica"
-                    />
-                  }
-                >
-                  {subdistricts.map((subdistrict) => (
-                    <MenuItem key={subdistrict} value={subdistrict}>
-                      {subdistrict}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            </div>
-          </div>
-          <div className="flex flex-col md:flex-row justify-end space-y-4 md:space-x-4 md:space-y-0">
-            <div className="w-full">
-              <CustomTextField
-                label="Ulica"
-                name="ulica"
-                value={formData.ulica}
-                onChange={handleChange}
-                variant="outlined"
-                fullWidth
-                margin="normal"
-              />
-            </div>
-            <div className="w-full">
-              <CustomTextField
-                label="Miasto/Wieś"
-                name="miasto"
-                value={formData.miasto}
-                onChange={handleChange}
-                variant="outlined"
-                fullWidth
-                margin="normal"
-              />
-            </div>
-          </div>
-          <div className="flex flex-col md:flex-row justify-end space-y-4 md:space-x-4 md:space-y-0">
-            <div className="w-full">
-              <CustomTextField
-                label="Metraż"
-                name="metraz"
-                type="number"
-                value={formData.metraz}
-                onChange={handleChange}
-                variant="outlined"
-                fullWidth
-                margin="normal"
-              />
-            </div>
-            <div className="w-full">
-              <CustomTextField
-                label="Pow. działki"
-                name="powDzialki"
-                type="number"
-                value={formData.powDzialki}
-                onChange={handleChange}
-                variant="outlined"
-                fullWidth
-                margin="normal"
-              />
-            </div>
-            <div className="w-full">
-              <CustomTextField
-                label="Ilość pokoi"
-                name="iloscPokoi"
-                type="number"
-                value={formData.iloscPokoi}
-                onChange={handleChange}
-                variant="outlined"
-                fullWidth
-                margin="normal"
-              />
-            </div>
-            <div className="w-full">
-              <CustomTextField
-                label="Cena"
-                name="cena"
-                type="number"
-                value={formData.cena}
-                onChange={handleChange}
-                variant="outlined"
-                fullWidth
-                margin="normal"
-              />
-            </div>
-          </div>
-          <div className="flex flex-col md:flex-row justify-end space-y-4 md:space-x-4 md:space-y-0">
-            <div className="w-full">
-              <FormControl
-                fullWidth
-                sx={{
-                  marginTop: "12px",
-                  "& .MuiOutlinedInput-root": {
-                    borderRadius: "6px",
-                    fontFamily: "Poppins",
-                    fontSize: "16px",
-                    height: "40px",
-                    "& input": {
-                      padding: "8px",
-                      height: "16px",
-                    },
-                  },
-                  "& .MuiFormLabel-root": {
-                    fontFamily: "Poppins",
-                    fontSize: "16px",
-                    color: "#535968",
-                    transform: "translate(14px, 9px) scale(1)",
-                  },
-                  "& .MuiInputLabel-root.MuiInputLabel-shrink": {
-                    transform: "translate(14px, -9px) scale(0.75)",
-                  },
-
-                  "& .MuiInputLabel-root.Mui-focused": {
-                    color: "#535968",
-                  },
-                  "& .MuiOutlinedInput-notchedOutline": {
-                    borderColor: "#535968",
-                  },
-                  "&:hover .MuiOutlinedInput-notchedOutline": {
-                    borderColor: "#535968",
-                  },
-                  "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                    borderColor: "#535968",
-                  },
-                  "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                    borderColor: "#535968",
-                  },
-                }}
-              >
-                <InputLabel>Typ inwestycji</InputLabel>
-                <Select
-                  value={formData.typInwestycji}
-                  onChange={(e) =>
-                    handleChange({
-                      target: {
-                        name: "typInwestycji",
-                        value: e.target.value,
-                      },
-                    })
-                  }
-                  label="Typ inwestycji"
-                >
-                  <MenuItem
-                    key={"null"}
-                    value={""}
+                "& .MuiFormLabel-root": {
+                  fontFamily: "Poppins",
+                  fontSize: "16px",
+                  color: "#535968",
+                  transform: "translate(14px, 9px) scale(1)",
+                },
+                "& .MuiInputLabel-root.Mui-focused": {
+                  color: "#535968",
+                },
+                "& .MuiOutlinedInput-notchedOutline": {
+                  borderColor: "#535968",
+                },
+                "&:hover .MuiOutlinedInput-notchedOutline": {
+                  borderColor: "#535968",
+                },
+                "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                  borderColor: "#535968",
+                },
+                "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                  borderColor: "#535968",
+                },
+              }}
+            >
+              <InputLabel id="district-label">Dzielnica</InputLabel>
+              <Select
+                labelId="district-label"
+                name="dzielnica"
+                value={formData.dzielnica || ""}
+                onChange={handleDistrictChange}
+                input={
+                  <OutlinedInput
                     sx={{
-                      fontStyle: "italic",
-                      color: "gray",
-                      fontWeight: "bold",
-                    }}
-                  >
-                    Brak
-                  </MenuItem>
-                  <MenuItem key="Dom" value="Dom">
-                    Dom
-                  </MenuItem>
-                  <MenuItem key="Mieszkanie" value="Mieszkanie">
-                    Mieszkanie
-                  </MenuItem>
-                  <MenuItem key="Lokal" value="Lokal">
-                    Lokal
-                  </MenuItem>
-                  <MenuItem key="Działka" value="Działka">
-                    Działka
-                  </MenuItem>
-                  <MenuItem key="Bliźniak" value="Bliźniak">
-                    Bliźniak
-                  </MenuItem>
-                  <MenuItem key="Szeregowy" value="Szeregowy">
-                    Szeregowy
-                  </MenuItem>
-                </Select>
-              </FormControl>
-            </div>
-            <div className="w-full">
-              <FormControl
-                fullWidth
-                sx={{
-                  marginTop: "12px",
-                  "& .MuiOutlinedInput-root": {
-                    borderRadius: "6px",
-                    fontFamily: "Poppins",
-                    fontSize: "16px",
-                    height: "40px",
-                    "& input": {
-                      padding: "8px",
-                      height: "16px",
-                    },
-                  },
-                  "& .MuiFormLabel-root": {
-                    fontFamily: "Poppins",
-                    fontSize: "16px",
-                    color: "#535968",
-                    transform: "translate(14px, 9px) scale(1)",
-                  },
-                  "& .MuiInputLabel-root.MuiInputLabel-shrink": {
-                    transform: "translate(14px, -9px) scale(0.75)",
-                  },
-
-                  "& .MuiInputLabel-root.Mui-focused": {
-                    color: "#535968",
-                  },
-                  "& .MuiOutlinedInput-notchedOutline": {
-                    borderColor: "#535968",
-                  },
-                  "&:hover .MuiOutlinedInput-notchedOutline": {
-                    borderColor: "#535968",
-                  },
-                  "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                    borderColor: "#535968",
-                  },
-                  "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                    borderColor: "#535968",
-                  },
-                }}
-              >
-                <InputLabel>Rynek</InputLabel>
-                <Select
-                  value={formData.rynek}
-                  onChange={(e) =>
-                    handleChange({
-                      target: {
-                        name: "rynek",
-                        value: e.target.value,
+                      "& .MuiOutlinedInput-notchedOutline": {
+                        borderColor: "#535968",
                       },
-                    })
-                  }
-                  label="Rynek"
-                >
-                  <MenuItem
-                    key={"null"}
-                    value={""}
-                    sx={{
-                      fontStyle: "italic",
-                      color: "gray",
-                      fontWeight: "bold",
+
+                      "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                        borderColor: "#535968",
+                      },
                     }}
-                  >
-                    Brak
+                    label="Dzielnica/Gmina"
+                  />
+                }
+              >
+                {Object.keys(dzielniceData.Dzielnice).map((district) => (
+                  <MenuItem key={district} value={district}>
+                    {district}
                   </MenuItem>
-                  <MenuItem key="Pierwotny" value="Pierwotny">
-                    Pierwotny
+                ))}
+              </Select>
+            </FormControl>
+            <FormControl
+              fullWidth
+              margin="dense"
+              sx={{
+                "& .MuiOutlinedInput-root": {
+                  borderRadius: "6px",
+                  fontFamily: "Poppins",
+                  fontSize: "16px",
+                  height: "40px",
+                  "& input": {
+                    padding: "8px",
+                    height: "16px",
+                  },
+                },
+                "& .MuiFormLabel-root": {
+                  fontFamily: "Poppins",
+                  fontSize: "16px",
+                  color: "#535968",
+                  transform: "translate(14px, 9px) scale(1)",
+                },
+                "& .MuiInputLabel-root.MuiInputLabel-shrink": {
+                  transform: "translate(14px, -9px) scale(0.75)",
+                },
+
+                "& .MuiInputLabel-root.Mui-focused": {
+                  color: "#535968",
+                },
+                "& .MuiOutlinedInput-notchedOutline": {
+                  borderColor: "#535968",
+                },
+                "&:hover .MuiOutlinedInput-notchedOutline": {
+                  borderColor: "#535968",
+                },
+                "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                  borderColor: "#535968",
+                },
+                "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                  borderColor: "#535968",
+                },
+              }}
+              disabled={!formData.dzielnica || isSubdistrictDisabled}
+            >
+              <InputLabel id="subdistrict-label">Poddzielnica</InputLabel>
+              <Select
+                labelId="subdistrict-label"
+                value={formData.poddzielnica}
+                onChange={handleSubdistrictChange}
+                input={
+                  <OutlinedInput
+                    sx={{
+                      "& .MuiOutlinedInput-notchedOutline": {
+                        borderColor: "#535968",
+                      },
+
+                      "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                        borderColor: "#535968",
+                      },
+                    }}
+                    label="Poddzielnica"
+                  />
+                }
+              >
+                {subdistricts.map((subdistrict) => (
+                  <MenuItem key={subdistrict} value={subdistrict}>
+                    {subdistrict}
                   </MenuItem>
-                  <MenuItem key="Wtórny" value="Wtórny">
-                    Wtórny
-                  </MenuItem>
-                </Select>
-              </FormControl>
-            </div>
+                ))}
+              </Select>
+            </FormControl>
           </div>
-          <div className="w-full">
+          <div className="flex justify-end space-x-2">
             <CustomTextField
-              label="Dane właściciela"
-              name="daneWlasciciela"
-              value={formData.daneWlasciciela}
+              label="Ulica"
+              name="ulica"
+              value={formData.ulica}
               onChange={handleChange}
               variant="outlined"
               fullWidth
-              margin="normal"
+              margin="dense"
             />
-          </div>
-          <div className="w-full">
             <CustomTextField
-              label="Komentarz"
-              name="komentarz"
-              value={formData.komentarz}
+              label="Miasto/Wieś"
+              name="miasto"
+              value={formData.miasto}
               onChange={handleChange}
               variant="outlined"
               fullWidth
-              margin="normal"
-              error={!!errors.komentarz}
-              helperText={errors.komentarz}
-              multiline
-              maxRows={4}
+              margin="dense"
             />
           </div>
+          <div className="flex justify-end space-x-2">
+            <CustomTextField
+              label="Metraż"
+              name="metraz"
+              type="number"
+              value={formData.metraz}
+              onChange={handleChange}
+              variant="outlined"
+              fullWidth
+              margin="dense"
+            />
+            <CustomTextField
+              label="Pow. działki"
+              name="powDzialki"
+              type="number"
+              value={formData.powDzialki}
+              onChange={handleChange}
+              variant="outlined"
+              fullWidth
+              margin="dense"
+            />
+            <CustomTextField
+              label="Ilość pokoi"
+              name="iloscPokoi"
+              type="number"
+              value={formData.iloscPokoi}
+              onChange={handleChange}
+              variant="outlined"
+              fullWidth
+              margin="dense"
+            />
+            <CustomTextField
+              label="Cena"
+              name="cena"
+              type="number"
+              value={formData.cena}
+              onChange={handleChange}
+              variant="outlined"
+              fullWidth
+              margin="dense"
+            />
+          </div>
+          <div className="flex justify-end space-x-2">
+            <FormControl
+              fullWidth
+              margin="dense"
+              sx={{
+                "& .MuiOutlinedInput-root": {
+                  borderRadius: "6px",
+                  fontFamily: "Poppins",
+                  fontSize: "16px",
+                  height: "40px",
+                  "& input": {
+                    padding: "8px",
+                    height: "16px",
+                  },
+                },
+                "& .MuiFormLabel-root": {
+                  fontFamily: "Poppins",
+                  fontSize: "16px",
+                  color: "#535968",
+                  transform: "translate(14px, 9px) scale(1)",
+                },
+                "& .MuiInputLabel-root.MuiInputLabel-shrink": {
+                  transform: "translate(14px, -9px) scale(0.75)",
+                },
+
+                "& .MuiInputLabel-root.Mui-focused": {
+                  color: "#535968",
+                },
+                "& .MuiOutlinedInput-notchedOutline": {
+                  borderColor: "#535968",
+                },
+                "&:hover .MuiOutlinedInput-notchedOutline": {
+                  borderColor: "#535968",
+                },
+                "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                  borderColor: "#535968",
+                },
+                "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                  borderColor: "#535968",
+                },
+              }}
+            >
+              <InputLabel>Typ inwestycji</InputLabel>
+              <Select
+                value={formData.typInwestycji}
+                onChange={(e) =>
+                  handleChange({
+                    target: {
+                      name: "typInwestycji",
+                      value: e.target.value,
+                    },
+                  })
+                }
+                label="Typ inwestycji"
+              >
+                <MenuItem
+                  key={"null"}
+                  value={""}
+                  sx={{
+                    fontStyle: "italic",
+                    color: "gray",
+                    fontWeight: "bold",
+                  }}
+                >
+                  Brak
+                </MenuItem>
+                <MenuItem key="Dom" value="Dom">
+                  Dom
+                </MenuItem>
+                <MenuItem key="Mieszkanie" value="Mieszkanie">
+                  Mieszkanie
+                </MenuItem>
+                <MenuItem key="Lokal" value="Lokal">
+                  Lokal
+                </MenuItem>
+                <MenuItem key="Działka" value="Działka">
+                  Działka
+                </MenuItem>
+                <MenuItem key="Bliźniak" value="Bliźniak">
+                  Bliźniak
+                </MenuItem>
+                <MenuItem key="Szeregowy" value="Szeregowy">
+                  Szeregowy
+                </MenuItem>
+              </Select>
+            </FormControl>
+            <FormControl
+              fullWidth
+              margin="dense"
+              sx={{
+                "& .MuiOutlinedInput-root": {
+                  borderRadius: "6px",
+                  fontFamily: "Poppins",
+                  fontSize: "16px",
+                  height: "40px",
+                  "& input": {
+                    padding: "8px",
+                    height: "16px",
+                  },
+                },
+                "& .MuiFormLabel-root": {
+                  fontFamily: "Poppins",
+                  fontSize: "16px",
+                  color: "#535968",
+                  transform: "translate(14px, 9px) scale(1)",
+                },
+                "& .MuiInputLabel-root.MuiInputLabel-shrink": {
+                  transform: "translate(14px, -9px) scale(0.75)",
+                },
+
+                "& .MuiInputLabel-root.Mui-focused": {
+                  color: "#535968",
+                },
+                "& .MuiOutlinedInput-notchedOutline": {
+                  borderColor: "#535968",
+                },
+                "&:hover .MuiOutlinedInput-notchedOutline": {
+                  borderColor: "#535968",
+                },
+                "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                  borderColor: "#535968",
+                },
+                "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                  borderColor: "#535968",
+                },
+              }}
+            >
+              <InputLabel>Rynek</InputLabel>
+              <Select
+                value={formData.rynek}
+                onChange={(e) =>
+                  handleChange({
+                    target: {
+                      name: "rynek",
+                      value: e.target.value,
+                    },
+                  })
+                }
+                label="Rynek"
+              >
+                <MenuItem
+                  key={"null"}
+                  value={""}
+                  sx={{
+                    fontStyle: "italic",
+                    color: "gray",
+                    fontWeight: "bold",
+                  }}
+                >
+                  Brak
+                </MenuItem>
+                <MenuItem key="Pierwotny" value="Pierwotny">
+                  Pierwotny
+                </MenuItem>
+                <MenuItem key="Wtórny" value="Wtórny">
+                  Wtórny
+                </MenuItem>
+              </Select>
+            </FormControl>
+          </div>
+          <CustomTextField
+            label="Dane właściciela"
+            name="daneWlasciciela"
+            value={formData.daneWlasciciela}
+            onChange={handleChange}
+            variant="outlined"
+            fullWidth
+            margin="dense"
+          />
+          <CustomTextField
+            label="Komentarz"
+            name="komentarz"
+            value={formData.komentarz}
+            onChange={handleChange}
+            variant="outlined"
+            fullWidth
+            margin="dense"
+            error={!!errors.komentarz}
+            helperText={errors.komentarz}
+            multiline
+            maxRows={4}
+          />
           <div className="flex flex-col">
             {formData.telefonWlasciciela.map((phone, index) => (
               <div key={index} className="flex flex-col">
@@ -625,7 +601,7 @@ function AddOfferPanel({ onSave, onCancel, users, userInformation }) {
                     label={`Telefon/Email ${index + 1}`}
                     variant="outlined"
                     fullWidth
-                    margin="normal"
+                    margin="dense"
                     onChange={(e) =>
                       handlePhoneNumbersChange(index, e.target.value)
                     }
@@ -634,7 +610,7 @@ function AddOfferPanel({ onSave, onCancel, users, userInformation }) {
                   <IconButton
                     onClick={() => removePhoneField(index)}
                     disabled={formData.telefonWlasciciela.length === 1}
-                    sx={{ marginTop: "8px" }}
+                    sx={{ marginTop: "8px", marginBottom: "4px" }}
                   >
                     <RemoveCircle
                       color={
@@ -656,7 +632,7 @@ function AddOfferPanel({ onSave, onCancel, users, userInformation }) {
               <AddCircle sx={{ color: "#FC8721" }} />
             </IconButton>
           </div>
-          <div className="flex justify-end space-x-4">
+          <div className="flex justify-end space-x-2">
             <CustomTextField
               label="Data kontaktu"
               name="dataKontaktu"
@@ -665,7 +641,7 @@ function AddOfferPanel({ onSave, onCancel, users, userInformation }) {
               onChange={handleChange}
               variant="outlined"
               fullWidth
-              margin="normal"
+              margin="dense"
               InputLabelProps={{ shrink: true }}
             />
 
@@ -677,17 +653,17 @@ function AddOfferPanel({ onSave, onCancel, users, userInformation }) {
               onChange={handleChange}
               variant="outlined"
               fullWidth
-              margin="normal"
+              margin="dense"
               error={!!errors.dataNastepnegoKontaktu}
               helperText={errors.dataNastepnegoKontaktu}
               InputLabelProps={{ shrink: true }}
             />
           </div>
-          <div className="flex justify-end space-x-4">
+          <div className="flex justify-end space-x-2">
             <FormControl
               fullWidth
+              margin="dense"
               sx={{
-                marginTop: "12px",
                 "& .MuiOutlinedInput-root": {
                   borderRadius: "6px",
                   fontFamily: "Poppins",
@@ -772,8 +748,8 @@ function AddOfferPanel({ onSave, onCancel, users, userInformation }) {
             </FormControl>
             <FormControl
               fullWidth
+              margin="dense"
               sx={{
-                marginTop: "12px",
                 "& .MuiOutlinedInput-root": {
                   borderRadius: "6px",
                   fontFamily: "Poppins",
@@ -846,7 +822,7 @@ function AddOfferPanel({ onSave, onCancel, users, userInformation }) {
             onChange={handleChange}
             variant="outlined"
             fullWidth
-            margin="normal"
+            margin="dense"
           />
           <div className="sticky bottom-0 bg-white py-2 px-2 z-20">
             <div className="flex justify-end space-x-4 mt-4">

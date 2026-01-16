@@ -57,8 +57,8 @@ const columnsClientsConfig = [
   },
   {
     id: "komentarzData",
-    label: "Komentarz dot. następnego kontaktu",
-    shortLabel: "Koment. nast. k.",
+    label: "Ostatni komentarz dot. następnego kontaktu",
+    shortLabel: "Ostat. kom. nast. k.",
     sortable: false,
     view: "basic",
   },

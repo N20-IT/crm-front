@@ -202,35 +202,28 @@ function ClientDetails({
   }, [fetchDetailsData]);
   return (
     <div className="fixed inset-0 bg-light-grey bg-opacity-75 flex items-center justify-center z-50">
-      <div className="bg-white p-6 rounded-lg shadow-lg w-4/5 max-h-[90vh] overflow-y-auto">
+      <div className="bg-white px-6 rounded-lg shadow-lg w-1/2 max-h-[90vh] overflow-y-auto">
         <Box
           sx={{
+            position: "sticky",
+            top: 0,
+            zIndex: 10,
+            backgroundColor: "white",
             display: "flex",
             justifyContent: "space-between",
             alignItems: "center",
-            marginBottom: "16px",
+            padding: "16px",
+            borderBottom: "1px solid #e0e0e0",
           }}
         >
-          <Typography
-            variant="h4"
-            sx={{
-              fontWeight: 600,
-              fontSize: "1.5rem",
-              fontFamily: "Poppins",
-            }}
-          >
+          <Typography variant="h4" sx={{ fontWeight: 600, fontSize: "1.5rem" }}>
             Klient {client.daneKlienta}
           </Typography>
-          <IconButton
-            onClick={onClose}
-            sx={{
-              color: "gray",
-            }}
-            aria-label="close"
-          >
+          <IconButton onClick={onClose}>
             <Close />
           </IconButton>
         </Box>
+
         <Divider sx={{ marginBottom: "16px" }} />
         {loading ? (
           <Grid2>
@@ -318,7 +311,14 @@ function ClientDetails({
                 </CustomTypography>
               )}
               {client.komentarz && (
-                <CustomTypography sx={{ fontSize: "1rem" }}>
+                <CustomTypography
+                  sx={{
+                    fontSize: "1rem",
+                    wordBreak: "break-word",
+                    overflowWrap: "anywhere",
+                    whiteSpace: "normal",
+                  }}
+                >
                   <strong>Opis klienta:</strong> {client.komentarz}
                 </CustomTypography>
               )}
@@ -467,12 +467,31 @@ function ClientDetails({
                   )}
                 </CustomTypography>
               )}
-              {client.komentarzData && (
-                <CustomTypography sx={{ fontSize: "1rem" }}>
-                  <strong>Komentarz dot. natępnego kontaktu:</strong>{" "}
-                  {client.komentarzData}
-                </CustomTypography>
-              )}
+              {Array.isArray(client.komentarzDataList) &&
+                client.komentarzDataList.length > 0 && (
+                  <CustomTypography
+                    sx={{
+                      fontSize: "1rem",
+                      wordBreak: "break-word",
+                      overflowWrap: "anywhere",
+                      whiteSpace: "normal",
+                    }}
+                  >
+                    <strong>Komentarze dot. następnego kontaktu:</strong>
+                    <ul style={{ marginTop: "8px" }}>
+                      {client.komentarzDataList.map((k, index) => (
+                        <li key={index}>
+                          {k.tekst}
+                          <br />
+                          <small>
+                            {new Date(k.data).toLocaleString("pl-PL")}
+                          </small>
+                        </li>
+                      ))}
+                    </ul>
+                  </CustomTypography>
+                )}
+
               {client.dataZapytania && (
                 <CustomTypography sx={{ fontSize: "1rem" }}>
                   <strong>Data zapytania:</strong>{" "}
@@ -716,11 +735,15 @@ function ClientDetails({
           <div></div>
         )}
         <Box
-          className="flex justify-end mt-6"
           sx={{
-            "& .MuiTableCell-root": {
-              border: 0,
-            },
+            position: "sticky",
+            bottom: 0,
+            zIndex: 10,
+            backgroundColor: "white",
+            padding: "16px",
+            borderTop: "1px solid #e0e0e0",
+            display: "flex",
+            justifyContent: "flex-end",
           }}
         >
           <ClientAction
@@ -731,6 +754,7 @@ function ClientDetails({
             userRole={userRole}
           />
         </Box>
+
         <Alerts
           message={alertMessage}
           severity={alertSeverity}

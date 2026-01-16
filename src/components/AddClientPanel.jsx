@@ -10,6 +10,12 @@ function AddClientPanel({ onSave, onCancel, allUsers }) {
     lokalizacja: [],
     numerTelefonu: [""],
     standard: [],
+    komentarzDataList: [
+      {
+        tekst: "",
+        data: new Date().toISOString(),
+      },
+    ],
   });
   const [, setErrors] = useState({});
   const [alertMessage, setAlertMessage] = useState("");
@@ -125,9 +131,48 @@ function AddClientPanel({ onSave, onCancel, allUsers }) {
     }));
   };
 
+  const handleCommentsChange = (index, value) => {
+    setFormData((prevData) => {
+      const newComments = [...prevData.komentarzDataList];
+
+      newComments[index] = {
+        ...newComments[index],
+        tekst: value,
+        data: new Date().toISOString(),
+      };
+
+      return {
+        ...prevData,
+        komentarzDataList: newComments,
+      };
+    });
+  };
+
+  const addCommentField = () => {
+    setFormData((prevData) => ({
+      ...prevData,
+      komentarzDataList: [
+        ...prevData.komentarzDataList,
+        {
+          tekst: "",
+          data: new Date().toISOString(),
+        },
+      ],
+    }));
+  };
+
+  const removeCommentField = (index) => {
+    setFormData((prevData) => ({
+      ...prevData,
+      komentarzDataList: prevData.komentarzDataList.filter(
+        (_, i) => i !== index
+      ),
+    }));
+  };
+
   return (
     <div className="fixed inset-0 bg-light-grey bg-opacity-75 flex items-center justify-center z-50">
-      <div className="bg-white px-6 rounded-lg shadow-lg w-1/3 max-h-[95%] overflow-auto">
+      <div className="bg-white px-6 rounded-lg shadow-lg w-full max-w-md md:max-w-lg lg:max-w-xl max-h-[95%] overflow-auto">
         <div className="sticky top-0 bg-white pt-6 pb-2 px-2 z-20">
           <h2 className="text-4xl font-bold mb-4 font-poppins">
             Dodaj nowego klienta
@@ -141,6 +186,9 @@ function AddClientPanel({ onSave, onCancel, allUsers }) {
               onPhoneNumbersChange={handlePhoneNumbersChange}
               addPhoneField={addPhoneField}
               removePhoneField={removePhoneField}
+              onCommentsChange={handleCommentsChange}
+              addCommentField={addCommentField}
+              removeCommentField={removeCommentField}
               allUsers={allUsers}
               userRole={userRole}
               action="add"
