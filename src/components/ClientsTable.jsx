@@ -358,7 +358,7 @@ function ClientsTable({
                   <CustomTableCell sx={{ whiteSpace: "nowrap" }}>
                     <strong>
                       {Array.isArray(row.numerTelefonu) &&
-                      row.numerTelefonu.length > 0 ? (
+                      row.numerTelefonu.some((n) => n !== "") ? (
                         row.numerTelefonu.map((number, index) => (
                           <div
                             key={index}
@@ -368,11 +368,14 @@ function ClientsTable({
                               gap: "4px",
                             }}
                           >
-                            <span>{formatPhoneNumber(number)}</span>
+                            <span>
+                              {number ? formatPhoneNumber(number) : "–"}
+                            </span>
                             <Tooltip arrow title="Skopiuj numer">
                               <IconButton
                                 onClick={() => copyToClipboard(number)}
                                 sx={{ padding: "6px" }}
+                                disabled={number === ""}
                               >
                                 <FileCopy />
                               </IconButton>
