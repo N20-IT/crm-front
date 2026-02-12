@@ -244,7 +244,7 @@ function ClientForm({
       </div>
 
       <CustomTextField
-        label="Komentarz"
+        label="Opis klienta"
         name="komentarz"
         value={formData.komentarz}
         onChange={onChange}
@@ -808,7 +808,7 @@ function ClientForm({
           }
         />
       </div>
-      <CustomTextField
+      {/* <CustomTextField
         label="Komentarz dot. natępnego kontaktu"
         name="komentarzData"
         value={formData.komentarzData}
@@ -819,13 +819,13 @@ function ClientForm({
         multiline
         maxRows={4}
         // disabled={action === "add" || userRole === "admin" ? false : true}
-      />
+      /> */}
 
       <div className="flex flex-col">
         {formData.komentarzDataList.map((komentarz, index) => (
           <div key={index} className="flex items-start space-x-2">
             <CustomTextField
-              label={`Komentarz ${index + 1}`}
+              label={`Komentarz do daty następnego spotkania ${index + 1}`}
               value={komentarz.tekst}
               onChange={(e) => onCommentsChange(index, e.target.value)}
               variant="outlined"
