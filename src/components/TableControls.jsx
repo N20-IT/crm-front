@@ -214,17 +214,17 @@ function TableControls({
     const selectedDistricts = event.target.value;
 
     const removedDistricts = localFilters.dzielnica.filter(
-      (district) => !selectedDistricts.includes(district)
+      (district) => !selectedDistricts.includes(district),
     );
 
     handleLocalFilterChange("dzielnica", selectedDistricts);
 
     if (removedDistricts.length > 0) {
       const subdistrictsToRemove = removedDistricts.flatMap(
-        (district) => dzielniceData.Dzielnice[district] || []
+        (district) => dzielniceData.Dzielnice[district] || [],
       );
       const newPoddzielnica = localFilters.poddzielnica.filter(
-        (subdistrict) => !subdistrictsToRemove.includes(subdistrict)
+        (subdistrict) => !subdistrictsToRemove.includes(subdistrict),
       );
       handleLocalFilterChange("poddzielnica", newPoddzielnica);
     }
@@ -242,8 +242,8 @@ function TableControls({
       ? [
           ...new Set(
             localFilters.dzielnica.flatMap(
-              (district) => dzielniceData.Dzielnice[district]
-            )
+              (district) => dzielniceData.Dzielnice[district],
+            ),
           ),
         ].sort()
       : [];
@@ -391,10 +391,7 @@ function TableControls({
           <Button
             variant="outlined"
             sx={{
-              color: isAnyFilterFilled(localFilters) ? "white" : "#6D727F",
-              backgroundColor: isAnyFilterFilled(localFilters)
-                ? "#009900"
-                : "white",
+              color: isAnyFilterFilled(localFilters) ? "#009900" : "#6D727F",
               fontFamily: "Poppins",
               borderColor: isAnyFilterFilled(localFilters)
                 ? "#009900"
@@ -1122,7 +1119,7 @@ function TableControls({
               onChange={(e) =>
                 handleLocalFilterChange(
                   "dataNastepnegoKontaktuOd",
-                  e.target.value
+                  e.target.value,
                 )
               }
               variant="outlined"
@@ -1143,7 +1140,7 @@ function TableControls({
               onChange={(e) =>
                 handleLocalFilterChange(
                   "dataNastepnegoKontaktuDo",
-                  e.target.value
+                  e.target.value,
                 )
               }
               variant="outlined"
