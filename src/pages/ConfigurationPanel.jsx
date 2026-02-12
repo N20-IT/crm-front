@@ -238,9 +238,21 @@ function ConfigurationPanel() {
       <div className="w-full">
         <div className="mb-6 flex justify-between items-center">
           <div>
-            <Typography variant="h4" className="font-bold mb-2">
-              Konfiguracja tabel
-            </Typography>
+            <div className="flex items-center gap-3 mb-2">
+              <Typography variant="h4" className="font-bold">
+                Konfiguracja tabel
+              </Typography>
+              <Chip
+                label="Strona w budowie"
+                size="small"
+                sx={{
+                  backgroundColor: "#FFF3CD",
+                  color: "#856404",
+                  fontWeight: "600",
+                  fontFamily: "Poppins",
+                }}
+              />
+            </div>
             <Typography variant="body2" color="textSecondary">
               Zarządzaj kolumnami dla tabel ofert i klientów
             </Typography>
