@@ -3,6 +3,7 @@ import {
   Delete,
   Edit,
   Info,
+  Print,
   RestoreFromTrash,
 } from "@mui/icons-material";
 import { IconButton, TableCell, Tooltip } from "@mui/material";
@@ -17,6 +18,7 @@ function ClientAction({
   handleGoToClientDetails,
   userRole,
   handleAddToCalendar,
+  downloadPDF,
 }) {
   const location = useLocation();
 
@@ -78,6 +80,18 @@ function ClientAction({
           </IconButton>
         </Tooltip>
       )}
+
+      <Tooltip title="Pobierz PDF">
+        <IconButton
+          onClick={() => downloadPDF(row)}
+          sx={{
+            padding: "4px",
+            color: "black",
+          }}
+        >
+          <Print />
+        </IconButton>
+      </Tooltip>
 
       <Tooltip title="Szczegóły klienta">
         {showDetailsIcon && (

@@ -39,6 +39,7 @@ function ClientsTable({
   loading,
   handleGoToClientDetails,
   userRole,
+  downloadPDF,
 }) {
   const [order, setOrder] = useState("desc");
   const [orderBy, setOrderBy] = useState("dataUtworzenia");
@@ -140,7 +141,7 @@ function ClientsTable({
     const formattedEndDate = formatDateForCalendar(endDate);
 
     const googleCalendarUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(
-      eventTitle
+      eventTitle,
     )}&dates=${formattedStartDate}/${formattedEndDate}&sf=true&output=xml`;
 
     window.open(googleCalendarUrl, "_blank");
@@ -304,6 +305,7 @@ function ClientsTable({
                     showDetailsIcon={true}
                     userRole={userRole}
                     handleAddToCalendar={handleAddToCalendar}
+                    downloadPDF={downloadPDF}
                   />
                   <CustomTableCell>
                     {row.dataUtworzenia
@@ -313,7 +315,7 @@ function ClientsTable({
                             year: "numeric",
                             month: "2-digit",
                             day: "2-digit",
-                          }
+                          },
                         )
                       : ""}
                   </CustomTableCell>
@@ -326,7 +328,7 @@ function ClientsTable({
                             year: "numeric",
                             month: "2-digit",
                             day: "2-digit",
-                          }
+                          },
                         )
                       : ""}
                   </CustomTableCell>
@@ -338,7 +340,7 @@ function ClientsTable({
                             year: "numeric",
                             month: "2-digit",
                             day: "2-digit",
-                          }
+                          },
                         )
                       : ""}
                   </CustomTableCell>
@@ -350,7 +352,7 @@ function ClientsTable({
                             year: "numeric",
                             month: "2-digit",
                             day: "2-digit",
-                          }
+                          },
                         )
                       : ""}
                   </CustomTableCell>
@@ -437,7 +439,7 @@ function ClientsTable({
                     sx={{
                       color:
                         clientStatuesConfig.find(
-                          (status) => status.value === row.status
+                          (status) => status.value === row.status,
                         )?.color || "black",
                       fontSize: "13px",
                     }}

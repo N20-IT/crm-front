@@ -40,6 +40,7 @@ function OffersTable({
   onSortApply,
   quantityOffers,
   handleAssignmentOfferToClientClick,
+  downloadPDF,
 }) {
   const [order, setOrder] = useState("desc");
   const [orderBy, setOrderBy] = useState("dataUtworzenia");
@@ -76,7 +77,7 @@ function OffersTable({
   };
 
   const filteredColumns = columns.filter((column) =>
-    readConfig === 0 ? column.view === "basic" : true
+    readConfig === 0 ? column.view === "basic" : true,
   );
 
   const formatNumber = (value) =>
@@ -291,6 +292,7 @@ function OffersTable({
                     handleAssignmentOfferToClientClick={
                       handleAssignmentOfferToClientClick
                     }
+                    downloadPDF={downloadPDF}
                   />
                   {readConfig === 1 && (
                     <CustomTableCell>
@@ -313,7 +315,7 @@ function OffersTable({
                           year: "numeric",
                           month: "2-digit",
                           day: "2-digit",
-                        }
+                        },
                       )}
                       <strong>
                         <br />
@@ -322,7 +324,7 @@ function OffersTable({
                           {
                             hour: "2-digit",
                             minute: "2-digit",
-                          }
+                          },
                         )}
                       </strong>
                     </CustomTableCell>
@@ -332,7 +334,7 @@ function OffersTable({
                       {row.dataNastepnegoKontaktu ? (
                         <>
                           {new Date(
-                            row.dataNastepnegoKontaktu
+                            row.dataNastepnegoKontaktu,
                           ).toLocaleDateString("pl-PL", {
                             year: "numeric",
                             month: "2-digit",
@@ -341,7 +343,7 @@ function OffersTable({
                           <strong>
                             <br />
                             {new Date(
-                              row.dataNastepnegoKontaktu
+                              row.dataNastepnegoKontaktu,
                             ).toLocaleTimeString("pl-PL", {
                               hour: "2-digit",
                               minute: "2-digit",
@@ -363,7 +365,7 @@ function OffersTable({
                               year: "numeric",
                               month: "2-digit",
                               day: "2-digit",
-                            }
+                            },
                           )}{" "}
                           <strong>
                             <br />
@@ -372,7 +374,7 @@ function OffersTable({
                               {
                                 hour: "2-digit",
                                 minute: "2-digit",
-                              }
+                              },
                             )}
                           </strong>
                         </>
@@ -385,7 +387,7 @@ function OffersTable({
                     sx={{
                       color:
                         statusesConfig.find(
-                          (status) => status.value === row.statusOferty
+                          (status) => status.value === row.statusOferty,
                         )?.color || "black",
                       fontSize: "13px",
                     }}
@@ -442,7 +444,7 @@ function OffersTable({
                             </div>
                           ) : (
                             <span key={index}>Brak</span>
-                          )
+                          ),
                         )
                       ) : (
                         <span>Brak</span>
