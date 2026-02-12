@@ -75,7 +75,7 @@ function AddOfferPanel({ onSave, onCancel, users, userInformation }) {
             accept: "application/json",
             Authorization: `Bearer ${token}`,
           },
-        }
+        },
       );
       if (response.data.exists) {
         const updatedInfo = [...phoneExistsInfo];
@@ -93,7 +93,7 @@ function AddOfferPanel({ onSave, onCancel, users, userInformation }) {
 
   const debouncedCheckIfPhoneExists = useCallback(
     debounce(checkIfPhoneExists, 1000),
-    [checkIfPhoneExists]
+    [checkIfPhoneExists],
   );
 
   const handleDistrictChange = (event) => {
@@ -194,7 +194,7 @@ function AddOfferPanel({ onSave, onCancel, users, userInformation }) {
     setFormData((prevData) => ({
       ...prevData,
       telefonWlasciciela: prevData.telefonWlasciciela.filter(
-        (_, i) => i !== index
+        (_, i) => i !== index,
       ),
     }));
     setPhoneExistsInfo((prevInfo) => prevInfo.filter((_, i) => i !== index));

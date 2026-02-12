@@ -29,6 +29,7 @@ function ClientForm({
   allUsers,
   userRole,
   action,
+  phoneExistsInfo,
 }) {
   const [errors, setErrors] = useState({});
 
@@ -134,27 +135,34 @@ function ClientForm({
       </div>
       <div className="flex flex-col">
         {formData.numerTelefonu.map((phone, index) => (
-          <div key={index} className="flex items-center space-x-2">
-            <CustomTextField
-              label={`Numer telefonu ${index + 1}`}
-              variant="outlined"
-              fullWidth
-              margin="dense"
-              type="tel"
-              value={phone}
-              onChange={(e) => onPhoneNumbersChange(index, e.target.value)}
-            />
-            <IconButton
-              onClick={() => removePhoneField(index)}
-              disabled={formData.numerTelefonu.length === 1}
-              sx={{ marginTop: "8px", marginBottom: "4px" }}
-            >
-              <RemoveCircle
-                color={
-                  formData.numerTelefonu.length === 1 ? "disabled" : "error"
-                }
+          <div key={index} className="flex flex-col">
+            <div className="flex items-center space-x-2">
+              <CustomTextField
+                label={`Numer telefonu ${index + 1}`}
+                variant="outlined"
+                fullWidth
+                margin="dense"
+                type="tel"
+                value={phone}
+                onChange={(e) => onPhoneNumbersChange(index, e.target.value)}
               />
-            </IconButton>
+              <IconButton
+                onClick={() => removePhoneField(index)}
+                disabled={formData.numerTelefonu.length === 1}
+                sx={{ marginTop: "8px", marginBottom: "4px" }}
+              >
+                <RemoveCircle
+                  color={
+                    formData.numerTelefonu.length === 1 ? "disabled" : "error"
+                  }
+                />
+              </IconButton>
+            </div>
+            {phoneExistsInfo[index] && (
+              <p style={{ color: "blue", fontFamily: "Poppins" }}>
+                {phoneExistsInfo[index]}
+              </p>
+            )}
           </div>
         ))}
 

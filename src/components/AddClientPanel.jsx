@@ -1,10 +1,17 @@
 import { Button } from "@mui/material";
 import ClientForm from "./ClientForm";
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import Alerts from "./Alerts";
 import { GetInformationFromToken } from "../utils/decodeToken";
+import { useReadCookie } from "../utils/auth";
+import axios from "axios";
+import serverConfig from "../servers.json";
+import { debounce } from "lodash";
 
 function AddClientPanel({ onSave, onCancel, allUsers }) {
+  const backendServer = serverConfig["backend-server"];
+  const token = useReadCookie();
+
   const userRole = GetInformationFromToken("custom:role");
   const [formData, setFormData] = useState({
     lokalizacja: [],
@@ -21,6 +28,7 @@ function AddClientPanel({ onSave, onCancel, allUsers }) {
   const [alertMessage, setAlertMessage] = useState("");
   const [alertSeverity, setAlertSeverity] = useState("");
   const [alertOpen, setAlertOpen] = useState(false);
+  const [phoneExistsInfo, setPhoneExistsInfo] = useState([""]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -29,6 +37,36 @@ function AddClientPanel({ onSave, onCancel, allUsers }) {
       [name]: value,
     }));
   };
+
+  const checkIfPhoneExists = async (index, phoneNumber) => {
+    try {
+      const response = await axios.get(
+        `${backendServer}/clients/check-phone/${phoneNumber}`,
+        {
+          headers: {
+            accept: "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
+      if (response.data.exists) {
+        const updatedInfo = [...phoneExistsInfo];
+        updatedInfo[index] = "Oferta z tym numerem telefonu już istnieje.";
+        setPhoneExistsInfo(updatedInfo);
+      } else {
+        const updatedInfo = [...phoneExistsInfo];
+        updatedInfo[index] = "";
+        setPhoneExistsInfo(updatedInfo);
+      }
+    } catch (error) {
+      console.error("Błąd podczas sprawdzania numeru telefonu:", error);
+    }
+  };
+
+  const debouncedCheckIfPhoneExists = useCallback(
+    debounce(checkIfPhoneExists, 1000),
+    [checkIfPhoneExists],
+  );
 
   const handleSave = async () => {
     const validationErrors = {};
@@ -109,10 +147,16 @@ function AddClientPanel({ onSave, onCancel, allUsers }) {
     }
   };
 
-  const handlePhoneNumbersChange = (index, value) => {
+  const handlePhoneNumbersChange = async (index, value) => {
+    const cleanedValue = value.replace(/\s+/g, "");
+
+    if (cleanedValue.length === 9) {
+      await debouncedCheckIfPhoneExists(index, cleanedValue);
+    }
+
     setFormData((prevData) => {
       const newPhones = [...prevData.numerTelefonu];
-      newPhones[index] = value;
+      newPhones[index] = cleanedValue;
       return { ...prevData, numerTelefonu: newPhones };
     });
   };
@@ -165,7 +209,7 @@ function AddClientPanel({ onSave, onCancel, allUsers }) {
     setFormData((prevData) => ({
       ...prevData,
       komentarzDataList: prevData.komentarzDataList.filter(
-        (_, i) => i !== index
+        (_, i) => i !== index,
       ),
     }));
   };
@@ -192,6 +236,7 @@ function AddClientPanel({ onSave, onCancel, allUsers }) {
               allUsers={allUsers}
               userRole={userRole}
               action="add"
+              phoneExistsInfo={phoneExistsInfo}
             />
             <div className="sticky bottom-0 bg-white py-2 px-2 z-20">
               <div className="flex justify-end space-x-4 mt-4">
