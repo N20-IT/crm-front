@@ -9,6 +9,7 @@ import UsersPage from "./pages/UsersPage";
 import ForgottenPasswordPage from "./pages/ForgottenPasswordPage";
 import DeletedClientsPage from "./pages/DeletedClientsPage";
 import ConfigurationPanel from "./pages/ConfigurationPanel";
+import LogsPage from "./pages/LogsPage";
 function App() {
   return (
     <Routes>
@@ -24,6 +25,7 @@ function App() {
       <Route path="/zapomniane-haslo" element={<ForgottenPasswordPage />} />
       <Route path="/oferty/:id" element={<OffersPage />} />
       <Route path="/kosz-klientow" element={<DeletedClientsPage />} />
+      <Route path="/logi" element={<LogsPage />} />
     </Routes>
   );
 }

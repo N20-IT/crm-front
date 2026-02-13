@@ -111,22 +111,38 @@ const Sidebar = () => {
                     </Link>
                   </Tooltip>
                 </li>
+
                 <li
                   className={`w-full h-14 flex justify-start items-center ${getLinkClass(
-                    "/ustawienia",
+                    "/logi",
                   )}`}
                 >
-                  <Tooltip title="Ustawienia" placement="right">
+                  <Tooltip title="Administrator" placement="right">
                     <Link
-                      to="/ustawienia"
+                      to="/logi"
                       className="flex items-center justify-start text-xl ml-4 w-full h-full"
                     >
-                      <Settings sx={{ marginRight: "6px" }} />
+                      <Description sx={{ marginRight: "6px" }} />
                     </Link>
                   </Tooltip>
                 </li>
               </>
             )}
+
+            <li
+              className={`w-full h-14 flex justify-start items-center ${getLinkClass(
+                "/ustawienia",
+              )}`}
+            >
+              <Tooltip title="Ustawienia" placement="right">
+                <Link
+                  to="/ustawienia"
+                  className="flex items-center justify-start text-xl ml-4 w-full h-full"
+                >
+                  <Settings sx={{ marginRight: "6px" }} />
+                </Link>
+              </Tooltip>
+            </li>
           </ul>
         </nav>
         <div className="fixed bottom-3 p-4 flex justify-center items-center w-16">
