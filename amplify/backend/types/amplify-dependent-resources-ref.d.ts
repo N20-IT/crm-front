@@ -1,8 +1,10 @@
 export type AmplifyDependentResourcesAttributes = {
   "auth": {
-    "n20crm": {
+    "crm108ce90a": {
       "AppClientID": "string",
       "AppClientIDWeb": "string",
+      "IdentityPoolId": "string",
+      "IdentityPoolName": "string",
       "UserPoolArn": "string",
       "UserPoolId": "string",
       "UserPoolName": "string"

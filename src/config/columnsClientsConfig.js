@@ -57,8 +57,8 @@ const columnsClientsConfig = [
   },
   {
     id: "komentarzData",
-    label: "Komentarz dot. następnego kontaktu",
-    shortLabel: "Koment. nast. k.",
+    label: "Ostatni komentarz dot. następnego kontaktu",
+    shortLabel: "Ostat. kom. nast. k.",
     sortable: false,
     view: "basic",
   },
@@ -88,8 +88,8 @@ const columnsClientsConfig = [
   },
   {
     id: "komentarz",
-    label: "Komentarz",
-    shortLabel: "Koment.",
+    label: "Opis klienta",
+    shortLabel: "Opis",
     sortable: false,
     view: "basic",
   },
@@ -152,7 +152,7 @@ const columnsClientsConfig = [
     label: "Standard",
     shortLabel: "Stand.",
     type: "dictionary", // Słownik: Do wejścia, Do remontu, Deweloperski, Do odświeżenia
-    sortable: true,
+    sortable: false,
     view: "basic",
   },
   {

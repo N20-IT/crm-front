@@ -17,12 +17,18 @@ function EditClientPanel({ initialData, onSave, onCancel, allUsers }) {
     return `${formattedDate}T${formattedTime}`;
   };
 
+  const getPolishISOString = () => {
+    const date = new Date();
+    const offsetMs = date.getTimezoneOffset() * 60000;
+    return new Date(date.getTime() - offsetMs).toISOString();
+  };
+
   const parsedInitialData = {
     ...initialData,
     dataZapytania: formatDateForInput(initialData?.dataZapytania ?? ""),
     ostatniKontakt: formatDateForInput(initialData?.ostatniKontakt ?? ""),
     dataNastepnegoKontaktu: formatDateForInput(
-      initialData?.dataNastepnegoKontaktu ?? ""
+      initialData?.dataNastepnegoKontaktu ?? "",
     ),
     lokalizacja: initialData?.lokalizacja
       ? initialData.lokalizacja.split(",")
@@ -76,7 +82,7 @@ function EditClientPanel({ initialData, onSave, onCancel, allUsers }) {
       validationErrors.komentarz = "Komentarz jest wymagany.";
     if (
       formData.dataNastepnegoKontaktu &&
-      !formData.komentarzData &&
+      formData.komentarzDataList[0].tekst === "" &&
       userRole !== "admin"
     )
       validationErrors.komentarzData =
@@ -146,9 +152,48 @@ function EditClientPanel({ initialData, onSave, onCancel, allUsers }) {
     }));
   };
 
+  const handleCommentsChange = (index, value) => {
+    setFormData((prevData) => {
+      const newComments = [...prevData.komentarzDataList];
+
+      newComments[index] = {
+        ...newComments[index],
+        tekst: value,
+        data: new Date().toISOString(),
+      };
+
+      return {
+        ...prevData,
+        komentarzDataList: newComments,
+      };
+    });
+  };
+
+  const addCommentField = () => {
+    setFormData((prevData) => ({
+      ...prevData,
+      komentarzDataList: [
+        ...prevData.komentarzDataList,
+        {
+          tekst: "",
+          data: new Date().toISOString(),
+        },
+      ],
+    }));
+  };
+
+  const removeCommentField = (index) => {
+    setFormData((prevData) => ({
+      ...prevData,
+      komentarzDataList: prevData.komentarzDataList.filter(
+        (_, i) => i !== index,
+      ),
+    }));
+  };
+
   return (
     <div className="fixed inset-0 bg-light-grey bg-opacity-75 flex items-center justify-center z-50">
-      <div className="bg-white px-6 rounded-lg shadow-lg w-1/3 max-h-[95%] overflow-auto">
+      <div className="bg-white px-6 rounded-lg shadow-lg w-full max-w-md md:max-w-lg lg:max-w-xl max-h-[95%] overflow-auto">
         <div className="sticky top-0 bg-white pt-6 pb-2 px-2 z-20">
           <h2 className="text-4xl font-bold mb-4 font-poppins">
             Edytuj klienta
@@ -162,6 +207,9 @@ function EditClientPanel({ initialData, onSave, onCancel, allUsers }) {
               onPhoneNumbersChange={handlePhoneNumbersChange}
               addPhoneField={addPhoneField}
               removePhoneField={removePhoneField}
+              onCommentsChange={handleCommentsChange}
+              addCommentField={addCommentField}
+              removeCommentField={removeCommentField}
               allUsers={allUsers}
               userRole={userRole}
               action="edit"

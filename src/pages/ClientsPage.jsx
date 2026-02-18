@@ -34,15 +34,15 @@ function ClientsPage() {
   const columns = useMemo(() => columnsClientsConfig, []);
   const backendServer = serverConfig["backend-server"];
   const [page, setPage] = useState(0);
-  const [itemsPerPage, setItemsPerPage] = useState(100);
-  const [orderBy, setOrderBy] = useState("dataZapytania");
+  const [itemsPerPage, setItemsPerPage] = useState(25);
+  const [orderBy, setOrderBy] = useState("dataUtworzenia");
   const [order, setOrder] = useState("desc");
   const [openDialogDelete, setopenDialogDelete] = useState(false);
   const [clientToDelete, setClientToDelete] = useState(null);
   const [isAddClientPanelOpen, setIsAddClientPanelOpen] = useState(false);
   const [isEditClientPanelOpen, setIsEditClientPanelOpen] = useState(false);
   const [isClientDetailsPanelOpen, setIsClientDetailsPanelOpen] = useState(
-    false
+    false,
   );
   const [clientDetailsId, setClientDetailsId] = useState(null);
   const [users, setUsers] = useState([]);
@@ -114,7 +114,7 @@ function ClientsPage() {
 
   const fetchAgents = useCallback(async () => {
     try {
-      const response = await axios.get(`${backendServer}/users`, {
+      const response = await axios.get(`${backendServer}/users?min=true`, {
         headers: {
           accept: "application/json",
           Authorization: `Bearer ${token}`,
@@ -139,7 +139,7 @@ function ClientsPage() {
       currentPage = page,
       rowsPerValue = itemsPerPage,
       sortBy = orderBy,
-      sort = order
+      sort = order,
     ) => {
       setLoading(true);
       try {
@@ -176,7 +176,7 @@ function ClientsPage() {
         setLoading(false);
       }
     },
-    [backendServer, token]
+    [backendServer, token],
   );
 
   const handleDeleteClient = useCallback(
@@ -192,7 +192,7 @@ function ClientsPage() {
               accept: "application/json",
               Authorization: `Bearer ${token}`,
             },
-          }
+          },
         );
         setAlertOpen(true);
         setAlertMessage("Pomyślnie usunięto klienta");
@@ -208,7 +208,7 @@ function ClientsPage() {
         setLoading(false);
       }
     },
-    [backendServer, token, fetchData]
+    [backendServer, token, fetchData],
   );
 
   // const handleDeleteClient = useCallback(
@@ -252,7 +252,7 @@ function ClientsPage() {
               accept: "application/json",
               Authorization: `Bearer ${token}`,
             },
-          }
+          },
         );
         setAlertOpen(true);
         setAlertMessage("Pomyślnie edytowano klienta");
@@ -269,7 +269,7 @@ function ClientsPage() {
         setLoading(false);
       }
     },
-    [backendServer, token, fetchData, handleEditClientClick]
+    [backendServer, token, fetchData, handleEditClientClick],
   );
 
   const handleSaveClient = useCallback(
@@ -296,7 +296,44 @@ function ClientsPage() {
         setLoading(false);
       }
     },
-    [backendServer, token, fetchData, handleAddClientClick]
+    [backendServer, token, fetchData, handleAddClientClick],
+  );
+
+  const downloadPDF = useCallback(
+    async (clientData) => {
+      try {
+        const response = await axios.get(
+          `${backendServer}/clients/${clientData._id}/print`,
+          {
+            headers: {
+              accept: "application/pdf",
+              Authorization: `Bearer ${token}`,
+            },
+            responseType: "blob",
+          },
+        );
+
+        const url = window.URL.createObjectURL(new Blob([response.data]));
+        const link = document.createElement("a");
+        link.href = url;
+        link.setAttribute("download", `klient_${clientData.daneKlienta}.pdf`);
+        document.body.appendChild(link);
+        link.click();
+
+        link.parentNode.removeChild(link);
+        window.URL.revokeObjectURL(url);
+
+        setAlertOpen(true);
+        setAlertMessage("Pomyślnie pobrano PDF");
+        setAlertSeverity("success");
+      } catch (error) {
+        setAlertOpen(true);
+        setAlertMessage("Wystąpił błąd podczas pobierania PDF");
+        setAlertSeverity("error");
+        console.log(error.message);
+      }
+    },
+    [backendServer, token],
   );
 
   useEffect(() => {
@@ -342,6 +379,7 @@ function ClientsPage() {
         loading={loading}
         handleGoToClientDetails={handleOpenClientDetailsPanel}
         userRole={userRole}
+        downloadPDF={downloadPDF}
       />
       <Alerts
         message={alertMessage}
@@ -380,6 +418,7 @@ function ClientsPage() {
           handleSaveEditedClient={handleEditClient}
           handleDeleteClientClick={handleDeleteClientClick}
           users={users}
+          downloadPDF={downloadPDF}
         />
       )}
     </div>

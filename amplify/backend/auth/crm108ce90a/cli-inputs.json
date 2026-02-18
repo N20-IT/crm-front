@@ -1,8 +1,10 @@
 {
   "version": "1",
   "cognitoConfig": {
-    "resourceNameTruncated": "n20crm7e16cbca",
-    "userPoolName": "n20-crm-userpool",
+    "identityPoolName": "crm108ce90a_identitypool_108ce90a",
+    "allowUnauthenticatedIdentities": false,
+    "resourceNameTruncated": "crm108ce90a",
+    "userPoolName": "crm108ce90a_userpool_108ce90a",
     "autoVerifiedAttributes": [
       "email"
     ],
@@ -12,8 +14,8 @@
     ],
     "smsAuthenticationMessage": "Your authentication code is {####}",
     "smsVerificationMessage": "Your verification code is {####}",
-    "emailVerificationSubject": "N20 kod weryfikacji",
-    "emailVerificationMessage": "Twój kod weryfikacji to {####}",
+    "emailVerificationSubject": "Your verification code",
+    "emailVerificationMessage": "Your verification code is {####}",
     "defaultPasswordPolicy": false,
     "passwordPolicyMinLength": 8,
     "passwordPolicyCharacters": [],
@@ -29,19 +31,15 @@
     "userpoolClientReadAttributes": [
       "email"
     ],
-    "userpoolClientLambdaRole": "n20crm7e16cbca_userpoolclient_lambda_role",
+    "userpoolClientLambdaRole": "crm108108ce90a_userpoolclient_lambda_role",
     "userpoolClientSetAttributes": false,
-    "sharedId": "7e16cbca",
-    "resourceName": "n20crm",
-    "authSelections": "userPoolOnly",
-    "useDefault": "manual",
+    "sharedId": "108ce90a",
+    "resourceName": "crm108ce90a",
+    "authSelections": "identityPoolAndUserPool",
+    "useDefault": "default",
     "usernameAttributes": [
       "email"
     ],
-    "userPoolGroups": false,
-    "adminQueries": false,
-    "triggers": {},
-    "hostedUI": false,
     "userPoolGroupList": [],
     "serviceName": "Cognito",
     "usernameCaseSensitive": false,

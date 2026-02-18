@@ -11,7 +11,7 @@ import {
 } from "@mui/material";
 import React, { useState, useEffect } from "react";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
-import { signIn, fetchAuthSession } from "@aws-amplify/auth";
+import { signIn, confirmSignIn, fetchAuthSession } from "@aws-amplify/auth";
 import { Amplify } from "aws-amplify";
 import awsExports from "../aws-exports";
 import { useLogin, useAuth } from "../utils/auth";
@@ -68,34 +68,43 @@ function LoginPage() {
   };
 
   const handleLogin = async (event) => {
-    setLoading(true);
     event.preventDefault();
+    setLoading(true);
+
     try {
-      await signIn({
-        username: username,
-        password: password,
-      });
+      const user = await signIn({ username, password });
+
+      if (
+        user?.nextStep?.signInStep ===
+        "CONFIRM_SIGN_IN_WITH_NEW_PASSWORD_REQUIRED"
+      ) {
+        const newPassword = prompt("Enter new password:");
+        await confirmSignIn(user, newPassword);
+      }
 
       const attribute = "custom:forceResetPass";
       const url =
         "https://adgr2ko5s4.execute-api.eu-north-1.amazonaws.com/dev/check-attribute";
-
       const requirePasswordChange = await LambdaConnection(
         username,
         attribute,
-        url
+        url,
       );
 
-      // console.log(requirePasswordChange);
       if (requirePasswordChange === true) {
         navigate("/zapomniane-haslo");
+        return;
       }
 
+      const session = await fetchAuthSession({ forceRefresh: true });
+      const idToken = session.tokens.idToken.toString();
+
+      login(idToken);
       setError("");
       setOpen(false);
-      login(await handleLogJwtToken());
     } catch (error) {
-      setError(error.message || "An error occurred during sign in");
+      console.error(error);
+      setError(error.message || "Login error");
       setOpen(true);
     } finally {
       setLoading(false);
@@ -105,6 +114,7 @@ function LoginPage() {
   const handleLogJwtToken = async () => {
     try {
       const session = await fetchAuthSession();
+      console.log(session);
       return session.tokens.idToken.toString();
     } catch (error) {
       setError("Error fetching auth session:", error);

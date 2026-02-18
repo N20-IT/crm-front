@@ -49,7 +49,7 @@ function OffersPage() {
   const [offerIdToDelete, setOfferIdToDelete] = useState(null);
   const [offerIdToUpdateAgent, setOfferIdToUpdateAgent] = useState(null);
   const [offerToChangeOfferInterest, setOfferToChangeOfferInterest] = useState(
-    null
+    null,
   );
   const [isEditOfferPanelOpen, setEditOfferPanelOpen] = useState(false);
   const [isOfferDetailsPanelOpen, setIsOfferDetailsPanelOpen] = useState(false);
@@ -65,7 +65,7 @@ function OffersPage() {
   const userRole = GetInformationFromToken("custom:role");
   const [readConfig, setReadConfig] = useState(useReadConfig());
   const [page, setPage] = useState(0);
-  const [itemsPerPage, setItemsPerPage] = useState(100);
+  const [itemsPerPage, setItemsPerPage] = useState(25);
   const { filters, updateFilter, setFilters, clearFilters } = useFiltersStore();
 
   const [searchValue, setSearchValue] = useState("");
@@ -154,7 +154,7 @@ function OffersPage() {
       currentPage,
       rowsPerValue,
       orderBy,
-      order
+      order,
     );
   };
 
@@ -170,7 +170,7 @@ function OffersPage() {
       currentPage,
       rowsPerValue,
       sortBy,
-      sort
+      sort,
     );
   };
 
@@ -192,9 +192,9 @@ function OffersPage() {
     const formattedEndDate = formatDateForCalendar(endDate);
 
     const googleCalendarUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(
-      eventTitle
+      eventTitle,
     )}&dates=${formattedStartDate}/${formattedEndDate}&details=${encodeURIComponent(
-      eventDescription
+      eventDescription,
     )}&sf=true&output=xml`;
 
     window.open(googleCalendarUrl, "_blank");
@@ -202,7 +202,7 @@ function OffersPage() {
 
   const fetchAgents = useCallback(async () => {
     try {
-      const response = await axios.get(`${backendServer}/users`, {
+      const response = await axios.get(`${backendServer}/users?min=true`, {
         headers: {
           accept: "application/json",
           Authorization: `Bearer ${token}`,
@@ -228,7 +228,7 @@ function OffersPage() {
       currentPage = page,
       rowsPerValue = itemsPerPage,
       sortBy = orderBy,
-      sort = order
+      sort = order,
     ) => {
       setLoading(true);
       try {
@@ -277,7 +277,7 @@ function OffersPage() {
       orderBy,
       page,
       searchValue,
-    ]
+    ],
   );
 
   const fetchClients = useCallback(async () => {
@@ -316,7 +316,7 @@ function OffersPage() {
         setLoading(false);
       }
     },
-    [backendServer, token, fetchData, handleAddOfferClick]
+    [backendServer, token, fetchData, handleAddOfferClick],
   );
 
   const handleDeleteOffer = useCallback(
@@ -344,7 +344,7 @@ function OffersPage() {
         setLoading(false);
       }
     },
-    [backendServer, token, fetchData]
+    [backendServer, token, fetchData],
   );
 
   const handleSaveEditedOffer = useCallback(
@@ -358,7 +358,7 @@ function OffersPage() {
             headers: {
               Authorization: `Bearer ${token}`,
             },
-          }
+          },
         );
         setAlertOpen(true);
         setAlertMessage("Zaktualizowano pomyślnie");
@@ -375,7 +375,7 @@ function OffersPage() {
         setLoading(false);
       }
     },
-    [backendServer, token, fetchData]
+    [backendServer, token, fetchData],
   );
 
   const handleAssigmentOfferToClient = useCallback(async () => {
@@ -389,7 +389,7 @@ function OffersPage() {
             accept: "application/json",
             Authorization: `Bearer ${token}`,
           },
-        }
+        },
       );
 
       const currentClientData = response.data;
@@ -400,7 +400,7 @@ function OffersPage() {
         setAlertSeverity("warning");
         if (openDialogAssignmentOfferToClient)
           setOpenDialogAssignmentOfferToClient(
-            !openDialogAssignmentOfferToClient
+            !openDialogAssignmentOfferToClient,
           );
 
         setLoading(false);
@@ -422,7 +422,7 @@ function OffersPage() {
             accept: "application/json",
             Authorization: `Bearer ${token}`,
           },
-        }
+        },
       );
       setAlertOpen(true);
       setAlertMessage("Zaktualizowano pomyślnie");
@@ -430,7 +430,7 @@ function OffersPage() {
       setEditOfferPanelOpen(false);
       if (openDialogAssignmentOfferToClient)
         setOpenDialogAssignmentOfferToClient(
-          !openDialogAssignmentOfferToClient
+          !openDialogAssignmentOfferToClient,
         );
       await fetchData();
     } catch (error) {
@@ -454,7 +454,7 @@ function OffersPage() {
             accept: "application/json",
             Authorization: `Bearer ${token}`,
           },
-        }
+        },
       );
       setAlertOpen(true);
       setAlertMessage("Pomyślnie zaktualizowano ofertę");
@@ -495,7 +495,7 @@ function OffersPage() {
           headers: {
             Authorization: `Bearer ${token}`,
           },
-        }
+        },
       );
 
       setAlertOpen(true);
@@ -519,6 +519,46 @@ function OffersPage() {
     offerToChangeOfferInterest,
     isOfferDetailsPanelOpen,
   ]);
+
+  const downloadPDF = useCallback(
+    async (offerData) => {
+      try {
+        const response = await axios.get(
+          `${backendServer}/listings/${offerData._id}/print`,
+          {
+            headers: {
+              accept: "application/pdf",
+              Authorization: `Bearer ${token}`,
+            },
+            responseType: "blob",
+          },
+        );
+
+        const url = window.URL.createObjectURL(new Blob([response.data]));
+        const link = document.createElement("a");
+        link.href = url;
+        link.setAttribute(
+          "download",
+          `klient_${offerData.telefonWlasciciela[0]}.pdf`,
+        );
+        document.body.appendChild(link);
+        link.click();
+
+        link.parentNode.removeChild(link);
+        window.URL.revokeObjectURL(url);
+
+        setAlertOpen(true);
+        setAlertMessage("Pomyślnie pobrano PDF");
+        setAlertSeverity("success");
+      } catch (error) {
+        setAlertOpen(true);
+        setAlertMessage("Wystąpił błąd podczas pobierania PDF");
+        setAlertSeverity("error");
+        console.log(error.message);
+      }
+    },
+    [backendServer, token],
+  );
 
   useEffect(() => {
     if (!isAuthenticated) {
@@ -579,6 +619,7 @@ function OffersPage() {
           handleAssignmentOfferToClientClick={
             handleAssignmentOfferToClientClick
           }
+          downloadPDF={downloadPDF}
         />
         <Alerts
           message={alertMessage}
@@ -668,6 +709,7 @@ function OffersPage() {
             handleAddToCalendar={handleAddToCalendar}
             handleUpdateOfferAgentClick={handleUpdateOfferAgentClick}
             users={users}
+            downloadPDF={downloadPDF}
           />
         )}
       </div>

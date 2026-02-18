@@ -52,7 +52,7 @@ function LogsPage() {
         setLoading(false);
       }
     },
-    [token, backendServer]
+    [token, backendServer],
   );
 
   const handleLogClick = (daysAgo) => {
@@ -73,7 +73,7 @@ function LogsPage() {
             accept: "application/json",
             Authorization: `Bearer ${token}`,
           },
-        }
+        },
       );
       setAlertOpen(true);
       setAlertMessage(response.data.message);
@@ -96,25 +96,11 @@ function LogsPage() {
         }}
       >
         <div className="flex flex-row justify-center">
-          <div className="w-1/5">
-            <Paper elevation={3} sx={{ padding: 3 }}>
-              <Typography variant="h5" sx={{ fontWeight: "bold" }}>
-                Przywracanie ofert
-              </Typography>
-              <Button
-                variant="contained"
-                onClick={() => handleRestoreAll()}
-                sx={{ marginTop: 2, backgroundColor: "#FC8721", width: "100%" }}
-              >
-                Przywróć oferty
-              </Button>
-            </Paper>
-          </div>
-          <div className="ml-3 w-4/5">
+          <div className="ml-3 w-full">
             <Paper elevation={3} sx={{ padding: 3, width: "100%" }}>
-              <Typography variant="h5" sx={{ fontWeight: "bold" }}>
+              {/* <Typography variant="h5" sx={{ fontWeight: "bold" }}>
                 Logi
-              </Typography>
+              </Typography> */}
               <Box
                 sx={{
                   display: "flex",

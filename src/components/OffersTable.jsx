@@ -40,11 +40,12 @@ function OffersTable({
   onSortApply,
   quantityOffers,
   handleAssignmentOfferToClientClick,
+  downloadPDF,
 }) {
   const [order, setOrder] = useState("desc");
   const [orderBy, setOrderBy] = useState("dataUtworzenia");
   const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(100);
+  const [rowsPerPage, setRowsPerPage] = useState(25);
 
   const handleSelect = (id) => {
     if (selected.includes(id))
@@ -76,7 +77,7 @@ function OffersTable({
   };
 
   const filteredColumns = columns.filter((column) =>
-    readConfig === 0 ? column.view === "basic" : true
+    readConfig === 0 ? column.view === "basic" : true,
   );
 
   const formatNumber = (value) =>
@@ -110,10 +111,13 @@ function OffersTable({
     return number.replace(/(\d{3})(?=\d)/g, "$1 ");
   };
 
-  const copyToClipboard = (number) => {
-    const formattedNumber = number.replace(/\D/g, "");
+  const copyToClipboard = (value) => {
+    const isEmail = value.includes("@");
+
+    const toCopy = isEmail ? value : value.replace(/\D/g, "");
+
     const textarea = document.createElement("textarea");
-    textarea.value = formattedNumber;
+    textarea.value = toCopy;
     document.body.appendChild(textarea);
     textarea.select();
     document.execCommand("copy");
@@ -145,27 +149,29 @@ function OffersTable({
             }}
           >
             <TableRow>
-              <TableCell
-                padding="checkbox"
-                style={{
-                  color: "white",
-                  textAlign: "center",
-                }}
-              >
-                <Checkbox
-                  checked={selected.length === rows.length}
-                  indeterminate={
-                    selected.length > 0 && selected.length < rows.length
-                  }
-                  onChange={handleSelectAll}
+              {userRole === "admin" && (
+                <TableCell
+                  padding="checkbox"
                   style={{
                     color: "white",
-                    padding: "0px",
-                    paddingLeft: "5px",
-                    paddingRight: "5px",
+                    textAlign: "center",
                   }}
-                />
-              </TableCell>
+                >
+                  <Checkbox
+                    checked={selected.length === rows.length}
+                    indeterminate={
+                      selected.length > 0 && selected.length < rows.length
+                    }
+                    onChange={handleSelectAll}
+                    style={{
+                      color: "white",
+                      padding: "0px",
+                      paddingLeft: "5px",
+                      paddingRight: "5px",
+                    }}
+                  />
+                </TableCell>
+              )}
               <TableCell
                 key="narzedzia"
                 sx={{
@@ -250,24 +256,26 @@ function OffersTable({
                     background: index % 2 === 1 ? "#f5f5f5" : "white",
                   }}
                 >
-                  <TableCell
-                    style={{
-                      textAlign: "center",
-                      padding: "5px",
-                      maxHeight: "60px",
-                    }}
-                  >
-                    <Checkbox
-                      checked={selected.includes(row._id)}
-                      onChange={() => handleSelect(row._id)}
-                      sx={{
-                        color: "#272F3E",
-                        "&.Mui-checked": {
-                          color: "#272F3E",
-                        },
+                  {userRole === "admin" && (
+                    <TableCell
+                      style={{
+                        textAlign: "center",
+                        padding: "5px",
+                        maxHeight: "60px",
                       }}
-                    />
-                  </TableCell>
+                    >
+                      <Checkbox
+                        checked={selected.includes(row._id)}
+                        onChange={() => handleSelect(row._id)}
+                        sx={{
+                          color: "#272F3E",
+                          "&.Mui-checked": {
+                            color: "#272F3E",
+                          },
+                        }}
+                      />
+                    </TableCell>
+                  )}
                   <OfferActions
                     row={row}
                     userRole={userRole}
@@ -284,6 +292,7 @@ function OffersTable({
                     handleAssignmentOfferToClientClick={
                       handleAssignmentOfferToClientClick
                     }
+                    downloadPDF={downloadPDF}
                   />
                   {readConfig === 1 && (
                     <CustomTableCell>
@@ -306,7 +315,7 @@ function OffersTable({
                           year: "numeric",
                           month: "2-digit",
                           day: "2-digit",
-                        }
+                        },
                       )}
                       <strong>
                         <br />
@@ -315,7 +324,7 @@ function OffersTable({
                           {
                             hour: "2-digit",
                             minute: "2-digit",
-                          }
+                          },
                         )}
                       </strong>
                     </CustomTableCell>
@@ -325,7 +334,7 @@ function OffersTable({
                       {row.dataNastepnegoKontaktu ? (
                         <>
                           {new Date(
-                            row.dataNastepnegoKontaktu
+                            row.dataNastepnegoKontaktu,
                           ).toLocaleDateString("pl-PL", {
                             year: "numeric",
                             month: "2-digit",
@@ -334,7 +343,7 @@ function OffersTable({
                           <strong>
                             <br />
                             {new Date(
-                              row.dataNastepnegoKontaktu
+                              row.dataNastepnegoKontaktu,
                             ).toLocaleTimeString("pl-PL", {
                               hour: "2-digit",
                               minute: "2-digit",
@@ -356,7 +365,7 @@ function OffersTable({
                               year: "numeric",
                               month: "2-digit",
                               day: "2-digit",
-                            }
+                            },
                           )}{" "}
                           <strong>
                             <br />
@@ -365,7 +374,7 @@ function OffersTable({
                               {
                                 hour: "2-digit",
                                 minute: "2-digit",
-                              }
+                              },
                             )}
                           </strong>
                         </>
@@ -378,7 +387,7 @@ function OffersTable({
                     sx={{
                       color:
                         statusesConfig.find(
-                          (status) => status.value === row.statusOferty
+                          (status) => status.value === row.statusOferty,
                         )?.color || "black",
                       fontSize: "13px",
                     }}
@@ -408,8 +417,8 @@ function OffersTable({
                     <strong>
                       {Array.isArray(row.telefonWlasciciela) &&
                       row.telefonWlasciciela.length > 0 ? (
-                        row.telefonWlasciciela.map((number, index) =>
-                          number !== "" ? (
+                        row.telefonWlasciciela.map((value, index) =>
+                          value !== "" ? (
                             <div
                               key={index}
                               style={{
@@ -419,28 +428,30 @@ function OffersTable({
                               }}
                             >
                               <span style={{ whiteSpace: "nowrap" }}>
-                                {formatPhoneNumber(number)}
+                                {value.includes("@")
+                                  ? value
+                                  : formatPhoneNumber(value)}{" "}
                               </span>
-                              <Tooltip title="Skopiuj numer">
+
+                              <Tooltip title="Skopiuj">
                                 <IconButton
-                                  onClick={() => copyToClipboard(number)}
-                                  sx={{
-                                    padding: "6px",
-                                  }}
+                                  onClick={() => copyToClipboard(value)}
+                                  sx={{ padding: "6px" }}
                                 >
                                   <FileCopy />
                                 </IconButton>
                               </Tooltip>
                             </div>
                           ) : (
-                            <span>Brak numeru</span>
-                          )
+                            <span key={index}>Brak</span>
+                          ),
                         )
                       ) : (
-                        <span>Brak numeru</span>
+                        <span>Brak</span>
                       )}
                     </strong>
                   </CustomTableCell>
+
                   {readConfig === 1 && (
                     <CustomTableCell>
                       {formatNumber(row.zlM2) || ""}
@@ -509,7 +520,7 @@ function OffersTable({
             position: "fixed",
             bottom: 0,
             right: 43.2,
-            zIndex: 1000,
+            zIndex: 30,
             width: "50%",
           }}
         />

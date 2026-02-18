@@ -41,6 +41,7 @@ function ClientDetails({
   handleSaveEditedClient,
   handleDeleteClientClick,
   users,
+  downloadPDF,
 }) {
   const [client, setClient] = useState("");
   const backendServer = serverConfig["backend-server"];
@@ -98,7 +99,7 @@ function ClientDetails({
             .catch((error) => {
               console.error(`Błąd przy pobieraniu oferty ${offerId}:`, error);
               return null;
-            })
+            }),
         );
 
         const offersData = await Promise.all(offersPromises);
@@ -121,7 +122,7 @@ function ClientDetails({
       setLoading(true);
       try {
         const updatedAssignedOffers = client.przypisaneOferty.filter(
-          (offerId) => offerId !== offerIdToRemove
+          (offerId) => offerId !== offerIdToRemove,
         );
 
         const updatedData = { przypisaneOferty: updatedAssignedOffers };
@@ -145,7 +146,7 @@ function ClientDetails({
         setLoading(false);
       }
     },
-    [token, backendServer, client]
+    [token, backendServer, client],
   );
 
   const handleSaveEditedOffer = useCallback(
@@ -159,7 +160,7 @@ function ClientDetails({
             headers: {
               Authorization: `Bearer ${token}`,
             },
-          }
+          },
         );
         setAlertOpen(true);
         setAlertMessage("Zaktualizowano pomyślnie");
@@ -176,7 +177,7 @@ function ClientDetails({
         setLoading(false);
       }
     },
-    [backendServer, token, fetchDetailsData]
+    [backendServer, token, fetchDetailsData],
   );
 
   const handleCloseEditPanel = () => {
@@ -202,35 +203,28 @@ function ClientDetails({
   }, [fetchDetailsData]);
   return (
     <div className="fixed inset-0 bg-light-grey bg-opacity-75 flex items-center justify-center z-50">
-      <div className="bg-white p-6 rounded-lg shadow-lg w-1/3">
+      <div className="bg-white px-6 rounded-lg shadow-lg w-1/2 max-h-[90vh] overflow-y-auto">
         <Box
           sx={{
+            position: "sticky",
+            top: 0,
+            zIndex: 10,
+            backgroundColor: "white",
             display: "flex",
             justifyContent: "space-between",
             alignItems: "center",
-            marginBottom: "16px",
+            padding: "16px",
+            borderBottom: "1px solid #e0e0e0",
           }}
         >
-          <Typography
-            variant="h4"
-            sx={{
-              fontWeight: 600,
-              fontSize: "1.5rem",
-              fontFamily: "Poppins",
-            }}
-          >
+          <Typography variant="h4" sx={{ fontWeight: 600, fontSize: "1.5rem" }}>
             Klient {client.daneKlienta}
           </Typography>
-          <IconButton
-            onClick={onClose}
-            sx={{
-              color: "gray",
-            }}
-            aria-label="close"
-          >
+          <IconButton onClick={onClose}>
             <Close />
           </IconButton>
         </Box>
+
         <Divider sx={{ marginBottom: "16px" }} />
         {loading ? (
           <Grid2>
@@ -309,7 +303,7 @@ function ClientDetails({
                     sx={{
                       color:
                         clientStatuesConfig.find(
-                          (status) => status.value === client.status
+                          (status) => status.value === client.status,
                         )?.color || "inherit",
                     }}
                   >
@@ -317,22 +311,83 @@ function ClientDetails({
                   </Box>
                 </CustomTypography>
               )}
+              {client.komentarz && (
+                <CustomTypography
+                  sx={{
+                    fontSize: "1rem",
+                    wordBreak: "break-word",
+                    overflowWrap: "anywhere",
+                    whiteSpace: "normal",
+                  }}
+                >
+                  <strong>Opis klienta:</strong> {client.komentarz}
+                </CustomTypography>
+              )}
               {client.standard && (
                 <CustomTypography sx={{ fontSize: "1rem" }}>
                   <strong>Standard: </strong>
-                  <Box
-                    component="span"
-                    sx={{
-                      color:
-                        clientStandardConfig.find(
-                          (standard) => standard.value === client.standard
-                        )?.color || "inherit",
-                    }}
-                  >
-                    {client.standard}
-                  </Box>
+
+                  {(() => {
+                    // Normalizacja formatu (string -> array)
+                    const standards = Array.isArray(client.standard)
+                      ? client.standard
+                      : typeof client.standard === "string"
+                      ? client.standard.split(",").map((s) => s.trim())
+                      : [];
+
+                    // Przygotowanie kolorów
+                    const coloredStandards = standards.map((standard) => {
+                      const color =
+                        clientStandardConfig.find((s) => s.value === standard)
+                          ?.color || "black";
+
+                      return { label: standard, color };
+                    });
+
+                    // 3 widoczne, reszta ukryta
+                    const visible = coloredStandards.slice(0, 3);
+                    const hidden = coloredStandards.slice(3);
+
+                    return (
+                      <Tooltip
+                        arrow
+                        placement="top"
+                        title={
+                          hidden.length > 0 && (
+                            <div
+                              style={{
+                                fontFamily: "Poppins",
+                                fontSize: "14px",
+                              }}
+                            >
+                              {coloredStandards.map((s, i) => (
+                                <div key={i} style={{ color: s.color }}>
+                                  {s.label}
+                                </div>
+                              ))}
+                            </div>
+                          )
+                        }
+                      >
+                        <span>
+                          {visible.map((s, i) => (
+                            <Box
+                              key={i}
+                              component="span"
+                              sx={{ color: s.color, marginRight: "6px" }}
+                            >
+                              {s.label}
+                              {i < visible.length - 1 && ", "}
+                            </Box>
+                          ))}
+                          {hidden.length > 0 && <span>...</span>}
+                        </span>
+                      </Tooltip>
+                    );
+                  })()}
                 </CustomTypography>
               )}
+
               {client.agent && (
                 <CustomTypography sx={{ fontSize: "1rem" }}>
                   <strong>Agent:</strong> {client.agent}
@@ -409,10 +464,35 @@ function ClientDetails({
                       year: "numeric",
                       month: "2-digit",
                       day: "2-digit",
-                    }
+                    },
                   )}
                 </CustomTypography>
               )}
+              {Array.isArray(client.komentarzDataList) &&
+                client.komentarzDataList.length > 0 && (
+                  <CustomTypography
+                    sx={{
+                      fontSize: "1rem",
+                      wordBreak: "break-word",
+                      overflowWrap: "anywhere",
+                      whiteSpace: "normal",
+                    }}
+                  >
+                    <strong>Komentarze dot. następnego kontaktu:</strong>
+                    <ul style={{ marginTop: "8px" }}>
+                      {client.komentarzDataList.map((k, index) => (
+                        <li key={index}>
+                          {k.tekst}
+                          <br />
+                          <small>
+                            {new Date(k.data).toLocaleString("pl-PL")}
+                          </small>
+                        </li>
+                      ))}
+                    </ul>
+                  </CustomTypography>
+                )}
+
               {client.dataZapytania && (
                 <CustomTypography sx={{ fontSize: "1rem" }}>
                   <strong>Data zapytania:</strong>{" "}
@@ -522,6 +602,19 @@ function ClientDetails({
                       <Tooltip title="Dzielnica">Dzielnica</Tooltip>
                     </TableCell>
                     <TableCell
+                      key="cena"
+                      sx={{
+                        color: "white",
+                        textAlign: "center",
+                        fontFamily: "Poppins",
+                        padding: "0px",
+                        paddingLeft: "15px",
+                        paddingRight: "15px",
+                      }}
+                    >
+                      <Tooltip title="Cena">Cena</Tooltip>
+                    </TableCell>
+                    <TableCell
                       key="metraz"
                       sx={{
                         color: "white",
@@ -589,6 +682,9 @@ function ClientDetails({
                             <strong>{row.dzielnica || ""}</strong>
                           </CustomTableCell>
                           <CustomTableCell>
+                            <strong>{formatNumber(row.cena) || ""}</strong>
+                          </CustomTableCell>
+                          <CustomTableCell>
                             <strong>{formatNumber(row.metraz) || ""}</strong>
                           </CustomTableCell>
                           <CustomTableCell>
@@ -608,7 +704,7 @@ function ClientDetails({
                                 onClick={() =>
                                   handleRemoveOfferFromClient(
                                     client._id,
-                                    row._id
+                                    row._id,
                                   )
                                 }
                                 sx={{
@@ -640,11 +736,15 @@ function ClientDetails({
           <div></div>
         )}
         <Box
-          className="flex justify-end mt-6"
           sx={{
-            "& .MuiTableCell-root": {
-              border: 0,
-            },
+            position: "sticky",
+            bottom: 0,
+            zIndex: 10,
+            backgroundColor: "white",
+            padding: "16px",
+            borderTop: "1px solid #e0e0e0",
+            display: "flex",
+            justifyContent: "flex-end",
           }}
         >
           <ClientAction
@@ -653,8 +753,10 @@ function ClientDetails({
             handleEditClientClick={handleEditClick}
             showDetailsIcon={false}
             userRole={userRole}
+            downloadPDF={downloadPDF}
           />
         </Box>
+
         <Alerts
           message={alertMessage}
           severity={alertSeverity}

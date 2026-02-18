@@ -7,6 +7,7 @@ import {
   Description,
   Logout,
   PersonRemove,
+  Settings,
 } from "@mui/icons-material";
 import { ThemeProvider } from "@mui/material/styles";
 import { customTooltip } from "../styles/CustomTooltip";
@@ -38,7 +39,7 @@ const Sidebar = () => {
           <ul>
             <li
               className={`w-full h-14 flex justify-start items-center ${getLinkClass(
-                "/oferty"
+                "/oferty",
               )}`}
             >
               <Tooltip title="Oferty" placement="right">
@@ -52,7 +53,7 @@ const Sidebar = () => {
             </li>
             <li
               className={`w-full h-14 flex justify-start items-center ${getLinkClass(
-                "/ciekawe-oferty"
+                "/ciekawe-oferty",
               )}`}
             >
               {" "}
@@ -67,7 +68,7 @@ const Sidebar = () => {
             </li>
             <li
               className={`w-full h-14 flex justify-start items-center ${getLinkClass(
-                "/klienci"
+                "/klienci",
               )}`}
             >
               <Tooltip title="Klienci" placement="right">
@@ -84,7 +85,7 @@ const Sidebar = () => {
               <>
                 <li
                   className={`w-full h-14 flex justify-start items-center ${getLinkClass(
-                    "/kosz-klientow"
+                    "/kosz-klientow",
                   )}`}
                 >
                   <Tooltip title="Kosz klientów" placement="right">
@@ -98,7 +99,7 @@ const Sidebar = () => {
                 </li>
                 <li
                   className={`w-full h-14 flex justify-start items-center ${getLinkClass(
-                    "/uzytkownicy"
+                    "/uzytkownicy",
                   )}`}
                 >
                   <Tooltip title="Użytkownicy" placement="right">
@@ -110,9 +111,10 @@ const Sidebar = () => {
                     </Link>
                   </Tooltip>
                 </li>
+
                 <li
                   className={`w-full h-14 flex justify-start items-center ${getLinkClass(
-                    "/logi"
+                    "/logi",
                   )}`}
                 >
                   <Tooltip title="Administrator" placement="right">
@@ -126,6 +128,21 @@ const Sidebar = () => {
                 </li>
               </>
             )}
+
+            <li
+              className={`w-full h-14 flex justify-start items-center ${getLinkClass(
+                "/ustawienia",
+              )}`}
+            >
+              <Tooltip title="Ustawienia" placement="right">
+                <Link
+                  to="/ustawienia"
+                  className="flex items-center justify-start text-xl ml-4 w-full h-full"
+                >
+                  <Settings sx={{ marginRight: "6px" }} />
+                </Link>
+              </Tooltip>
+            </li>
           </ul>
         </nav>
         <div className="fixed bottom-3 p-4 flex justify-center items-center w-16">

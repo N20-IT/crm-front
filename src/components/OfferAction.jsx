@@ -8,6 +8,7 @@ import {
   AssignmentInd,
   Info,
   Assignment,
+  Print,
 } from "@mui/icons-material";
 import { useFiltersStore } from "../store/filtersStore";
 
@@ -23,6 +24,7 @@ function OfferActions({
   showDetailsIcon,
   handleChangeOfferInterestClick,
   handleAssignmentOfferToClientClick,
+  downloadPDF,
 }) {
   const { filters } = useFiltersStore();
 
@@ -114,7 +116,7 @@ function OfferActions({
               const { ulica, miasto } = row;
               const location = `${miasto}, ${ulica}`;
               const googleMapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
-                location
+                location,
               )}`;
               window.open(googleMapsUrl, "_blank");
             }}
@@ -137,6 +139,18 @@ function OfferActions({
           }}
         >
           <AssignmentInd />
+        </IconButton>
+      </Tooltip>
+
+      <Tooltip title="Pobierz PDF">
+        <IconButton
+          onClick={() => downloadPDF(row)}
+          sx={{
+            padding: "4px",
+            color: "black",
+          }}
+        >
+          <Print />
         </IconButton>
       </Tooltip>
 

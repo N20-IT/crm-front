@@ -39,11 +39,12 @@ function ClientsTable({
   loading,
   handleGoToClientDetails,
   userRole,
+  downloadPDF,
 }) {
   const [order, setOrder] = useState("desc");
   const [orderBy, setOrderBy] = useState("dataUtworzenia");
   const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(100);
+  const [rowsPerPage, setRowsPerPage] = useState(25);
   const navigate = useNavigate();
   const { setClientId } = useFiltersStore();
 
@@ -120,6 +121,30 @@ function ClientsTable({
   const handleMatchClient = (clientId) => {
     setClientId(clientId);
     navigate("/oferty");
+  };
+
+  const handleAddToCalendar = (row) => {
+    const eventTitle = row.daneKlienta + " " + row.numerTelefonu;
+
+    const startDate = new Date(row.dataNastepnegoKontaktu);
+    startDate.setHours(12, 0, 0, 0);
+    const endDate = new Date(startDate);
+    endDate.setHours(startDate.getHours() + 1);
+
+    const formatDateForCalendar = (date) =>
+      date
+        .toISOString()
+        .replace(/[-:.]/g, "")
+        .slice(0, 15) + "Z";
+
+    const formattedStartDate = formatDateForCalendar(startDate);
+    const formattedEndDate = formatDateForCalendar(endDate);
+
+    const googleCalendarUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(
+      eventTitle,
+    )}&dates=${formattedStartDate}/${formattedEndDate}&sf=true&output=xml`;
+
+    window.open(googleCalendarUrl, "_blank");
   };
 
   return (
@@ -279,6 +304,8 @@ function ClientsTable({
                     handleGoToClientDetails={handleGoToClientDetails}
                     showDetailsIcon={true}
                     userRole={userRole}
+                    handleAddToCalendar={handleAddToCalendar}
+                    downloadPDF={downloadPDF}
                   />
                   <CustomTableCell>
                     {row.dataUtworzenia
@@ -288,7 +315,7 @@ function ClientsTable({
                             year: "numeric",
                             month: "2-digit",
                             day: "2-digit",
-                          }
+                          },
                         )
                       : ""}
                   </CustomTableCell>
@@ -301,7 +328,7 @@ function ClientsTable({
                             year: "numeric",
                             month: "2-digit",
                             day: "2-digit",
-                          }
+                          },
                         )
                       : ""}
                   </CustomTableCell>
@@ -313,7 +340,7 @@ function ClientsTable({
                             year: "numeric",
                             month: "2-digit",
                             day: "2-digit",
-                          }
+                          },
                         )
                       : ""}
                   </CustomTableCell>
@@ -325,7 +352,7 @@ function ClientsTable({
                             year: "numeric",
                             month: "2-digit",
                             day: "2-digit",
-                          }
+                          },
                         )
                       : ""}
                   </CustomTableCell>
@@ -333,7 +360,7 @@ function ClientsTable({
                   <CustomTableCell sx={{ whiteSpace: "nowrap" }}>
                     <strong>
                       {Array.isArray(row.numerTelefonu) &&
-                      row.numerTelefonu.length > 0 ? (
+                      row.numerTelefonu.some((n) => n !== "") ? (
                         row.numerTelefonu.map((number, index) => (
                           <div
                             key={index}
@@ -343,11 +370,14 @@ function ClientsTable({
                               gap: "4px",
                             }}
                           >
-                            <span>{formatPhoneNumber(number)}</span>
+                            <span>
+                              {number ? formatPhoneNumber(number) : "–"}
+                            </span>
                             <Tooltip arrow title="Skopiuj numer">
                               <IconButton
                                 onClick={() => copyToClipboard(number)}
                                 sx={{ padding: "6px" }}
+                                disabled={number === ""}
                               >
                                 <FileCopy />
                               </IconButton>
@@ -384,20 +414,32 @@ function ClientsTable({
                     )}
                   </CustomTableCell>
                   <CustomTableCell>
-                    {row.komentarzData && row.komentarzData.length > 50 ? (
-                      <Tooltip arrow title={row.komentarzData}>
-                        <span>{row.komentarzData.slice(0, 50)} ...</span>
-                      </Tooltip>
+                    {Array.isArray(row.komentarzDataList) &&
+                    row.komentarzDataList.at(-1)?.tekst ? (
+                      row.komentarzDataList.at(-1).tekst.length > 50 ? (
+                        <Tooltip
+                          arrow
+                          title={row.komentarzDataList.at(-1).tekst}
+                        >
+                          <span>
+                            {row.komentarzDataList.at(-1).tekst.slice(0, 50)}{" "}
+                            ...
+                          </span>
+                        </Tooltip>
+                      ) : (
+                        row.komentarzDataList.at(-1).tekst
+                      )
                     ) : (
-                      row.komentarzData || ""
+                      ""
                     )}
                   </CustomTableCell>
+
                   <CustomTableCell>{row.numerGalactica || ""}</CustomTableCell>
                   <CustomTableCell
                     sx={{
                       color:
                         clientStatuesConfig.find(
-                          (status) => status.value === row.status
+                          (status) => status.value === row.status,
                         )?.color || "black",
                       fontSize: "13px",
                     }}
@@ -551,7 +593,7 @@ function ClientsTable({
             position: "fixed",
             bottom: 0,
             right: 43.2,
-            zIndex: 1000,
+            zIndex: 30,
             width: "50%",
           }}
         />

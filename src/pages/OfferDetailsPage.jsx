@@ -31,6 +31,7 @@ function OfferDetailsPage({
   handleAddToCalendar,
   handleUpdateOfferAgentClick,
   users,
+  downloadPDF,
 }) {
   const [offer, setOffer] = useState("");
   const [alertMessage, setAlertMessage] = useState("");
@@ -82,7 +83,7 @@ function OfferDetailsPage({
   }, [isAuthenticated, navigate, fetchDetailsData]);
   return (
     <div className=" fixed inset-0 bg-light-grey bg-opacity-75 flex items-center justify-center z-50">
-      <div className="bg-white p-6 rounded-lg shadow-lg w-1/3">
+      <div className="bg-white p-6 rounded-lg shadow-lg w-4/5 max-h-[90vh] overflow-y-auto">
         <Box
           sx={{
             display: "flex",
@@ -211,6 +212,11 @@ function OfferDetailsPage({
                   <strong>Cena:</strong> {formatNumber(offer.cena)} zł
                 </CustomTypography>
               )}
+              {offer.zlM2 && (
+                <CustomTypography sx={{ fontSize: "1rem" }}>
+                  <strong>Zł/m²:</strong> {formatNumber(offer.zlM2)}
+                </CustomTypography>
+              )}
               {offer.linkOferta && (
                 <CustomTypography sx={{ fontSize: "1rem" }}>
                   <strong>Link do oferty:</strong>{" "}
@@ -271,7 +277,7 @@ function OfferDetailsPage({
                     sx={{
                       color: offer.statusOferty
                         ? statusesConfig.find(
-                            (status) => status.value === offer.statusOferty
+                            (status) => status.value === offer.statusOferty,
                           ).color
                         : "inherit",
                     }}
@@ -285,11 +291,7 @@ function OfferDetailsPage({
                   <strong>Komentarz:</strong> {offer.komentarz}
                 </CustomTypography>
               )}
-              {offer.zlM2 && (
-                <CustomTypography sx={{ fontSize: "1rem" }}>
-                  <strong>Zł/m²:</strong> {formatNumber(offer.zlM2)}
-                </CustomTypography>
-              )}
+
               <br></br>
               <Typography
                 variant="h6"
@@ -324,7 +326,7 @@ function OfferDetailsPage({
                       day: "2-digit",
                       hour: "2-digit",
                       minute: "2-digit",
-                    }
+                    },
                   )}
                 </CustomTypography>
               )}
@@ -373,6 +375,7 @@ function OfferDetailsPage({
             handleAddToCalendar={(e) => handleAddToCalendar(offer)}
             handleUpdateOfferAgentClick={handleUpdateOfferAgentClick}
             showDetailsIcon={false}
+            downloadPDF={downloadPDF}
           />
         </Box>
         <Alerts

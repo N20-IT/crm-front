@@ -1,20 +1,34 @@
 import { Button } from "@mui/material";
 import ClientForm from "./ClientForm";
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import Alerts from "./Alerts";
 import { GetInformationFromToken } from "../utils/decodeToken";
+import { useReadCookie } from "../utils/auth";
+import axios from "axios";
+import serverConfig from "../servers.json";
+import { debounce } from "lodash";
 
 function AddClientPanel({ onSave, onCancel, allUsers }) {
+  const backendServer = serverConfig["backend-server"];
+  const token = useReadCookie();
+
   const userRole = GetInformationFromToken("custom:role");
   const [formData, setFormData] = useState({
     lokalizacja: [],
     numerTelefonu: [""],
     standard: [],
+    komentarzDataList: [
+      {
+        tekst: "",
+        data: new Date().toISOString(),
+      },
+    ],
   });
   const [, setErrors] = useState({});
   const [alertMessage, setAlertMessage] = useState("");
   const [alertSeverity, setAlertSeverity] = useState("");
   const [alertOpen, setAlertOpen] = useState(false);
+  const [phoneExistsInfo, setPhoneExistsInfo] = useState([""]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -23,6 +37,36 @@ function AddClientPanel({ onSave, onCancel, allUsers }) {
       [name]: value,
     }));
   };
+
+  const checkIfPhoneExists = async (index, phoneNumber) => {
+    try {
+      const response = await axios.get(
+        `${backendServer}/clients/check-phone/${phoneNumber}`,
+        {
+          headers: {
+            accept: "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
+      if (response.data.exists) {
+        const updatedInfo = [...phoneExistsInfo];
+        updatedInfo[index] = "Oferta z tym numerem telefonu już istnieje.";
+        setPhoneExistsInfo(updatedInfo);
+      } else {
+        const updatedInfo = [...phoneExistsInfo];
+        updatedInfo[index] = "";
+        setPhoneExistsInfo(updatedInfo);
+      }
+    } catch (error) {
+      console.error("Błąd podczas sprawdzania numeru telefonu:", error);
+    }
+  };
+
+  const debouncedCheckIfPhoneExists = useCallback(
+    debounce(checkIfPhoneExists, 1000),
+    [checkIfPhoneExists],
+  );
 
   const handleSave = async () => {
     const validationErrors = {};
@@ -56,7 +100,7 @@ function AddClientPanel({ onSave, onCancel, allUsers }) {
       validationErrors.komentarz = "Komentarz jest wymagany.";
     if (
       formData.dataNastepnegoKontaktu &&
-      !formData.komentarzData &&
+      formData.komentarzDataList[0].tekst === "" &&
       userRole !== "admin"
     )
       validationErrors.komentarzData =
@@ -103,10 +147,16 @@ function AddClientPanel({ onSave, onCancel, allUsers }) {
     }
   };
 
-  const handlePhoneNumbersChange = (index, value) => {
+  const handlePhoneNumbersChange = async (index, value) => {
+    const cleanedValue = value.replace(/\s+/g, "");
+
+    if (cleanedValue.length === 9) {
+      await debouncedCheckIfPhoneExists(index, cleanedValue);
+    }
+
     setFormData((prevData) => {
       const newPhones = [...prevData.numerTelefonu];
-      newPhones[index] = value;
+      newPhones[index] = cleanedValue;
       return { ...prevData, numerTelefonu: newPhones };
     });
   };
@@ -125,9 +175,48 @@ function AddClientPanel({ onSave, onCancel, allUsers }) {
     }));
   };
 
+  const handleCommentsChange = (index, value) => {
+    setFormData((prevData) => {
+      const newComments = [...prevData.komentarzDataList];
+
+      newComments[index] = {
+        ...newComments[index],
+        tekst: value,
+        data: new Date().toISOString(),
+      };
+
+      return {
+        ...prevData,
+        komentarzDataList: newComments,
+      };
+    });
+  };
+
+  const addCommentField = () => {
+    setFormData((prevData) => ({
+      ...prevData,
+      komentarzDataList: [
+        ...prevData.komentarzDataList,
+        {
+          tekst: "",
+          data: new Date().toISOString(),
+        },
+      ],
+    }));
+  };
+
+  const removeCommentField = (index) => {
+    setFormData((prevData) => ({
+      ...prevData,
+      komentarzDataList: prevData.komentarzDataList.filter(
+        (_, i) => i !== index,
+      ),
+    }));
+  };
+
   return (
     <div className="fixed inset-0 bg-light-grey bg-opacity-75 flex items-center justify-center z-50">
-      <div className="bg-white px-6 rounded-lg shadow-lg w-1/3 max-h-[95%] overflow-auto">
+      <div className="bg-white px-6 rounded-lg shadow-lg w-full max-w-md md:max-w-lg lg:max-w-xl max-h-[95%] overflow-auto">
         <div className="sticky top-0 bg-white pt-6 pb-2 px-2 z-20">
           <h2 className="text-4xl font-bold mb-4 font-poppins">
             Dodaj nowego klienta
@@ -141,9 +230,13 @@ function AddClientPanel({ onSave, onCancel, allUsers }) {
               onPhoneNumbersChange={handlePhoneNumbersChange}
               addPhoneField={addPhoneField}
               removePhoneField={removePhoneField}
+              onCommentsChange={handleCommentsChange}
+              addCommentField={addCommentField}
+              removeCommentField={removeCommentField}
               allUsers={allUsers}
               userRole={userRole}
               action="add"
+              phoneExistsInfo={phoneExistsInfo}
             />
             <div className="sticky bottom-0 bg-white py-2 px-2 z-20">
               <div className="flex justify-end space-x-4 mt-4">

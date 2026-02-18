@@ -1,5 +1,6 @@
 {
-  "projectName": "n20crm",
+  "whyContinueWithGen1": "Prefer not to answer",
+  "projectName": "CRM",
   "version": "3.1",
   "frontend": "javascript",
   "javascript": {

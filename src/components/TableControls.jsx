@@ -28,6 +28,7 @@ import { useChangeColumnConfig, useReadConfig } from "../config/columnConfig";
 import dzielniceData from "../dzielnice_poddzielnice.json";
 import statusesConfig from "../config/statusesConfig";
 import { useFiltersStore } from "../store/filtersStore";
+import { GetInformationFromToken } from "../utils/decodeToken";
 
 function TableControls({
   selectedCount,
@@ -78,6 +79,7 @@ function TableControls({
   const changeColumnConfig = useChangeColumnConfig();
   const readConfig = useReadConfig();
   const [columnConfig, setColumnConfig] = useState(readConfig);
+  const userRole = GetInformationFromToken("custom:role");
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -212,17 +214,17 @@ function TableControls({
     const selectedDistricts = event.target.value;
 
     const removedDistricts = localFilters.dzielnica.filter(
-      (district) => !selectedDistricts.includes(district)
+      (district) => !selectedDistricts.includes(district),
     );
 
     handleLocalFilterChange("dzielnica", selectedDistricts);
 
     if (removedDistricts.length > 0) {
       const subdistrictsToRemove = removedDistricts.flatMap(
-        (district) => dzielniceData.Dzielnice[district] || []
+        (district) => dzielniceData.Dzielnice[district] || [],
       );
       const newPoddzielnica = localFilters.poddzielnica.filter(
-        (subdistrict) => !subdistrictsToRemove.includes(subdistrict)
+        (subdistrict) => !subdistrictsToRemove.includes(subdistrict),
       );
       handleLocalFilterChange("poddzielnica", newPoddzielnica);
     }
@@ -240,8 +242,8 @@ function TableControls({
       ? [
           ...new Set(
             localFilters.dzielnica.flatMap(
-              (district) => dzielniceData.Dzielnice[district]
-            )
+              (district) => dzielniceData.Dzielnice[district],
+            ),
           ),
         ].sort()
       : [];
@@ -342,46 +344,50 @@ function TableControls({
           spacing={2}
           alignItems="center"
         >
-          <Button
-            aria-controls={open ? "basic-menu" : undefined}
-            aria-haspopup="true"
-            aria-expanded={open ? "true" : undefined}
-            onClick={handleClick}
-            variant="outlined"
-            endIcon={<KeyboardArrowDown />}
-            sx={{
-              color: "#6D727F",
-              fontFamily: "Poppins",
-              borderColor: "black",
-              width: "180px",
-              height: "40px",
-            }}
-          >
-            Zaznaczono {selectedCount}
-          </Button>
-          <Menu
-            id="basic-menu"
-            anchorEl={anchorEl}
-            open={open}
-            onClose={handleClose}
-            MenuListProps={{
-              "aria-labelledby": "basic-button",
-            }}
-          >
-            <MenuItem
-              onClick={() => {
-                deleteMultipleOffersClick();
-                handleClose();
-              }}
-            >
-              <Delete />
-              Usuń
-            </MenuItem>
-            <MenuItem>
-              <Star />
-              Dodaj do ciekawych ofert
-            </MenuItem>
-          </Menu>
+          {userRole === "admin" && (
+            <>
+              <Button
+                aria-controls={open ? "basic-menu" : undefined}
+                aria-haspopup="true"
+                aria-expanded={open ? "true" : undefined}
+                onClick={handleClick}
+                variant="outlined"
+                endIcon={<KeyboardArrowDown />}
+                sx={{
+                  color: "#6D727F",
+                  fontFamily: "Poppins",
+                  borderColor: "black",
+                  width: "180px",
+                  height: "40px",
+                }}
+              >
+                Zaznaczono {selectedCount}
+              </Button>
+              <Menu
+                id="basic-menu"
+                anchorEl={anchorEl}
+                open={open}
+                onClose={handleClose}
+                MenuListProps={{
+                  "aria-labelledby": "basic-button",
+                }}
+              >
+                <MenuItem
+                  onClick={() => {
+                    deleteMultipleOffersClick();
+                    handleClose();
+                  }}
+                >
+                  <Delete />
+                  Usuń
+                </MenuItem>
+                <MenuItem>
+                  <Star />
+                  Dodaj do ciekawych ofert
+                </MenuItem>
+              </Menu>
+            </>
+          )}
           <Button
             variant="outlined"
             sx={{
@@ -1113,7 +1119,7 @@ function TableControls({
               onChange={(e) =>
                 handleLocalFilterChange(
                   "dataNastepnegoKontaktuOd",
-                  e.target.value
+                  e.target.value,
                 )
               }
               variant="outlined"
@@ -1134,7 +1140,7 @@ function TableControls({
               onChange={(e) =>
                 handleLocalFilterChange(
                   "dataNastepnegoKontaktuDo",
-                  e.target.value
+                  e.target.value,
                 )
               }
               variant="outlined"
