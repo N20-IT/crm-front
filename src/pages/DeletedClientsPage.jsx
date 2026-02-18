@@ -38,7 +38,7 @@ function DeletedClientsPage() {
   const [isAddClientPanelOpen, setIsAddClientPanelOpen] = useState(false);
   const [isEditClientPanelOpen, setIsEditClientPanelOpen] = useState(false);
   const [isClientDetailsPanelOpen, setIsClientDetailsPanelOpen] = useState(
-    false
+    false,
   );
   const [clientDetailsId, setClientDetailsId] = useState(null);
   const [users, setUsers] = useState([]);
@@ -129,7 +129,7 @@ function DeletedClientsPage() {
       currentPage = page,
       rowsPerValue = itemsPerPage,
       sortBy = orderBy,
-      sort = order
+      sort = order,
     ) => {
       setLoading(true);
       try {
@@ -154,7 +154,7 @@ function DeletedClientsPage() {
         setLoading(false);
       }
     },
-    [backendServer, token]
+    [backendServer, token],
   );
 
   // const handleDeleteClient = useCallback(
@@ -198,7 +198,7 @@ function DeletedClientsPage() {
             accept: "application/json",
             Authorization: `Bearer ${token}`,
           },
-        }
+        },
       );
       setAlertOpen(true);
       setAlertMessage("Pomyślnie przywrócono klienta");
@@ -228,7 +228,7 @@ function DeletedClientsPage() {
               accept: "application/json",
               Authorization: `Bearer ${token}`,
             },
-          }
+          },
         );
         setAlertOpen(true);
         setAlertMessage("Pomyślnie edytowano klienta");
@@ -245,7 +245,7 @@ function DeletedClientsPage() {
         setLoading(false);
       }
     },
-    [backendServer, token, fetchData, handleEditClientClick]
+    [backendServer, token, fetchData, handleEditClientClick],
   );
 
   const handleSaveClient = useCallback(
@@ -272,7 +272,44 @@ function DeletedClientsPage() {
         setLoading(false);
       }
     },
-    [backendServer, token, fetchData, handleAddClientClick]
+    [backendServer, token, fetchData, handleAddClientClick],
+  );
+
+  const downloadPDF = useCallback(
+    async (clientData) => {
+      try {
+        const response = await axios.get(
+          `${backendServer}/clients/${clientData._id}/print`,
+          {
+            headers: {
+              accept: "application/pdf",
+              Authorization: `Bearer ${token}`,
+            },
+            responseType: "blob",
+          },
+        );
+
+        const url = window.URL.createObjectURL(new Blob([response.data]));
+        const link = document.createElement("a");
+        link.href = url;
+        link.setAttribute("download", `klient_${clientData.daneKlienta}.pdf`);
+        document.body.appendChild(link);
+        link.click();
+
+        link.parentNode.removeChild(link);
+        window.URL.revokeObjectURL(url);
+
+        setAlertOpen(true);
+        setAlertMessage("Pomyślnie pobrano PDF");
+        setAlertSeverity("success");
+      } catch (error) {
+        setAlertOpen(true);
+        setAlertMessage("Wystąpił błąd podczas pobierania PDF");
+        setAlertSeverity("error");
+        console.log(error.message);
+      }
+    },
+    [backendServer, token],
   );
 
   useEffect(() => {
@@ -304,6 +341,7 @@ function DeletedClientsPage() {
         loading={loading}
         handleGoToClientDetails={handleOpenClientDetailsPanel}
         userRole={userRole}
+        downloadPDF={downloadPDF}
       />
       <Alerts
         message={alertMessage}
@@ -342,6 +380,7 @@ function DeletedClientsPage() {
           handleSaveEditedClient={handleEditClient}
           handleDeleteClientClick={handleDeleteClientClick}
           users={users}
+          downloadPDF={downloadPDF}
         />
       )}
     </div>

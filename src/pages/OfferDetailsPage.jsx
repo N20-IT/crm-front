@@ -31,6 +31,7 @@ function OfferDetailsPage({
   handleAddToCalendar,
   handleUpdateOfferAgentClick,
   users,
+  downloadPDF,
 }) {
   const [offer, setOffer] = useState("");
   const [alertMessage, setAlertMessage] = useState("");
@@ -276,7 +277,7 @@ function OfferDetailsPage({
                     sx={{
                       color: offer.statusOferty
                         ? statusesConfig.find(
-                            (status) => status.value === offer.statusOferty
+                            (status) => status.value === offer.statusOferty,
                           ).color
                         : "inherit",
                     }}
@@ -325,7 +326,7 @@ function OfferDetailsPage({
                       day: "2-digit",
                       hour: "2-digit",
                       minute: "2-digit",
-                    }
+                    },
                   )}
                 </CustomTypography>
               )}
@@ -374,6 +375,7 @@ function OfferDetailsPage({
             handleAddToCalendar={(e) => handleAddToCalendar(offer)}
             handleUpdateOfferAgentClick={handleUpdateOfferAgentClick}
             showDetailsIcon={false}
+            downloadPDF={downloadPDF}
           />
         </Box>
         <Alerts

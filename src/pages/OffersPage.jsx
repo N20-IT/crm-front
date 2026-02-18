@@ -709,6 +709,7 @@ function OffersPage() {
             handleAddToCalendar={handleAddToCalendar}
             handleUpdateOfferAgentClick={handleUpdateOfferAgentClick}
             users={users}
+            downloadPDF={downloadPDF}
           />
         )}
       </div>

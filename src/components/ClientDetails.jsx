@@ -41,6 +41,7 @@ function ClientDetails({
   handleSaveEditedClient,
   handleDeleteClientClick,
   users,
+  downloadPDF,
 }) {
   const [client, setClient] = useState("");
   const backendServer = serverConfig["backend-server"];
@@ -98,7 +99,7 @@ function ClientDetails({
             .catch((error) => {
               console.error(`Błąd przy pobieraniu oferty ${offerId}:`, error);
               return null;
-            })
+            }),
         );
 
         const offersData = await Promise.all(offersPromises);
@@ -121,7 +122,7 @@ function ClientDetails({
       setLoading(true);
       try {
         const updatedAssignedOffers = client.przypisaneOferty.filter(
-          (offerId) => offerId !== offerIdToRemove
+          (offerId) => offerId !== offerIdToRemove,
         );
 
         const updatedData = { przypisaneOferty: updatedAssignedOffers };
@@ -145,7 +146,7 @@ function ClientDetails({
         setLoading(false);
       }
     },
-    [token, backendServer, client]
+    [token, backendServer, client],
   );
 
   const handleSaveEditedOffer = useCallback(
@@ -159,7 +160,7 @@ function ClientDetails({
             headers: {
               Authorization: `Bearer ${token}`,
             },
-          }
+          },
         );
         setAlertOpen(true);
         setAlertMessage("Zaktualizowano pomyślnie");
@@ -176,7 +177,7 @@ function ClientDetails({
         setLoading(false);
       }
     },
-    [backendServer, token, fetchDetailsData]
+    [backendServer, token, fetchDetailsData],
   );
 
   const handleCloseEditPanel = () => {
@@ -302,7 +303,7 @@ function ClientDetails({
                     sx={{
                       color:
                         clientStatuesConfig.find(
-                          (status) => status.value === client.status
+                          (status) => status.value === client.status,
                         )?.color || "inherit",
                     }}
                   >
@@ -463,7 +464,7 @@ function ClientDetails({
                       year: "numeric",
                       month: "2-digit",
                       day: "2-digit",
-                    }
+                    },
                   )}
                 </CustomTypography>
               )}
@@ -703,7 +704,7 @@ function ClientDetails({
                                 onClick={() =>
                                   handleRemoveOfferFromClient(
                                     client._id,
-                                    row._id
+                                    row._id,
                                   )
                                 }
                                 sx={{
@@ -752,6 +753,7 @@ function ClientDetails({
             handleEditClientClick={handleEditClick}
             showDetailsIcon={false}
             userRole={userRole}
+            downloadPDF={downloadPDF}
           />
         </Box>
 

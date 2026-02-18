@@ -418,6 +418,7 @@ function ClientsPage() {
           handleSaveEditedClient={handleEditClient}
           handleDeleteClientClick={handleDeleteClientClick}
           users={users}
+          downloadPDF={downloadPDF}
         />
       )}
     </div>

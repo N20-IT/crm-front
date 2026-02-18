@@ -41,7 +41,7 @@ function InterestingOffersPage() {
   const [offerIdToDelete, setOfferIdToDelete] = useState(null);
   const [offerIdToUpdateAgent, setOfferIdToUpdateAgent] = useState(null);
   const [offerToChangeOfferInterest, setOfferToChangeOfferInterest] = useState(
-    null
+    null,
   );
   const [isEditOfferPanelOpen, setEditOfferPanelOpen] = useState(false);
   const [isOfferDetailsPanelOpen, setIsOfferDetailsPanelOpen] = useState(false);
@@ -140,7 +140,7 @@ function InterestingOffersPage() {
       currentPage,
       rowsPerValue,
       orderBy,
-      order
+      order,
     );
   };
 
@@ -156,7 +156,7 @@ function InterestingOffersPage() {
       currentPage,
       rowsPerValue,
       sortBy,
-      sort
+      sort,
     );
   };
 
@@ -178,9 +178,9 @@ function InterestingOffersPage() {
     const formattedEndDate = formatDateForCalendar(endDate);
 
     const googleCalendarUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(
-      eventTitle
+      eventTitle,
     )}&dates=${formattedStartDate}/${formattedEndDate}&details=${encodeURIComponent(
-      eventDescription
+      eventDescription,
     )}&sf=true&output=xml`;
 
     window.open(googleCalendarUrl, "_blank");
@@ -215,7 +215,7 @@ function InterestingOffersPage() {
       rowsPerValue = itemsPerPage,
       sortBy = orderBy,
       sort = order,
-      clientId
+      clientId,
     ) => {
       setLoading(true);
       try {
@@ -256,7 +256,7 @@ function InterestingOffersPage() {
         setLoading(false);
       }
     },
-    [backendServer, token, readConfig]
+    [backendServer, token, readConfig],
   );
 
   const fetchClients = useCallback(async () => {
@@ -300,7 +300,7 @@ function InterestingOffersPage() {
         setLoading(false);
       }
     },
-    [backendServer, token, fetchData, handleAddOfferClick]
+    [backendServer, token, fetchData, handleAddOfferClick],
   );
 
   const handleDeleteOffer = useCallback(
@@ -328,7 +328,7 @@ function InterestingOffersPage() {
         setLoading(false);
       }
     },
-    [backendServer, token, fetchData]
+    [backendServer, token, fetchData],
   );
 
   const handleSaveEditedOffer = useCallback(
@@ -342,7 +342,7 @@ function InterestingOffersPage() {
             headers: {
               Authorization: `Bearer ${token}`,
             },
-          }
+          },
         );
         setAlertOpen(true);
         setAlertMessage("Zaktualizowano pomyślnie");
@@ -359,7 +359,7 @@ function InterestingOffersPage() {
         setLoading(false);
       }
     },
-    [backendServer, token, fetchData]
+    [backendServer, token, fetchData],
   );
 
   const handleConfirmOfferAssignment = useCallback(async () => {
@@ -374,7 +374,7 @@ function InterestingOffersPage() {
             accept: "application/json",
             Authorization: `Bearer ${token}`,
           },
-        }
+        },
       );
       setAlertOpen(true);
       setAlertMessage("Pomyślnie zaktualizowano ofertę");
@@ -415,7 +415,7 @@ function InterestingOffersPage() {
           headers: {
             Authorization: `Bearer ${token}`,
           },
-        }
+        },
       );
 
       setAlertOpen(true);
@@ -439,6 +439,46 @@ function InterestingOffersPage() {
     offerToChangeOfferInterest,
     isOfferDetailsPanelOpen,
   ]);
+
+  const downloadPDF = useCallback(
+    async (clientData) => {
+      try {
+        const response = await axios.get(
+          `${backendServer}/listings/${clientData._id}/print`,
+          {
+            headers: {
+              accept: "application/pdf",
+              Authorization: `Bearer ${token}`,
+            },
+            responseType: "blob",
+          },
+        );
+
+        const url = window.URL.createObjectURL(new Blob([response.data]));
+        const link = document.createElement("a");
+        link.href = url;
+        link.setAttribute(
+          "download",
+          `klient_${clientData.daneKlienta ? clientData.daneKlienta : ""}.pdf`,
+        );
+        document.body.appendChild(link);
+        link.click();
+
+        link.parentNode.removeChild(link);
+        window.URL.revokeObjectURL(url);
+
+        setAlertOpen(true);
+        setAlertMessage("Pomyślnie pobrano PDF");
+        setAlertSeverity("success");
+      } catch (error) {
+        setAlertOpen(true);
+        setAlertMessage("Wystąpił błąd podczas pobierania PDF");
+        setAlertSeverity("error");
+        console.log(error.message);
+      }
+    },
+    [backendServer, token],
+  );
 
   useEffect(() => {
     if (!isAuthenticated) navigate("/");
@@ -496,6 +536,7 @@ function InterestingOffersPage() {
           onSortApply={handleSort}
           quantityOffers={quantityOffers}
           handleChangeOfferInterest={handleChangeOfferInterest}
+          downloadPDF={downloadPDF}
         />
         <Alerts
           message={alertMessage}
@@ -569,6 +610,7 @@ function InterestingOffersPage() {
             handleAddToCalendar={handleAddToCalendar}
             handleUpdateOfferAgentClick={handleUpdateOfferAgentClick}
             users={users}
+            downloadPDF={downloadPDF}
           />
         )}
       </div>
