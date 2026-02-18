@@ -71,10 +71,12 @@ function LoginPage() {
     setLoading(true);
     event.preventDefault();
     try {
-      await signIn({
+      const xd = await signIn({
         username: username,
         password: password,
       });
+
+      console.log(xd);
 
       const attribute = "custom:forceResetPass";
       const url =
@@ -105,6 +107,7 @@ function LoginPage() {
   const handleLogJwtToken = async () => {
     try {
       const session = await fetchAuthSession();
+      console.log(session);
       return session.tokens.idToken.toString();
     } catch (error) {
       setError("Error fetching auth session:", error);
