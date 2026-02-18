@@ -12,12 +12,12 @@ import {
 import React, { useState, useEffect } from "react";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { signIn, fetchAuthSession } from "@aws-amplify/auth";
-import { Amplify } from "aws-amplify";
-import awsExports from "../aws-exports";
+// import { Amplify } from "aws-amplify";
+// import awsExports from "../aws-exports";
 import { useLogin, useAuth } from "../utils/auth";
 import { useNavigate } from "react-router-dom";
 import LoadingCircularProgress from "../components/LoadingCircularProgress";
-Amplify.configure(awsExports);
+// Amplify.configure(awsExports);
 
 function LoginPage() {
   const [username, setUsername] = useState("");
@@ -83,7 +83,7 @@ function LoginPage() {
       const requirePasswordChange = await LambdaConnection(
         username,
         attribute,
-        url
+        url,
       );
 
       // console.log(requirePasswordChange);
