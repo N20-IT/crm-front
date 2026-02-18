@@ -19,6 +19,12 @@ const awsmobile = {
     passwordPolicyCharacters: [],
   },
   aws_cognito_verification_mechanisms: ["EMAIL"],
+  cookieStorage: {
+    domain: ".d2peddebsf5u5o.amplifyapp.com/",
+    path: "/",
+    expires: 365,
+    secure: true,
+  },
 };
 
 export default awsmobile;
