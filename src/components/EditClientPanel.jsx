@@ -28,7 +28,7 @@ function EditClientPanel({ initialData, onSave, onCancel, allUsers }) {
     dataZapytania: formatDateForInput(initialData?.dataZapytania ?? ""),
     ostatniKontakt: formatDateForInput(initialData?.ostatniKontakt ?? ""),
     dataNastepnegoKontaktu: formatDateForInput(
-      initialData?.dataNastepnegoKontaktu ?? ""
+      initialData?.dataNastepnegoKontaktu ?? "",
     ),
     lokalizacja: initialData?.lokalizacja
       ? initialData.lokalizacja.split(",")
@@ -82,7 +82,7 @@ function EditClientPanel({ initialData, onSave, onCancel, allUsers }) {
       validationErrors.komentarz = "Komentarz jest wymagany.";
     if (
       formData.dataNastepnegoKontaktu &&
-      !formData.komentarzData &&
+      formData.komentarzDataList[0].tekst === "" &&
       userRole !== "admin"
     )
       validationErrors.komentarzData =
@@ -186,7 +186,7 @@ function EditClientPanel({ initialData, onSave, onCancel, allUsers }) {
     setFormData((prevData) => ({
       ...prevData,
       komentarzDataList: prevData.komentarzDataList.filter(
-        (_, i) => i !== index
+        (_, i) => i !== index,
       ),
     }));
   };

@@ -158,7 +158,7 @@ function ClientForm({
                 />
               </IconButton>
             </div>
-            {phoneExistsInfo[index] && (
+            {action === "add" && phoneExistsInfo[index] && (
               <p style={{ color: "blue", fontFamily: "Poppins" }}>
                 {phoneExistsInfo[index]}
               </p>

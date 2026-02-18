@@ -100,7 +100,7 @@ function AddClientPanel({ onSave, onCancel, allUsers }) {
       validationErrors.komentarz = "Komentarz jest wymagany.";
     if (
       formData.dataNastepnegoKontaktu &&
-      !formData.komentarzData &&
+      formData.komentarzDataList[0].tekst === "" &&
       userRole !== "admin"
     )
       validationErrors.komentarzData =
