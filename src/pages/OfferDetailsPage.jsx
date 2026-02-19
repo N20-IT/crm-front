@@ -89,13 +89,18 @@ function OfferDetailsPage({
   }, [isAuthenticated, navigate, fetchDetailsData]);
   return (
     <div className=" fixed inset-0 bg-light-grey bg-opacity-75 flex items-center justify-center z-50">
-      <div className="bg-white p-6 rounded-lg shadow-lg w-1/2 max-h-[90vh] overflow-y-auto">
+      <div className="bg-white px-6 rounded-lg shadow-lg w-1/2 max-h-[90vh] overflow-y-auto">
         <Box
           sx={{
+            position: "sticky",
+            top: 0,
+            zIndex: 10,
+            backgroundColor: "white",
             display: "flex",
             justifyContent: "space-between",
             alignItems: "center",
-            marginBottom: "16px",
+            padding: "16px",
+            borderBottom: "1px solid #e0e0e0",
           }}
         >
           <Typography
@@ -365,11 +370,14 @@ function OfferDetailsPage({
           </Grid2>
         )}
         <Box
-          className="flex justify-end mt-6"
           sx={{
-            "& .MuiTableCell-root": {
-              border: 0,
-            },
+            position: "sticky",
+            bottom: 0,
+            zIndex: 10,
+            backgroundColor: "white",
+            padding: "16px",
+            display: "flex",
+            justifyContent: "flex-end",
           }}
         >
           <OfferActions

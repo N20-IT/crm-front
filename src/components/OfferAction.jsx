@@ -35,6 +35,7 @@ function OfferActions({
         maxHeight: "60px",
         padding: "0px",
         fontFamily: "Poppins",
+        border: "0px",
       }}
     >
       {userRole === "admin" && (
