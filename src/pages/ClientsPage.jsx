@@ -91,7 +91,8 @@ function ClientsPage() {
   };
 
   const handleSearchAndFilter = (searchQuery, currentFilters) => {
-    fetchData(searchQuery, currentFilters);
+    setPage(0);
+    fetchData(searchQuery, currentFilters, 0);
   };
 
   const handlePagination = (currentPage, rowsPerValue) => {
@@ -176,7 +177,16 @@ function ClientsPage() {
         setLoading(false);
       }
     },
-    [backendServer, token],
+    [
+      backendServer,
+      token,
+      searchValue,
+      filters,
+      page,
+      itemsPerPage,
+      orderBy,
+      order,
+    ],
   );
 
   const handleDeleteClient = useCallback(
@@ -255,11 +265,11 @@ function ClientsPage() {
           },
         );
         setAlertOpen(true);
-        setAlertMessage("Pomyślnie edytowano klienta");
+        setAlertMessage("Zaktualizowano pomyślnie");
         setAlertSeverity("success");
         setIsEditClientPanelOpen(false);
-        if (isClientDetailsPanelOpen)
-          setIsClientDetailsPanelOpen(!isClientDetailsPanelOpen);
+        // if (isClientDetailsPanelOpen)
+        //   setIsClientDetailsPanelOpen(!isClientDetailsPanelOpen);
         await fetchData();
       } catch (error) {
         setAlertOpen(true);
@@ -350,7 +360,7 @@ function ClientsPage() {
   }, []);
 
   return (
-    <div className="flex items-start justify-start h-screen ml-16 flex-col">
+    <div className="flex items-start justify-start ml-16 flex-col overflow-x-hidden">
       <Sidebar />
       {loading && <LoadingCircularProgress />}
       <div className="flex justify-center w-full">
@@ -375,6 +385,10 @@ function ClientsPage() {
         handleGoToClientDetails={handleOpenClientDetailsPanel}
         userRole={userRole}
         downloadPDF={downloadPDF}
+        page={page}
+        itemsPerPage={itemsPerPage}
+        orderBy={orderBy}
+        order={order}
       />
       <Alerts
         message={alertMessage}

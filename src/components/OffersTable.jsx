@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useRef, useEffect } from "react";
 import { ThemeProvider } from "@mui/material/styles";
 import { customTooltip } from "../styles/CustomTooltip";
 import {
@@ -41,12 +41,11 @@ function OffersTable({
   quantityOffers,
   handleAssignmentOfferToClientClick,
   downloadPDF,
+  page,
+  itemsPerPage,
+  orderBy,
+  order,
 }) {
-  const [order, setOrder] = useState("desc");
-  const [orderBy, setOrderBy] = useState("dataUtworzenia");
-  const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(25);
-
   const handleSelect = (id) => {
     if (selected.includes(id))
       setSelected(selected.filter((itemId) => itemId !== id));
@@ -58,11 +57,14 @@ function OffersTable({
     else setSelected(rows.map((row) => row._id));
   };
 
+  const safePage = Number.isFinite(Number(page)) ? Number(page) : 0;
+  const safeItemsPerPage = Number.isFinite(Number(itemsPerPage))
+    ? Number(itemsPerPage)
+    : 25;
+
   const handleSortRequest = (columnId) => {
     const isDesc = orderBy === columnId && order === "desc";
-    isDesc ? setOrder("asc") : setOrder("desc");
-    setOrderBy(columnId);
-    onSortApply(0, rowsPerPage, columnId, isDesc ? "asc" : "desc");
+    onSortApply(0, safeItemsPerPage, columnId, isDesc ? "asc" : "desc");
     scrollToTop();
   };
 
@@ -83,15 +85,12 @@ function OffersTable({
   };
 
   const handleChangePage = (event, newPage) => {
-    setPage(newPage);
-    onPaginationApply(newPage, rowsPerPage);
+    onPaginationApply(newPage, safeItemsPerPage);
     scrollToTop();
   };
 
   const handleChangeRowsPerPage = (event) => {
     const newRows = parseInt(event.target.value, 10);
-    setRowsPerPage(newRows);
-    setPage(0);
     onPaginationApply(0, newRows);
     scrollToTop();
   };
@@ -260,7 +259,7 @@ function OffersTable({
           </TableHead>
           <TableBody>
             {loading ? (
-              [...Array(rowsPerPage)].map((_, index) => (
+              [...Array(safeItemsPerPage)].map((_, index) => (
                 <TableRow key={index}>
                   <TableCell key={"checkbox"}>
                     <Skeleton variant="rounded" width="100%" height={16} />
@@ -537,9 +536,9 @@ function OffersTable({
         <TablePagination
           component="div"
           count={quantityOffers}
-          page={page}
+          page={safePage}
           onPageChange={handleChangePage}
-          rowsPerPage={rowsPerPage}
+          rowsPerPage={safeItemsPerPage}
           onRowsPerPageChange={handleChangeRowsPerPage}
           labelRowsPerPage="Wiersze na stronę"
           labelDisplayedRows={({ from, to, count }) =>

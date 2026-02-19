@@ -180,6 +180,39 @@ function ClientDetails({
     [backendServer, token, fetchDetailsData],
   );
 
+  const handleSaveClientEdit = useCallback(
+    async (updatedClientData) => {
+      try {
+        await axios.put(
+          `${backendServer}/clients/${updatedClientData._id}`,
+          updatedClientData,
+          {
+            headers: {
+              accept: "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          },
+        );
+        setAlertOpen(true);
+        setAlertMessage("Pomyślnie edytowano klienta");
+        setAlertSeverity("success");
+        setIsEditClientPanelOpen(false);
+        await fetchDetailsData();
+      } catch (error) {
+        setAlertOpen(true);
+        setAlertMessage("Błąd podczas edytowania klienta: " + error.message);
+        setAlertSeverity("error");
+      }
+    },
+    [backendServer, token, fetchDetailsData],
+  );
+
+  const handleSaveAndRefresh = async (updatedClientData) => {
+    handleCloseEditPanel();
+    handleSaveEditedClient(updatedClientData);
+    fetchDetailsData();
+  };
+
   const handleCloseEditPanel = () => {
     setIsEditClientPanelOpen(!isEditClientPanelOpen);
   };
@@ -202,8 +235,14 @@ function ClientDetails({
     fetchDetailsData();
   }, [fetchDetailsData]);
   return (
-    <div className="fixed inset-0 bg-light-grey bg-opacity-75 flex items-center justify-center z-50">
-      <div className="bg-white px-6 rounded-lg shadow-lg w-1/2 max-h-[90vh] overflow-y-auto">
+    <div
+      className="fixed inset-0 bg-light-grey bg-opacity-75 flex items-center justify-center z-50"
+      onClick={onClose}
+    >
+      <div
+        className="bg-white px-6 rounded-lg shadow-lg w-1/2 max-h-[90vh] overflow-y-auto"
+        onClick={(e) => e.stopPropagation()}
+      >
         <Box
           sx={{
             position: "sticky",
@@ -554,7 +593,7 @@ function ClientDetails({
             <ThemeProvider theme={customTooltip}>
               <TableContainer
                 className="ml-5"
-                component={Paper}
+                // component={Paper}
                 elevation={8}
                 style={{
                   width: "99.4%",
@@ -564,6 +603,8 @@ function ClientDetails({
                   maxHeight: "88vh",
                   marginLeft: "0px",
                   marginTop: "6px",
+                  borderRadius: "4px",
+                  color: "black",
                 }}
               >
                 <Table>
@@ -742,7 +783,6 @@ function ClientDetails({
             zIndex: 10,
             backgroundColor: "white",
             padding: "16px",
-            borderTop: "1px solid #e0e0e0",
             display: "flex",
             justifyContent: "flex-end",
           }}
@@ -766,7 +806,7 @@ function ClientDetails({
         {isEditClientPanelOpen && (
           <EditClientPanel
             initialData={client}
-            onSave={handleSaveEditedClient}
+            onSave={handleSaveAndRefresh}
             onCancel={handleCloseEditPanel}
             allUsers={users}
           />

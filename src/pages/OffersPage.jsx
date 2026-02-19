@@ -134,6 +134,7 @@ function OffersPage() {
   };
 
   const handleSearchAndFilter = (searchQuery, currentFilters, columnConfig) => {
+    setPage(0);
     setReadConfig(columnConfig);
     fetchData(searchQuery, currentFilters, columnConfig);
   };
@@ -485,8 +486,9 @@ function OffersPage() {
     setLoading(true);
     const editedOffer = {
       ...offerToChangeOfferInterest,
-      czyCiekawa: true,
+      czyCiekawa: !offerToChangeOfferInterest.czyCiekawa,
     };
+
     try {
       await axios.put(
         `${backendServer}/listings/${editedOffer._id}`,
@@ -576,7 +578,7 @@ function OffersPage() {
 
   return (
     <div>
-      <div className="flex items-start justify-start h-screen ml-16  flex-col">
+      <div className="flex items-start justify-start ml-16 flex-col overflow-x-hidden">
         <Sidebar />
         {loading && <LoadingCircularProgress />}
         <div className="flex justify-center w-full">
@@ -612,6 +614,10 @@ function OffersPage() {
             handleAssignmentOfferToClientClick
           }
           downloadPDF={downloadPDF}
+          page={page}
+          itemsPerPage={itemsPerPage}
+          orderBy={orderBy}
+          order={order}
         />
         <Alerts
           message={alertMessage}
@@ -700,6 +706,7 @@ function OffersPage() {
             handleDeleteOfferClick={handleDeleteOfferClick}
             handleAddToCalendar={handleAddToCalendar}
             handleUpdateOfferAgentClick={handleUpdateOfferAgentClick}
+            handleChangeOfferInterestClick={handleChangeOfferInterestClick}
             users={users}
             downloadPDF={downloadPDF}
           />

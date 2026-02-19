@@ -194,7 +194,7 @@ export default function ClientFilters({ onFilterApply, allUsers }) {
 
     clearGlobalFilters();
 
-    onFilterApply(localFilters);
+    onFilterApply(emptyFilters);
 
     changeFilterPanelOpen();
   };

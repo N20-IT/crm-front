@@ -40,11 +40,11 @@ function ClientsTable({
   handleGoToClientDetails,
   userRole,
   downloadPDF,
+  page,
+  itemsPerPage,
+  orderBy,
+  order,
 }) {
-  const [order, setOrder] = useState("desc");
-  const [orderBy, setOrderBy] = useState("dataUtworzenia");
-  const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(25);
   const containerRef = useRef(null);
 
   const scrollToTop = (smooth = true) => {
@@ -76,22 +76,17 @@ function ClientsTable({
 
   const handleSortRequest = (columnId) => {
     const isDesc = orderBy === columnId && order === "desc";
-    isDesc ? setOrder("asc") : setOrder("desc");
-    setOrderBy(columnId);
-    onSortApply(0, rowsPerPage, columnId, isDesc ? "asc" : "desc");
+    onSortApply(0, itemsPerPage, columnId, isDesc ? "asc" : "desc");
     scrollToTop();
   };
 
   const handleChangePage = (event, newPage) => {
-    setPage(newPage);
-    onPaginationApply(newPage, rowsPerPage);
+    onPaginationApply(newPage, itemsPerPage);
     scrollToTop();
   };
 
   const handleChangeRowsPerPage = (event) => {
     const newRows = parseInt(event.target.value, 10);
-    setRowsPerPage(newRows);
-    setPage(0);
     onPaginationApply(0, newRows);
     scrollToTop();
   };
@@ -270,7 +265,7 @@ function ClientsTable({
           </TableHead>
           <TableBody>
             {loading
-              ? [...Array(rowsPerPage)].map((_, index) => (
+              ? [...Array(itemsPerPage)].map((_, index) => (
                   <TableRow key={index}>
                     <TableCell key={"checkbox"}>
                       <Skeleton variant="rounded" width="100%" height={16} />
@@ -607,7 +602,7 @@ function ClientsTable({
           count={quantityClients}
           page={page}
           onPageChange={handleChangePage}
-          rowsPerPage={rowsPerPage}
+          rowsPerPage={itemsPerPage}
           onRowsPerPageChange={handleChangeRowsPerPage}
           labelRowsPerPage="Wiersze na stronę"
           labelDisplayedRows={({ from, to, count }) =>

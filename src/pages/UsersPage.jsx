@@ -44,7 +44,7 @@ function UsersPage() {
       currentPage = page,
       rowsPerValue = rowsPerPage,
       sortBy = orderBy,
-      sort = order
+      sort = order,
     ) => {
       setLoading(true);
       try {
@@ -79,14 +79,15 @@ function UsersPage() {
         setLoading(false);
       }
     },
-    [backendServer, token]
+    [backendServer, token],
   );
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
     fetchData(newPage, rowsPerPage, orderBy, order);
     try {
       if (containerRef.current) {
-        if (containerRef.current.scrollTo) containerRef.current.scrollTo({ top: 0, behavior: "smooth" });
+        if (containerRef.current.scrollTo)
+          containerRef.current.scrollTo({ top: 0, behavior: "smooth" });
         else containerRef.current.scrollTop = 0;
       }
     } catch (e) {}
@@ -97,7 +98,8 @@ function UsersPage() {
     fetchData(0, parseInt(event.target.value, 10), orderBy, order);
     try {
       if (containerRef.current) {
-        if (containerRef.current.scrollTo) containerRef.current.scrollTo({ top: 0, behavior: "smooth" });
+        if (containerRef.current.scrollTo)
+          containerRef.current.scrollTo({ top: 0, behavior: "smooth" });
         else containerRef.current.scrollTop = 0;
       }
     } catch (e) {}
@@ -134,7 +136,7 @@ function UsersPage() {
             accept: "application/json",
             Authorization: `Bearer ${token}`,
           },
-        }
+        },
       );
     } catch (error) {
       setAlertOpen(true);
@@ -262,7 +264,8 @@ function UsersPage() {
     fetchData(0, rowsPerPage, sortBy, sort);
     try {
       if (containerRef.current) {
-        if (containerRef.current.scrollTo) containerRef.current.scrollTo({ top: 0, behavior: "smooth" });
+        if (containerRef.current.scrollTo)
+          containerRef.current.scrollTo({ top: 0, behavior: "smooth" });
         else containerRef.current.scrollTop = 0;
       }
     } catch (e) {}
@@ -274,7 +277,7 @@ function UsersPage() {
   }, [isAuthenticated, userRole, navigate, fetchData]);
 
   return (
-    <div className="flex items-start justify-start h-screen ml-16 flex-col">
+    <div className="flex items-start justify-start ml-16 flex-col overflow-x-hidden">
       <Sidebar />
       {loading && <LoadingCircularProgress />}
       <div className="flex justify-center w-full">

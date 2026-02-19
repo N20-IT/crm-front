@@ -58,7 +58,7 @@ function InterestingOffersPage() {
   const userRole = GetInformationFromToken("custom:role");
   const [readConfig, setReadConfig] = useState(useReadConfig());
   const [page, setPage] = useState(0);
-  const [itemsPerPage, setItemsPerPage] = useState(100);
+  const [itemsPerPage, setItemsPerPage] = useState(25);
   const { filters, setFilters, clearFilters } = useFiltersStore();
   const [searchValue, setSearchValue] = useState("");
   const [quantityOffers, setQuantityOffers] = useState(0);
@@ -124,6 +124,7 @@ function InterestingOffersPage() {
   };
 
   const handleSearchAndFilter = (searchQuery, currentFilters, columnConfig) => {
+    setPage(0);
     setReadConfig(columnConfig);
     if (searchQuery !== searchValue) setSearchValue(searchQuery);
     if (currentFilters !== filters) setFilters(currentFilters);
@@ -405,7 +406,7 @@ function InterestingOffersPage() {
     setLoading(true);
     const editedOffer = {
       ...offerToChangeOfferInterest,
-      czyCiekawa: false,
+      czyCiekawa: !offerToChangeOfferInterest.czyCiekawa,
     };
     try {
       await axios.put(
@@ -504,7 +505,7 @@ function InterestingOffersPage() {
 
   return (
     <div>
-      <div className="flex items-start justify-start h-screen ml-16 flex-col">
+      <div className="flex items-start justify-start ml-16 flex-col overflow-x-hidden">
         <Sidebar />
         {loading && <LoadingCircularProgress />}
         <div className="flex justify-center w-full">
@@ -537,6 +538,10 @@ function InterestingOffersPage() {
           quantityOffers={quantityOffers}
           handleChangeOfferInterest={handleChangeOfferInterest}
           downloadPDF={downloadPDF}
+          page={page}
+          itemsPerPage={itemsPerPage}
+          orderBy={orderBy}
+          order={order}
         />
         <Alerts
           message={alertMessage}
