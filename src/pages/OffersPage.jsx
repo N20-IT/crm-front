@@ -176,7 +176,7 @@ function OffersPage() {
   };
 
   const handleAddToCalendar = (row) => {
-    const eventTitle = row.telefonWlasciciela;
+    const eventTitle = row.daneWlasciciela + " - " + row.telefonWlasciciela;
     const eventDescription = row.linkOferta;
 
     const startDate = new Date(row.dataNastepnegoKontaktu);
