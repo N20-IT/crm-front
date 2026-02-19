@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { ThemeProvider } from "@mui/material/styles";
 import { customTooltip } from "../styles/CustomTooltip";
 import {
@@ -63,18 +63,48 @@ function OffersTable({
     isDesc ? setOrder("asc") : setOrder("desc");
     setOrderBy(columnId);
     onSortApply(0, rowsPerPage, columnId, isDesc ? "asc" : "desc");
+    scrollToTop();
+  };
+
+  const containerRef = useRef(null);
+
+  const scrollToTop = (smooth = true) => {
+    try {
+      if (containerRef.current) {
+        if (smooth && containerRef.current.scrollTo) {
+          containerRef.current.scrollTo({ top: 0, behavior: "smooth" });
+        } else {
+          containerRef.current.scrollTop = 0;
+        }
+      }
+    } catch (e) {
+      // ignore
+    }
   };
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
     onPaginationApply(newPage, rowsPerPage);
+    scrollToTop();
   };
 
   const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(parseInt(event.target.value, 10));
+    const newRows = parseInt(event.target.value, 10);
+    setRowsPerPage(newRows);
     setPage(0);
-    onPaginationApply(0, parseInt(event.target.value, 10));
+    onPaginationApply(0, newRows);
+    scrollToTop();
   };
+
+  // Scroll to top when rows change (covers filtering and external updates)
+  useEffect(() => {
+    // Use immediate jump to top when data updates
+    try {
+      if (containerRef.current) containerRef.current.scrollTop = 0;
+    } catch (e) {
+      // ignore
+    }
+  }, [rows, quantityOffers]);
 
   const filteredColumns = columns.filter((column) =>
     readConfig === 0 ? column.view === "basic" : true,
@@ -127,6 +157,7 @@ function OffersTable({
   return (
     <ThemeProvider theme={customTooltip}>
       <TableContainer
+        ref={containerRef}
         className="ml-5"
         component={Paper}
         elevation={8}
