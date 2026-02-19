@@ -207,6 +207,12 @@ function ClientDetails({
     [backendServer, token, fetchDetailsData],
   );
 
+  const handleSaveAndRefresh = async (updatedClientData) => {
+    handleCloseEditPanel();
+    handleSaveEditedClient(updatedClientData);
+    fetchDetailsData();
+  };
+
   const handleCloseEditPanel = () => {
     setIsEditClientPanelOpen(!isEditClientPanelOpen);
   };
@@ -793,7 +799,7 @@ function ClientDetails({
         {isEditClientPanelOpen && (
           <EditClientPanel
             initialData={client}
-            onSave={handleSaveClientEdit}
+            onSave={handleSaveAndRefresh}
             onCancel={handleCloseEditPanel}
             allUsers={users}
           />

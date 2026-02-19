@@ -256,11 +256,11 @@ function ClientsPage() {
           },
         );
         setAlertOpen(true);
-        setAlertMessage("Pomyślnie edytowano klienta");
+        setAlertMessage("Zaktualizowano pomyślnie");
         setAlertSeverity("success");
         setIsEditClientPanelOpen(false);
-        if (isClientDetailsPanelOpen)
-          setIsClientDetailsPanelOpen(!isClientDetailsPanelOpen);
+        // if (isClientDetailsPanelOpen)
+        //   setIsClientDetailsPanelOpen(!isClientDetailsPanelOpen);
         await fetchData();
       } catch (error) {
         setAlertOpen(true);
