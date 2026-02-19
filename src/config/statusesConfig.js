@@ -1,5 +1,5 @@
 const statusesConfig = [
-  { value: "Brak", label: "Brak", color: "black" },
+  { value: "Wszystko", label: "Wszystko", color: "black" },
   { value: "Był kontakt", label: "Był kontakt", color: "#004400" },
   { value: "Chętny", label: "Chętny", color: "#FFA500" },
   { value: "Przyjęte", label: "Przyjęte", color: "#32CD32" },
