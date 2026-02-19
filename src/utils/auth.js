@@ -1,11 +1,9 @@
+import { useState, useEffect } from "react";
 import { useCookies } from "react-cookie";
 import { signOut } from "@aws-amplify/auth";
 import { useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
-import {
-  useDeleteColumnConfig,
-  useColumnConfig,
-} from "../config/columnConfig";
+import { useDeleteColumnConfig, useColumnConfig } from "../config/columnConfig";
 
 /* =========================
    COOKIE SUPPORT
@@ -39,6 +37,11 @@ export const removeTokenFromSessionStorage = () => {
   sessionStorage.removeItem("authToken");
 };
 
+export const clearAuthStorage = (removeCookie) => {
+  removeCookie("authToken", { path: "/" });
+  removeTokenFromSessionStorage();
+};
+
 /* =========================
    TOKEN VALIDATION
 ========================= */
@@ -70,24 +73,32 @@ export const useReadToken = () => {
     : getTokenFromSessionStorage();
 };
 
+// Alias dla kompatybilności z istniejącym kodem
+export const useReadCookie = useReadToken;
+
 /* =========================
    AUTH STATE
 ========================= */
 
 export const useAuth = () => {
   const [cookies, , removeCookie] = useCookies(["authToken"]);
-
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const token = cookiesEnabled()
     ? cookies.authToken
     : getTokenFromSessionStorage();
+  const navigate = useNavigate();
 
-  if (!isTokenValid(token)) {
-    removeCookie("authToken", { path: "/" });
-    removeTokenFromSessionStorage();
-    return false;
-  }
+  useEffect(() => {
+    if (!isTokenValid(token)) {
+      clearAuthStorage(removeCookie);
+      setIsAuthenticated(false);
+      navigate("/"); // redirect do login
+    } else {
+      setIsAuthenticated(true);
+    }
+  }, [token, removeCookie, navigate]);
 
-  return true;
+  return isAuthenticated;
 };
 
 /* =========================
@@ -105,7 +116,7 @@ export const useLogin = () => {
     if (cookiesEnabled()) {
       setCookie("authToken", token, {
         path: "/",
-        maxAge: 60 * 60 * 12,
+        maxAge: 60 * 60 * 12, // 12h
         secure: true,
         sameSite: "lax",
       });
@@ -131,12 +142,9 @@ export const useLogout = () => {
 
   const logout = async () => {
     try {
-      removeCookie("authToken", { path: "/" });
-      removeTokenFromSessionStorage();
-
+      clearAuthStorage(removeCookie);
       deleteConfig();
-
-      await signOut();
+      await signOut(); // opcjonalnie global: true
     } catch (error) {
       console.error("Logout error:", error);
     } finally {
@@ -163,5 +171,3 @@ export const useTokenInfo = (key) => {
     return null;
   }
 };
-
-export const useReadCookie = useReadToken;
