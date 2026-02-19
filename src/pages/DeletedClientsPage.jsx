@@ -324,7 +324,7 @@ function DeletedClientsPage() {
     fetchData();
   }, [isAuthenticated, userRole, id, navigate, fetchAgents, fetchData]);
   return (
-    <div className="flex items-start justify-start h-screen ml-16 mt-[10px] flex-col">
+    <div className="flex items-start justify-start ml-16 mt-[10px] flex-col overflow-x-hidden">
       <Sidebar />
       {loading && <LoadingCircularProgress />}
 

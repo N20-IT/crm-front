@@ -585,7 +585,7 @@ function OffersPage() {
 
   return (
     <div>
-      <div className="flex items-start justify-start h-screen ml-16  flex-col">
+      <div className="flex items-start justify-start ml-16 flex-col overflow-x-hidden">
         <Sidebar />
         {loading && <LoadingCircularProgress />}
         <div className="flex justify-center w-full">
