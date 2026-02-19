@@ -744,7 +744,7 @@ function TableControls({
                     fontWeight: "bold",
                   }}
                 >
-                  Brak
+                  Wszystko
                 </MenuItem>
                 <MenuItem value="Dom">Dom</MenuItem>
                 <MenuItem value="Mieszkanie">Mieszkanie</MenuItem>
@@ -811,7 +811,7 @@ function TableControls({
                     fontWeight: "bold",
                   }}
                 >
-                  Brak
+                  Wszystko
                 </MenuItem>
                 <MenuItem value="Pierwotny">Pierwotny</MenuItem>
                 <MenuItem value="Wtórny">Wtórny</MenuItem>
@@ -1012,7 +1012,7 @@ function TableControls({
                     fontWeight: "bold",
                   }}
                 >
-                  Brak
+                  Wszystko
                 </MenuItem>
                 {allUsers.map((user) => (
                   <MenuItem key={user} value={user}>
@@ -1075,11 +1075,11 @@ function TableControls({
                 {statusesConfig.map((status) => (
                   <MenuItem
                     key={status.value}
-                    value={status.value === "Brak" ? "" : status.value}
+                    value={status.value === "Wszystko" ? "" : status.value}
                     sx={{
-                      fontStyle: status.value === "Brak" ? "italic" : "normal",
-                      color: status.value === "Brak" ? "gray" : "inherit",
-                      fontWeight: status.value === "Brak" ? "bold" : "poppins",
+                      fontStyle: status.value === "Wszystko" ? "italic" : "normal",
+                      color: status.value === "Wszystko" ? "gray" : "inherit",
+                      fontWeight: status.value === "Wszystko" ? "bold" : "normal",
                     }}
                   >
                     {status.label}
@@ -1223,7 +1223,7 @@ function TableControls({
                 value=""
                 sx={{ fontStyle: "italic", color: "gray", fontWeight: "bold" }}
               >
-                Brak
+                Wszystko
               </MenuItem>
               {clients.map((client) => (
                 <MenuItem key={client._id} value={client._id}>
