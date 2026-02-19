@@ -478,22 +478,22 @@ function ClientDetails({
               {(client.iloscPokoiOd || client.iloscPokoiDo) && (
                 <CustomTypography sx={{ fontSize: "1rem" }}>
                   <strong>Ilość pokoi:</strong>
-                  {client.iloscPokoiOd && ` od ${client.iloscPokoiOd}`}
-                  {client.iloscPokoiDo && ` do ${client.iloscPokoiDo}`}
+                  {client.iloscPokoiOd && ` ${client.iloscPokoiOd}`}
+                  {client.iloscPokoiDo && ` - ${client.iloscPokoiDo}`}
                 </CustomTypography>
               )}
               {(client.metrazOd || client.metrazDo) && (
                 <CustomTypography sx={{ fontSize: "1rem" }}>
                   <strong>Metraż:</strong>
-                  {client.metrazOd && ` od ${formatNumber(client.metrazOd)} m²`}
-                  {client.metrazDo && ` do ${formatNumber(client.metrazDo)} m²`}
+                  {client.metrazOd && ` ${formatNumber(client.metrazOd)}`}
+                  {client.metrazDo && ` - ${formatNumber(client.metrazDo)} m²`}
                 </CustomTypography>
               )}
               {(client.budzetOd || client.budzetDo) && (
                 <CustomTypography sx={{ fontSize: "1rem" }}>
                   <strong>Budżet:</strong>
-                  {client.budzetOd && ` od ${formatNumber(client.budzetOd)} zł`}
-                  {client.budzetDo && ` do ${formatNumber(client.budzetDo)} zł`}
+                  {client.budzetOd && ` ${formatNumber(client.budzetOd)}`}
+                  {client.budzetDo && ` - ${formatNumber(client.budzetDo)} zł`}
                 </CustomTypography>
               )}
 
