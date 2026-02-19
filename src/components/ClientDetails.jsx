@@ -235,8 +235,14 @@ function ClientDetails({
     fetchDetailsData();
   }, [fetchDetailsData]);
   return (
-    <div className="fixed inset-0 bg-light-grey bg-opacity-75 flex items-center justify-center z-50">
-      <div className="bg-white px-6 rounded-lg shadow-lg w-1/2 max-h-[90vh] overflow-y-auto">
+    <div
+      className="fixed inset-0 bg-light-grey bg-opacity-75 flex items-center justify-center z-50"
+      onClick={onClose}
+    >
+      <div
+        className="bg-white px-6 rounded-lg shadow-lg w-1/2 max-h-[90vh] overflow-y-auto"
+        onClick={(e) => e.stopPropagation()}
+      >
         <Box
           sx={{
             position: "sticky",
