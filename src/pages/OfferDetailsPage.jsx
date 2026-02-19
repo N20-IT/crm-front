@@ -28,8 +28,10 @@ function OfferDetailsPage({
   readConfig,
   handleSaveEditedOffer,
   handleDeleteOfferClick,
+  handleChangeOfferInterestClick,
   handleAddToCalendar,
   handleUpdateOfferAgentClick,
+
   users,
   downloadPDF,
 }) {
@@ -393,6 +395,7 @@ function OfferDetailsPage({
             handleDeleteOfferClick={handleDeleteOfferClick}
             handleEditClick={handleEditClick}
             handleAddToCalendar={(e) => handleAddToCalendar(offer)}
+            handleChangeOfferInterestClick={handleChangeOfferInterestClick}
             handleUpdateOfferAgentClick={handleUpdateOfferAgentClick}
             showDetailsIcon={false}
             downloadPDF={downloadPDF}

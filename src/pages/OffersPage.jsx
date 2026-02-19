@@ -486,8 +486,9 @@ function OffersPage() {
     setLoading(true);
     const editedOffer = {
       ...offerToChangeOfferInterest,
-      czyCiekawa: true,
+      czyCiekawa: !offerToChangeOfferInterest.czyCiekawa,
     };
+
     try {
       await axios.put(
         `${backendServer}/listings/${editedOffer._id}`,
@@ -713,6 +714,7 @@ function OffersPage() {
             handleDeleteOfferClick={handleDeleteOfferClick}
             handleAddToCalendar={handleAddToCalendar}
             handleUpdateOfferAgentClick={handleUpdateOfferAgentClick}
+            handleChangeOfferInterestClick={handleChangeOfferInterestClick}
             users={users}
             downloadPDF={downloadPDF}
           />

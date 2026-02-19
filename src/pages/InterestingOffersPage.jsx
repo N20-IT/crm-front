@@ -406,7 +406,7 @@ function InterestingOffersPage() {
     setLoading(true);
     const editedOffer = {
       ...offerToChangeOfferInterest,
-      czyCiekawa: false,
+      czyCiekawa: !offerToChangeOfferInterest.czyCiekawa,
     };
     try {
       await axios.put(
