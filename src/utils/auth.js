@@ -163,3 +163,5 @@ export const useTokenInfo = (key) => {
     return null;
   }
 };
+
+export const useReadCookie = useReadToken;
