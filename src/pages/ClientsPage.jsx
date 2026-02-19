@@ -177,7 +177,16 @@ function ClientsPage() {
         setLoading(false);
       }
     },
-    [backendServer, token],
+    [
+      backendServer,
+      token,
+      searchValue,
+      filters,
+      page,
+      itemsPerPage,
+      orderBy,
+      order,
+    ],
   );
 
   const handleDeleteClient = useCallback(
