@@ -180,6 +180,33 @@ function ClientDetails({
     [backendServer, token, fetchDetailsData],
   );
 
+  const handleSaveClientEdit = useCallback(
+    async (updatedClientData) => {
+      try {
+        await axios.put(
+          `${backendServer}/clients/${updatedClientData._id}`,
+          updatedClientData,
+          {
+            headers: {
+              accept: "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          },
+        );
+        setAlertOpen(true);
+        setAlertMessage("Pomyślnie edytowano klienta");
+        setAlertSeverity("success");
+        setIsEditClientPanelOpen(false);
+        await fetchDetailsData();
+      } catch (error) {
+        setAlertOpen(true);
+        setAlertMessage("Błąd podczas edytowania klienta: " + error.message);
+        setAlertSeverity("error");
+      }
+    },
+    [backendServer, token, fetchDetailsData],
+  );
+
   const handleCloseEditPanel = () => {
     setIsEditClientPanelOpen(!isEditClientPanelOpen);
   };
@@ -766,7 +793,7 @@ function ClientDetails({
         {isEditClientPanelOpen && (
           <EditClientPanel
             initialData={client}
-            onSave={handleSaveEditedClient}
+            onSave={handleSaveClientEdit}
             onCancel={handleCloseEditPanel}
             allUsers={users}
           />

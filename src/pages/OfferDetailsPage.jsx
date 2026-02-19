@@ -77,6 +77,12 @@ function OfferDetailsPage({
         })
       : "";
 
+  const handleSaveAndRefresh = async (offerData) => {
+    handleCloseEditPanel();
+    await handleSaveEditedOffer(offerData);
+    await fetchDetailsData();
+  };
+
   useEffect(() => {
     if (!isAuthenticated) navigate("/");
     else fetchDetailsData();
@@ -387,7 +393,7 @@ function OfferDetailsPage({
         {isEditOfferPanelOpen && (
           <EditOfferPanel
             offerData={offer}
-            onSave={handleSaveEditedOffer}
+            onSave={handleSaveAndRefresh}
             onCancel={handleCloseEditPanel}
             users={users}
           />
