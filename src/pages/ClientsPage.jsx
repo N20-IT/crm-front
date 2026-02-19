@@ -20,7 +20,7 @@ import qs from "qs";
 
 function ClientsPage() {
   const { id } = useParams();
-  const { filters, clearFilters } = useClientFiltersStore();
+  const { filters, setFilters, clearFilters } = useClientFiltersStore();
   const [searchValue, setSearchValue] = useState("");
   const navigate = useNavigate();
   const isAuthenticated = useAuth();
@@ -355,14 +355,9 @@ function ClientsPage() {
     }
 
     fetchAgents();
-    fetchData();
-  }, [isAuthenticated, id, navigate, fetchAgents, fetchData]);
-
-  useEffect(() => {
-    return () => {
-      clearFilters();
-    };
-  }, []);
+    setFilters({ agent: userInformation });
+    fetchData(searchValue, { ...filters, agent: userInformation });
+  }, [isAuthenticated, id, navigate, fetchAgents]);
 
   return (
     <div className="flex items-start justify-start ml-16 flex-col overflow-x-hidden">
