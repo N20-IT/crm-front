@@ -1,15 +1,15 @@
 import React, { useState } from "react";
-import { Button } from "@mui/material";
-import UserForm from "./UserForm";
+import { Button, TextField, MenuItem } from "@mui/material";
 import Alerts from "./Alerts";
 
 function AddUserPanel({ onSave, onCancel }) {
   const [formData, setFormData] = useState({
-    email: "",
     imie: "",
     nazwisko: "",
+    email: "",
     role: "user",
   });
+
   const [errors, setErrors] = useState({});
   const [alertMessage, setAlertMessage] = useState("");
   const [alertSeverity, setAlertSeverity] = useState("");
@@ -25,12 +25,19 @@ function AddUserPanel({ onSave, onCancel }) {
 
   const validate = () => {
     const newErrors = {};
+
     if (!formData.imie || formData.imie.trim().length < 2) {
       newErrors.imie = "Imię musi mieć przynajmniej 2 znaki.";
+    } else if (formData.imie.trim().length > 50) {
+      newErrors.imie = "Imię nie może mieć więcej niż 50 znaków.";
     }
+
     if (!formData.nazwisko || formData.nazwisko.trim().length < 2) {
       newErrors.nazwisko = "Nazwisko musi mieć przynajmniej 2 znaki.";
+    } else if (formData.nazwisko.trim().length > 50) {
+      newErrors.nazwisko = "Nazwisko nie może mieć więcej niż 50 znaków.";
     }
+
     if (!formData.email) {
       newErrors.email = "Email jest wymagany.";
     } else {
@@ -39,17 +46,20 @@ function AddUserPanel({ onSave, onCancel }) {
         newErrors.email = "Niepoprawny format email.";
       }
     }
+
     if (!["user", "admin"].includes(formData.role)) {
       newErrors.role = "Rola musi być 'user' lub 'admin'.";
     }
 
     setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
+    return newErrors;
   };
 
   const handleSave = async () => {
-    if (!validate()) {
-      const errorMessages = Object.values(errors).join("\n");
+    const validationErrors = validate();
+
+    if (Object.keys(validationErrors).length > 0) {
+      const errorMessages = Object.values(validationErrors).join("\n");
       setAlertMessage("Popraw następujące błędy:\n" + errorMessages);
       setAlertSeverity("error");
       setAlertOpen(true);
@@ -58,12 +68,7 @@ function AddUserPanel({ onSave, onCancel }) {
 
     try {
       await onSave(formData);
-      setFormData({
-        email: "",
-        imie: "",
-        nazwisko: "",
-        role: "user",
-      });
+      setFormData({ imie: "", nazwisko: "", email: "", role: "user" });
       setErrors({});
       setAlertMessage("Użytkownik został dodany pomyślnie.");
       setAlertSeverity("success");
@@ -85,42 +90,89 @@ function AddUserPanel({ onSave, onCancel }) {
           </h2>
         </div>
         <form>
-          <div className="w-full">
-            <UserForm formData={formData} onChange={handleChange} errors={errors} />
-            <div className="sticky bottom-0 bg-white py-2 px-2 z-20">
-              <div className="flex justify-end space-x-4 mt-4">
-                <Button
-                  variant="contained"
-                  onClick={handleSave}
-                  sx={{
-                    color: "white",
-                    backgroundColor: "#FC8721",
-                    fontFamily: "Poppins",
-                    fontSize: "20px",
-                    width: "100%",
-                  }}
-                >
-                  Zapisz
-                </Button>
-                <Button
-                  variant="contained"
-                  onClick={onCancel}
-                  sx={{
-                    backgroundColor: "#6D727F",
-                    color: "white",
-                    fontFamily: "Poppins",
-                    fontSize: "20px",
-                    width: "100%",
-                  }}
-                >
-                  Anuluj
-                </Button>
-              </div>
+          <div className="w-full space-y-4">
+            {/* Imię */}
+            <TextField
+              fullWidth
+              label="Imię"
+              name="imie"
+              value={formData.imie}
+              onChange={handleChange}
+              error={!!errors.imie}
+              helperText={errors.imie}
+            />
+
+            {/* Nazwisko */}
+            <TextField
+              fullWidth
+              label="Nazwisko"
+              name="nazwisko"
+              value={formData.nazwisko}
+              onChange={handleChange}
+              error={!!errors.nazwisko}
+              helperText={errors.nazwisko}
+            />
+
+            {/* Email */}
+            <TextField
+              fullWidth
+              label="Email"
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
+              error={!!errors.email}
+              helperText={errors.email}
+            />
+
+            {/* Rola */}
+            <TextField
+              select
+              fullWidth
+              label="Rola"
+              name="role"
+              value={formData.role}
+              onChange={handleChange}
+              error={!!errors.role}
+              helperText={errors.role}
+            >
+              <MenuItem value="user">User</MenuItem>
+              <MenuItem value="admin">Admin</MenuItem>
+            </TextField>
+
+            {/* Przyciski */}
+            <div className="flex justify-end space-x-4 mt-4">
+              <Button
+                variant="contained"
+                onClick={handleSave}
+                sx={{
+                  color: "white",
+                  backgroundColor: "#FC8721",
+                  fontFamily: "Poppins",
+                  fontSize: "20px",
+                  width: "100%",
+                }}
+              >
+                Zapisz
+              </Button>
+              <Button
+                variant="contained"
+                onClick={onCancel}
+                sx={{
+                  backgroundColor: "#6D727F",
+                  color: "white",
+                  fontFamily: "Poppins",
+                  fontSize: "20px",
+                  width: "100%",
+                }}
+              >
+                Anuluj
+              </Button>
             </div>
           </div>
         </form>
       </div>
 
+      {/* Alerty */}
       <Alerts
         message={alertMessage}
         severity={alertSeverity}
