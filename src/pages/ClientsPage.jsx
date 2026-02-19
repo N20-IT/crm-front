@@ -310,30 +310,25 @@ function ClientsPage() {
               Authorization: `Bearer ${token}`,
             },
             responseType: "blob",
-          },
+          }
         );
 
-        const url = window.URL.createObjectURL(new Blob([response.data]));
-        const link = document.createElement("a");
-        link.href = url;
-        link.setAttribute("download", `klient_${clientData.daneKlienta}.pdf`);
-        document.body.appendChild(link);
-        link.click();
+        const file = new Blob([response.data], {
+          type: "application/pdf",
+        });
 
-        link.parentNode.removeChild(link);
-        window.URL.revokeObjectURL(url);
+        const fileURL = URL.createObjectURL(file);
 
-        setAlertOpen(true);
-        setAlertMessage("Pomyślnie pobrano PDF");
-        setAlertSeverity("success");
+        window.open(fileURL, "_blank");
+
       } catch (error) {
         setAlertOpen(true);
-        setAlertMessage("Wystąpił błąd podczas pobierania PDF");
+        setAlertMessage("Wystąpił błąd podczas otwierania PDF");
         setAlertSeverity("error");
         console.log(error.message);
       }
     },
-    [backendServer, token],
+    [backendServer, token]
   );
 
   useEffect(() => {
