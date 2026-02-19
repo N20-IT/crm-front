@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth, useReadCookie } from "../utils/auth";
 import Sidebar from "../components/Sidebar";
@@ -35,6 +35,7 @@ function UsersPage() {
   const backendServer = serverConfig["backend-server"];
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(false);
+  const containerRef = useRef(null);
 
   const [quantityUsers, setQuantityUsers] = useState(0);
 
@@ -83,11 +84,23 @@ function UsersPage() {
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
     fetchData(newPage, rowsPerPage, orderBy, order);
+    try {
+      if (containerRef.current) {
+        if (containerRef.current.scrollTo) containerRef.current.scrollTo({ top: 0, behavior: "smooth" });
+        else containerRef.current.scrollTop = 0;
+      }
+    } catch (e) {}
   };
   const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
     fetchData(0, parseInt(event.target.value, 10), orderBy, order);
+    try {
+      if (containerRef.current) {
+        if (containerRef.current.scrollTo) containerRef.current.scrollTo({ top: 0, behavior: "smooth" });
+        else containerRef.current.scrollTop = 0;
+      }
+    } catch (e) {}
   };
 
   const handleOpenCloseDialog = () => setOpenDialog(!openDialog);
@@ -247,6 +260,12 @@ function UsersPage() {
     if (sortBy !== orderBy) setOrderBy(sortBy);
     if (sort !== order) setOrder(sort);
     fetchData(0, rowsPerPage, sortBy, sort);
+    try {
+      if (containerRef.current) {
+        if (containerRef.current.scrollTo) containerRef.current.scrollTo({ top: 0, behavior: "smooth" });
+        else containerRef.current.scrollTop = 0;
+      }
+    } catch (e) {}
   };
 
   useEffect(() => {
@@ -263,6 +282,7 @@ function UsersPage() {
       </div>
       <TableContainer
         className="ml-5"
+        ref={containerRef}
         component={Paper}
         elevation={8}
         style={{
