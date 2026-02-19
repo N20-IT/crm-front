@@ -134,6 +134,7 @@ function OffersPage() {
   };
 
   const handleSearchAndFilter = (searchQuery, currentFilters, columnConfig) => {
+    setPage(0);
     setReadConfig(columnConfig);
     fetchData(searchQuery, currentFilters, columnConfig);
   };
@@ -175,7 +176,7 @@ function OffersPage() {
   };
 
   const handleAddToCalendar = (row) => {
-    const eventTitle = row.telefonWlasciciela;
+    const eventTitle = row.daneWlasciciela + " - " + row.telefonWlasciciela;
     const eventDescription = row.linkOferta;
 
     const startDate = new Date(row.dataNastepnegoKontaktu);
@@ -460,8 +461,7 @@ function OffersPage() {
       setAlertMessage("Pomyślnie zaktualizowano ofertę");
       setAlertSeverity("success");
       setOpenDialogConfirmOfferAssignment(false);
-      if (isOfferDetailsPanelOpen)
-        setIsOfferDetailsPanelOpen(!isOfferDetailsPanelOpen);
+
       await fetchData();
     } catch (error) {
       setAlertOpen(true);
@@ -485,8 +485,9 @@ function OffersPage() {
     setLoading(true);
     const editedOffer = {
       ...offerToChangeOfferInterest,
-      czyCiekawa: true,
+      czyCiekawa: !offerToChangeOfferInterest.czyCiekawa,
     };
+
     try {
       await axios.put(
         `${backendServer}/listings/${editedOffer._id}`,
@@ -502,8 +503,7 @@ function OffersPage() {
       setAlertMessage("Pomyślnie zaktualizowano ofertę");
       setAlertSeverity("success");
       setOpenDialogChangeOfferInterest(false);
-      if (isOfferDetailsPanelOpen)
-        setIsOfferDetailsPanelOpen(!isOfferDetailsPanelOpen);
+
       await fetchData();
     } catch (error) {
       setAlertOpen(true);
@@ -534,25 +534,16 @@ function OffersPage() {
           },
         );
 
-        const url = window.URL.createObjectURL(new Blob([response.data]));
-        const link = document.createElement("a");
-        link.href = url;
-        link.setAttribute(
-          "download",
-          `klient_${offerData.telefonWlasciciela[0]}.pdf`,
-        );
-        document.body.appendChild(link);
-        link.click();
+        const file = new Blob([response.data], {
+          type: "application/pdf",
+        });
 
-        link.parentNode.removeChild(link);
-        window.URL.revokeObjectURL(url);
+        const fileURL = URL.createObjectURL(file);
 
-        setAlertOpen(true);
-        setAlertMessage("Pomyślnie pobrano PDF");
-        setAlertSeverity("success");
+        window.open(fileURL, "_blank");
       } catch (error) {
         setAlertOpen(true);
-        setAlertMessage("Wystąpił błąd podczas pobierania PDF");
+        setAlertMessage("Wystąpił błąd podczas otwierania PDF");
         setAlertSeverity("error");
         console.log(error.message);
       }
@@ -584,7 +575,7 @@ function OffersPage() {
 
   return (
     <div>
-      <div className="flex items-start justify-start h-screen ml-16  flex-col">
+      <div className="flex items-start justify-start ml-16 flex-col overflow-x-hidden">
         <Sidebar />
         {loading && <LoadingCircularProgress />}
         <div className="flex justify-center w-full">
@@ -620,6 +611,10 @@ function OffersPage() {
             handleAssignmentOfferToClientClick
           }
           downloadPDF={downloadPDF}
+          page={page}
+          itemsPerPage={itemsPerPage}
+          orderBy={orderBy}
+          order={order}
         />
         <Alerts
           message={alertMessage}
@@ -708,6 +703,7 @@ function OffersPage() {
             handleDeleteOfferClick={handleDeleteOfferClick}
             handleAddToCalendar={handleAddToCalendar}
             handleUpdateOfferAgentClick={handleUpdateOfferAgentClick}
+            handleChangeOfferInterestClick={handleChangeOfferInterestClick}
             users={users}
             downloadPDF={downloadPDF}
           />

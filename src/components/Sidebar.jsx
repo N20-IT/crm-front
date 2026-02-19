@@ -11,7 +11,7 @@ import {
 } from "@mui/icons-material";
 import { ThemeProvider } from "@mui/material/styles";
 import { customTooltip } from "../styles/CustomTooltip";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { GetInformationFromToken } from "../utils/decodeToken";
 import { Button, Tooltip } from "@mui/material";
 import { useLogout } from "../utils/auth";
@@ -20,9 +20,16 @@ const Sidebar = () => {
   const location = useLocation();
   const userRole = GetInformationFromToken("custom:role");
   const logout = useLogout();
+  const navigate = useNavigate();
 
   const getLinkClass = (path) => {
     return location.pathname === path ? "bg-orange" : "hover:bg-dark-blue";
+  };
+
+  const handleNavClick = (path) => {
+    if (location.pathname === path) {
+      navigate(0);
+    }
   };
 
   return (
@@ -46,6 +53,7 @@ const Sidebar = () => {
                 <Link
                   to="/oferty"
                   className="flex items-center justify-start text-xl ml-4 w-full h-full"
+                  onClick={() => handleNavClick("/oferty")}
                 >
                   <LocalOffer sx={{ marginRight: "6px" }} />
                 </Link>
@@ -61,6 +69,7 @@ const Sidebar = () => {
                 <Link
                   to="/ciekawe-oferty"
                   className="flex items-center justify-start text-xl ml-4 w-full h-full"
+                  onClick={() => handleNavClick("/ciekawe-oferty")}
                 >
                   <Star sx={{ marginRight: "6px" }} />
                 </Link>
@@ -75,6 +84,7 @@ const Sidebar = () => {
                 <Link
                   to="/klienci"
                   className="flex items-center justify-start text-xl ml-4 w-full h-full"
+                  onClick={() => handleNavClick("/klienci")}
                 >
                   <Group sx={{ marginRight: "6px" }} />
                 </Link>
@@ -92,6 +102,7 @@ const Sidebar = () => {
                     <Link
                       to="/kosz-klientow"
                       className="flex items-center justify-start text-xl ml-4 w-full h-full"
+                      onClick={() => handleNavClick("/kosz-klientow")}
                     >
                       <PersonRemove sx={{ marginRight: "6px" }} />
                     </Link>
@@ -106,6 +117,7 @@ const Sidebar = () => {
                     <Link
                       to="/uzytkownicy"
                       className="flex items-center justify-start text-xl ml-4 w-full h-full"
+                      onClick={() => handleNavClick("/uzytkownicy")}
                     >
                       <Groups sx={{ marginRight: "6px" }} />
                     </Link>
@@ -121,6 +133,7 @@ const Sidebar = () => {
                     <Link
                       to="/logi"
                       className="flex items-center justify-start text-xl ml-4 w-full h-full"
+                      onClick={() => handleNavClick("/logi")}
                     >
                       <Description sx={{ marginRight: "6px" }} />
                     </Link>
@@ -138,6 +151,7 @@ const Sidebar = () => {
                 <Link
                   to="/ustawienia"
                   className="flex items-center justify-start text-xl ml-4 w-full h-full"
+                  onClick={() => handleNavClick("/ustawienia")}
                 >
                   <Settings sx={{ marginRight: "6px" }} />
                 </Link>

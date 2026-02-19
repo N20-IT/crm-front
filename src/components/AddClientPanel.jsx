@@ -8,7 +8,7 @@ import axios from "axios";
 import serverConfig from "../servers.json";
 import { debounce } from "lodash";
 
-function AddClientPanel({ onSave, onCancel, allUsers }) {
+function AddClientPanel({ onSave, onCancel, allUsers, userInformation }) {
   const backendServer = serverConfig["backend-server"];
   const token = useReadCookie();
 
@@ -23,6 +23,7 @@ function AddClientPanel({ onSave, onCancel, allUsers }) {
         data: new Date().toISOString(),
       },
     ],
+    agent: userInformation,
   });
   const [, setErrors] = useState({});
   const [alertMessage, setAlertMessage] = useState("");

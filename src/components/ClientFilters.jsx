@@ -194,9 +194,7 @@ export default function ClientFilters({ onFilterApply, allUsers }) {
 
     clearGlobalFilters();
 
-    onFilterApply(localFilters);
-
-    changeFilterPanelOpen();
+    onFilterApply(emptyFilters);
   };
 
   useEffect(() => {
@@ -270,11 +268,11 @@ export default function ClientFilters({ onFilterApply, allUsers }) {
           {statusesConfig.map((status) => (
             <MenuItem
               key={status.value}
-              value={status.value === "Brak" ? "" : status.value}
+              value={status.value === "Wszystko" ? "" : status.value}
               sx={{
-                fontStyle: status.value === "Brak" ? "italic" : "normal",
-                color: status.value === "Brak" ? "gray" : "inherit",
-                fontWeight: status.value === "Brak" ? "bold" : "poppins",
+                fontStyle: status.value === "Wszystko" ? "italic" : "normal",
+                color: status.value === "Wszystko" ? "gray" : "inherit",
+                fontWeight: status.value === "Wszystko" ? "bold" : "poppins",
               }}
             >
               {status.label}
@@ -353,7 +351,7 @@ export default function ClientFilters({ onFilterApply, allUsers }) {
               fontWeight: "bold",
             }}
           >
-            Brak
+            Wszystko
           </MenuItem>
           {allUsers.map((user) => (
             <MenuItem key={user} value={user}>
@@ -505,7 +503,7 @@ export default function ClientFilters({ onFilterApply, allUsers }) {
               fontWeight: "bold",
             }}
           >
-            Brak
+            Wszystko
           </MenuItem>
           <MenuItem value="Dom">Dom</MenuItem>
           <MenuItem value="Mieszkanie">Mieszkanie</MenuItem>
@@ -668,9 +666,9 @@ export default function ClientFilters({ onFilterApply, allUsers }) {
                 sx={{
                   fontFamily: "Poppins",
                   fontSize: "16px",
-                  color: standard.value === "Brak" ? "gray" : "inherit",
-                  fontStyle: standard.value === "Brak" ? "italic" : "normal",
-                  fontWeight: standard.value === "Brak" ? "bold" : "normal",
+                  color: standard.value === "Wszystko" ? "gray" : "inherit",
+                  fontStyle: standard.value === "Wszystko" ? "italic" : "normal",
+                  fontWeight: standard.value === "Wszystko" ? "bold" : "normal",
                 }}
               />
             </MenuItem>

@@ -20,7 +20,7 @@ const awsmobile = {
   },
   aws_cognito_verification_mechanisms: ["EMAIL"],
   cookieStorage: {
-    domain: ".d2peddebsf5u5o.amplifyapp.com/",
+    domain: ".n20crm.com",
     path: "/",
     expires: 365,
     secure: true,

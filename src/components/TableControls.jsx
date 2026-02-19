@@ -285,35 +285,31 @@ function TableControls({
     });
   };
 
+  const emptyFilters = {
+    ulica: "",
+    dzielnica: [],
+    poddzielnica: [],
+    miasto: "",
+    typInwestycji: "",
+    rynek: "",
+    minIloscPokoi: "",
+    maxIloscPokoi: "",
+    minMetraz: "",
+    maxMetraz: "",
+    minPrice: "",
+    maxPrice: "",
+    agent: "",
+    statusOferty: "",
+    dataKontaktuOd: "",
+    dataKontaktuDo: "",
+    dataNastepnegoKontaktuOd: "",
+    dataNastepnegoKontaktuDo: "",
+    clientId: "",
+  };
+
   const handleClearFilters = () => {
-    const emptyFilters = {
-      ulica: "",
-      dzielnica: [],
-      poddzielnica: [],
-      miasto: "",
-      typInwestycji: "",
-      rynek: "",
-      minIloscPokoi: "",
-      maxIloscPokoi: "",
-      minMetraz: "",
-      maxMetraz: "",
-      minPrice: "",
-      maxPrice: "",
-      agent: "",
-      statusOferty: "",
-      dataKontaktuOd: "",
-      dataKontaktuDo: "",
-      dataNastepnegoKontaktuOd: "",
-      dataNastepnegoKontaktuDo: "",
-      clientId: "",
-    };
-
-    // Wyczyść lokalne filtry
     setLocalFilters(emptyFilters);
-    // Wyczyść globalne filtry
     clearGlobalFilters();
-
-    toggleFilterPanel();
   };
 
   useEffect(() => {
@@ -391,9 +387,9 @@ function TableControls({
           <Button
             variant="outlined"
             sx={{
-              color: isAnyFilterFilled(localFilters) ? "#009900" : "#6D727F",
+              color: isAnyFilterFilled(appliedFilters) ? "#009900" : "#6D727F",
               fontFamily: "Poppins",
-              borderColor: isAnyFilterFilled(localFilters)
+              borderColor: isAnyFilterFilled(appliedFilters)
                 ? "#009900"
                 : "black",
               width: "180px",
@@ -404,6 +400,26 @@ function TableControls({
           >
             Filtruj
           </Button>
+          <Tooltip title="Wyczyść filtry">
+            <IconButton
+              onClick={() => {
+                handleClearFilters();
+                onFilterApply(searchValue, emptyFilters, columnConfig);
+              }}
+              sx={{
+                color: isAnyFilterFilled(appliedFilters)
+                  ? "#CC0000"
+                  : "#6D727F",
+                border: "1px solid",
+                borderColor: isAnyFilterFilled(appliedFilters)
+                  ? "#CC0000"
+                  : "black",
+                borderRadius: "4px",
+              }}
+            >
+              <Clear />
+            </IconButton>
+          </Tooltip>
           <CustomTextField
             label="Szukaj..."
             value={searchValue}
@@ -728,7 +744,7 @@ function TableControls({
                     fontWeight: "bold",
                   }}
                 >
-                  Brak
+                  Wszystko
                 </MenuItem>
                 <MenuItem value="Dom">Dom</MenuItem>
                 <MenuItem value="Mieszkanie">Mieszkanie</MenuItem>
@@ -795,7 +811,7 @@ function TableControls({
                     fontWeight: "bold",
                   }}
                 >
-                  Brak
+                  Wszystko
                 </MenuItem>
                 <MenuItem value="Pierwotny">Pierwotny</MenuItem>
                 <MenuItem value="Wtórny">Wtórny</MenuItem>
@@ -996,7 +1012,7 @@ function TableControls({
                     fontWeight: "bold",
                   }}
                 >
-                  Brak
+                  Wszystko
                 </MenuItem>
                 {allUsers.map((user) => (
                   <MenuItem key={user} value={user}>
@@ -1059,11 +1075,11 @@ function TableControls({
                 {statusesConfig.map((status) => (
                   <MenuItem
                     key={status.value}
-                    value={status.value === "Brak" ? "" : status.value}
+                    value={status.value === "Wszystko" ? "" : status.value}
                     sx={{
-                      fontStyle: status.value === "Brak" ? "italic" : "normal",
-                      color: status.value === "Brak" ? "gray" : "inherit",
-                      fontWeight: status.value === "Brak" ? "bold" : "poppins",
+                      fontStyle: status.value === "Wszystko" ? "italic" : "normal",
+                      color: status.value === "Wszystko" ? "gray" : "inherit",
+                      fontWeight: status.value === "Wszystko" ? "bold" : "normal",
                     }}
                   >
                     {status.label}
@@ -1207,7 +1223,7 @@ function TableControls({
                 value=""
                 sx={{ fontStyle: "italic", color: "gray", fontWeight: "bold" }}
               >
-                Brak
+                Wszystko
               </MenuItem>
               {clients.map((client) => (
                 <MenuItem key={client._id} value={client._id}>

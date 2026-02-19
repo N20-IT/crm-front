@@ -20,7 +20,7 @@ import qs from "qs";
 
 function ClientsPage() {
   const { id } = useParams();
-  const { filters, clearFilters } = useClientFiltersStore();
+  const { filters, setFilters, clearFilters } = useClientFiltersStore();
   const [searchValue, setSearchValue] = useState("");
   const navigate = useNavigate();
   const isAuthenticated = useAuth();
@@ -91,7 +91,8 @@ function ClientsPage() {
   };
 
   const handleSearchAndFilter = (searchQuery, currentFilters) => {
-    fetchData(searchQuery, currentFilters);
+    setPage(0);
+    fetchData(searchQuery, currentFilters, 0);
   };
 
   const handlePagination = (currentPage, rowsPerValue) => {
@@ -176,7 +177,16 @@ function ClientsPage() {
         setLoading(false);
       }
     },
-    [backendServer, token],
+    [
+      backendServer,
+      token,
+      searchValue,
+      filters,
+      page,
+      itemsPerPage,
+      orderBy,
+      order,
+    ],
   );
 
   const handleDeleteClient = useCallback(
@@ -255,11 +265,11 @@ function ClientsPage() {
           },
         );
         setAlertOpen(true);
-        setAlertMessage("Pomyślnie edytowano klienta");
+        setAlertMessage("Zaktualizowano pomyślnie");
         setAlertSeverity("success");
         setIsEditClientPanelOpen(false);
-        if (isClientDetailsPanelOpen)
-          setIsClientDetailsPanelOpen(!isClientDetailsPanelOpen);
+        // if (isClientDetailsPanelOpen)
+        //   setIsClientDetailsPanelOpen(!isClientDetailsPanelOpen);
         await fetchData();
       } catch (error) {
         setAlertOpen(true);
@@ -310,30 +320,25 @@ function ClientsPage() {
               Authorization: `Bearer ${token}`,
             },
             responseType: "blob",
-          },
+          }
         );
 
-        const url = window.URL.createObjectURL(new Blob([response.data]));
-        const link = document.createElement("a");
-        link.href = url;
-        link.setAttribute("download", `klient_${clientData.daneKlienta}.pdf`);
-        document.body.appendChild(link);
-        link.click();
+        const file = new Blob([response.data], {
+          type: "application/pdf",
+        });
 
-        link.parentNode.removeChild(link);
-        window.URL.revokeObjectURL(url);
+        const fileURL = URL.createObjectURL(file);
 
-        setAlertOpen(true);
-        setAlertMessage("Pomyślnie pobrano PDF");
-        setAlertSeverity("success");
+        window.open(fileURL, "_blank");
+
       } catch (error) {
         setAlertOpen(true);
-        setAlertMessage("Wystąpił błąd podczas pobierania PDF");
+        setAlertMessage("Wystąpił błąd podczas otwierania PDF");
         setAlertSeverity("error");
         console.log(error.message);
       }
     },
-    [backendServer, token],
+    [backendServer, token]
   );
 
   useEffect(() => {
@@ -345,17 +350,12 @@ function ClientsPage() {
     }
 
     fetchAgents();
-    fetchData();
-  }, [isAuthenticated, id, navigate, fetchAgents, fetchData]);
-
-  useEffect(() => {
-    return () => {
-      clearFilters();
-    };
-  }, []);
+    setFilters({ agent: userInformation });
+    fetchData(searchValue, { ...filters, agent: userInformation });
+  }, [isAuthenticated, id, navigate, fetchAgents]);
 
   return (
-    <div className="flex items-start justify-start h-screen ml-16 flex-col">
+    <div className="flex items-start justify-start ml-16 flex-col overflow-x-hidden">
       <Sidebar />
       {loading && <LoadingCircularProgress />}
       <div className="flex justify-center w-full">
@@ -380,6 +380,10 @@ function ClientsPage() {
         handleGoToClientDetails={handleOpenClientDetailsPanel}
         userRole={userRole}
         downloadPDF={downloadPDF}
+        page={page}
+        itemsPerPage={itemsPerPage}
+        orderBy={orderBy}
+        order={order}
       />
       <Alerts
         message={alertMessage}
@@ -401,6 +405,7 @@ function ClientsPage() {
           onSave={handleSaveClient}
           onCancel={handleAddClientClick}
           allUsers={allUsers.length !== 0 ? allUsers : users}
+          userInformation={userInformation}
         />
       )}
       {isEditClientPanelOpen && (

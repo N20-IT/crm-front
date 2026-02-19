@@ -60,6 +60,26 @@ function ClientTableControls({
     onSearchFilterApply(searchValue, newFilters);
   };
 
+  const emptyFilters = {
+    status: "",
+    agent: "",
+    lokalizacja: [],
+    rodzajNieruchomosci: "",
+    pokojeOd: "",
+    pokojeDo: "",
+    metrazOd: "",
+    metrazDo: "",
+    budzetOd: "",
+    budzetDo: "",
+    standard: [],
+    dataZapytaniaOd: "",
+    dataZapytaniaDo: "",
+    ostatniKontaktOd: "",
+    ostatniKontaktDo: "",
+    dataNastepnegoKontaktuOd: "",
+    dataNastepnegoKontaktuDo: "",
+  };
+
   return (
     <Box
       sx={{
@@ -90,6 +110,22 @@ function ClientTableControls({
         >
           Filtruj
         </Button>
+        <Tooltip title="Wyczyść filtry">
+          <IconButton
+            onClick={() => {
+              clearFilters();
+              onSearchFilterApply(searchValue, emptyFilters);
+            }}
+            sx={{
+              color: isAnyFilterFilled(filters) ? "#CC0000" : "#6D727F",
+              border: "1px solid",
+              borderColor: isAnyFilterFilled(filters) ? "#CC0000" : "black",
+              borderRadius: "4px",
+            }}
+          >
+            <Clear />
+          </IconButton>
+        </Tooltip>
         <CustomTextField
           label="Szukaj..."
           value={searchValue}

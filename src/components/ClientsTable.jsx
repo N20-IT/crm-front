@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { ThemeProvider } from "@mui/material/styles";
 import { customTooltip } from "../styles/CustomTooltip";
 import {
@@ -40,11 +40,26 @@ function ClientsTable({
   handleGoToClientDetails,
   userRole,
   downloadPDF,
+  page,
+  itemsPerPage,
+  orderBy,
+  order,
 }) {
-  const [order, setOrder] = useState("desc");
-  const [orderBy, setOrderBy] = useState("dataUtworzenia");
-  const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(25);
+  const containerRef = useRef(null);
+
+  const scrollToTop = (smooth = true) => {
+    try {
+      if (containerRef.current) {
+        if (smooth && containerRef.current.scrollTo) {
+          containerRef.current.scrollTo({ top: 0, behavior: "smooth" });
+        } else {
+          containerRef.current.scrollTop = 0;
+        }
+      }
+    } catch (e) {
+      // ignore
+    }
+  };
   const navigate = useNavigate();
   const { setClientId } = useFiltersStore();
 
@@ -61,20 +76,19 @@ function ClientsTable({
 
   const handleSortRequest = (columnId) => {
     const isDesc = orderBy === columnId && order === "desc";
-    isDesc ? setOrder("asc") : setOrder("desc");
-    setOrderBy(columnId);
-    onSortApply(0, rowsPerPage, columnId, isDesc ? "asc" : "desc");
+    onSortApply(0, itemsPerPage, columnId, isDesc ? "asc" : "desc");
+    scrollToTop();
   };
 
   const handleChangePage = (event, newPage) => {
-    setPage(newPage);
-    onPaginationApply(newPage, rowsPerPage);
+    onPaginationApply(newPage, itemsPerPage);
+    scrollToTop();
   };
 
   const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(parseInt(event.target.value, 10));
-    setPage(0);
-    onPaginationApply(0, parseInt(event.target.value, 10));
+    const newRows = parseInt(event.target.value, 10);
+    onPaginationApply(0, newRows);
+    scrollToTop();
   };
 
   const formatNumber = (value) =>
@@ -147,9 +161,16 @@ function ClientsTable({
     window.open(googleCalendarUrl, "_blank");
   };
 
+  // Scroll to top when rows change (covers filtering and external updates)
+  useEffect(() => {
+    // smooth scroll when rows or total changes
+    scrollToTop(true);
+  }, [rows, quantityClients]);
+
   return (
     <ThemeProvider theme={customTooltip}>
       <TableContainer
+        ref={containerRef}
         className="ml-5"
         component={Paper}
         elevation={8}
@@ -244,7 +265,7 @@ function ClientsTable({
           </TableHead>
           <TableBody>
             {loading
-              ? [...Array(rowsPerPage)].map((_, index) => (
+              ? [...Array(itemsPerPage)].map((_, index) => (
                   <TableRow key={index}>
                     <TableCell key={"checkbox"}>
                       <Skeleton variant="rounded" width="100%" height={16} />
@@ -581,7 +602,7 @@ function ClientsTable({
           count={quantityClients}
           page={page}
           onPageChange={handleChangePage}
-          rowsPerPage={rowsPerPage}
+          rowsPerPage={itemsPerPage}
           onRowsPerPageChange={handleChangeRowsPerPage}
           labelRowsPerPage="Wiersze na stronę"
           labelDisplayedRows={({ from, to, count }) =>

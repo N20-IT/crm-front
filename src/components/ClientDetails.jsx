@@ -180,6 +180,39 @@ function ClientDetails({
     [backendServer, token, fetchDetailsData],
   );
 
+  const handleSaveClientEdit = useCallback(
+    async (updatedClientData) => {
+      try {
+        await axios.put(
+          `${backendServer}/clients/${updatedClientData._id}`,
+          updatedClientData,
+          {
+            headers: {
+              accept: "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          },
+        );
+        setAlertOpen(true);
+        setAlertMessage("Pomyślnie edytowano klienta");
+        setAlertSeverity("success");
+        setIsEditClientPanelOpen(false);
+        await fetchDetailsData();
+      } catch (error) {
+        setAlertOpen(true);
+        setAlertMessage("Błąd podczas edytowania klienta: " + error.message);
+        setAlertSeverity("error");
+      }
+    },
+    [backendServer, token, fetchDetailsData],
+  );
+
+  const handleSaveAndRefresh = async (updatedClientData) => {
+    handleCloseEditPanel();
+    handleSaveEditedClient(updatedClientData);
+    fetchDetailsData();
+  };
+
   const handleCloseEditPanel = () => {
     setIsEditClientPanelOpen(!isEditClientPanelOpen);
   };
@@ -198,12 +231,42 @@ function ClientDetails({
     setIsOfferDetailsPanelOpen(!isOfferDetailsPanelOpen);
   };
 
+  const handleAddToCalendar = (row) => {
+    const eventTitle = row.daneKlienta + " " + row.numerTelefonu;
+
+    const startDate = new Date(row.dataNastepnegoKontaktu);
+    startDate.setHours(12, 0, 0, 0);
+    const endDate = new Date(startDate);
+    endDate.setHours(startDate.getHours() + 1);
+
+    const formatDateForCalendar = (date) =>
+      date
+        .toISOString()
+        .replace(/[-:.]/g, "")
+        .slice(0, 15) + "Z";
+
+    const formattedStartDate = formatDateForCalendar(startDate);
+    const formattedEndDate = formatDateForCalendar(endDate);
+
+    const googleCalendarUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(
+      eventTitle,
+    )}&dates=${formattedStartDate}/${formattedEndDate}&sf=true&output=xml`;
+
+    window.open(googleCalendarUrl, "_blank");
+  };
+
   useEffect(() => {
     fetchDetailsData();
   }, [fetchDetailsData]);
   return (
-    <div className="fixed inset-0 bg-light-grey bg-opacity-75 flex items-center justify-center z-50">
-      <div className="bg-white px-6 rounded-lg shadow-lg w-1/2 max-h-[90vh] overflow-y-auto">
+    <div
+      className="fixed inset-0 bg-light-grey bg-opacity-75 flex items-center justify-center z-50"
+      onClick={onClose}
+    >
+      <div
+        className="bg-white px-6 rounded-lg shadow-lg w-1/2 max-h-[90vh] overflow-y-auto"
+        onClick={(e) => e.stopPropagation()}
+      >
         <Box
           sx={{
             position: "sticky",
@@ -415,22 +478,22 @@ function ClientDetails({
               {(client.iloscPokoiOd || client.iloscPokoiDo) && (
                 <CustomTypography sx={{ fontSize: "1rem" }}>
                   <strong>Ilość pokoi:</strong>
-                  {client.iloscPokoiOd && ` od ${client.iloscPokoiOd}`}
-                  {client.iloscPokoiDo && ` do ${client.iloscPokoiDo}`}
+                  {client.iloscPokoiOd && ` ${client.iloscPokoiOd}`}
+                  {client.iloscPokoiDo && ` - ${client.iloscPokoiDo}`}
                 </CustomTypography>
               )}
               {(client.metrazOd || client.metrazDo) && (
                 <CustomTypography sx={{ fontSize: "1rem" }}>
                   <strong>Metraż:</strong>
-                  {client.metrazOd && ` od ${formatNumber(client.metrazOd)} m²`}
-                  {client.metrazDo && ` do ${formatNumber(client.metrazDo)} m²`}
+                  {client.metrazOd && ` ${formatNumber(client.metrazOd)}`}
+                  {client.metrazDo && ` - ${formatNumber(client.metrazDo)} m²`}
                 </CustomTypography>
               )}
               {(client.budzetOd || client.budzetDo) && (
                 <CustomTypography sx={{ fontSize: "1rem" }}>
                   <strong>Budżet:</strong>
-                  {client.budzetOd && ` od ${formatNumber(client.budzetOd)} zł`}
-                  {client.budzetDo && ` do ${formatNumber(client.budzetDo)} zł`}
+                  {client.budzetOd && ` ${formatNumber(client.budzetOd)}`}
+                  {client.budzetDo && ` - ${formatNumber(client.budzetDo)} zł`}
                 </CustomTypography>
               )}
 
@@ -554,7 +617,7 @@ function ClientDetails({
             <ThemeProvider theme={customTooltip}>
               <TableContainer
                 className="ml-5"
-                component={Paper}
+                // component={Paper}
                 elevation={8}
                 style={{
                   width: "99.4%",
@@ -564,6 +627,8 @@ function ClientDetails({
                   maxHeight: "88vh",
                   marginLeft: "0px",
                   marginTop: "6px",
+                  borderRadius: "4px",
+                  color: "black",
                 }}
               >
                 <Table>
@@ -742,7 +807,6 @@ function ClientDetails({
             zIndex: 10,
             backgroundColor: "white",
             padding: "16px",
-            borderTop: "1px solid #e0e0e0",
             display: "flex",
             justifyContent: "flex-end",
           }}
@@ -751,6 +815,7 @@ function ClientDetails({
             row={client}
             handleDeleteClientClick={handleDeleteClientClick}
             handleEditClientClick={handleEditClick}
+            handleAddToCalendar={handleAddToCalendar}
             showDetailsIcon={false}
             userRole={userRole}
             downloadPDF={downloadPDF}
@@ -766,7 +831,7 @@ function ClientDetails({
         {isEditClientPanelOpen && (
           <EditClientPanel
             initialData={client}
-            onSave={handleSaveEditedClient}
+            onSave={handleSaveAndRefresh}
             onCancel={handleCloseEditPanel}
             allUsers={users}
           />

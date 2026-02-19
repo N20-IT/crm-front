@@ -17,6 +17,8 @@ import awsExports from "../aws-exports";
 import { useLogin, useAuth } from "../utils/auth";
 import { useNavigate } from "react-router-dom";
 import LoadingCircularProgress from "../components/LoadingCircularProgress";
+import { useCookies } from "react-cookie";
+import { removeTokenFromSessionStorage } from "../utils/auth";
 Amplify.configure(awsExports);
 
 function LoginPage() {
@@ -29,6 +31,12 @@ function LoginPage() {
   const isAuthenticated = useAuth();
   const login = useLogin();
   const [loading, setLoading] = useState(false);
+  const [, , removeCookie] = useCookies(["authToken"]);
+
+  useEffect(() => {
+    removeCookie("authToken", { path: "/" });
+    removeTokenFromSessionStorage();
+  }, [removeCookie]);
 
   useEffect(() => {
     if (isAuthenticated) navigate("/oferty");
