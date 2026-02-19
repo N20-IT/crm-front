@@ -57,9 +57,14 @@ function OffersTable({
     else setSelected(rows.map((row) => row._id));
   };
 
+  const safePage = Number.isFinite(Number(page)) ? Number(page) : 0;
+  const safeItemsPerPage = Number.isFinite(Number(itemsPerPage))
+    ? Number(itemsPerPage)
+    : 25;
+
   const handleSortRequest = (columnId) => {
     const isDesc = orderBy === columnId && order === "desc";
-    onSortApply(0, itemsPerPage, columnId, isDesc ? "asc" : "desc");
+    onSortApply(0, safeItemsPerPage, columnId, isDesc ? "asc" : "desc");
     scrollToTop();
   };
 
@@ -80,7 +85,7 @@ function OffersTable({
   };
 
   const handleChangePage = (event, newPage) => {
-    onPaginationApply(newPage, itemsPerPage);
+    onPaginationApply(newPage, safeItemsPerPage);
     scrollToTop();
   };
 
@@ -147,8 +152,6 @@ function OffersTable({
     document.execCommand("copy");
     document.body.removeChild(textarea);
   };
-
-  // parent controls `page` — do not override here
 
   return (
     <ThemeProvider theme={customTooltip}>
@@ -256,7 +259,7 @@ function OffersTable({
           </TableHead>
           <TableBody>
             {loading ? (
-              [...Array(itemsPerPage)].map((_, index) => (
+              [...Array(safeItemsPerPage)].map((_, index) => (
                 <TableRow key={index}>
                   <TableCell key={"checkbox"}>
                     <Skeleton variant="rounded" width="100%" height={16} />
@@ -533,9 +536,9 @@ function OffersTable({
         <TablePagination
           component="div"
           count={quantityOffers}
-          page={page}
+          page={safePage}
           onPageChange={handleChangePage}
-          rowsPerPage={itemsPerPage}
+          rowsPerPage={safeItemsPerPage}
           onRowsPerPageChange={handleChangeRowsPerPage}
           labelRowsPerPage="Wiersze na stronę"
           labelDisplayedRows={({ from, to, count }) =>

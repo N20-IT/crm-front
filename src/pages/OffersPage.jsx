@@ -621,6 +621,10 @@ function OffersPage() {
             handleAssignmentOfferToClientClick
           }
           downloadPDF={downloadPDF}
+          page={page}
+          itemsPerPage={itemsPerPage}
+          orderBy={orderBy}
+          order={order}
         />
         <Alerts
           message={alertMessage}
