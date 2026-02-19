@@ -285,32 +285,30 @@ function TableControls({
     });
   };
 
-  const handleClearFilters = () => {
-    const emptyFilters = {
-      ulica: "",
-      dzielnica: [],
-      poddzielnica: [],
-      miasto: "",
-      typInwestycji: "",
-      rynek: "",
-      minIloscPokoi: "",
-      maxIloscPokoi: "",
-      minMetraz: "",
-      maxMetraz: "",
-      minPrice: "",
-      maxPrice: "",
-      agent: "",
-      statusOferty: "",
-      dataKontaktuOd: "",
-      dataKontaktuDo: "",
-      dataNastepnegoKontaktuOd: "",
-      dataNastepnegoKontaktuDo: "",
-      clientId: "",
-    };
+  const emptyFilters = {
+    ulica: "",
+    dzielnica: [],
+    poddzielnica: [],
+    miasto: "",
+    typInwestycji: "",
+    rynek: "",
+    minIloscPokoi: "",
+    maxIloscPokoi: "",
+    minMetraz: "",
+    maxMetraz: "",
+    minPrice: "",
+    maxPrice: "",
+    agent: "",
+    statusOferty: "",
+    dataKontaktuOd: "",
+    dataKontaktuDo: "",
+    dataNastepnegoKontaktuOd: "",
+    dataNastepnegoKontaktuDo: "",
+    clientId: "",
+  };
 
-    // Wyczyść lokalne filtry
+  const handleClearFilters = () => {
     setLocalFilters(emptyFilters);
-    // Wyczyść globalne filtry
     clearGlobalFilters();
   };
 
@@ -389,9 +387,9 @@ function TableControls({
           <Button
             variant="outlined"
             sx={{
-              color: isAnyFilterFilled(localFilters) ? "#009900" : "#6D727F",
+              color: isAnyFilterFilled(appliedFilters) ? "#009900" : "#6D727F",
               fontFamily: "Poppins",
-              borderColor: isAnyFilterFilled(localFilters)
+              borderColor: isAnyFilterFilled(appliedFilters)
                 ? "#009900"
                 : "black",
               width: "180px",
@@ -402,6 +400,26 @@ function TableControls({
           >
             Filtruj
           </Button>
+          <Tooltip title="Wyczyść filtry">
+            <IconButton
+              onClick={() => {
+                handleClearFilters();
+                onFilterApply(searchValue, emptyFilters, columnConfig);
+              }}
+              sx={{
+                color: isAnyFilterFilled(appliedFilters)
+                  ? "#CC0000"
+                  : "#6D727F",
+                border: "1px solid",
+                borderColor: isAnyFilterFilled(appliedFilters)
+                  ? "#CC0000"
+                  : "black",
+                borderRadius: "4px",
+              }}
+            >
+              <Clear />
+            </IconButton>
+          </Tooltip>
           <CustomTextField
             label="Szukaj..."
             value={searchValue}
