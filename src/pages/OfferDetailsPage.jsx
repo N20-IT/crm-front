@@ -89,7 +89,7 @@ function OfferDetailsPage({
   }, [isAuthenticated, navigate, fetchDetailsData]);
   return (
     <div className=" fixed inset-0 bg-light-grey bg-opacity-75 flex items-center justify-center z-50">
-      <div className="bg-white p-6 rounded-lg shadow-lg w-4/5 max-h-[90vh] overflow-y-auto">
+      <div className="bg-white p-6 rounded-lg shadow-lg w-1/2 max-h-[90vh] overflow-y-auto">
         <Box
           sx={{
             display: "flex",

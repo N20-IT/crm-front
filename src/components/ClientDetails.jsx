@@ -587,7 +587,7 @@ function ClientDetails({
             <ThemeProvider theme={customTooltip}>
               <TableContainer
                 className="ml-5"
-                component={Paper}
+                // component={Paper}
                 elevation={8}
                 style={{
                   width: "99.4%",
@@ -597,6 +597,8 @@ function ClientDetails({
                   maxHeight: "88vh",
                   marginLeft: "0px",
                   marginTop: "6px",
+                  borderRadius: "4px",
+                  color: "black",
                 }}
               >
                 <Table>
@@ -775,7 +777,6 @@ function ClientDetails({
             zIndex: 10,
             backgroundColor: "white",
             padding: "16px",
-            borderTop: "1px solid #e0e0e0",
             display: "flex",
             justifyContent: "flex-end",
           }}
