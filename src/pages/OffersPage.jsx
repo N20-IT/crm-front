@@ -461,8 +461,7 @@ function OffersPage() {
       setAlertMessage("Pomyślnie zaktualizowano ofertę");
       setAlertSeverity("success");
       setOpenDialogConfirmOfferAssignment(false);
-      if (isOfferDetailsPanelOpen)
-        setIsOfferDetailsPanelOpen(!isOfferDetailsPanelOpen);
+
       await fetchData();
     } catch (error) {
       setAlertOpen(true);
@@ -504,8 +503,7 @@ function OffersPage() {
       setAlertMessage("Pomyślnie zaktualizowano ofertę");
       setAlertSeverity("success");
       setOpenDialogChangeOfferInterest(false);
-      if (isOfferDetailsPanelOpen)
-        setIsOfferDetailsPanelOpen(!isOfferDetailsPanelOpen);
+
       await fetchData();
     } catch (error) {
       setAlertOpen(true);
@@ -522,37 +520,36 @@ function OffersPage() {
     isOfferDetailsPanelOpen,
   ]);
 
-    const downloadPDF = useCallback(
-      async (offerData) => {
-        try {
-          const response = await axios.get(
-            `${backendServer}/listings/${offerData._id}/print`,
-            {
-              headers: {
-                accept: "application/pdf",
-                Authorization: `Bearer ${token}`,
-              },
-              responseType: "blob",
-            }
-          );
+  const downloadPDF = useCallback(
+    async (offerData) => {
+      try {
+        const response = await axios.get(
+          `${backendServer}/listings/${offerData._id}/print`,
+          {
+            headers: {
+              accept: "application/pdf",
+              Authorization: `Bearer ${token}`,
+            },
+            responseType: "blob",
+          },
+        );
 
-          const file = new Blob([response.data], {
-            type: "application/pdf",
-          });
+        const file = new Blob([response.data], {
+          type: "application/pdf",
+        });
 
-          const fileURL = URL.createObjectURL(file);
+        const fileURL = URL.createObjectURL(file);
 
-          window.open(fileURL, "_blank");
-
-        } catch (error) {
-          setAlertOpen(true);
-          setAlertMessage("Wystąpił błąd podczas otwierania PDF");
-          setAlertSeverity("error");
-          console.log(error.message);
-        }
-      },
-      [backendServer, token]
-    );
+        window.open(fileURL, "_blank");
+      } catch (error) {
+        setAlertOpen(true);
+        setAlertMessage("Wystąpił błąd podczas otwierania PDF");
+        setAlertSeverity("error");
+        console.log(error.message);
+      }
+    },
+    [backendServer, token],
+  );
 
   useEffect(() => {
     if (!isAuthenticated) {
