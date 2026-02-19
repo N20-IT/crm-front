@@ -231,6 +231,30 @@ function ClientDetails({
     setIsOfferDetailsPanelOpen(!isOfferDetailsPanelOpen);
   };
 
+  const handleAddToCalendar = (row) => {
+    const eventTitle = row.daneKlienta + " " + row.numerTelefonu;
+
+    const startDate = new Date(row.dataNastepnegoKontaktu);
+    startDate.setHours(12, 0, 0, 0);
+    const endDate = new Date(startDate);
+    endDate.setHours(startDate.getHours() + 1);
+
+    const formatDateForCalendar = (date) =>
+      date
+        .toISOString()
+        .replace(/[-:.]/g, "")
+        .slice(0, 15) + "Z";
+
+    const formattedStartDate = formatDateForCalendar(startDate);
+    const formattedEndDate = formatDateForCalendar(endDate);
+
+    const googleCalendarUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(
+      eventTitle,
+    )}&dates=${formattedStartDate}/${formattedEndDate}&sf=true&output=xml`;
+
+    window.open(googleCalendarUrl, "_blank");
+  };
+
   useEffect(() => {
     fetchDetailsData();
   }, [fetchDetailsData]);
@@ -791,6 +815,7 @@ function ClientDetails({
             row={client}
             handleDeleteClientClick={handleDeleteClientClick}
             handleEditClientClick={handleEditClick}
+            handleAddToCalendar={handleAddToCalendar}
             showDetailsIcon={false}
             userRole={userRole}
             downloadPDF={downloadPDF}
