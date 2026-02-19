@@ -363,6 +363,7 @@ function DeletedClientsPage() {
           onSave={handleSaveClient}
           onCancel={handleAddClientClick}
           allUsers={allUsers.length !== 0 ? allUsers : users}
+          userInformation={userInformation}
         />
       )}
       {isEditClientPanelOpen && (
