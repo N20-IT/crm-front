@@ -27,13 +27,20 @@ function LoginPage() {
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
   const isAuthenticated = useAuth();
+  const navigate = useNavigate();
+  const [checkedAuth, setCheckedAuth] = useState(false);
   const login = useLogin();
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    if (isAuthenticated) navigate("/oferty");
-  }, [isAuthenticated, navigate]);
-
+    setCheckedAuth(true);
+  }, []);
+  useEffect(() => {
+    if (checkedAuth && isAuthenticated) {
+      navigate("/oferty");
+    }
+  }, [checkedAuth, isAuthenticated, navigate]);
+  
   const LambdaConnection = (email, attribute, apiUrl) => {
     var raw = JSON.stringify({
       email: email,
