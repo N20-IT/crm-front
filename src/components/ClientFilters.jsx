@@ -195,8 +195,6 @@ export default function ClientFilters({ onFilterApply, allUsers }) {
     clearGlobalFilters();
 
     onFilterApply(emptyFilters);
-
-    changeFilterPanelOpen();
   };
 
   useEffect(() => {

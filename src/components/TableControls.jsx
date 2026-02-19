@@ -312,8 +312,6 @@ function TableControls({
     setLocalFilters(emptyFilters);
     // Wyczyść globalne filtry
     clearGlobalFilters();
-
-    toggleFilterPanel();
   };
 
   useEffect(() => {
