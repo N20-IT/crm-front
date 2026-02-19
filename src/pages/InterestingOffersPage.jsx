@@ -58,7 +58,7 @@ function InterestingOffersPage() {
   const userRole = GetInformationFromToken("custom:role");
   const [readConfig, setReadConfig] = useState(useReadConfig());
   const [page, setPage] = useState(0);
-  const [itemsPerPage, setItemsPerPage] = useState(100);
+  const [itemsPerPage, setItemsPerPage] = useState(1);
   const { filters, setFilters, clearFilters } = useFiltersStore();
   const [searchValue, setSearchValue] = useState("");
   const [quantityOffers, setQuantityOffers] = useState(0);
@@ -124,6 +124,7 @@ function InterestingOffersPage() {
   };
 
   const handleSearchAndFilter = (searchQuery, currentFilters, columnConfig) => {
+    setPage(0);
     setReadConfig(columnConfig);
     if (searchQuery !== searchValue) setSearchValue(searchQuery);
     if (currentFilters !== filters) setFilters(currentFilters);
@@ -537,6 +538,10 @@ function InterestingOffersPage() {
           quantityOffers={quantityOffers}
           handleChangeOfferInterest={handleChangeOfferInterest}
           downloadPDF={downloadPDF}
+          page={page}
+          itemsPerPage={itemsPerPage}
+          orderBy={orderBy}
+          order={order}
         />
         <Alerts
           message={alertMessage}

@@ -134,6 +134,7 @@ function OffersPage() {
   };
 
   const handleSearchAndFilter = (searchQuery, currentFilters, columnConfig) => {
+    setPage(0);
     setReadConfig(columnConfig);
     fetchData(searchQuery, currentFilters, columnConfig);
   };

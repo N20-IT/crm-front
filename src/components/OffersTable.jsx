@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useRef, useEffect } from "react";
 import { ThemeProvider } from "@mui/material/styles";
 import { customTooltip } from "../styles/CustomTooltip";
 import {
@@ -41,12 +41,11 @@ function OffersTable({
   quantityOffers,
   handleAssignmentOfferToClientClick,
   downloadPDF,
+  page,
+  itemsPerPage,
+  orderBy,
+  order,
 }) {
-  const [order, setOrder] = useState("desc");
-  const [orderBy, setOrderBy] = useState("dataUtworzenia");
-  const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(25);
-
   const handleSelect = (id) => {
     if (selected.includes(id))
       setSelected(selected.filter((itemId) => itemId !== id));
@@ -60,9 +59,7 @@ function OffersTable({
 
   const handleSortRequest = (columnId) => {
     const isDesc = orderBy === columnId && order === "desc";
-    isDesc ? setOrder("asc") : setOrder("desc");
-    setOrderBy(columnId);
-    onSortApply(0, rowsPerPage, columnId, isDesc ? "asc" : "desc");
+    onSortApply(0, itemsPerPage, columnId, isDesc ? "asc" : "desc");
     scrollToTop();
   };
 
@@ -83,15 +80,12 @@ function OffersTable({
   };
 
   const handleChangePage = (event, newPage) => {
-    setPage(newPage);
-    onPaginationApply(newPage, rowsPerPage);
+    onPaginationApply(newPage, itemsPerPage);
     scrollToTop();
   };
 
   const handleChangeRowsPerPage = (event) => {
     const newRows = parseInt(event.target.value, 10);
-    setRowsPerPage(newRows);
-    setPage(0);
     onPaginationApply(0, newRows);
     scrollToTop();
   };
@@ -153,6 +147,8 @@ function OffersTable({
     document.execCommand("copy");
     document.body.removeChild(textarea);
   };
+
+  // parent controls `page` — do not override here
 
   return (
     <ThemeProvider theme={customTooltip}>
@@ -260,7 +256,7 @@ function OffersTable({
           </TableHead>
           <TableBody>
             {loading ? (
-              [...Array(rowsPerPage)].map((_, index) => (
+              [...Array(itemsPerPage)].map((_, index) => (
                 <TableRow key={index}>
                   <TableCell key={"checkbox"}>
                     <Skeleton variant="rounded" width="100%" height={16} />
@@ -539,7 +535,7 @@ function OffersTable({
           count={quantityOffers}
           page={page}
           onPageChange={handleChangePage}
-          rowsPerPage={rowsPerPage}
+          rowsPerPage={itemsPerPage}
           onRowsPerPageChange={handleChangeRowsPerPage}
           labelRowsPerPage="Wiersze na stronę"
           labelDisplayedRows={({ from, to, count }) =>

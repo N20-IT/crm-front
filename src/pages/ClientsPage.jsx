@@ -91,7 +91,8 @@ function ClientsPage() {
   };
 
   const handleSearchAndFilter = (searchQuery, currentFilters) => {
-    fetchData(searchQuery, currentFilters);
+    setPage(0);
+    fetchData(searchQuery, currentFilters, 0);
   };
 
   const handlePagination = (currentPage, rowsPerValue) => {
@@ -380,6 +381,10 @@ function ClientsPage() {
         handleGoToClientDetails={handleOpenClientDetailsPanel}
         userRole={userRole}
         downloadPDF={downloadPDF}
+        page={page}
+        itemsPerPage={itemsPerPage}
+        orderBy={orderBy}
+        order={order}
       />
       <Alerts
         message={alertMessage}
