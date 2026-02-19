@@ -27,7 +27,6 @@ function LoginPage() {
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
   const isAuthenticated = useAuth();
-  const navigate = useNavigate();
   const [checkedAuth, setCheckedAuth] = useState(false);
   const login = useLogin();
   const [loading, setLoading] = useState(false);
