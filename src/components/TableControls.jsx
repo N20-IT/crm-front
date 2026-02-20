@@ -1077,9 +1077,11 @@ function TableControls({
                     key={status.value}
                     value={status.value === "Wszystko" ? "" : status.value}
                     sx={{
-                      fontStyle: status.value === "Wszystko" ? "italic" : "normal",
+                      fontStyle:
+                        status.value === "Wszystko" ? "italic" : "normal",
                       color: status.value === "Wszystko" ? "gray" : "inherit",
-                      fontWeight: status.value === "Wszystko" ? "bold" : "normal",
+                      fontWeight:
+                        status.value === "Wszystko" ? "bold" : "normal",
                     }}
                   >
                     {status.label}
@@ -1225,7 +1227,7 @@ function TableControls({
               >
                 Wszystko
               </MenuItem>
-              {clients.map((client) => (
+              {clients?.map((client) => (
                 <MenuItem key={client._id} value={client._id}>
                   {client.daneKlienta}
                 </MenuItem>

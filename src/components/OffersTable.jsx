@@ -188,7 +188,7 @@ function OffersTable({
                   }}
                 >
                   <Checkbox
-                    checked={selected.length === rows.length}
+                    checked={selected?.length === rows?.length}
                     indeterminate={
                       selected.length > 0 && selected.length < rows.length
                     }

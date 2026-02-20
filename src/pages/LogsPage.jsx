@@ -14,6 +14,7 @@ import {
 import axios from "axios";
 import serverConfig from "../servers.json";
 import Alerts from "../components/Alerts";
+import { useLogout } from "../utils/auth";
 
 function LogsPage() {
   const navigate = useNavigate();
@@ -27,6 +28,7 @@ function LogsPage() {
   const [alertSeverity, setAlertSeverity] = useState("");
   const backendServer = serverConfig["backend-server"];
   const [deletedOffers, setDeletedOffers] = useState([]);
+  const logout = useLogout();
 
   useEffect(() => {
     if (!isAuthenticated || userRole !== "admin") navigate("/");
@@ -42,6 +44,8 @@ function LogsPage() {
             Authorization: `Bearer ${token}`,
           },
         });
+        if (response.data === "Forbidden") logout();
+
         setLogs(response.data);
       } catch (error) {
         console.log(error);
