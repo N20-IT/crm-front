@@ -14,6 +14,7 @@ import EditUserPanel from "../components/EditUserPanel";
 import UsersTable from "../components/UsersTable";
 import columnsUsersConfig from "../config/columnsUsersConfig";
 import LoadingCircularProgress from "../components/LoadingCircularProgress";
+import { useLogout } from "../utils/auth";
 
 function UsersPage() {
   const navigate = useNavigate();
@@ -36,6 +37,7 @@ function UsersPage() {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(false);
   const containerRef = useRef(null);
+  const logout = useLogout();
 
   const [quantityUsers, setQuantityUsers] = useState(0);
 
@@ -71,6 +73,9 @@ function UsersPage() {
               ? "Użytkownik"
               : user.role,
         }));
+
+        if (response.data === "Forbidden") logout();
+
         setUsers(usersList);
         setQuantityUsers(response.data["total"]);
       } catch (error) {

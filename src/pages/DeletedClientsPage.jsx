@@ -15,6 +15,7 @@ import EditClientPanel from "../components/EditClientPanel";
 import LoadingCircularProgress from "../components/LoadingCircularProgress";
 import ClientDetails from "../components/ClientDetails";
 import { useParams } from "react-router-dom";
+import { useLogout } from "../utils/auth";
 
 function DeletedClientsPage() {
   const { id } = useParams();
@@ -50,6 +51,7 @@ function DeletedClientsPage() {
   const userRole = GetInformationFromToken("custom:role");
   const [clientToEdit, setClientToEdit] = useState(null);
   const [loading, setLoading] = useState(true);
+  const logout = useLogout();
 
   const handleEditClientClickCancel = () => {
     setClientToEdit("");
@@ -146,6 +148,8 @@ function DeletedClientsPage() {
             czyUsuniety: true,
           },
         });
+        if (response.data === "Forbidden") logout();
+
         setRows(response.data["klienci"]);
         setQuantityClients(response.data["total"]);
       } catch (error) {

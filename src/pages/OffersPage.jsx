@@ -18,6 +18,7 @@ import columnsOffersConfig from "../config/columnsOffersConfig";
 import LoadingCircularProgress from "../components/LoadingCircularProgress";
 import { useParams } from "react-router-dom";
 import { useFiltersStore } from "../store/filtersStore";
+import { useLogout } from "../utils/auth";
 
 function OffersPage() {
   const { id } = useParams();
@@ -74,6 +75,7 @@ function OffersPage() {
   const [order, setOrder] = useState("desc");
   const [clients, setClients] = useState([]);
   const columns = useMemo(() => columnsOffersConfig, []);
+  const logout = useLogout();
 
   const handleOpenOfferDetailsPanel = (offerId) => {
     setOfferDetailsId(offerId);
@@ -260,6 +262,9 @@ function OffersPage() {
             return qs.stringify(serializedParams, { arrayFormat: "repeat" });
           },
         });
+
+        if (response.data === "Forbidden") logout();
+
         setRows(response.data["listings"]);
         setQuantityOffers(response.data["total"]);
       } catch (error) {
@@ -649,7 +654,7 @@ function OffersPage() {
           dialogTitle={"Potwierdzenie przypisania oferty klientowi"}
           dialogContent={
             "Czy na pewno chcesz przypisać tę ofertę klientowi:\n" +
-            clients.find((client) => client._id === clientIdToAssign)
+            clients?.find((client) => client._id === clientIdToAssign)
               ?.daneKlienta
           }
           buttonText={"Potwierdź"}

@@ -17,6 +17,7 @@ import ClientDetails from "../components/ClientDetails";
 import { useParams } from "react-router-dom";
 import { useClientFiltersStore } from "../store/clientFilterStore";
 import qs from "qs";
+import { useLogout } from "../utils/auth";
 
 function ClientsPage() {
   const { id } = useParams();
@@ -54,6 +55,7 @@ function ClientsPage() {
   const userRole = GetInformationFromToken("custom:role");
   const [clientToEdit, setClientToEdit] = useState(null);
   const [loading, setLoading] = useState(true);
+  const logout = useLogout();
 
   const handleEditClientClickCancel = () => {
     setClientToEdit("");
@@ -169,6 +171,8 @@ function ClientsPage() {
             return qs.stringify(serializedParams, { arrayFormat: "repeat" });
           },
         });
+        if (response.data === "Forbidden") logout();
+
         setRows(response.data["klienci"]);
         setQuantityClients(response.data["total"]);
       } catch (error) {
@@ -320,7 +324,7 @@ function ClientsPage() {
               Authorization: `Bearer ${token}`,
             },
             responseType: "blob",
-          }
+          },
         );
 
         const file = new Blob([response.data], {
@@ -330,7 +334,6 @@ function ClientsPage() {
         const fileURL = URL.createObjectURL(file);
 
         window.open(fileURL, "_blank");
-
       } catch (error) {
         setAlertOpen(true);
         setAlertMessage("Wystąpił błąd podczas otwierania PDF");
@@ -338,7 +341,7 @@ function ClientsPage() {
         console.log(error.message);
       }
     },
-    [backendServer, token]
+    [backendServer, token],
   );
 
   useEffect(() => {

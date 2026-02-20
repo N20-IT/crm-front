@@ -17,6 +17,7 @@ import OfferDetailsPage from "./OfferDetailsPage";
 import columnsOffersConfig from "../config/columnsOffersConfig";
 import LoadingCircularProgress from "../components/LoadingCircularProgress";
 import { useFiltersStore } from "../store/filtersStore";
+import { useLogout } from "../utils/auth";
 
 function InterestingOffersPage() {
   const navigate = useNavigate();
@@ -65,6 +66,7 @@ function InterestingOffersPage() {
   const [orderBy, setOrderBy] = useState("dataUtworzenia");
   const [order, setOrder] = useState("desc");
   const [clients, setClients] = useState([]);
+  const logout = useLogout();
 
   const columns = useMemo(() => columnsOffersConfig, []);
 
@@ -249,6 +251,8 @@ function InterestingOffersPage() {
             return qs.stringify(serializedParams, { arrayFormat: "repeat" });
           },
         });
+        if (response.data === "Forbidden") logout();
+
         setRows(response.data["listings"]);
         setQuantityOffers(response.data["total"]);
       } catch (error) {
