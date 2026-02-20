@@ -389,65 +389,26 @@ function ClientDetails({
               {client.standard && (
                 <CustomTypography sx={{ fontSize: "1rem" }}>
                   <strong>Standard: </strong>
-
-                  {(() => {
-                    // Normalizacja formatu (string -> array)
-                    const standards = Array.isArray(client.standard)
-                      ? client.standard
-                      : typeof client.standard === "string"
-                      ? client.standard.split(",").map((s) => s.trim())
-                      : [];
-
-                    // Przygotowanie kolorów
-                    const coloredStandards = standards.map((standard) => {
-                      const color =
-                        clientStandardConfig.find((s) => s.value === standard)
-                          ?.color || "black";
-
-                      return { label: standard, color };
-                    });
-
-                    // 3 widoczne, reszta ukryta
-                    const visible = coloredStandards.slice(0, 3);
-                    const hidden = coloredStandards.slice(3);
-
-                    return (
-                      <Tooltip
-                        arrow
-                        placement="top"
-                        title={
-                          hidden.length > 0 && (
-                            <div
-                              style={{
-                                fontFamily: "Poppins",
-                                fontSize: "14px",
-                              }}
-                            >
-                              {coloredStandards.map((s, i) => (
-                                <div key={i} style={{ color: s.color }}>
-                                  {s.label}
-                                </div>
-                              ))}
-                            </div>
-                          )
-                        }
-                      >
-                        <span>
-                          {visible.map((s, i) => (
-                            <Box
-                              key={i}
-                              component="span"
-                              sx={{ color: s.color, marginRight: "6px" }}
-                            >
-                              {s.label}
-                              {i < visible.length - 1 && ", "}
-                            </Box>
-                          ))}
-                          {hidden.length > 0 && <span>...</span>}
-                        </span>
-                      </Tooltip>
-                    );
-                  })()}
+                  {(Array.isArray(client.standard)
+                    ? client.standard
+                    : typeof client.standard === "string"
+                    ? client.standard.split(",").map((s) => s.trim())
+                    : []
+                  ).map((standard, i, arr) => (
+                    <Box
+                      key={i}
+                      component="span"
+                      sx={{
+                        color:
+                          clientStandardConfig.find((s) => s.value === standard)
+                            ?.color || "black",
+                        marginRight: "4px",
+                      }}
+                    >
+                      {standard}
+                      {i < arr.length - 1 && ","}
+                    </Box>
+                  ))}
                 </CustomTypography>
               )}
 
@@ -532,7 +493,7 @@ function ClientDetails({
                 </CustomTypography>
               )}
               {Array.isArray(client.komentarzDataList) &&
-                client.komentarzDataList.length > 0 && (
+                client.komentarzDataList[0].tekst !== "" && (
                   <CustomTypography
                     sx={{
                       fontSize: "1rem",
@@ -785,8 +746,12 @@ function ClientDetails({
                     ) : (
                       <TableRow>
                         <TableCell
-                          colSpan={5}
-                          style={{ textAlign: "center", width: "100%" }}
+                          colSpan={6}
+                          style={{
+                            textAlign: "center",
+                            width: "100%",
+                            backgroundColor: "#f5f5f5",
+                          }}
                         >
                           Brak danych do wyświetlenia
                         </TableCell>
