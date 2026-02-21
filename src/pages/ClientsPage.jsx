@@ -399,7 +399,7 @@ function ClientsPage() {
         onClose={handleOpenCloseDialog}
         onConfirm={handleConfirmDelete}
         dialogTitle={"Potwierdzenie usunięcia"}
-        dialogContent={"Czy na pewno chcesz usunąć?"}
+        dialogContent={"Czy na pewno chcesz usunąć? Spowoduje to przeniesienie klienta do kosza klientów."}
         buttonText={"Usuń"}
         buttonColor={"error"}
       />

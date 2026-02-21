@@ -223,7 +223,7 @@ export default function ClientFilters({ onFilterApply, allUsers }) {
         sx={{
           marginTop: "12px",
           "& .MuiOutlinedInput-root": {
-            borderRadius: "6px",
+            borderRadius: "4px",
             fontFamily: "Poppins",
             fontSize: "16px",
             height: "40px",
@@ -287,7 +287,7 @@ export default function ClientFilters({ onFilterApply, allUsers }) {
         sx={{
           marginTop: "12px",
           "& .MuiOutlinedInput-root": {
-            borderRadius: "6px",
+            borderRadius: "4px",
             fontFamily: "Poppins",
             fontSize: "16px",
             height: "40px",
@@ -365,7 +365,7 @@ export default function ClientFilters({ onFilterApply, allUsers }) {
         sx={{
           marginTop: "12px",
           "& .MuiOutlinedInput-root": {
-            borderRadius: "6px",
+            borderRadius: "4px",
             fontFamily: "Poppins",
             fontSize: "16px",
             height: "40px",
@@ -451,7 +451,7 @@ export default function ClientFilters({ onFilterApply, allUsers }) {
         sx={{
           marginTop: "12px",
           "& .MuiOutlinedInput-root": {
-            borderRadius: "6px",
+            borderRadius: "4px",
             fontFamily: "Poppins",
             fontSize: "16px",
             height: "40px",
@@ -596,7 +596,7 @@ export default function ClientFilters({ onFilterApply, allUsers }) {
         margin="normal"
         sx={{
           "& .MuiOutlinedInput-root": {
-            borderRadius: "6px",
+            borderRadius: "4px",
             fontFamily: "Poppins",
             fontSize: "16px",
             height: "40px",

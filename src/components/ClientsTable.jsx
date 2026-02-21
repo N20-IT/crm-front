@@ -303,7 +303,7 @@ function ClientsTable({
                       <IconButton onClick={() => handleMatchClient(row._id)}>
                         <Badge
                           badgeContent={row.noweOfertyLiczba}
-                          max={1000}
+                          max={10000}
                           sx={{
                             "& .MuiBadge-badge": {
                               backgroundColor: "#FC8721",

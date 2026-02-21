@@ -5,7 +5,9 @@ import {
   DialogContent,
   DialogTitle,
   Button,
+  Divider,
 } from "@mui/material";
+
 const ConfirmDialog = ({
   open,
   onClose,
@@ -13,51 +15,85 @@ const ConfirmDialog = ({
   dialogTitle,
   dialogContent,
   buttonText,
-  buttonColor,
 }) => {
   return (
     <Dialog
       open={open}
       onClose={onClose}
-      maxWidth="sm"
+      maxWidth="xs"
       fullWidth
-      PaperProps={{ sx: { borderRadius: "10px" } }}
+      PaperProps={{
+        sx: {
+          borderRadius: "4px",
+          fontFamily: "Poppins",
+        },
+      }}
     >
+      {/* ===== HEADER ===== */}
       <DialogTitle
-        className=" bg-orange text-white"
-        sx={{ fontFamily: ["Poppins"], fontSize: "24px", borderRadius: "10px" }}
+        sx={{
+          fontFamily: "Poppins",
+          fontSize: "28px",
+          fontWeight: 600,
+          padding: "24px 24px 12px 24px",
+        }}
       >
         {dialogTitle}
       </DialogTitle>
-      <DialogContent>
-        <p className=" text-black font-poppins text-xl mt-3">{dialogContent}</p>
+
+      <Divider />
+
+      {/* ===== CONTENT ===== */}
+      <DialogContent
+        sx={{
+          padding: "24px",
+        }}
+      >
+        <p className="text-lg font-poppins text-black">
+          {dialogContent}
+        </p>
       </DialogContent>
-      <DialogActions>
+
+      {/* ===== ACTIONS ===== */}
+      <DialogActions
+        sx={{
+          padding: "16px 24px 24px 24px",
+          gap: "16px",
+        }}
+      >
         <Button
-          onClick={onClose}
           variant="contained"
-          sx={{
-            backgroundColor: "#6D727F",
-            color: "white",
-            fontFamily: ["Poppins"],
-            fontSize: "18px",
-            width: "105px",
-          }}
-        >
-          Anuluj
-        </Button>
-        <Button
           onClick={onConfirm}
-          variant="contained"
-          color={buttonColor}
           sx={{
+            backgroundColor: "#FC8721",
             color: "white",
-            fontFamily: ["Poppins"],
-            fontSize: "18px",
-            width: "105px",
+            fontFamily: "Poppins",
+            fontSize: "20px",
+            width: "100%",
+            textTransform: "none",
+            "&:hover": {
+              backgroundColor: "#e67615",
+            },
           }}
         >
           {buttonText}
+        </Button>
+        <Button
+          variant="contained"
+          onClick={onClose}
+          sx={{
+            backgroundColor: "#6D727F",
+            color: "white",
+            fontFamily: "Poppins",
+            fontSize: "20px",
+            width: "100%",
+            textTransform: "none",
+            "&:hover": {
+              backgroundColor: "#5c616d",
+            },
+          }}
+        >
+          Anuluj
         </Button>
       </DialogActions>
     </Dialog>

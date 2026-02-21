@@ -148,14 +148,14 @@ function LoginPage() {
 
   return (
     <div
-      className=" h-screen flex justify-center items-center bg-white bg-cover bg-center font-poppins flex-col"
+      className="h-screen flex justify-center items-center bg-white bg-cover bg-center font-poppins flex-col"
       style={{ backgroundImage: "url('/real-estate.jpg')" }}
     >
       {loading && <LoadingCircularProgress />}
-      <div className="absolute max-w-36 top-8 left-28">
+      <div className="absolute top-36 w-48 h-48 flex items-center justify-center">
         <img src="/n20logoCzarne.png" />
       </div>
-      <div className="relative w-screen max-w-xl h-screen max-h-126 p-8 bg-white rounded-2xl shadow-lg opacity-95 flex flex-col justify-start items-center">
+      <div className="relative w-full max-w-md p-6 bg-white rounded-lg shadow-lg flex flex-col items-center">
         <TextField
           autoComplete="email"
           fullWidth
@@ -163,14 +163,16 @@ function LoginPage() {
           id="username"
           onChange={(e) => setUsername(e.target.value)}
           sx={{
+            mt: 2,
             "& .MuiOutlinedInput-root": {
-              borderRadius: "12px",
+              height: "56px",
+              borderRadius: "4px",
               fontFamily: "Poppins",
-              fontSize: "20px",
+              fontSize: "18px",
             },
             "& .MuiFormLabel-root": {
               fontFamily: "Poppins",
-              fontSize: "20px",
+              fontSize: "18px",
               color: "#535968",
             },
             "& .MuiInputLabel-root.Mui-focused": {
@@ -179,57 +181,46 @@ function LoginPage() {
             "& .MuiOutlinedInput-notchedOutline": {
               borderColor: "#535968",
             },
-            "&:hover .MuiOutlinedInput-notchedOutline": {
-              borderColor: "#535968",
-            },
-            "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-              borderColor: "#535968",
-            },
-            "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline": {
-              borderColor: "#535968",
-            },
-
-            marginTop: "50px",
           }}
         />
+
         <FormControl
-          sx={{ width: "512px", marginTop: "24px" }}
+          fullWidth
           variant="outlined"
+          sx={{ mt: 2 }}
         >
           <InputLabel
             htmlFor="outlined-adornment-password"
             sx={{
               fontFamily: "Poppins",
-              fontSize: "20px",
+              fontSize: "18px",
               color: "#535968",
               "&.Mui-focused": {
                 color: "#535968",
               },
             }}
           >
-            Password
+            Hasło
           </InputLabel>
+
           <OutlinedInput
+            id="outlined-adornment-password"
+            type={showPassword ? "text" : "password"}
+            onChange={(e) => setPassword(e.target.value)}
+            autoComplete="current-password"
+            label="Hasło"
             sx={{
-              borderRadius: "12px",
+              height: "56px",
+              borderRadius: "4px",
               fontFamily: "Poppins",
-              fontSize: "20px",
+              fontSize: "18px",
               "& .MuiOutlinedInput-notchedOutline": {
                 borderColor: "#535968",
               },
-              "&:hover .MuiOutlinedInput-notchedOutline": {
-                borderColor: "#535968",
-              },
-              "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                borderColor: "#535968",
-              },
             }}
-            id="outlined-adornment-password"
-            type={showPassword ? "text" : "password"}
             endAdornment={
               <InputAdornment position="end">
                 <IconButton
-                  aria-label="toggle password visibility"
                   onClick={handleClickShowPassword}
                   edge="end"
                 >
@@ -237,39 +228,35 @@ function LoginPage() {
                 </IconButton>
               </InputAdornment>
             }
-            label="Password"
-            autoComplete="current-password"
-            onChange={(e) => setPassword(e.target.value)}
           />
         </FormControl>
+
         <Button
+          variant="contained"
           fullWidth
           sx={{
-            height: "64px",
+            mt: 2,
+            height: "56px",
             backgroundColor: "#FC8721",
-            borderRadius: "32px",
-            color: "white",
             fontFamily: "Poppins",
-            fontSize: "20px",
-            marginTop: "24px",
+            fontSize: "18px",
+            borderRadius: "4px",
           }}
-          className=" mt-6"
           onClick={handleLogin}
         >
-          {" "}
-          Log in
+          Zaloguj
         </Button>
 
         <Button
           variant="text"
+          fullWidth
           sx={{
-            color: "#272F3E",
-            textDecoration: "underline",
-            height: "30px",
-            position: "absolute",
-            bottom: "32px",
+            mt: 1,
+            height: "56px",
+            color: "#9CA3AF",
             fontFamily: "Poppins",
-            fontSize: "20px",
+            fontSize: "18px",
+            borderRadius: "4px",
           }}
           onClick={handleForgottenPassword}
         >

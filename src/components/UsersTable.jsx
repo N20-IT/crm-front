@@ -33,18 +33,19 @@ function UsersTable({
     onSortApply(columnId, isDesc ? "asc" : "desc");
   };
   return (
-    <Table>
+    <Table sx={{ tableLayout: "fixed" }}>
       <TableHead style={{ backgroundColor: "#272F3E" }}>
         <TableRow>
           <TableCell
             key={"narzedzia"}
-            style={{
+            sx={{
               color: "white",
               textAlign: "center",
               fontFamily: "Poppins",
-              padding: "0px",
-              paddingLeft: "5px",
-              paddingRight: "5px",
+              padding: "0px 4px",
+              width: "100px",
+              minWidth: "100px",
+              maxWidth: "100px",
             }}
           >
             Narzędzia
@@ -52,13 +53,12 @@ function UsersTable({
           {columns.map((column) => (
             <TableCell
               key={column.id}
-              style={{
+              sx={{
                 color: "white",
                 textAlign: "center",
                 fontFamily: "Poppins",
-                padding: "0px",
-                paddingLeft: "5px",
-                paddingRight: "5px",
+                padding: "0px 5px",
+                whiteSpace: "nowrap",
               }}
               sortDirection={orderBy === column.id ? order : false}
             >
@@ -85,6 +85,7 @@ function UsersTable({
           ))}
         </TableRow>
       </TableHead>
+
       <TableBody>
         {loading
           ? [...Array(rowsPerPage)].map((_, index) => (
@@ -102,12 +103,12 @@ function UsersTable({
           : users.map((user) => (
               <TableRow key={user.email}>
                 <TableCell
-                  style={{
+                  sx={{
                     textAlign: "center",
-                    padding: "9px",
-                    maxHeight: "60px",
-                    fontFamily: "Poppins",
-                    width: "9.5%",
+                    padding: "4px",
+                    width: "100px",
+                    minWidth: "100px",
+                    maxWidth: "100px",
                   }}
                 >
                   <Tooltip title="Usuń">
@@ -130,7 +131,7 @@ function UsersTable({
                 {columns.map((column) => (
                   <CustomTableCell
                     key={column.id}
-                    style={{ textAlign: "center", fontFamily: "Poppins" }}
+                    sx={{ textAlign: "center", fontFamily: "Poppins", whiteSpace: "nowrap" }}
                   >
                     {user[column.id] === "admin"
                       ? "Administrator"

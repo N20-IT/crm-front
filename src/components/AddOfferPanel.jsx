@@ -215,7 +215,7 @@ function AddOfferPanel({ onSave, onCancel, users, userInformation }) {
               margin="dense"
               sx={{
                 "& .MuiOutlinedInput-root": {
-                  borderRadius: "6px",
+                  borderRadius: "4px",
                   fontFamily: "Poppins",
                   fontSize: "16px",
                   height: "40px",
@@ -284,7 +284,7 @@ function AddOfferPanel({ onSave, onCancel, users, userInformation }) {
               margin="dense"
               sx={{
                 "& .MuiOutlinedInput-root": {
-                  borderRadius: "6px",
+                  borderRadius: "4px",
                   fontFamily: "Poppins",
                   fontSize: "16px",
                   height: "40px",
@@ -417,7 +417,7 @@ function AddOfferPanel({ onSave, onCancel, users, userInformation }) {
               margin="dense"
               sx={{
                 "& .MuiOutlinedInput-root": {
-                  borderRadius: "6px",
+                  borderRadius: "4px",
                   fontFamily: "Poppins",
                   fontSize: "16px",
                   height: "40px",
@@ -502,7 +502,7 @@ function AddOfferPanel({ onSave, onCancel, users, userInformation }) {
               margin="dense"
               sx={{
                 "& .MuiOutlinedInput-root": {
-                  borderRadius: "6px",
+                  borderRadius: "4px",
                   fontFamily: "Poppins",
                   fontSize: "16px",
                   height: "40px",
@@ -665,7 +665,7 @@ function AddOfferPanel({ onSave, onCancel, users, userInformation }) {
               margin="dense"
               sx={{
                 "& .MuiOutlinedInput-root": {
-                  borderRadius: "6px",
+                  borderRadius: "4px",
                   fontFamily: "Poppins",
                   fontSize: "16px",
                   height: "40px",
@@ -751,7 +751,7 @@ function AddOfferPanel({ onSave, onCancel, users, userInformation }) {
               margin="dense"
               sx={{
                 "& .MuiOutlinedInput-root": {
-                  borderRadius: "6px",
+                  borderRadius: "4px",
                   fontFamily: "Poppins",
                   fontSize: "16px",
                   height: "40px",

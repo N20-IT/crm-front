@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from "react";
 import {
+  Autocomplete,
+  createFilterOptions, 
+  TextField,
   MenuItem,
   Button,
   Box,
@@ -272,6 +275,11 @@ function TableControls({
     }
   };
 
+  const clientFilterOptions = createFilterOptions({
+    matchFrom: "start",
+    stringify: (option) => option.daneKlienta,
+  });
+
   const isAnyFilterFilled = (localFilters) => {
     if (!localFilters || typeof localFilters !== "object") {
       return false;
@@ -415,6 +423,8 @@ function TableControls({
                   ? "#CC0000"
                   : "black",
                 borderRadius: "4px",
+                height: "40px",
+                width: "40px",
               }}
             >
               <Clear />
@@ -522,7 +532,7 @@ function TableControls({
             sx={{
               marginTop: "12px",
               "& .MuiOutlinedInput-root": {
-                borderRadius: "6px",
+                borderRadius: "4px",
                 fontFamily: "Poppins",
                 fontSize: "16px",
                 height: "40px",
@@ -602,7 +612,7 @@ function TableControls({
             sx={{
               marginTop: "12px",
               "& .MuiOutlinedInput-root": {
-                borderRadius: "6px",
+                borderRadius: "4px",
                 fontFamily: "Poppins",
                 fontSize: "16px",
                 height: "40px",
@@ -692,7 +702,7 @@ function TableControls({
               sx={{
                 marginTop: "12px",
                 "& .MuiOutlinedInput-root": {
-                  borderRadius: "6px",
+                  borderRadius: "4px",
                   fontFamily: "Poppins",
                   fontSize: "16px",
                   height: "40px",
@@ -759,7 +769,7 @@ function TableControls({
               sx={{
                 marginTop: "12px",
                 "& .MuiOutlinedInput-root": {
-                  borderRadius: "6px",
+                  borderRadius: "4px",
                   fontFamily: "Poppins",
                   fontSize: "16px",
                   height: "40px",
@@ -946,7 +956,7 @@ function TableControls({
               sx={{
                 marginTop: "12px",
                 "& .MuiOutlinedInput-root": {
-                  borderRadius: "6px",
+                  borderRadius: "4px",
                   fontFamily: "Poppins",
                   fontSize: "16px",
                   height: "40px",
@@ -1028,7 +1038,7 @@ function TableControls({
               sx={{
                 marginTop: "12px",
                 "& .MuiOutlinedInput-root": {
-                  borderRadius: "6px",
+                  borderRadius: "4px",
                   fontFamily: "Poppins",
                   fontSize: "16px",
                   height: "40px",
@@ -1172,67 +1182,49 @@ function TableControls({
               }
             />
           </div>
-          <FormControl
-            fullWidth
-            sx={{
-              marginTop: "12px",
-              "& .MuiOutlinedInput-root": {
-                borderRadius: "6px",
-                fontFamily: "Poppins",
-                fontSize: "16px",
-                height: "40px",
-                "& input": {
-                  padding: "8px",
-                  height: "16px",
-                },
-              },
-              "& .MuiFormLabel-root": {
-                fontFamily: "Poppins",
-                fontSize: "16px",
-                color: "#535968",
-                transform: "translate(14px, 9px) scale(1)",
-              },
-              "& .MuiInputLabel-root.MuiInputLabel-shrink": {
-                transform: "translate(14px, -9px) scale(0.75)",
-              },
-
-              "& .MuiInputLabel-root.Mui-focused": {
-                color: "#535968",
-              },
-              "& .MuiOutlinedInput-notchedOutline": {
-                borderColor: "#535968",
-              },
-              "&:hover .MuiOutlinedInput-notchedOutline": {
-                borderColor: "#535968",
-              },
-              "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                borderColor: "#535968",
-              },
-              "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                borderColor: "#535968",
-              },
-            }}
-          >
-            <InputLabel>Klient</InputLabel>
-            <Select
-              value={localFilters?.clientId}
-              onChange={(e) =>
-                handleLocalFilterChange("clientId", e.target.value)
+          <FormControl fullWidth sx={{ marginTop: "12px" }}>
+            <Autocomplete
+              options={clients || []}
+              getOptionLabel={(option) => option.daneKlienta}
+              value={clients?.find(c => c._id === localFilters?.clientId) || null}
+              onChange={(event, newValue) =>
+                handleLocalFilterChange("clientId", newValue?._id || "")
               }
-              label="Typ inwestycji"
-            >
-              <MenuItem
-                value=""
-                sx={{ fontStyle: "italic", color: "gray", fontWeight: "bold" }}
-              >
-                Wszystko
-              </MenuItem>
-              {clients?.map((client) => (
-                <MenuItem key={client._id} value={client._id}>
-                  {client.daneKlienta}
-                </MenuItem>
-              ))}
-            </Select>
+              filterOptions={clientFilterOptions}
+              isOptionEqualToValue={(option, value) => option._id === value._id}
+              clearOnEscape
+              noOptionsText="Brak wyników"
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  label="Klient"
+                  sx={{
+                    "& .MuiOutlinedInput-root": {
+                      borderRadius: "4px",
+                      fontFamily: "Poppins",
+                      fontSize: "16px",
+                      height: "40px",
+                      "& input": {
+                        padding: "0 8px",
+                        height: "100%",
+                        lineHeight: "40px",
+                      },
+                    },
+                    "& .MuiFormLabel-root": {
+                      fontFamily: "Poppins",
+                      fontSize: "16px",
+                      color: "#535968",
+                      top: "50%",
+                      left: "12px",
+                      transform: "translateY(-50%)",
+                    },
+                    "& .MuiInputLabel-root.MuiInputLabel-shrink": {
+                      transform: "translate(0, -28px) scale(0.75)",
+                    },
+                  }}
+                />
+              )}
+            />
           </FormControl>
           <Button
             variant="contained"

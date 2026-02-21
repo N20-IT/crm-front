@@ -1,6 +1,7 @@
 import React, { useState } from "react";
-import { Button, TextField, MenuItem } from "@mui/material";
+import { TextField, MenuItem } from "@mui/material";
 import Alerts from "./Alerts";
+import UserPanelLayout from "./UserPanelLayout";
 
 function AddUserPanel({ onSave, onCancel }) {
   const [formData, setFormData] = useState({
@@ -9,7 +10,6 @@ function AddUserPanel({ onSave, onCancel }) {
     email: "",
     role: "user",
   });
-
   const [errors, setErrors] = useState({});
   const [alertMessage, setAlertMessage] = useState("");
   const [alertSeverity, setAlertSeverity] = useState("");
@@ -17,10 +17,7 @@ function AddUserPanel({ onSave, onCancel }) {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const validate = () => {
@@ -82,104 +79,61 @@ function AddUserPanel({ onSave, onCancel }) {
   };
 
   return (
-    <div className="fixed inset-0 bg-light-grey bg-opacity-75 flex items-center justify-center z-50">
-      <div className="bg-white p-6 rounded-lg shadow-lg w-1/3">
-        <div className="sticky top-0 bg-white pt-6 pb-2 px-2 z-20">
-          <h2 className="text-4xl font-bold mb-4 font-poppins">
-            Dodaj nowego użytkownika
-          </h2>
-        </div>
-        <form>
-          <div className="w-full space-y-4">
-            {/* Imię */}
-            <TextField
-              fullWidth
-              label="Imię"
-              name="imie"
-              value={formData.imie}
-              onChange={handleChange}
-              error={!!errors.imie}
-              helperText={errors.imie}
-            />
+    <>
+      <UserPanelLayout
+        title="Dodaj nowego użytkownika"
+        onSave={handleSave}
+        onCancel={onCancel}
+      >
+        <TextField
+          fullWidth
+          label="Imię"
+          name="imie"
+          value={formData.imie}
+          onChange={handleChange}
+          error={!!errors.imie}
+          helperText={errors.imie}
+        />
+        <TextField
+          fullWidth
+          label="Nazwisko"
+          name="nazwisko"
+          value={formData.nazwisko}
+          onChange={handleChange}
+          error={!!errors.nazwisko}
+          helperText={errors.nazwisko}
+        />
+        <TextField
+          fullWidth
+          label="Email"
+          name="email"
+          value={formData.email}
+          onChange={handleChange}
+          error={!!errors.email}
+          helperText={errors.email}
+        />
+        <TextField
+          select
+          fullWidth
+          label="Rola"
+          name="role"
+          value={formData.role}
+          onChange={handleChange}
+          error={!!errors.role}
+          helperText={errors.role}
+        >
+          <MenuItem value="user">User</MenuItem>
+          <MenuItem value="admin">Admin</MenuItem>
+        </TextField>
+      </UserPanelLayout>
 
-            {/* Nazwisko */}
-            <TextField
-              fullWidth
-              label="Nazwisko"
-              name="nazwisko"
-              value={formData.nazwisko}
-              onChange={handleChange}
-              error={!!errors.nazwisko}
-              helperText={errors.nazwisko}
-            />
-
-            {/* Email */}
-            <TextField
-              fullWidth
-              label="Email"
-              name="email"
-              value={formData.email}
-              onChange={handleChange}
-              error={!!errors.email}
-              helperText={errors.email}
-            />
-
-            {/* Rola */}
-            <TextField
-              select
-              fullWidth
-              label="Rola"
-              name="role"
-              value={formData.role}
-              onChange={handleChange}
-              error={!!errors.role}
-              helperText={errors.role}
-            >
-              <MenuItem value="user">User</MenuItem>
-              <MenuItem value="admin">Admin</MenuItem>
-            </TextField>
-
-            {/* Przyciski */}
-            <div className="flex justify-end space-x-4 mt-4">
-              <Button
-                variant="contained"
-                onClick={handleSave}
-                sx={{
-                  color: "white",
-                  backgroundColor: "#FC8721",
-                  fontFamily: "Poppins",
-                  fontSize: "20px",
-                  width: "100%",
-                }}
-              >
-                Zapisz
-              </Button>
-              <Button
-                variant="contained"
-                onClick={onCancel}
-                sx={{
-                  backgroundColor: "#6D727F",
-                  color: "white",
-                  fontFamily: "Poppins",
-                  fontSize: "20px",
-                  width: "100%",
-                }}
-              >
-                Anuluj
-              </Button>
-            </div>
-          </div>
-        </form>
-      </div>
-
-      {/* Alerty */}
       <Alerts
         message={alertMessage}
         severity={alertSeverity}
         open={alertOpen}
         onClose={() => setAlertOpen(false)}
       />
-    </div>
+    </>
   );
 }
 

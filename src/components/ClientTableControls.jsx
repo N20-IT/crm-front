@@ -121,6 +121,8 @@ function ClientTableControls({
               border: "1px solid",
               borderColor: isAnyFilterFilled(filters) ? "#CC0000" : "black",
               borderRadius: "4px",
+              height: "40px",
+              width: "40px",
             }}
           >
             <Clear />

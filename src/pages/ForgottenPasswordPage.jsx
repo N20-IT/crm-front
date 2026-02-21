@@ -111,7 +111,7 @@ function ForgottenPasswordPage() {
               sx={{
                 height: "64px",
                 backgroundColor: "#FC8721",
-                borderRadius: "32px",
+                borderRadius: "4px",
                 color: "white",
                 fontFamily: "Poppins",
                 fontSize: "20px",
@@ -157,7 +157,7 @@ function ForgottenPasswordPage() {
               sx={{
                 height: "64px",
                 backgroundColor: "#FC8721",
-                borderRadius: "32px",
+                borderRadius: "4px",
                 color: "white",
                 fontFamily: "Poppins",
                 fontSize: "20px",

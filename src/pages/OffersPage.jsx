@@ -673,8 +673,8 @@ function OffersPage() {
             }
             dialogContent={
               offerToChangeOfferInterest.czyCiekawa
-                ? "Czy na pewno chcesz usunąć te ofertę z ciekawych?"
-                : "Czy na pewno chcesz dodać te ofertę do ciekawych?"
+                ? "Czy na pewno chcesz usunąć tę ofertę z ciekawych?"
+                : "Czy na pewno chcesz dodać tę ofertę do ciekawych?"
             }
             buttonText={"Potwierdź"}
             buttonColor={"warning"}
