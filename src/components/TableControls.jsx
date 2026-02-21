@@ -24,7 +24,7 @@ import {
   ThemeProvider,
 } from "@mui/material";
 import { customTooltip } from "../styles/CustomTooltip";
-import { Delete, Star, ViewList, ViewModule, Clear } from "@mui/icons-material";
+import { Person, Delete, Star, ViewList, ViewModule, Clear } from "@mui/icons-material";
 import { KeyboardArrowDown } from "@mui/icons-material";
 import CustomTextField from "./CustomTextField";
 import { useChangeColumnConfig, useReadConfig } from "../config/columnConfig";
@@ -41,6 +41,7 @@ function TableControls({
   onFilterApply,
   allUsers,
   clients,
+  userInformation
 }) {
   const {
     filters: appliedFilters,
@@ -428,6 +429,30 @@ function TableControls({
               }}
             >
               <Clear />
+            </IconButton>
+          </Tooltip>
+          <Tooltip title="Moje rekordy">
+            <IconButton
+              onClick={() => {
+                const updatedFilters = {
+                  ...localFilters,
+                  agent: userInformation,
+                };
+                setLocalFilters(updatedFilters);
+                setFilters(updatedFilters);
+                onFilterApply(searchValue, updatedFilters, columnConfig);
+              }}
+              sx={{
+                color: localFilters.agent === userInformation ? "#009900" : "#6D727F",
+                border: "1px solid",
+                borderColor: localFilters.agent === userInformation ? "#009900" : "black",
+                borderRadius: "4px",
+                height: "40px",
+                width: "40px",
+                ml: 1,
+              }}
+            >
+              <Person />
             </IconButton>
           </Tooltip>
           <CustomTextField

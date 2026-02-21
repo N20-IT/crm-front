@@ -367,6 +367,7 @@ function ClientsPage() {
           onSearchFilterApply={handleSearchAndFilter}
           allUsers={allUsers.length !== 0 ? allUsers : users}
           userRole={userRole}
+          userInformation={userInformation}
         />
       </div>
       <ClientsTable

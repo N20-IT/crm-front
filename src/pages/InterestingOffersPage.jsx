@@ -521,6 +521,7 @@ function InterestingOffersPage() {
             onFilterApply={handleSearchAndFilter}
             allUsers={allUsers.length !== 0 ? allUsers : users}
             clients={clients}
+            userInformation={userInformation}
           />
         </div>
         <OffersTable

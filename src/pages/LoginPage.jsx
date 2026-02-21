@@ -155,97 +155,77 @@ function LoginPage() {
       <div className="absolute top-36 w-48 h-48 flex items-center justify-center">
         <img src="/n20logoCzarne.png" />
       </div>
-      <div className="relative w-full max-w-md p-6 bg-white rounded-lg shadow-lg flex flex-col items-center">
-        <TextField
-          autoComplete="email"
-          fullWidth
-          label="Nazwa użytkownika"
-          id="username"
-          onChange={(e) => setUsername(e.target.value)}
-          sx={{
-            mt: 2,
-            "& .MuiOutlinedInput-root": {
-              height: "56px",
-              borderRadius: "4px",
-              fontFamily: "Poppins",
-              fontSize: "18px",
-            },
-            "& .MuiFormLabel-root": {
-              fontFamily: "Poppins",
-              fontSize: "18px",
-              color: "#535968",
-            },
-            "& .MuiInputLabel-root.Mui-focused": {
-              color: "#535968",
-            },
-            "& .MuiOutlinedInput-notchedOutline": {
-              borderColor: "#535968",
-            },
-          }}
-        />
 
-        <FormControl
-          fullWidth
-          variant="outlined"
-          sx={{ mt: 2 }}
-        >
-          <InputLabel
-            htmlFor="outlined-adornment-password"
+      <div className="relative w-full max-w-md p-6 bg-white rounded-lg shadow-lg flex flex-col items-center">
+        {/* Opakowujemy w form */}
+        <form onSubmit={handleLogin} style={{ width: "100%" }}>
+          <TextField
+            autoComplete="email"
+            fullWidth
+            label="Nazwa użytkownika"
+            id="username"
+            onChange={(e) => setUsername(e.target.value)}
             sx={{
+              mt: 2,
+              "& .MuiOutlinedInput-root": { height: "56px", borderRadius: "4px", fontFamily: "Poppins", fontSize: "18px" },
+              "& .MuiFormLabel-root": { fontFamily: "Poppins", fontSize: "18px", color: "#535968" },
+              "& .MuiInputLabel-root.Mui-focused": { color: "#535968" },
+              "& .MuiOutlinedInput-notchedOutline": { borderColor: "#535968" },
+            }}
+          />
+
+          <FormControl fullWidth variant="outlined" sx={{ mt: 2 }}>
+            <InputLabel
+              htmlFor="outlined-adornment-password"
+              sx={{
+                fontFamily: "Poppins",
+                fontSize: "18px",
+                color: "#535968",
+                "&.Mui-focused": { color: "#535968" },
+              }}
+            >
+              Hasło
+            </InputLabel>
+
+            <OutlinedInput
+              id="outlined-adornment-password"
+              type={showPassword ? "text" : "password"}
+              onChange={(e) => setPassword(e.target.value)}
+              autoComplete="current-password"
+              label="Hasło"
+              sx={{
+                height: "56px",
+                borderRadius: "4px",
+                fontFamily: "Poppins",
+                fontSize: "18px",
+                "& .MuiOutlinedInput-notchedOutline": { borderColor: "#535968" },
+              }}
+              endAdornment={
+                <InputAdornment position="end">
+                  <IconButton onClick={handleClickShowPassword} edge="end">
+                    {showPassword ? <VisibilityOff /> : <Visibility />}
+                  </IconButton>
+                </InputAdornment>
+              }
+            />
+          </FormControl>
+
+          <Button
+            type="submit"  // <-- tu ważne, żeby był submit
+            variant="contained"
+            fullWidth
+            sx={{
+              mt: 2,
+              height: "56px",
+              backgroundColor: "#FC8721",
               fontFamily: "Poppins",
               fontSize: "18px",
-              color: "#535968",
-              "&.Mui-focused": {
-                color: "#535968",
-              },
+              borderRadius: "4px",
             }}
           >
-            Hasło
-          </InputLabel>
-
-          <OutlinedInput
-            id="outlined-adornment-password"
-            type={showPassword ? "text" : "password"}
-            onChange={(e) => setPassword(e.target.value)}
-            autoComplete="current-password"
-            label="Hasło"
-            sx={{
-              height: "56px",
-              borderRadius: "4px",
-              fontFamily: "Poppins",
-              fontSize: "18px",
-              "& .MuiOutlinedInput-notchedOutline": {
-                borderColor: "#535968",
-              },
-            }}
-            endAdornment={
-              <InputAdornment position="end">
-                <IconButton
-                  onClick={handleClickShowPassword}
-                  edge="end"
-                >
-                  {showPassword ? <VisibilityOff /> : <Visibility />}
-                </IconButton>
-              </InputAdornment>
-            }
-          />
-        </FormControl>
-
-        <Button
-          variant="contained"
-          fullWidth
-          sx={{
-            mt: 2,
-            height: "56px",
-            backgroundColor: "#FC8721",
-            fontFamily: "Poppins",
-            fontSize: "18px",
-            borderRadius: "4px",
-          }}
-          onClick={handleLogin}
-        >
-          Zaloguj
-        </Button>
+            Zaloguj
+          </Button>
+        </form>
 
         <Button
           variant="text"
@@ -263,6 +243,7 @@ function LoginPage() {
           Zapomniałem hasła
         </Button>
       </div>
+
       {error && (
         <Snackbar
           open={open}
