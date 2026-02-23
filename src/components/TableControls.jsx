@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import {
   Autocomplete,
-  createFilterOptions, 
+  createFilterOptions,
   TextField,
   MenuItem,
   Button,
@@ -24,7 +24,14 @@ import {
   ThemeProvider,
 } from "@mui/material";
 import { customTooltip } from "../styles/CustomTooltip";
-import { Person, Delete, Star, ViewList, ViewModule, Clear } from "@mui/icons-material";
+import {
+  Person,
+  Delete,
+  Star,
+  ViewList,
+  ViewModule,
+  Clear,
+} from "@mui/icons-material";
 import { KeyboardArrowDown } from "@mui/icons-material";
 import CustomTextField from "./CustomTextField";
 import { useChangeColumnConfig, useReadConfig } from "../config/columnConfig";
@@ -41,7 +48,7 @@ function TableControls({
   onFilterApply,
   allUsers,
   clients,
-  userInformation
+  userInformation,
 }) {
   const {
     filters: appliedFilters,
@@ -443,9 +450,13 @@ function TableControls({
                 onFilterApply(searchValue, updatedFilters, columnConfig);
               }}
               sx={{
-                color: localFilters.agent === userInformation ? "#009900" : "#6D727F",
+                color:
+                  localFilters.agent === userInformation
+                    ? "#009900"
+                    : "#6D727F",
                 border: "1px solid",
-                borderColor: localFilters.agent === userInformation ? "#009900" : "black",
+                borderColor:
+                  localFilters.agent === userInformation ? "#009900" : "black",
                 borderRadius: "4px",
                 height: "40px",
                 width: "40px",
@@ -487,32 +498,6 @@ function TableControls({
               },
             }}
           />
-          <ToggleButtonGroup
-            value={columnConfig}
-            exclusive
-            onChange={handleViewChange}
-            aria-label="view selection"
-            sx={{ height: "40px" }}
-          >
-            <Tooltip title="Widok podstawowy">
-              <ToggleButton value={0} aria-label="basic view">
-                <ViewList
-                  sx={{
-                    color: columnConfig === 0 ? "#FC8721" : "default",
-                  }}
-                />
-              </ToggleButton>
-            </Tooltip>
-            <Tooltip title="Widok rozszerzony">
-              <ToggleButton value={1} aria-label="expanded view">
-                <ViewModule
-                  sx={{
-                    color: columnConfig === 1 ? "#FC8721" : "default",
-                  }}
-                />
-              </ToggleButton>
-            </Tooltip>
-          </ToggleButtonGroup>
           <Button
             variant="contained"
             sx={{
@@ -1211,7 +1196,9 @@ function TableControls({
             <Autocomplete
               options={clients || []}
               getOptionLabel={(option) => option.daneKlienta}
-              value={clients?.find(c => c._id === localFilters?.clientId) || null}
+              value={
+                clients?.find((c) => c._id === localFilters?.clientId) || null
+              }
               onChange={(event, newValue) =>
                 handleLocalFilterChange("clientId", newValue?._id || "")
               }
