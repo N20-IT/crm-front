@@ -1,5 +1,6 @@
 import {
   Clear,
+  Person,
   KeyboardArrowDown,
   ViewList,
   ViewModule,
@@ -23,6 +24,7 @@ function ClientTableControls({
   onAddClientClick,
   onSearchFilterApply,
   allUsers,
+  userInformation
 }) {
   const {
     filters,
@@ -121,9 +123,31 @@ function ClientTableControls({
               border: "1px solid",
               borderColor: isAnyFilterFilled(filters) ? "#CC0000" : "black",
               borderRadius: "4px",
+              height: "40px",
+              width: "40px",
             }}
           >
             <Clear />
+          </IconButton>
+        </Tooltip>
+        <Tooltip title="Moje rekordy">
+          <IconButton
+            onClick={() => {
+              const updatedFilters = { ...filters, agent: userInformation };
+              useClientFiltersStore.getState().setFilters(updatedFilters);
+              onSearchFilterApply(searchValue, updatedFilters);
+            }}
+            sx={{
+              color: filters.agent === userInformation ? "#009900" : "#6D727F",
+              border: "1px solid",
+              borderColor: filters.agent === userInformation ? "#009900" : "black",
+              borderRadius: "4px",
+              height: "40px",
+              width: "40px",
+              ml: 1,
+            }}
+          >
+            <Person />
           </IconButton>
         </Tooltip>
         <CustomTextField

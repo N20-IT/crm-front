@@ -41,6 +41,33 @@ function UsersPage() {
 
   const [quantityUsers, setQuantityUsers] = useState(0);
 
+  const [
+    openDialogConfirmCancelAddUser,
+    setOpenDialogConfirmCancelAddUser,
+  ] = useState(false);
+  const [
+    openDialogConfirmCancelEditUser,
+    setOpenDialogConfirmCancelEditUser,
+  ] = useState(false);
+
+  const handleCancelAddUserClick = () => {
+    setOpenDialogConfirmCancelAddUser(!openDialogConfirmCancelAddUser);
+  };
+
+  const handleConfirmCancelAddUser = () => {
+    setAddUserPanelOpen(!isAddUserPanelOpen);
+    handleCancelAddUserClick();
+  };
+
+  const handleCancelEditUserClick = () => {
+    setOpenDialogConfirmCancelEditUser(!openDialogConfirmCancelEditUser);
+  };
+
+  const handleConfirmCancelEditUser = () => {
+    setIsEditUserPanelOpen(!isEditUserPanelOpen);
+    handleCancelEditUserClick();
+  };
+
   const fetchData = useCallback(
     async (
       currentPage = page,
@@ -332,15 +359,39 @@ function UsersPage() {
         buttonColor={"error"}
       />
       {isAddUserPanelOpen && (
-        <AddUserPanel onSave={handleSaveUser} onCancel={handleAddUserClick} />
+        <AddUserPanel
+          onSave={handleSaveUser}
+          onCancel={handleCancelAddUserClick}
+        />
       )}
       {isEditUserPanelOpen && (
         <EditUserPanel
           initialData={userToEdit}
           onSave={handleEditUser}
-          onCancel={handleEditUserClickCancel}
+          onCancel={handleCancelEditUserClick}
         />
       )}
+
+      <ConfirmDialog
+        open={openDialogConfirmCancelAddUser}
+        onClose={handleCancelAddUserClick}
+        onConfirm={handleConfirmCancelAddUser}
+        dialogTitle={"Potwierdzenie anulowania dodania użytkownika"}
+        dialogContent={"Czy na pewno chcesz anulować dodanie użytkownika?"}
+        buttonText={"Potwierdź"}
+        buttonColor={"error"}
+      />
+
+      <ConfirmDialog
+        open={openDialogConfirmCancelEditUser}
+        onClose={handleCancelEditUserClick}
+        onConfirm={handleConfirmCancelEditUser}
+        dialogTitle={"Potwierdzenie anulowania edycji użytkownika"}
+        dialogContent={"Czy na pewno chcesz anulować edycję użytkownika?"}
+        buttonText={"Potwierdź"}
+        buttonColor={"error"}
+      />
+
       <TablePagination
         component="div"
         count={quantityUsers}
@@ -355,9 +406,9 @@ function UsersPage() {
         sx={{
           position: "fixed",
           bottom: 0,
-          left: 0,
           right: 43.2,
-          zIndex: 1000,
+          zIndex: 30,
+          width: "50%",
         }}
       />
     </div>

@@ -124,7 +124,7 @@ const EditOfferPanel = ({ offerData, onSave, onCancel, users }) => {
               margin="dense"
               sx={{
                 "& .MuiOutlinedInput-root": {
-                  borderRadius: "6px",
+                  borderRadius: "4px",
                   fontFamily: "Poppins",
                   fontSize: "16px",
                   height: "40px",
@@ -192,7 +192,7 @@ const EditOfferPanel = ({ offerData, onSave, onCancel, users }) => {
               margin="dense"
               sx={{
                 "& .MuiOutlinedInput-root": {
-                  borderRadius: "6px",
+                  borderRadius: "4px",
                   fontFamily: "Poppins",
                   fontSize: "16px",
                   height: "40px",
@@ -326,7 +326,7 @@ const EditOfferPanel = ({ offerData, onSave, onCancel, users }) => {
               margin="dense"
               sx={{
                 "& .MuiOutlinedInput-root": {
-                  borderRadius: "6px",
+                  borderRadius: "4px",
                   fontFamily: "Poppins",
                   fontSize: "16px",
                   height: "40px",
@@ -400,7 +400,7 @@ const EditOfferPanel = ({ offerData, onSave, onCancel, users }) => {
               margin="dense"
               sx={{
                 "& .MuiOutlinedInput-root": {
-                  borderRadius: "6px",
+                  borderRadius: "4px",
                   fontFamily: "Poppins",
                   fontSize: "16px",
                   height: "40px",
@@ -574,7 +574,7 @@ const EditOfferPanel = ({ offerData, onSave, onCancel, users }) => {
               margin="dense"
               sx={{
                 "& .MuiOutlinedInput-root": {
-                  borderRadius: "6px",
+                  borderRadius: "4px",
                   fontFamily: "Poppins",
                   fontSize: "16px",
                   height: "40px",
@@ -660,7 +660,7 @@ const EditOfferPanel = ({ offerData, onSave, onCancel, users }) => {
               margin="dense"
               sx={{
                 "& .MuiOutlinedInput-root": {
-                  borderRadius: "6px",
+                  borderRadius: "4px",
                   fontFamily: "Poppins",
                   fontSize: "16px",
                   height: "40px",

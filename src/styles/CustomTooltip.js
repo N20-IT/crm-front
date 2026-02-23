@@ -14,7 +14,7 @@ export const customTooltip = createTheme({
           color: "#fff",
           padding: "12px 16px",
           border: "1px solid rgba(255, 255, 255, 0.2)",
-          borderRadius: "10px",
+          borderRadius: "4px",
           boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.3)",
         },
       },

@@ -34,6 +34,7 @@ import { GetInformationFromToken } from "../utils/decodeToken";
 import { useReadConfig } from "../config/columnConfig";
 import EditOfferPanel from "./EditOfferPanel";
 import OfferDetailsFromClient from "./OfferDetailsFromClient";
+import ConfirmDialog from "./ConfirmDialog";
 
 function ClientDetails({
   id,
@@ -62,6 +63,19 @@ function ClientDetails({
   const [readConfig, setReadConfig] = useState(useReadConfig());
   const [isEditOfferPanelOpen, setEditOfferPanelOpen] = useState(false);
   const [editOfferData, setEditOfferData] = useState(null);
+  const [
+    openDialogConfirmCancelEditClient,
+    setOpenDialogConfirmCancelEditClient,
+  ] = useState(false);
+
+  const handleCancelEditClientClick = () => {
+    setOpenDialogConfirmCancelEditClient(!openDialogConfirmCancelEditClient);
+  };
+
+  const handleConfirmCancelEditClient = () => {
+    setIsEditClientPanelOpen(!isEditClientPanelOpen);
+    handleCancelEditClientClick();
+  };
 
   const formatNumber = (value) =>
     value
@@ -797,7 +811,7 @@ function ClientDetails({
           <EditClientPanel
             initialData={client}
             onSave={handleSaveAndRefresh}
-            onCancel={handleCloseEditPanel}
+            onCancel={handleCancelEditClientClick}
             allUsers={users}
           />
         )}
@@ -818,6 +832,16 @@ function ClientDetails({
             handleSaveEditedOffer={handleSaveEditedOffer}
           />
         )}
+
+        <ConfirmDialog
+          open={openDialogConfirmCancelEditClient}
+          onClose={handleCancelEditClientClick}
+          onConfirm={handleConfirmCancelEditClient}
+          dialogTitle={"Potwierdzenie anulowania edycji klienta"}
+          dialogContent={"Czy na pewno chcesz anulować edycję klienta?"}
+          buttonText={"Potwierdź"}
+          buttonColor={"error"}
+        />
       </div>
     </div>
   );

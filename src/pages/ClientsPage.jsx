@@ -57,6 +57,33 @@ function ClientsPage() {
   const [loading, setLoading] = useState(true);
   const logout = useLogout();
 
+  const [
+    openDialogConfirmCancelAddClient,
+    setOpenDialogConfirmCancelAddClient,
+  ] = useState(false);
+  const [
+    openDialogConfirmCancelEditClient,
+    setOpenDialogConfirmCancelEditClient,
+  ] = useState(false);
+
+  const handleCancelAddClientClick = () => {
+    setOpenDialogConfirmCancelAddClient(!openDialogConfirmCancelAddClient);
+  };
+
+  const handleConfirmCancelAddClient = () => {
+    setIsAddClientPanelOpen(!isAddClientPanelOpen);
+    handleCancelAddClientClick();
+  };
+
+  const handleCancelEditClientClick = () => {
+    setOpenDialogConfirmCancelEditClient(!openDialogConfirmCancelEditClient);
+  };
+
+  const handleConfirmCancelEditClient = () => {
+    setIsEditClientPanelOpen(!isEditClientPanelOpen);
+    handleCancelEditClientClick();
+  };
+
   const handleEditClientClickCancel = () => {
     setClientToEdit("");
     setIsEditClientPanelOpen(!isEditClientPanelOpen);
@@ -367,6 +394,7 @@ function ClientsPage() {
           onSearchFilterApply={handleSearchAndFilter}
           allUsers={allUsers.length !== 0 ? allUsers : users}
           userRole={userRole}
+          userInformation={userInformation}
         />
       </div>
       <ClientsTable
@@ -399,14 +427,37 @@ function ClientsPage() {
         onClose={handleOpenCloseDialog}
         onConfirm={handleConfirmDelete}
         dialogTitle={"Potwierdzenie usunięcia"}
-        dialogContent={"Czy na pewno chcesz usunąć?"}
+        dialogContent={
+          "Czy na pewno chcesz usunąć? Spowoduje to przeniesienie klienta do kosza klientów."
+        }
         buttonText={"Usuń"}
         buttonColor={"error"}
       />
+
+      <ConfirmDialog
+        open={openDialogConfirmCancelAddClient}
+        onClose={handleCancelAddClientClick}
+        onConfirm={handleConfirmCancelAddClient}
+        dialogTitle={"Potwierdzenie anulowania dodania klienta"}
+        dialogContent={"Czy na pewno chcesz anulować dodanie klienta?"}
+        buttonText={"Potwierdź"}
+        buttonColor={"error"}
+      />
+
+      <ConfirmDialog
+        open={openDialogConfirmCancelEditClient}
+        onClose={handleCancelEditClientClick}
+        onConfirm={handleConfirmCancelEditClient}
+        dialogTitle={"Potwierdzenie anulowania edycji klienta"}
+        dialogContent={"Czy na pewno chcesz anulować edycję klienta?"}
+        buttonText={"Potwierdź"}
+        buttonColor={"error"}
+      />
+
       {isAddClientPanelOpen && (
         <AddClientPanel
           onSave={handleSaveClient}
-          onCancel={handleAddClientClick}
+          onCancel={handleCancelAddClientClick}
           allUsers={allUsers.length !== 0 ? allUsers : users}
           userInformation={userInformation}
         />
@@ -415,7 +466,7 @@ function ClientsPage() {
         <EditClientPanel
           initialData={clientToEdit}
           onSave={handleEditClient}
-          onCancel={handleEditClientClickCancel}
+          onCancel={handleCancelEditClientClick}
           allUsers={allUsers.length !== 0 ? allUsers : users}
         />
       )}

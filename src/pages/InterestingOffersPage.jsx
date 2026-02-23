@@ -67,8 +67,34 @@ function InterestingOffersPage() {
   const [order, setOrder] = useState("desc");
   const [clients, setClients] = useState([]);
   const logout = useLogout();
+  const [
+    openDialogConfirmCancelAddOffer,
+    setOpenDialogConfirmCancelAddOffer,
+  ] = useState(false);
+  const [
+    openDialogConfirmCancelEditOffer,
+    setOpenDialogConfirmCancelEditOffer,
+  ] = useState(false);
 
   const columns = useMemo(() => columnsOffersConfig, []);
+
+  const handleCancelAddOfferClick = () => {
+    setOpenDialogConfirmCancelAddOffer(!openDialogConfirmCancelAddOffer);
+  };
+
+  const handleConfirmCancelAddOffer = () => {
+    setAddOfferPanelOpen(!isAddOfferPanelOpen);
+    handleCancelAddOfferClick();
+  };
+
+  const handleCancelEditOfferClick = () => {
+    setOpenDialogConfirmCancelEditOffer(!openDialogConfirmCancelEditOffer);
+  };
+
+  const handleConfirmCancelEditOffer = () => {
+    setEditOfferPanelOpen(!isEditOfferPanelOpen);
+    handleCancelEditOfferClick();
+  };
 
   const handleOpenOfferDetailsPanel = (offerId) => {
     setOfferDetailsId(offerId);
@@ -521,6 +547,7 @@ function InterestingOffersPage() {
             onFilterApply={handleSearchAndFilter}
             allUsers={allUsers.length !== 0 ? allUsers : users}
             clients={clients}
+            userInformation={userInformation}
           />
         </div>
         <OffersTable
@@ -556,7 +583,7 @@ function InterestingOffersPage() {
         {isAddOfferPanelOpen && (
           <AddOfferPanel
             onSave={handleSaveOffer}
-            onCancel={handleAddOfferClick}
+            onCancel={handleCancelAddOfferClick}
             users={users}
           />
         )}
@@ -592,6 +619,26 @@ function InterestingOffersPage() {
         )}
 
         <ConfirmDialog
+          open={openDialogConfirmCancelAddOffer}
+          onClose={handleCancelAddOfferClick}
+          onConfirm={handleConfirmCancelAddOffer}
+          dialogTitle={"Potwierdzenie anulowania dodania oferty"}
+          dialogContent={"Czy na pewno chcesz anulować dodanie oferty?"}
+          buttonText={"Potwierdź"}
+          buttonColor={"error"}
+        />
+
+        <ConfirmDialog
+          open={openDialogConfirmCancelEditOffer}
+          onClose={handleCancelEditOfferClick}
+          onConfirm={handleConfirmCancelEditOffer}
+          dialogTitle={"Potwierdzenie anulowania edycji oferty"}
+          dialogContent={"Czy na pewno chcesz anulować edycję oferty?"}
+          buttonText={"Potwierdź"}
+          buttonColor={"error"}
+        />
+
+        <ConfirmDialog
           open={openDialogConfirmOfferAssignment}
           onClose={handleOpenCloseDialogConfirmOfferAssignment}
           onConfirm={handleConfirmOfferAssignment}
@@ -604,7 +651,7 @@ function InterestingOffersPage() {
           <EditOfferPanel
             offerData={editOfferData}
             onSave={handleSaveEditedOffer}
-            onCancel={() => setEditOfferPanelOpen(false)}
+            onCancel={handleCancelEditOfferClick}
             users={users}
           />
         )}

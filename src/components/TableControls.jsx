@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from "react";
 import {
+  Autocomplete,
+  createFilterOptions,
+  TextField,
   MenuItem,
   Button,
   Box,
@@ -21,7 +24,14 @@ import {
   ThemeProvider,
 } from "@mui/material";
 import { customTooltip } from "../styles/CustomTooltip";
-import { Delete, Star, ViewList, ViewModule, Clear } from "@mui/icons-material";
+import {
+  Person,
+  Delete,
+  Star,
+  ViewList,
+  ViewModule,
+  Clear,
+} from "@mui/icons-material";
 import { KeyboardArrowDown } from "@mui/icons-material";
 import CustomTextField from "./CustomTextField";
 import { useChangeColumnConfig, useReadConfig } from "../config/columnConfig";
@@ -38,6 +48,7 @@ function TableControls({
   onFilterApply,
   allUsers,
   clients,
+  userInformation,
 }) {
   const {
     filters: appliedFilters,
@@ -272,6 +283,11 @@ function TableControls({
     }
   };
 
+  const clientFilterOptions = createFilterOptions({
+    matchFrom: "start",
+    stringify: (option) => option.daneKlienta,
+  });
+
   const isAnyFilterFilled = (localFilters) => {
     if (!localFilters || typeof localFilters !== "object") {
       return false;
@@ -415,9 +431,39 @@ function TableControls({
                   ? "#CC0000"
                   : "black",
                 borderRadius: "4px",
+                height: "40px",
+                width: "40px",
               }}
             >
               <Clear />
+            </IconButton>
+          </Tooltip>
+          <Tooltip title="Moje rekordy">
+            <IconButton
+              onClick={() => {
+                const updatedFilters = {
+                  ...localFilters,
+                  agent: userInformation,
+                };
+                setLocalFilters(updatedFilters);
+                setFilters(updatedFilters);
+                onFilterApply(searchValue, updatedFilters, columnConfig);
+              }}
+              sx={{
+                color:
+                  localFilters.agent === userInformation
+                    ? "#009900"
+                    : "#6D727F",
+                border: "1px solid",
+                borderColor:
+                  localFilters.agent === userInformation ? "#009900" : "black",
+                borderRadius: "4px",
+                height: "40px",
+                width: "40px",
+                ml: 1,
+              }}
+            >
+              <Person />
             </IconButton>
           </Tooltip>
           <CustomTextField
@@ -452,32 +498,6 @@ function TableControls({
               },
             }}
           />
-          <ToggleButtonGroup
-            value={columnConfig}
-            exclusive
-            onChange={handleViewChange}
-            aria-label="view selection"
-            sx={{ height: "40px" }}
-          >
-            <Tooltip title="Widok podstawowy">
-              <ToggleButton value={0} aria-label="basic view">
-                <ViewList
-                  sx={{
-                    color: columnConfig === 0 ? "#FC8721" : "default",
-                  }}
-                />
-              </ToggleButton>
-            </Tooltip>
-            <Tooltip title="Widok rozszerzony">
-              <ToggleButton value={1} aria-label="expanded view">
-                <ViewModule
-                  sx={{
-                    color: columnConfig === 1 ? "#FC8721" : "default",
-                  }}
-                />
-              </ToggleButton>
-            </Tooltip>
-          </ToggleButtonGroup>
           <Button
             variant="contained"
             sx={{
@@ -522,7 +542,7 @@ function TableControls({
             sx={{
               marginTop: "12px",
               "& .MuiOutlinedInput-root": {
-                borderRadius: "6px",
+                borderRadius: "4px",
                 fontFamily: "Poppins",
                 fontSize: "16px",
                 height: "40px",
@@ -602,7 +622,7 @@ function TableControls({
             sx={{
               marginTop: "12px",
               "& .MuiOutlinedInput-root": {
-                borderRadius: "6px",
+                borderRadius: "4px",
                 fontFamily: "Poppins",
                 fontSize: "16px",
                 height: "40px",
@@ -692,7 +712,7 @@ function TableControls({
               sx={{
                 marginTop: "12px",
                 "& .MuiOutlinedInput-root": {
-                  borderRadius: "6px",
+                  borderRadius: "4px",
                   fontFamily: "Poppins",
                   fontSize: "16px",
                   height: "40px",
@@ -759,7 +779,7 @@ function TableControls({
               sx={{
                 marginTop: "12px",
                 "& .MuiOutlinedInput-root": {
-                  borderRadius: "6px",
+                  borderRadius: "4px",
                   fontFamily: "Poppins",
                   fontSize: "16px",
                   height: "40px",
@@ -946,7 +966,7 @@ function TableControls({
               sx={{
                 marginTop: "12px",
                 "& .MuiOutlinedInput-root": {
-                  borderRadius: "6px",
+                  borderRadius: "4px",
                   fontFamily: "Poppins",
                   fontSize: "16px",
                   height: "40px",
@@ -1028,7 +1048,7 @@ function TableControls({
               sx={{
                 marginTop: "12px",
                 "& .MuiOutlinedInput-root": {
-                  borderRadius: "6px",
+                  borderRadius: "4px",
                   fontFamily: "Poppins",
                   fontSize: "16px",
                   height: "40px",
@@ -1172,67 +1192,51 @@ function TableControls({
               }
             />
           </div>
-          <FormControl
-            fullWidth
-            sx={{
-              marginTop: "12px",
-              "& .MuiOutlinedInput-root": {
-                borderRadius: "6px",
-                fontFamily: "Poppins",
-                fontSize: "16px",
-                height: "40px",
-                "& input": {
-                  padding: "8px",
-                  height: "16px",
-                },
-              },
-              "& .MuiFormLabel-root": {
-                fontFamily: "Poppins",
-                fontSize: "16px",
-                color: "#535968",
-                transform: "translate(14px, 9px) scale(1)",
-              },
-              "& .MuiInputLabel-root.MuiInputLabel-shrink": {
-                transform: "translate(14px, -9px) scale(0.75)",
-              },
-
-              "& .MuiInputLabel-root.Mui-focused": {
-                color: "#535968",
-              },
-              "& .MuiOutlinedInput-notchedOutline": {
-                borderColor: "#535968",
-              },
-              "&:hover .MuiOutlinedInput-notchedOutline": {
-                borderColor: "#535968",
-              },
-              "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                borderColor: "#535968",
-              },
-              "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                borderColor: "#535968",
-              },
-            }}
-          >
-            <InputLabel>Klient</InputLabel>
-            <Select
-              value={localFilters?.clientId}
-              onChange={(e) =>
-                handleLocalFilterChange("clientId", e.target.value)
+          <FormControl fullWidth sx={{ marginTop: "12px" }}>
+            <Autocomplete
+              options={clients || []}
+              getOptionLabel={(option) => option.daneKlienta}
+              value={
+                clients?.find((c) => c._id === localFilters?.clientId) || null
               }
-              label="Typ inwestycji"
-            >
-              <MenuItem
-                value=""
-                sx={{ fontStyle: "italic", color: "gray", fontWeight: "bold" }}
-              >
-                Wszystko
-              </MenuItem>
-              {clients?.map((client) => (
-                <MenuItem key={client._id} value={client._id}>
-                  {client.daneKlienta}
-                </MenuItem>
-              ))}
-            </Select>
+              onChange={(event, newValue) =>
+                handleLocalFilterChange("clientId", newValue?._id || "")
+              }
+              filterOptions={clientFilterOptions}
+              isOptionEqualToValue={(option, value) => option._id === value._id}
+              clearOnEscape
+              noOptionsText="Brak wyników"
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  label="Klient"
+                  sx={{
+                    "& .MuiOutlinedInput-root": {
+                      borderRadius: "4px",
+                      fontFamily: "Poppins",
+                      fontSize: "16px",
+                      height: "40px",
+                      "& input": {
+                        padding: "0 8px",
+                        height: "100%",
+                        lineHeight: "40px",
+                      },
+                    },
+                    "& .MuiFormLabel-root": {
+                      fontFamily: "Poppins",
+                      fontSize: "16px",
+                      color: "#535968",
+                      top: "50%",
+                      left: "12px",
+                      transform: "translateY(-50%)",
+                    },
+                    "& .MuiInputLabel-root.MuiInputLabel-shrink": {
+                      transform: "translate(0, -28px) scale(0.75)",
+                    },
+                  }}
+                />
+              )}
+            />
           </FormControl>
           <Button
             variant="contained"
