@@ -355,9 +355,9 @@ function UsersPage() {
         sx={{
           position: "fixed",
           bottom: 0,
-          left: 0,
           right: 43.2,
-          zIndex: 1000,
+          zIndex: 30,
+          width: "50%",
         }}
       />
     </div>
