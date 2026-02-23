@@ -16,7 +16,7 @@ function TableControlsUsers({ onAddUserClick }) {
         direction={{ xs: "column", sm: "row" }}
         spacing={2}
         alignItems="center"
-        justifyContent="flex-end"
+        justifyContent="flex-start"
       >
         <Button
           variant="contained"
