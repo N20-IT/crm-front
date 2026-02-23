@@ -354,8 +354,8 @@ function ClientsTable({
                       : ""}
                   </CustomTableCell>
                   <CustomTableCell>
-                    {row.dataNastepnegoKontaktu
-                      ? new Date(row.dataNastepnegoKontaktu).toLocaleDateString(
+                    {row.ostatniKontakt
+                      ? new Date(row.ostatniKontakt).toLocaleDateString(
                           "pl-PL",
                           {
                             year: "numeric",
@@ -366,8 +366,8 @@ function ClientsTable({
                       : ""}
                   </CustomTableCell>
                   <CustomTableCell>
-                    {row.ostatniKontakt
-                      ? new Date(row.ostatniKontakt).toLocaleDateString(
+                    {row.dataNastepnegoKontaktu
+                      ? new Date(row.dataNastepnegoKontaktu).toLocaleDateString(
                           "pl-PL",
                           {
                             year: "numeric",
