@@ -20,6 +20,7 @@ import EditOfferPanel from "../components/EditOfferPanel";
 import serverConfig from "../servers.json";
 import OfferActions from "../components/OfferAction";
 import statusesConfig from "../config/statusesConfig";
+import ConfirmDialog from "../components/ConfirmDialog";
 
 function OfferDetailsPage({
   id,
@@ -31,7 +32,6 @@ function OfferDetailsPage({
   handleChangeOfferInterestClick,
   handleAddToCalendar,
   handleUpdateOfferAgentClick,
-
   users,
   downloadPDF,
 }) {
@@ -45,6 +45,19 @@ function OfferDetailsPage({
   const backendServer = serverConfig["backend-server"];
   const navigate = useNavigate();
   const isAuthenticated = useAuth();
+  const [
+    openDialogConfirmCancelEditOffer,
+    setOpenDialogConfirmCancelEditOffer,
+  ] = useState(false);
+
+  const handleCancelEditOfferClick = () => {
+    setOpenDialogConfirmCancelEditOffer(!openDialogConfirmCancelEditOffer);
+  };
+
+  const handleConfirmCancelEditOffer = () => {
+    setEditOfferPanelOpen(!isEditOfferPanelOpen);
+    handleCancelEditOfferClick();
+  };
 
   const fetchDetailsData = useCallback(async () => {
     try {
@@ -411,10 +424,19 @@ function OfferDetailsPage({
           <EditOfferPanel
             offerData={offer}
             onSave={handleSaveAndRefresh}
-            onCancel={handleCloseEditPanel}
+            onCancel={handleCancelEditOfferClick}
             users={users}
           />
         )}
+        <ConfirmDialog
+          open={openDialogConfirmCancelEditOffer}
+          onClose={handleCancelEditOfferClick}
+          onConfirm={handleConfirmCancelEditOffer}
+          dialogTitle={"Potwierdzenie anulowania edycji oferty"}
+          dialogContent={"Czy na pewno chcesz anulować edycję oferty?"}
+          buttonText={"Potwierdź"}
+          buttonColor={"error"}
+        />
       </div>
     </div>
   );

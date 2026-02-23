@@ -53,6 +53,20 @@ function DeletedClientsPage() {
   const [loading, setLoading] = useState(true);
   const logout = useLogout();
 
+  const [
+    openDialogConfirmCancelEditClient,
+    setOpenDialogConfirmCancelEditClient,
+  ] = useState(false);
+
+  const handleCancelEditClientClick = () => {
+    setOpenDialogConfirmCancelEditClient(!openDialogConfirmCancelEditClient);
+  };
+
+  const handleConfirmCancelEditClient = () => {
+    setIsEditClientPanelOpen(!isEditClientPanelOpen);
+    handleCancelEditClientClick();
+  };
+
   const handleEditClientClickCancel = () => {
     setClientToEdit("");
     setIsEditClientPanelOpen(!isEditClientPanelOpen);
@@ -374,7 +388,7 @@ function DeletedClientsPage() {
         <EditClientPanel
           initialData={clientToEdit}
           onSave={handleEditClient}
-          onCancel={handleEditClientClickCancel}
+          onCancel={handleCancelEditClientClick}
           allUsers={allUsers.length !== 0 ? allUsers : users}
         />
       )}
@@ -388,6 +402,16 @@ function DeletedClientsPage() {
           downloadPDF={downloadPDF}
         />
       )}
+
+      <ConfirmDialog
+        open={openDialogConfirmCancelEditClient}
+        onClose={handleCancelEditClientClick}
+        onConfirm={handleConfirmCancelEditClient}
+        dialogTitle={"Potwierdzenie anulowania edycji klienta"}
+        dialogContent={"Czy na pewno chcesz anulować edycję klienta?"}
+        buttonText={"Potwierdź"}
+        buttonColor={"error"}
+      />
     </div>
   );
 }
