@@ -99,6 +99,18 @@ function ClientTableControls({
         justifyContent="flex-end"
       >
         <Button
+          variant="contained"
+          sx={{
+            height: "40px",
+            backgroundColor: "#FC8721",
+            fontFamily: "Poppins",
+            fontSize: "18px",
+          }}
+          onClick={onAddClientClick}
+        >
+          Dodaj Klienta
+        </Button>
+        <Button
           variant="outlined"
           sx={{
             color: isAnyFilterFilled(filters) ? "#009900" : "#6D727F",
@@ -180,18 +192,6 @@ function ClientTableControls({
             },
           }}
         />
-        <Button
-          variant="contained"
-          sx={{
-            height: "40px",
-            backgroundColor: "#FC8721",
-            fontFamily: "Poppins",
-            fontSize: "18px",
-          }}
-          onClick={onAddClientClick}
-        >
-          Dodaj Klienta
-        </Button>
       </Stack>
       <ClientFilters onFilterApply={handleFilterChange} allUsers={allUsers} />
     </Box>
