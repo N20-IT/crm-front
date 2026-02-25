@@ -108,14 +108,28 @@ const EditOfferPanel = ({ offerData, onSave, onCancel, users }) => {
     setFormData((prevData) => ({
       ...prevData,
       telefonWlasciciela: prevData.telefonWlasciciela.filter(
-        (_, i) => i !== index
+        (_, i) => i !== index,
       ),
     }));
   };
 
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === "Escape") onCancel();
+    };
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, [onCancel]);
+
   return (
-    <div className=" fixed inset-0 bg-light-grey bg-opacity-75 flex items-center justify-center z-50">
-      <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md md:max-w-lg lg:max-w-xl max-h-[95%] overflow-auto">
+    <div
+      className=" fixed inset-0 bg-light-grey bg-opacity-75 flex items-center justify-center z-50"
+      onClick={onCancel}
+    >
+      <div
+        className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md md:max-w-lg lg:max-w-xl max-h-[95%] overflow-auto"
+        onClick={(e) => e.stopPropagation()}
+      >
         <h2 className=" text-4xl font-bold mb-4 font-poppins">Edytuj ofertę</h2>
         <form>
           <div className="flex justify-end space-x-2">
@@ -531,7 +545,7 @@ const EditOfferPanel = ({ offerData, onSave, onCancel, users }) => {
               value={
                 formData.dataKontaktu
                   ? new Date(formData.dataKontaktu).toLocaleDateString(
-                      "en-CA"
+                      "en-CA",
                     ) +
                     "T" +
                     new Date(formData.dataKontaktu)
@@ -552,7 +566,7 @@ const EditOfferPanel = ({ offerData, onSave, onCancel, users }) => {
               value={
                 formData.dataNastepnegoKontaktu
                   ? new Date(
-                      formData.dataNastepnegoKontaktu
+                      formData.dataNastepnegoKontaktu,
                     ).toLocaleDateString("en-CA") +
                     "T" +
                     new Date(formData.dataNastepnegoKontaktu)

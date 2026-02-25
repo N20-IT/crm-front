@@ -1,6 +1,6 @@
 import { Button } from "@mui/material";
 import ClientForm from "./ClientForm";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Alerts from "./Alerts";
 import { GetInformationFromToken } from "../utils/decodeToken";
 
@@ -191,9 +191,23 @@ function EditClientPanel({ initialData, onSave, onCancel, allUsers }) {
     }));
   };
 
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === "Escape") onCancel();
+    };
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, [onCancel]);
+
   return (
-    <div className="fixed inset-0 bg-light-grey bg-opacity-75 flex items-center justify-center z-50">
-      <div className="bg-white px-6 rounded-lg shadow-lg w-full max-w-md md:max-w-lg lg:max-w-xl max-h-[95%] overflow-auto">
+    <div
+      className="fixed inset-0 bg-light-grey bg-opacity-75 flex items-center justify-center z-50"
+      onClick={onCancel}
+    >
+      <div
+        className="bg-white px-6 rounded-lg shadow-lg w-full max-w-md md:max-w-lg lg:max-w-xl max-h-[95%] overflow-auto"
+        onClick={(e) => e.stopPropagation()}
+      >
         <div className="sticky top-0 bg-white pt-6 pb-2 px-2 z-20">
           <h2 className="text-4xl font-bold mb-4 font-poppins">
             Edytuj klienta
