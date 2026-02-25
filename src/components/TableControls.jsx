@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import {
   Autocomplete,
-  createFilterOptions, 
+  createFilterOptions,
   TextField,
   MenuItem,
   Button,
@@ -24,7 +24,14 @@ import {
   ThemeProvider,
 } from "@mui/material";
 import { customTooltip } from "../styles/CustomTooltip";
-import { Person, Delete, Star, ViewList, ViewModule, Clear } from "@mui/icons-material";
+import {
+  Person,
+  Delete,
+  Star,
+  ViewList,
+  ViewModule,
+  Clear,
+} from "@mui/icons-material";
 import { KeyboardArrowDown } from "@mui/icons-material";
 import CustomTextField from "./CustomTextField";
 import { useChangeColumnConfig, useReadConfig } from "../config/columnConfig";
@@ -41,7 +48,7 @@ function TableControls({
   onFilterApply,
   allUsers,
   clients,
-  userInformation
+  userInformation,
 }) {
   const {
     filters: appliedFilters,
@@ -111,25 +118,15 @@ function TableControls({
 
   const validateDates = () => {
     const contactDateInvalid =
-      localFilters.dataKontaktuOd &&
-      localFilters.dataKontaktuDo &&
-      new Date(localFilters.dataKontaktuOd) >
-        new Date(localFilters.dataKontaktuDo);
-    const followUpDateInvalid =
-      localFilters.dataNastepnegoKontaktuOd &&
-      localFilters.dataNastepnegoKontaktuDo &&
-      new Date(localFilters.dataNastepnegoKontaktuOd) >
-        new Date(localFilters.dataNastepnegoKontaktuDo);
+      localFilters.dataUtworzeniaOd &&
+      localFilters.dataUtworzeniaDo &&
+      new Date(localFilters.dataUtworzeniaOd) >
+        new Date(localFilters.dataUtworzeniaDo);
     setDateError({
       contactDate: contactDateInvalid,
-      followUpDate: followUpDateInvalid,
     });
   };
   const handleContactDateBlur = () => {
-    validateDates();
-  };
-
-  const handleFollowUpDateBlur = () => {
     validateDates();
   };
 
@@ -309,10 +306,8 @@ function TableControls({
     maxPrice: "",
     agent: "",
     statusOferty: "",
-    dataKontaktuOd: "",
-    dataKontaktuDo: "",
-    dataNastepnegoKontaktuOd: "",
-    dataNastepnegoKontaktuDo: "",
+    dataUtworzeniaOd: "",
+    dataUtworzeniaDo: "",
     clientId: "",
   };
 
@@ -455,9 +450,13 @@ function TableControls({
                 onFilterApply(searchValue, updatedFilters, columnConfig);
               }}
               sx={{
-                color: localFilters.agent === userInformation ? "#009900" : "#6D727F",
+                color:
+                  localFilters.agent === userInformation
+                    ? "#009900"
+                    : "#6D727F",
                 border: "1px solid",
-                borderColor: localFilters.agent === userInformation ? "#009900" : "black",
+                borderColor:
+                  localFilters.agent === userInformation ? "#009900" : "black",
                 borderRadius: "4px",
                 height: "40px",
                 width: "40px",
@@ -1127,12 +1126,12 @@ function TableControls({
           </div>
           <div className="flex justify-end space-x-4 mt-3">
             <CustomTextField
-              label="Kontakt od"
-              name="dataKontaktuOd"
+              label="Data utworzenia od"
+              name="dataUtworzeniaOd"
               type="date"
-              value={localFilters?.dataKontaktuOd}
+              value={localFilters?.dataUtworzeniaOd}
               onChange={(e) =>
-                handleLocalFilterChange("dataKontaktuOd", e.target.value)
+                handleLocalFilterChange("dataUtworzeniaOd", e.target.value)
               }
               variant="outlined"
               fullWidth
@@ -1140,17 +1139,17 @@ function TableControls({
               onBlur={handleContactDateBlur}
               error={
                 dateError.contactDate &&
-                new Date(localFilters.dataKontaktuOd) >
-                  new Date(localFilters.dataKontaktuDo)
+                new Date(localFilters.dataUtworzeniaOd) >
+                  new Date(localFilters.dataUtworzeniaDo)
               }
             />
             <CustomTextField
-              label="Kontakt do"
-              name="dataKontaktuDo"
+              label="Data utworzenia do"
+              name="dataUtworzeniaDo"
               type="date"
-              value={localFilters?.dataKontaktuDo}
+              value={localFilters?.dataUtworzeniaDo}
               onChange={(e) =>
-                handleLocalFilterChange("dataKontaktuDo", e.target.value)
+                handleLocalFilterChange("dataUtworzeniaDo", e.target.value)
               }
               variant="outlined"
               fullWidth
@@ -1158,52 +1157,8 @@ function TableControls({
               onBlur={handleContactDateBlur}
               error={
                 dateError.contactDate &&
-                new Date(localFilters.dataKontaktuOd) >
-                  new Date(localFilters.dataKontaktuDo)
-              }
-            />
-          </div>
-          <div className="flex justify-end space-x-4 mt-3">
-            <CustomTextField
-              label="Następny od"
-              name="dataNastepnegoKontaktuOd"
-              type="date"
-              value={localFilters?.dataNastepnegoKontaktuOd}
-              onChange={(e) =>
-                handleLocalFilterChange(
-                  "dataNastepnegoKontaktuOd",
-                  e.target.value,
-                )
-              }
-              variant="outlined"
-              fullWidth
-              InputLabelProps={{ shrink: true }}
-              onBlur={handleFollowUpDateBlur}
-              error={
-                dateError.followUpDate &&
-                new Date(localFilters.dataNastepnegoKontaktuOd) >
-                  new Date(localFilters.dataNastepnegoKontaktuDo)
-              }
-            />
-            <CustomTextField
-              label="Następny do"
-              name="dataNastepnegoKontaktuDo"
-              type="date"
-              value={localFilters?.dataNastepnegoKontaktuDo}
-              onChange={(e) =>
-                handleLocalFilterChange(
-                  "dataNastepnegoKontaktuDo",
-                  e.target.value,
-                )
-              }
-              variant="outlined"
-              fullWidth
-              InputLabelProps={{ shrink: true }}
-              onBlur={handleFollowUpDateBlur}
-              error={
-                dateError.followUpDate &&
-                new Date(localFilters.dataNastepnegoKontaktuOd) >
-                  new Date(localFilters.dataNastepnegoKontaktuDo)
+                new Date(localFilters.dataUtworzeniaOd) >
+                  new Date(localFilters.dataUtworzeniaDo)
               }
             />
           </div>
@@ -1211,7 +1166,9 @@ function TableControls({
             <Autocomplete
               options={clients || []}
               getOptionLabel={(option) => option.daneKlienta}
-              value={clients?.find(c => c._id === localFilters?.clientId) || null}
+              value={
+                clients?.find((c) => c._id === localFilters?.clientId) || null
+              }
               onChange={(event, newValue) =>
                 handleLocalFilterChange("clientId", newValue?._id || "")
               }
