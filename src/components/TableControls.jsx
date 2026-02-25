@@ -764,30 +764,54 @@ function TableControls({
             >
               <InputLabel>Typ inwestycji</InputLabel>
               <Select
-                value={localFilters?.typInwestycji}
+                value={localFilters?.typInwestycji || []}
                 onChange={(e) =>
                   handleLocalFilterChange("typInwestycji", e.target.value)
                 }
-                label="Typ inwestycji"
+                multiple
+                renderValue={(selected) =>
+                  Array.isArray(selected) ? selected.join(", ") : ""
+                }
+                input={
+                  <OutlinedInput
+                    sx={{
+                      "& .MuiOutlinedInput-notchedOutline": {
+                        borderColor: "#535968",
+                      },
+                      "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                        borderColor: "#535968",
+                      },
+                    }}
+                    label="Typ inwestycji"
+                  />
+                }
               >
-                <MenuItem
-                  value=""
-                  sx={{
-                    fontStyle: "italic",
-                    color: "gray",
-                    fontWeight: "bold",
-                  }}
-                >
-                  Wszystko
-                </MenuItem>
-                <MenuItem value="Dom">Dom</MenuItem>
-                <MenuItem value="Mieszkanie">Mieszkanie</MenuItem>
-                <MenuItem value="Lokal">Lokal</MenuItem>
-                <MenuItem value="Działka">Działka</MenuItem>
-                <MenuItem value="Bliźniak">Bliźniak</MenuItem>
-                <MenuItem value="Szeregowy">Szeregowy</MenuItem>
+                {[
+                  "Dom",
+                  "Mieszkanie",
+                  "Lokal",
+                  "Działka",
+                  "Bliźniak",
+                  "Szeregowy",
+                ].map((typ) => (
+                  <MenuItem
+                    key={typ}
+                    value={typ}
+                    sx={{
+                      "& .Mui-checked": { color: "#FC8721" },
+                    }}
+                  >
+                    <Checkbox
+                      checked={(localFilters?.typInwestycji || []).includes(
+                        typ,
+                      )}
+                    />
+                    <ListItemText primary={typ} />
+                  </MenuItem>
+                ))}
               </Select>
             </FormControl>
+
             <FormControl
               fullWidth
               sx={{
@@ -831,24 +855,42 @@ function TableControls({
             >
               <InputLabel>Rynek</InputLabel>
               <Select
-                value={localFilters?.rynek}
+                value={localFilters?.rynek || []}
                 onChange={(e) =>
                   handleLocalFilterChange("rynek", e.target.value)
                 }
-                label="Rynek"
+                multiple
+                renderValue={(selected) =>
+                  Array.isArray(selected) ? selected.join(", ") : ""
+                }
+                input={
+                  <OutlinedInput
+                    sx={{
+                      "& .MuiOutlinedInput-notchedOutline": {
+                        borderColor: "#535968",
+                      },
+                      "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                        borderColor: "#535968",
+                      },
+                    }}
+                    label="Rynek"
+                  />
+                }
               >
-                <MenuItem
-                  value=""
-                  sx={{
-                    fontStyle: "italic",
-                    color: "gray",
-                    fontWeight: "bold",
-                  }}
-                >
-                  Wszystko
-                </MenuItem>
-                <MenuItem value="Pierwotny">Pierwotny</MenuItem>
-                <MenuItem value="Wtórny">Wtórny</MenuItem>
+                {["Pierwotny", "Wtórny"].map((rynek) => (
+                  <MenuItem
+                    key={rynek}
+                    value={rynek}
+                    sx={{
+                      "& .Mui-checked": { color: "#FC8721" },
+                    }}
+                  >
+                    <Checkbox
+                      checked={(localFilters?.rynek || []).includes(rynek)}
+                    />
+                    <ListItemText primary={rynek} />
+                  </MenuItem>
+                ))}
               </Select>
             </FormControl>
           </div>

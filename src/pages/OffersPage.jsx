@@ -260,6 +260,7 @@ function OffersPage() {
       sort = order,
     ) => {
       setLoading(true);
+      console.log(currentFilters);
       try {
         const response = await axios.get(`${backendServer}/listings`, {
           headers: {
@@ -284,6 +285,10 @@ function OffersPage() {
               poddzielnica: params.poddzielnica
                 ? params.poddzielnica.join(",")
                 : undefined,
+              typInwestycji: params.typInwestycji
+                ? params.typInwestycji.join(",")
+                : undefined,
+              rynek: params.rynek ? params.rynek.join(",") : undefined,
             };
             return qs.stringify(serializedParams, { arrayFormat: "repeat" });
           },
