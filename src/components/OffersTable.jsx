@@ -16,11 +16,14 @@ import {
   Link,
   TablePagination,
   IconButton,
+  Badge,
 } from "@mui/material";
-import { Language, FileCopy } from "@mui/icons-material";
+import { Language, FileCopy, OpenInNew } from "@mui/icons-material";
 import OfferActions from "../components/OfferAction";
 import CustomTableCell from "./CustomTableCell";
 import statusesConfig from "../config/statusesConfig";
+import { useClientFiltersStore } from "../store/clientFilterStore";
+import { useNavigate } from "react-router-dom";
 
 function OffersTable({
   rows,
@@ -69,6 +72,9 @@ function OffersTable({
   };
 
   const containerRef = useRef(null);
+
+  const { setOfferId } = useClientFiltersStore();
+  const navigate = useNavigate();
 
   const scrollToTop = (smooth = true) => {
     try {
@@ -153,6 +159,11 @@ function OffersTable({
     document.body.removeChild(textarea);
   };
 
+  const handleMatchOffer = (offerId) => {
+    setOfferId(offerId);
+    navigate("/klienci");
+  };
+
   return (
     <ThemeProvider theme={customTooltip}>
       <TableContainer
@@ -202,6 +213,21 @@ function OffersTable({
                   />
                 </TableCell>
               )}
+              <TableCell
+                key="nrOfertyLink"
+                sx={{
+                  color: "white",
+                  textAlign: "center",
+                  fontFamily: "Poppins",
+                  padding: "0px",
+                  paddingLeft: "15px",
+                  paddingRight: "15px",
+                }}
+              >
+                <Tooltip arrow title="Wybrane oferty">
+                  <span>Klienci</span>
+                </Tooltip>
+              </TableCell>
               <TableCell
                 key="narzedzia"
                 sx={{
@@ -306,6 +332,26 @@ function OffersTable({
                       />
                     </TableCell>
                   )}
+
+                  <CustomTableCell style={{ whiteSpace: "nowrap" }}>
+                    <Tooltip arrow title={"Dobierz klientów"}>
+                      <IconButton onClick={() => handleMatchOffer(row._id)}>
+                        <Badge
+                          badgeContent={row.nowiKlienciLiczba}
+                          max={10000}
+                          sx={{
+                            "& .MuiBadge-badge": {
+                              backgroundColor: "#FC8721",
+                              color: "white",
+                              zIndex: 0,
+                            },
+                          }}
+                        >
+                          <OpenInNew />
+                        </Badge>
+                      </IconButton>
+                    </Tooltip>
+                  </CustomTableCell>
                   <OfferActions
                     row={row}
                     userRole={userRole}
