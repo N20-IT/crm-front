@@ -260,7 +260,6 @@ function OffersPage() {
       sort = order,
     ) => {
       setLoading(true);
-      console.log(currentFilters);
       try {
         const response = await axios.get(`${backendServer}/listings`, {
           headers: {
