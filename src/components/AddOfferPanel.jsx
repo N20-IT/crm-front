@@ -33,7 +33,12 @@ function AddOfferPanel({ onSave, onCancel, users, userInformation }) {
     daneWlasciciela: "",
     telefonWlasciciela: [""],
     linkOferta: "",
-    komentarz: "",
+    komentarz: [
+      {
+        tekst: "",
+        data: new Date().toISOString(),
+      },
+    ],
     agent: userInformation,
     statusOferty: "",
   });
@@ -198,6 +203,43 @@ function AddOfferPanel({ onSave, onCancel, users, userInformation }) {
       ),
     }));
     setPhoneExistsInfo((prevInfo) => prevInfo.filter((_, i) => i !== index));
+  };
+
+  const handleCommentsChange = (index, value) => {
+    setFormData((prevData) => {
+      const newComments = [...prevData.komentarz];
+
+      newComments[index] = {
+        ...newComments[index],
+        tekst: value,
+        data: new Date().toISOString(),
+      };
+
+      return {
+        ...prevData,
+        komentarz: newComments,
+      };
+    });
+  };
+
+  const addCommentField = () => {
+    setFormData((prevData) => ({
+      ...prevData,
+      komentarz: [
+        ...prevData.komentarz,
+        {
+          tekst: "",
+          data: new Date().toISOString(),
+        },
+      ],
+    }));
+  };
+
+  const removeCommentField = (index) => {
+    setFormData((prevData) => ({
+      ...prevData,
+      komentarz: prevData.komentarz.filter((_, i) => i !== index),
+    }));
   };
 
   useEffect(() => {
@@ -594,7 +636,39 @@ function AddOfferPanel({ onSave, onCancel, users, userInformation }) {
             fullWidth
             margin="dense"
           />
-          <CustomTextField
+          <div className="flex flex-col">
+            {formData.komentarz.map((komentarz, index) => (
+              <div key={index} className="flex items-start space-x-2">
+                <CustomTextField
+                  label={`Komentarz do daty następnego spotkania ${index + 1}`}
+                  value={komentarz.tekst}
+                  onChange={(e) => handleCommentsChange(index, e.target.value)}
+                  variant="outlined"
+                  fullWidth
+                  margin="dense"
+                  multiline
+                  maxRows={4}
+                />
+
+                <IconButton
+                  onClick={() => removeCommentField(index)}
+                  disabled={formData.komentarz.length === 1}
+                  sx={{ marginTop: "8px" }}
+                >
+                  <RemoveCircle
+                    color={
+                      formData.komentarz.length === 1 ? "disabled" : "error"
+                    }
+                  />
+                </IconButton>
+              </div>
+            ))}
+
+            <IconButton onClick={addCommentField}>
+              <AddCircle sx={{ color: "#FC8721" }} />
+            </IconButton>
+          </div>
+          {/* <CustomTextField
             label="Komentarz"
             name="komentarz"
             value={formData.komentarz}
@@ -606,7 +680,7 @@ function AddOfferPanel({ onSave, onCancel, users, userInformation }) {
             helperText={errors.komentarz}
             multiline
             maxRows={4}
-          />
+          /> */}
           <div className="flex flex-col">
             {formData.telefonWlasciciela.map((phone, index) => (
               <div key={index} className="flex flex-col">
