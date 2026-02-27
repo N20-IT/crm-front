@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth, useReadCookie } from "../utils/auth";
 import Sidebar from "../components/Sidebar";
@@ -11,7 +11,6 @@ import {
   Paper,
   Typography,
   Switch,
-  IconButton,
   Tabs,
   Tab,
   List,
@@ -26,6 +25,9 @@ import {
   VisibilityOff,
   Save,
 } from "@mui/icons-material";
+import LoadingCircularProgress from "../components/LoadingCircularProgress";
+import columnsOffersConfig from "../config/columnsOffersConfig";
+import columnsClientsConfig from "../config/columnsClientsConfig";
 
 function ConfigurationPanel() {
   const navigate = useNavigate();
@@ -40,58 +42,79 @@ function ConfigurationPanel() {
 
   const [activeTab, setActiveTab] = useState(0);
   const [draggedItem, setDraggedItem] = useState(null);
+  const userInformation =
+    GetInformationFromToken("name") +
+    " " +
+    GetInformationFromToken("family_name");
 
-  const [offersConfig, setOffersConfig] = useState([
-    { id: "ulica", label: "Ulica", shortLabel: "Ul.", visible: false },
-    {
-      id: "poddzielnica",
-      label: "Poddzielnica",
-      shortLabel: "Poddz.",
-      visible: true,
-    },
-    {
-      id: "dzielnica",
-      label: "Dzielnica",
-      shortLabel: "Dziel.",
-      visible: true,
-    },
-    { id: "miasto", label: "Miasto", shortLabel: "Miasto", visible: true },
-    { id: "rynek", label: "Rynek", shortLabel: "Rynek", visible: false },
-  ]);
+  const [offersConfig, setOffersConfig] = useState([]);
+  const [clientsConfig, setClientsConfig] = useState([]);
+  const [userData, setUserData] = useState("");
 
-  const [clientsConfig, setClientsConfig] = useState([
-    { id: "daneKlienta", label: "Klient", shortLabel: "Klient", visible: true },
-    {
-      id: "numerTelefonu",
-      label: "Numer telefonu",
-      shortLabel: "Tel.",
-      visible: false,
-    },
-    {
-      id: "adresEmail",
-      label: "Adres e-mail",
-      shortLabel: "Email",
-      visible: true,
-    },
-    {
-      id: "komentarz",
-      label: "Opis klienta",
-      shortLabel: "Opis",
-      visible: true,
-    },
-    {
-      id: "lokalizacja",
-      label: "Lokalizacja",
-      shortLabel: "Lok.",
-      visible: false,
-    },
-  ]);
+  const fetchAgents = useCallback(async () => {
+    setLoading(true);
+    try {
+      const response = await axios.get(`${backendServer}/users?min=true`, {
+        headers: {
+          accept: "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      const usersList = response.data["users"];
+      const matchedUser = usersList.find(
+        (user) => user.imie + " " + user.nazwisko === userInformation,
+      );
+      setUserData(matchedUser);
+      const offersConfig = (matchedUser?.listingsColumns || []).map((col) => {
+        const full = columnsOffersConfig.find((c) => c.id === col.id);
+        return full ? { ...full, ...col } : col;
+      });
+      const clientsConfig = (matchedUser?.clientColumns || []).map((col) => {
+        const full = columnsClientsConfig.find((c) => c.id === col.id);
+        return full ? { ...full, ...col } : col;
+      });
+      setOffersConfig(offersConfig);
+      setClientsConfig(clientsConfig);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
+  }, [token, backendServer]);
+
+  const handleSaveUser = async (userData, clientConfig, offersConfig) => {
+    setLoading(true);
+    try {
+      const userToSave = {
+        ...userData,
+        clientColumns: clientConfig,
+        listingsColumns: offersConfig,
+      };
+      await axios.put(`${backendServer}/users/${userData._id}`, userToSave, {
+        headers: {
+          accept: "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      await fetchAgents();
+      setAlertOpen(true);
+      setAlertMessage("Pomyślnie zapisano konfigurację");
+      setAlertSeverity("success");
+    } catch (error) {
+      setAlertOpen(true);
+      setAlertMessage(error.message);
+      setAlertSeverity("error");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    console.log(isAuthenticated, userRole);
     if (!isAuthenticated || (userRole !== "admin" && userRole !== "user"))
       navigate("/");
-  }, [isAuthenticated, userRole, navigate]);
+    else fetchAgents();
+  }, [isAuthenticated, userRole, navigate, fetchAgents]);
 
   const getCurrentConfig = () => {
     return activeTab === 0 ? offersConfig : clientsConfig;
@@ -140,15 +163,7 @@ function ConfigurationPanel() {
   const handleSaveConfiguration = async () => {
     setLoading(true);
     try {
-      const configToSave = {
-        offers: offersConfig,
-        clients: clientsConfig,
-      };
-
-      // await axios.post(`${backendServer}/api/config/columns`, configToSave, {
-      //   headers: { Authorization: `Bearer ${token}` }
-      // });
-
+      await handleSaveUser(userData, clientsConfig, offersConfig);
       setAlertMessage("Konfiguracja została zapisana pomyślnie");
       setAlertSeverity("success");
       setAlertOpen(true);
@@ -164,6 +179,7 @@ function ConfigurationPanel() {
   return (
     <div className="flex items-start justify-start h-screen ml-16 flex-col">
       <Sidebar />
+      {loading && <LoadingCircularProgress />}
 
       <div className="flex-1 w-full p-8 overflow-auto">
         <Typography variant="h4" className="mb-6 font-bold">
