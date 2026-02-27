@@ -22,9 +22,7 @@ const Sidebar = () => {
   const navigate = useNavigate();
 
   const getLinkClass = (path) =>
-    location.pathname === path
-      ? "bg-orange"
-      : "hover:bg-dark-blue";
+    location.pathname === path ? "bg-orange" : "hover:bg-dark-blue";
 
   const handleNavClick = (path) => {
     if (location.pathname === path) navigate(0);
@@ -36,7 +34,6 @@ const Sidebar = () => {
   return (
     <ThemeProvider theme={customTooltip}>
       <aside className="fixed top-0 left-0 w-16 h-screen bg-light-grey text-white flex flex-col">
-
         {/* ===== LOGO ===== */}
         <div className="w-full p-1 h-20 flex items-center justify-center">
           <div className="w-full h-full flex justify-center items-center cursor-default">
@@ -51,7 +48,6 @@ const Sidebar = () => {
         {/* ===== MENU ===== */}
         <nav className="flex-1">
           <ul>
-
             <li className={`${tileClass} ${getLinkClass("/oferty")}`}>
               <Tooltip title="Oferty" placement="right">
                 <Link
@@ -90,7 +86,9 @@ const Sidebar = () => {
 
             {userRole === "admin" && (
               <>
-                <li className={`${tileClass} ${getLinkClass("/kosz-klientow")}`}>
+                <li
+                  className={`${tileClass} ${getLinkClass("/kosz-klientow")}`}
+                >
                   <Tooltip title="Kosz klientów" placement="right">
                     <Link
                       to="/kosz-klientow"
@@ -125,20 +123,19 @@ const Sidebar = () => {
                     </Link>
                   </Tooltip>
                 </li>
-
-                <li className={`${tileClass} ${getLinkClass("/ustawienia")}`}>
-                  <Tooltip title="Ustawienia" placement="right">
-                    <Link
-                      to="/ustawienia"
-                      onClick={() => handleNavClick("/ustawienia")}
-                      className="ml-4 w-full h-full flex items-center"
-                    >
-                      <Settings />
-                    </Link>
-                  </Tooltip>
-                </li>
               </>
             )}
+            <li className={`${tileClass} ${getLinkClass("/ustawienia")}`}>
+              <Tooltip title="Ustawienia" placement="right">
+                <Link
+                  to="/ustawienia"
+                  onClick={() => handleNavClick("/ustawienia")}
+                  className="ml-4 w-full h-full flex items-center"
+                >
+                  <Settings />
+                </Link>
+              </Tooltip>
+            </li>
           </ul>
         </nav>
 
@@ -153,7 +150,6 @@ const Sidebar = () => {
             </button>
           </Tooltip>
         </div>
-
       </aside>
     </ThemeProvider>
   );

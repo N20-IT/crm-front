@@ -88,7 +88,9 @@ function ConfigurationPanel() {
   ]);
 
   useEffect(() => {
-    if (!isAuthenticated || userRole !== "admin") navigate("/");
+    console.log(isAuthenticated, userRole);
+    if (!isAuthenticated || (userRole !== "admin" && userRole !== "user"))
+      navigate("/");
   }, [isAuthenticated, userRole, navigate]);
 
   const getCurrentConfig = () => {
