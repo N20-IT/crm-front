@@ -125,11 +125,11 @@ const Sidebar = () => {
                 </li>
               </>
             )}
-            <li className={`${tileClass} ${getLinkClass("/ustawienia")}`}>
-              <Tooltip title="Ustawienia" placement="right">
+            <li className={`${tileClass} ${getLinkClass("/konfigurator")}`}>
+              <Tooltip title="Konfigurator widoków tabel" placement="right">
                 <Link
-                  to="/ustawienia"
-                  onClick={() => handleNavClick("/ustawienia")}
+                  to="/konfigurator"
+                  onClick={() => handleNavClick("/konfigurator")}
                   className="ml-4 w-full h-full flex items-center"
                 >
                   <Settings />

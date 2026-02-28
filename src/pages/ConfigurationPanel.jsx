@@ -11,8 +11,6 @@ import {
   Paper,
   Typography,
   Switch,
-  Tabs,
-  Tab,
   List,
   ListItem,
   Divider,
@@ -40,8 +38,9 @@ function ConfigurationPanel() {
   const [alertSeverity, setAlertSeverity] = useState("");
   const backendServer = serverConfig["backend-server"];
 
-  const [activeTab, setActiveTab] = useState(0);
-  const [draggedItem, setDraggedItem] = useState(null);
+  const [draggedItem, setDraggedItem] = useState({ type: null, index: null });
+  const tileHeight = 30;
+  const avatarSize = Math.max(24, Math.min(40, Math.floor(tileHeight * 0.6)));
   const userInformation =
     GetInformationFromToken("name") +
     " " +
@@ -50,6 +49,79 @@ function ConfigurationPanel() {
   const [offersConfig, setOffersConfig] = useState([]);
   const [clientsConfig, setClientsConfig] = useState([]);
   const [userData, setUserData] = useState("");
+
+  // Default configurations and ordering (minimal fields: id and isVisible)
+  const defaultClientsOrder = [
+    { id: "dataUtworzenia", isVisible: true },
+    { id: "dataZapytania", isVisible: true },
+    { id: "ostatniKontakt", isVisible: true },
+    { id: "dataNastepnegoKontaktu", isVisible: true },
+    { id: "daneKlienta", isVisible: true },
+    { id: "numerTelefonu", isVisible: true },
+    { id: "adresEmail", isVisible: true },
+    { id: "komentarzData", isVisible: true },
+    { id: "numerGalactica", isVisible: true },
+    { id: "status", isVisible: true },
+    { id: "agent", isVisible: true },
+    { id: "komentarz", isVisible: true },
+    { id: "portal", isVisible: true },
+    { id: "lokalizacja", isVisible: true },
+    { id: "rodzajNieruchomosci", isVisible: true },
+    { id: "iloscPokoiOd", isVisible: true },
+    { id: "iloscPokoiDo", isVisible: true },
+    { id: "metrazOd", isVisible: true },
+    { id: "metrazDo", isVisible: true },
+    { id: "standard", isVisible: true },
+    { id: "budzetOd", isVisible: true },
+    { id: "budzetDo", isVisible: true },
+  ];
+
+  const defaultOffersOrder = [
+    { id: "linkOferta", isVisible: true },
+    { id: "dataUtworzenia", isVisible: true },
+    { id: "dataNastepnegoKontaktu", isVisible: true },
+    { id: "dataKontaktu", isVisible: true },
+    { id: "status", isVisible: true },
+    { id: "agent", isVisible: true },
+    { id: "komentarz", isVisible: true },
+    { id: "daneWlasciciela", isVisible: true },
+    { id: "telefonDoWlasciciela", isVisible: true },
+    { id: "zlM2", isVisible: true },
+    { id: "cena", isVisible: true },
+    { id: "powDzialki", isVisible: true },
+    { id: "metraz", isVisible: true },
+    { id: "iloscPokoi", isVisible: true },
+    { id: "typInwestycji", isVisible: true },
+    { id: "rynek", isVisible: true },
+    { id: "miasto", isVisible: true },
+    { id: "dzielnica", isVisible: true },
+    { id: "poddzielnica", isVisible: true },
+    { id: "ulica", isVisible: true },
+  ];
+
+  const buildConfigFromDefaults = (defaults, fullList) =>
+    defaults.map((d) => {
+      const full = fullList.find((f) => f.id === d.id) || { id: d.id };
+      return { ...full, ...d };
+    });
+
+  const resetClientsDefaults = () => {
+    const newConfig = buildConfigFromDefaults(defaultClientsOrder, columnsClientsConfig);
+    setClientsConfig(newConfig);
+  };
+
+  const resetOffersDefaults = () => {
+    const newConfig = buildConfigFromDefaults(defaultOffersOrder, columnsOffersConfig);
+    setOffersConfig(newConfig);
+  };
+
+  const toggleShowHideAll = (type) => {
+    const cfg = type === "offers" ? offersConfig : clientsConfig;
+    if (!cfg || cfg.length === 0) return;
+    const anyHidden = cfg.some((c) => !c.isVisible);
+    const newCfg = cfg.map((c) => ({ ...c, isVisible: anyHidden }));
+    type === "offers" ? setOffersConfig(newCfg) : setClientsConfig(newCfg);
+  };
 
   const fetchAgents = useCallback(async () => {
     setLoading(true);
@@ -116,48 +188,40 @@ function ConfigurationPanel() {
     else fetchAgents();
   }, [isAuthenticated, userRole, navigate, fetchAgents]);
 
-  const getCurrentConfig = () => {
-    return activeTab === 0 ? offersConfig : clientsConfig;
-  };
+  const getConfigByType = (type) => (type === "offers" ? offersConfig : clientsConfig);
+  const setConfigByType = (type, newConfig) =>
+    type === "offers" ? setOffersConfig(newConfig) : setClientsConfig(newConfig);
 
-  const setCurrentConfig = (newConfig) => {
-    if (activeTab === 0) {
-      setOffersConfig(newConfig);
-    } else {
-      setClientsConfig(newConfig);
-    }
-  };
-
-  const handleToggleVisibility = (id) => {
-    const config = getCurrentConfig();
+  const handleToggleVisibility = (id, type) => {
+    const config = getConfigByType(type);
     const newConfig = config.map((item) =>
       item.id === id ? { ...item, isVisible: !item.isVisible } : item,
     );
-    setCurrentConfig(newConfig);
+    setConfigByType(type, newConfig);
   };
 
-  const handleDragStart = (e, index) => {
-    setDraggedItem(index);
+  const handleDragStart = (e, index, type) => {
+    setDraggedItem({ type, index });
     e.dataTransfer.effectAllowed = "move";
   };
 
-  const handleDragOver = (e, index) => {
+  const handleDragOver = (e, index, type) => {
     e.preventDefault();
-    if (draggedItem === null || draggedItem === index) return;
+    if (!draggedItem || draggedItem.type !== type || draggedItem.index === index) return;
 
-    const config = getCurrentConfig();
+    const config = getConfigByType(type);
     const newConfig = [...config];
-    const draggedItemContent = newConfig[draggedItem];
+    const draggedItemContent = newConfig[draggedItem.index];
 
-    newConfig.splice(draggedItem, 1);
+    newConfig.splice(draggedItem.index, 1);
     newConfig.splice(index, 0, draggedItemContent);
 
-    setCurrentConfig(newConfig);
-    setDraggedItem(index);
+    setConfigByType(type, newConfig);
+    setDraggedItem({ type, index });
   };
 
   const handleDragEnd = () => {
-    setDraggedItem(null);
+    setDraggedItem({ type: null, index: null });
   };
 
   const handleSaveConfiguration = async () => {
@@ -183,144 +247,225 @@ function ConfigurationPanel() {
 
       <div className="flex-1 w-full p-8 overflow-auto">
         <Typography variant="h4" className="mb-6 font-bold">
-          Konfiguracja widoków tabel
+          Konfigurator widoków tabel
         </Typography>
-        <Chip
-          label="Strona w budowie"
-          size="small"
-          sx={{
-            backgroundColor: "#FFF3CD",
-            color: "#856404",
-            fontWeight: "600",
-            fontFamily: "Poppins",
-            marginBottom: "16px",
-          }}
-        />
-
-        <Paper className="p-6">
-          <Tabs
-            value={activeTab}
-            onChange={(e, newValue) => setActiveTab(newValue)}
-            className="mb-4"
-            sx={{
-              "& .MuiTabs-indicator": {
-                backgroundColor: "#FC8721",
-                height: 3,
-              },
-              "& .MuiTab-root": {
-                color: "#6d727f",
-                fontWeight: 500,
-                "&.Mui-selected": {
-                  color: "#FC8721",
-                  fontWeight: "bold",
-                },
-              },
-            }}
-          >
-            <Tab label="Oferty" />
-            <Tab label="Klienci" />
-          </Tabs>
-
-          <Divider className="mb-4" />
 
           <Typography variant="body2" className="mb-4 text-gray-600">
             Przeciągnij kolumny, aby zmienić ich kolejność. Użyj przełącznika,
             aby pokazać lub ukryć kolumnę.
           </Typography>
 
-          <List className="bg-gray-50 rounded-lg">
-            {getCurrentConfig().map((column, index) => (
-              <ListItem
-                key={column.id}
-                draggable
-                onDragStart={(e) => handleDragStart(e, index)}
-                onDragOver={(e) => handleDragOver(e, index)}
-                onDragEnd={handleDragEnd}
-                className={`bg-white mb-2 rounded-lg shadow-sm cursor-move hover:shadow-md transition-shadow ${
-                  draggedItem === index ? "opacity-50" : ""
-                }`}
+        <Paper className="p-6">
+          <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", mb: 2 }}>
+            <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+              <Button
+                variant="outlined"
+                onClick={() => {
+                  fetchAgents();
+                }}
                 sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  padding: "12px 16px",
+                  borderColor: "#6d727f",
+                  backgroundColor: "#6d727f",
+                  color: "white",
                 }}
               >
-                {/* Numeracja */}
-                <Box
-                  className="flex items-center justify-center mr-3"
-                  sx={{
-                    minWidth: 32,
-                    height: 32,
-                    borderRadius: "50%",
-                    backgroundColor: column.isVisible ? "#FC8721" : "#6d727f",
-                    color: "white",
-                    fontWeight: "bold",
-                    fontSize: "0.875rem",
-                  }}
-                >
-                  {index + 1}
-                </Box>
+                Anuluj
+              </Button>
+              <Button
+                variant="contained"
+                startIcon={<Save />}
+                onClick={handleSaveConfiguration}
+                disabled={loading}
+                sx={{
+                  backgroundColor: "#FC8721",
+                }}
+              >
+                Zapisz konfigurację
+              </Button>
+            </Box>
 
-                <DragIndicator className="text-gray-400 mr-3 cursor-grab active:cursor-grabbing" />
-
-                <Box className="flex-1">
-                  <Typography variant="body1" className="font-medium">
-                    {column.label}
-                  </Typography>
-                  <Typography variant="caption" className="text-gray-500">
-                    {column.shortLabel}
-                  </Typography>
-                </Box>
-
-                <Box className="flex items-center gap-2">
-                  {column.isVisible ? (
-                    <Visibility sx={{ color: "#6d727f" }} />
-                  ) : (
-                    <VisibilityOff sx={{ color: "#6d727f" }} />
-                  )}
-                  <Switch
-                    checked={column.isVisible}
-                    onChange={() => handleToggleVisibility(column.id)}
-                    sx={{
-                      "& .MuiSwitch-switchBase.Mui-checked": {
-                        color: "#FC8721",
-                      },
-                      "& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track": {
-                        backgroundColor: "#FC8721",
-                      },
-                    }}
-                  />
-                </Box>
-              </ListItem>
-            ))}
-          </List>
-
-          <Box className="mt-6 flex justify-end gap-3">
-            <Button
-              variant="outlined"
-              onClick={() => {
-                setActiveTab(0);
-              }}
-              sx={{
-                borderColor: "#6d727f",
-                backgroundColor: "#6d727f",
-                color: "white",
-              }}
-            >
-              Anuluj
-            </Button>
-            <Button
-              variant="contained"
-              startIcon={<Save />}
-              onClick={handleSaveConfiguration}
-              disabled={loading}
-              sx={{
-                backgroundColor: "#FC8721",
-              }}
-            >
-              Zapisz konfigurację
-            </Button>
+            <Box sx={{ display: "flex", alignItems: "center", gap: 2 }} />
           </Box>
+<Divider className="mb-4" />
+          <Box sx={{ display: "flex", gap: 3, alignItems: "flex-start" }}>
+            <Box sx={{ flex: 1 }}>
+              <Typography variant="h6" sx={{ mb: 1 }}>
+                Oferty
+              </Typography>
+              <Box sx={{ display: "flex", gap: 1, mb: 1 }}>
+                <Button
+                  size="small"
+                  variant="contained"
+                  onClick={resetOffersDefaults}
+                  sx={{ backgroundColor: "#FC8721", color: "white" }}
+                >
+                  Domyślne
+                </Button>
+                <Button
+                  size="small"
+                  variant="contained"
+                  startIcon={<Visibility />}
+                  onClick={() => toggleShowHideAll("offers")}
+                  sx={{ backgroundColor: "#FC8721", color: "white" }}
+                >
+                  Pokaż/Ukryj wszystkie
+                </Button>
+              </Box>
+              <List className="bg-gray-50 rounded-lg">
+                {offersConfig.map((column, index) => (
+                  <ListItem
+                    key={column.id}
+                    draggable
+                    onDragStart={(e) => handleDragStart(e, index, "offers")}
+                    onDragOver={(e) => handleDragOver(e, index, "offers")}
+                    onDragEnd={handleDragEnd}
+                    className={`bg-white mb-2 rounded-lg shadow-sm cursor-move hover:shadow-md transition-shadow ${
+                      draggedItem.type === "offers" && draggedItem.index === index
+                        ? "opacity-50"
+                        : ""
+                    }`}
+                    sx={{ display: "flex", alignItems: "center", padding: "8px 16px", minHeight: tileHeight }}
+                  >
+                    <Box
+                      className="flex items-center justify-center mr-3"
+                      sx={{
+                        minWidth: avatarSize,
+                        height: avatarSize,
+                        borderRadius: "50%",
+                        backgroundColor: column.isVisible ? "#FC8721" : "#6d727f",
+                        color: "white",
+                        fontWeight: "bold",
+                        fontSize: Math.max(12, Math.floor(avatarSize * 0.4)),
+                      }}
+                    >
+                      {index + 1}
+                    </Box>
+
+                    <DragIndicator className="text-gray-400 mr-3 cursor-grab active:cursor-grabbing" />
+
+                    <Box className="flex-1">
+                      <Typography variant="body1" className="font-medium">
+                        {column.label}{' '}
+                        <Typography component="span" variant="caption" sx={{ color: "#6b7280", ml: 1 }}>
+                          ({column.shortLabel})
+                        </Typography>
+                      </Typography>
+                    </Box>
+
+                    <Box className="flex items-center gap-2">
+                      {column.isVisible ? (
+                        <Visibility sx={{ color: "#6d727f" }} />
+                      ) : (
+                        <VisibilityOff sx={{ color: "#6d727f" }} />
+                      )}
+                      <Switch
+                        checked={column.isVisible}
+                        onChange={() => handleToggleVisibility(column.id, "offers")}
+                        sx={{
+                          "& .MuiSwitch-switchBase.Mui-checked": {
+                            color: "#FC8721",
+                          },
+                          "& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track": {
+                            backgroundColor: "#FC8721",
+                          },
+                        }}
+                      />
+                    </Box>
+                  </ListItem>
+                ))}
+              </List>
+            </Box>
+
+            <Box sx={{ flex: 1 }}>
+              <Typography variant="h6" sx={{ mb: 1 }}>
+                Klienci
+              </Typography>
+              <Box sx={{ display: "flex", gap: 1, mb: 1 }}>
+                <Button
+                  size="small"
+                  variant="contained"
+                  onClick={resetClientsDefaults}
+                  sx={{ backgroundColor: "#FC8721", color: "white" }}
+                >
+                  Domyślne
+                </Button>
+                <Button
+                  size="small"
+                  variant="contained"
+                  startIcon={<Visibility />}
+                  onClick={() => toggleShowHideAll("clients")}
+                  sx={{ backgroundColor: "#FC8721", color: "white" }}
+                >
+                  Pokaż/Ukryj wszystkie
+                </Button>
+              </Box>
+              <List className="bg-gray-50 rounded-lg">
+                {clientsConfig.map((column, index) => (
+                  <ListItem
+                    key={column.id}
+                    draggable
+                    onDragStart={(e) => handleDragStart(e, index, "clients")}
+                    onDragOver={(e) => handleDragOver(e, index, "clients")}
+                    onDragEnd={handleDragEnd}
+                    className={`bg-white mb-2 rounded-lg shadow-sm cursor-move hover:shadow-md transition-shadow ${
+                      draggedItem.type === "clients" && draggedItem.index === index
+                        ? "opacity-50"
+                        : ""
+                    }`}
+                    sx={{ display: "flex", alignItems: "center", padding: "8px 16px", minHeight: tileHeight }}
+                  >
+                    <Box
+                      className="flex items-center justify-center mr-3"
+                      sx={{
+                        minWidth: avatarSize,
+                        height: avatarSize,
+                        borderRadius: "50%",
+                        backgroundColor: column.isVisible ? "#FC8721" : "#6d727f",
+                        color: "white",
+                        fontWeight: "bold",
+                        fontSize: Math.max(12, Math.floor(avatarSize * 0.4)),
+                      }}
+                    >
+                      {index + 1}
+                    </Box>
+
+                    <DragIndicator className="text-gray-400 mr-3 cursor-grab active:cursor-grabbing" />
+
+                    <Box className="flex-1">
+                      <Typography variant="body1" className="font-medium">
+                        {column.label}{' '}
+                        <Typography component="span" variant="caption" sx={{ color: "#6b7280", ml: 1 }}>
+                          ({column.shortLabel})
+                        </Typography>
+                      </Typography>
+                    </Box>
+
+                    <Box className="flex items-center gap-2">
+                      {column.isVisible ? (
+                        <Visibility sx={{ color: "#6d727f" }} />
+                      ) : (
+                        <VisibilityOff sx={{ color: "#6d727f" }} />
+                      )}
+                      <Switch
+                        checked={column.isVisible}
+                        onChange={() => handleToggleVisibility(column.id, "clients")}
+                        sx={{
+                          "& .MuiSwitch-switchBase.Mui-checked": {
+                            color: "#FC8721",
+                          },
+                          "& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track": {
+                            backgroundColor: "#FC8721",
+                          },
+                        }}
+                      />
+                    </Box>
+                  </ListItem>
+                ))}
+              </List>
+            </Box>
+          </Box>
+
+
         </Paper>
       </div>
 

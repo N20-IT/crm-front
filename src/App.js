@@ -20,7 +20,7 @@ function App() {
       <Route path="/klienci" element={<ClientsPage />} />
       <Route path="/klienci/:id" element={<ClientsPage />} />
       <Route path="/ciekawe-oferty" element={<InterestingOffersPage />} />
-      <Route path="/ustawienia" element={<ConfigurationPanel />} />
+      <Route path="/konfigurator" element={<ConfigurationPanel />} />
       <Route path="/uzytkownicy" element={<UsersPage />} />
       <Route path="/zapomniane-haslo" element={<ForgottenPasswordPage />} />
       <Route path="/oferty/:id" element={<OffersPage />} />
