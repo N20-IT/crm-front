@@ -191,99 +191,132 @@ function OffersTable({
             }}
           >
             <TableRow>
-              {userRole === "admin" && (
-                <TableCell
-                  padding="checkbox"
-                  style={{
-                    color: "white",
-                    textAlign: "center",
-                  }}
-                >
-                  <Checkbox
-                    checked={selected?.length === rows?.length}
-                    indeterminate={
-                      selected.length > 0 && selected.length < rows.length
-                    }
-                    onChange={handleSelectAll}
-                    style={{
-                      color: "white",
-                      padding: "0px",
-                      paddingLeft: "5px",
-                      paddingRight: "5px",
-                    }}
-                  />
-                </TableCell>
-              )}
-              <TableCell
-                key="nrOfertyLink"
-                sx={{
-                  color: "white",
-                  textAlign: "center",
-                  fontFamily: "Poppins",
-                  padding: "0px",
-                  paddingLeft: "15px",
-                  paddingRight: "15px",
-                }}
-              >
-                <Tooltip arrow title="Wybrane oferty">
-                  <span>Klienci</span>
-                </Tooltip>
-              </TableCell>
-              <TableCell
-                key="narzedzia"
-                sx={{
-                  color: "white",
-                  textAlign: "center",
-                  fontFamily: "Poppins",
-                  padding: "0px",
-                  paddingLeft: "30px",
-                  paddingRight: "30px",
-                }}
-              >
-                <Tooltip title="Narzędzia">
-                  <span>Narzędzia</span>
-                </Tooltip>
-              </TableCell>
-              {offerColumnConfig
-                .filter((column) => column.isVisible)
-                .map((column) => (
+              {loading ? (
+                <>
+                  <TableCell key={"checkbox"}>
+                    <Skeleton
+                      variant="rounded"
+                      width="100%"
+                      height={16}
+                      sx={{ backgroundColor: "white" }}
+                    />
+                  </TableCell>
+                  <TableCell key={"narzedzia"}>
+                    <Skeleton
+                      variant="rounded"
+                      width="100%"
+                      height={16}
+                      sx={{ backgroundColor: "white" }}
+                    />
+                  </TableCell>
+                  {Array.from({ length: 20 }).map((_, index) => (
+                    <TableCell key={index}>
+                      <Skeleton
+                        variant="rounded"
+                        width="100%"
+                        height={16}
+                        sx={{ backgroundColor: "white" }}
+                      />
+                    </TableCell>
+                  ))}
+                </>
+              ) : (
+                <>
+                  {userRole === "admin" && (
+                    <TableCell
+                      padding="checkbox"
+                      style={{
+                        color: "white",
+                        textAlign: "center",
+                      }}
+                    >
+                      <Checkbox
+                        checked={selected?.length === rows?.length}
+                        indeterminate={
+                          selected.length > 0 && selected.length < rows.length
+                        }
+                        onChange={handleSelectAll}
+                        style={{
+                          color: "white",
+                          padding: "0px",
+                          paddingLeft: "5px",
+                          paddingRight: "5px",
+                        }}
+                      />
+                    </TableCell>
+                  )}
                   <TableCell
-                    key={column.id}
+                    key="nrOfertyLink"
                     sx={{
                       color: "white",
                       textAlign: "center",
                       fontFamily: "Poppins",
                       padding: "0px",
-                      paddingLeft: "5px",
-                      paddingRight: "5px",
+                      paddingLeft: "15px",
+                      paddingRight: "15px",
                     }}
-                    sortDirection={orderBy === column.id ? order : false}
                   >
-                    {column.sortable ? (
-                      <TableSortLabel
-                        active={orderBy === column.id}
-                        direction={order === "asc" ? "asc" : "desc"}
-                        onClick={() => handleSortRequest(column.id)}
-                        sx={{
-                          color: "white !important",
-                          fontSize: "13px",
-                          paddingLeft: "20px",
-                          "& .MuiTableSortLabel-icon": {
-                            color: "white !important",
-                          },
-                        }}
-                      >
-                        <Tooltip title={column.label}>
-                          <span> {column.shortLabel}</span>
-                        </Tooltip>
-                      </TableSortLabel>
-                    ) : (
-                      <Tooltip title={column.label}>
-                        <span>{column.shortLabel}</span>
-                      </Tooltip>
-                    )}
+                    <Tooltip arrow title="Wybrane oferty">
+                      <span>Klienci</span>
+                    </Tooltip>
                   </TableCell>
-                ))}
+                  <TableCell
+                    key="narzedzia"
+                    sx={{
+                      color: "white",
+                      textAlign: "center",
+                      fontFamily: "Poppins",
+                      padding: "0px",
+                      paddingLeft: "30px",
+                      paddingRight: "30px",
+                    }}
+                  >
+                    <Tooltip title="Narzędzia">
+                      <span>Narzędzia</span>
+                    </Tooltip>
+                  </TableCell>
+                  {offerColumnConfig
+                    .filter((column) => column.isVisible)
+                    .map((column) => (
+                      <TableCell
+                        key={column.id}
+                        sx={{
+                          color: "white",
+                          textAlign: "center",
+                          fontFamily: "Poppins",
+                          padding: "0px",
+                          paddingLeft: "5px",
+                          paddingRight: "5px",
+                        }}
+                        sortDirection={orderBy === column.id ? order : false}
+                      >
+                        {column.sortable ? (
+                          <TableSortLabel
+                            active={orderBy === column.id}
+                            direction={order === "asc" ? "asc" : "desc"}
+                            onClick={() => handleSortRequest(column.id)}
+                            sx={{
+                              color: "white !important",
+                              fontSize: "13px",
+                              paddingLeft: "20px",
+                              "& .MuiTableSortLabel-icon": {
+                                color: "white !important",
+                              },
+                            }}
+                          >
+                            <Tooltip title={column.label}>
+                              <span> {column.shortLabel}</span>
+                            </Tooltip>
+                          </TableSortLabel>
+                        ) : (
+                          <Tooltip title={column.label}>
+                            <span>{column.shortLabel}</span>
+                          </Tooltip>
+                        )}
+                      </TableCell>
+                    ))}
+                </>
+              )}
             </TableRow>
           </TableHead>
           <TableBody>
@@ -296,8 +329,8 @@ function OffersTable({
                   <TableCell key={"narzedzia"}>
                     <Skeleton variant="rounded" width="100%" height={16} />
                   </TableCell>
-                  {filteredColumns.map((column) => (
-                    <TableCell key={column.id}>
+                  {Array.from({ length: 20 }).map((_, index) => (
+                    <TableCell key={index}>
                       <Skeleton variant="rounded" width="100%" height={16} />
                     </TableCell>
                   ))}
