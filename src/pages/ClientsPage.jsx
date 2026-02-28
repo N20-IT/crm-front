@@ -56,6 +56,7 @@ function ClientsPage() {
   const [clientToEdit, setClientToEdit] = useState(null);
   const [loading, setLoading] = useState(true);
   const logout = useLogout();
+  const [clientColumnConfig, setClientColumnConfig] = useState([]);
 
   const [
     openDialogConfirmCancelAddClient,
@@ -151,6 +152,16 @@ function ClientsPage() {
         },
       });
       const usersList = response.data["users"];
+
+      const matchedUser = usersList.find(
+        (user) => user.imie + " " + user.nazwisko === userInformation,
+      );
+      const clientsConfig = (matchedUser?.clientColumns || []).map((col) => {
+        const full = columnsClientsConfig.find((c) => c.id === col.id);
+        return full ? { ...full, ...col } : col;
+      });
+      setClientColumnConfig(clientsConfig);
+
       const agents = usersList.map((user) => user.imie + " " + user.nazwisko);
       if (userRole === "admin") setUsers(agents);
       else {
@@ -415,6 +426,7 @@ function ClientsPage() {
         itemsPerPage={itemsPerPage}
         orderBy={orderBy}
         order={order}
+        clientColumnConfig={clientColumnConfig}
       />
       <Alerts
         message={alertMessage}

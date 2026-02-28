@@ -48,6 +48,7 @@ function OffersTable({
   itemsPerPage,
   orderBy,
   order,
+  offerColumnConfig,
 }) {
   const handleSelect = (id) => {
     if (selected.includes(id))
@@ -243,44 +244,46 @@ function OffersTable({
                   <span>Narzędzia</span>
                 </Tooltip>
               </TableCell>
-              {filteredColumns.map((column, index) => (
-                <TableCell
-                  key={column.id}
-                  sx={{
-                    color: "white",
-                    textAlign: "center",
-                    fontFamily: "Poppins",
-                    padding: "0px",
-                    paddingLeft: "5px",
-                    paddingRight: "5px",
-                  }}
-                  sortDirection={orderBy === column.id ? order : false}
-                >
-                  {column.sortable ? (
-                    <TableSortLabel
-                      active={orderBy === column.id}
-                      direction={order === "asc" ? "asc" : "desc"}
-                      onClick={() => handleSortRequest(column.id)}
-                      sx={{
-                        color: "white !important",
-                        fontSize: "13px",
-                        paddingLeft: "20px",
-                        "& .MuiTableSortLabel-icon": {
+              {offerColumnConfig
+                .filter((column) => column.isVisible)
+                .map((column) => (
+                  <TableCell
+                    key={column.id}
+                    sx={{
+                      color: "white",
+                      textAlign: "center",
+                      fontFamily: "Poppins",
+                      padding: "0px",
+                      paddingLeft: "5px",
+                      paddingRight: "5px",
+                    }}
+                    sortDirection={orderBy === column.id ? order : false}
+                  >
+                    {column.sortable ? (
+                      <TableSortLabel
+                        active={orderBy === column.id}
+                        direction={order === "asc" ? "asc" : "desc"}
+                        onClick={() => handleSortRequest(column.id)}
+                        sx={{
                           color: "white !important",
-                        },
-                      }}
-                    >
+                          fontSize: "13px",
+                          paddingLeft: "20px",
+                          "& .MuiTableSortLabel-icon": {
+                            color: "white !important",
+                          },
+                        }}
+                      >
+                        <Tooltip title={column.label}>
+                          <span> {column.shortLabel}</span>
+                        </Tooltip>
+                      </TableSortLabel>
+                    ) : (
                       <Tooltip title={column.label}>
-                        <span> {column.shortLabel}</span>
+                        <span>{column.shortLabel}</span>
                       </Tooltip>
-                    </TableSortLabel>
-                  ) : (
-                    <Tooltip title={column.label}>
-                      <span>{column.shortLabel}</span>
-                    </Tooltip>
-                  )}
-                </TableCell>
-              ))}
+                    )}
+                  </TableCell>
+                ))}
             </TableRow>
           </TableHead>
           <TableBody>
@@ -370,201 +373,138 @@ function OffersTable({
                     }
                     downloadPDF={downloadPDF}
                   />
-                  {readConfig === 1 && (
-                    <CustomTableCell>
-                      {row.linkOferta ? (
-                        <Link href={row.linkOferta} target="_blank">
-                          <Tooltip title={row.linkOferta}>
-                            <Language sx={{ color: "#FC8721" }} />
-                          </Tooltip>
-                        </Link>
-                      ) : (
-                        ""
-                      )}
-                    </CustomTableCell>
-                  )}
-                  {readConfig === 1 && (
-                    <CustomTableCell>
-                      {new Date(row.dataUtworzenia).toLocaleDateString(
-                        "pl-PL",
-                        {
-                          year: "numeric",
-                          month: "2-digit",
-                          day: "2-digit",
-                        },
-                      )}
-                      <strong>
-                        <br />
-                        {new Date(row.dataUtworzenia).toLocaleTimeString(
-                          "pl-PL",
-                          {
-                            hour: "2-digit",
-                            minute: "2-digit",
-                          },
-                        )}
-                      </strong>
-                    </CustomTableCell>
-                  )}
-                  {readConfig === 1 && (
-                    <CustomTableCell>
-                      {row.dataNastepnegoKontaktu ? (
-                        <>
-                          {new Date(
-                            row.dataNastepnegoKontaktu,
-                          ).toLocaleDateString("pl-PL", {
-                            year: "numeric",
-                            month: "2-digit",
-                            day: "2-digit",
-                          })}{" "}
-                          <strong>
-                            <br />
-                            {new Date(
-                              row.dataNastepnegoKontaktu,
-                            ).toLocaleTimeString("pl-PL", {
-                              hour: "2-digit",
-                              minute: "2-digit",
-                            })}
-                          </strong>
-                        </>
-                      ) : (
-                        ""
-                      )}
-                    </CustomTableCell>
-                  )}
-                  {readConfig === 1 && (
-                    <CustomTableCell>
-                      {row.dataKontaktu ? (
-                        <>
-                          {new Date(row.dataKontaktu).toLocaleDateString(
-                            "pl-PL",
-                            {
-                              year: "numeric",
-                              month: "2-digit",
-                              day: "2-digit",
-                            },
-                          )}{" "}
-                          <strong>
-                            <br />
-                            {new Date(row.dataKontaktu).toLocaleTimeString(
-                              "pl-PL",
-                              {
-                                hour: "2-digit",
-                                minute: "2-digit",
-                              },
-                            )}
-                          </strong>
-                        </>
-                      ) : (
-                        ""
-                      )}
-                    </CustomTableCell>
-                  )}
-                  <CustomTableCell
-                    sx={{
-                      color:
-                        statusesConfig.find(
-                          (status) => status.value === row.statusOferty,
-                        )?.color || "black",
-                      fontSize: "13px",
-                    }}
-                  >
-                    <strong>{row.statusOferty}</strong>
-                  </CustomTableCell>
-                  <CustomTableCell>
-                    <strong>{row.agent || ""}</strong>
-                  </CustomTableCell>
-                  {readConfig === 1 && (
-                    <CustomTableCell>
-                      {row.komentarz && row.komentarz.length > 50 ? (
-                        <Tooltip title={row.komentarz}>
-                          <span>{row.komentarz.slice(0, 50)} ...</span>
-                        </Tooltip>
-                      ) : (
-                        row.komentarz || ""
-                      )}
-                    </CustomTableCell>
-                  )}
-                  {readConfig === 1 && (
-                    <CustomTableCell>
-                      {row.daneWlasciciela || ""}
-                    </CustomTableCell>
-                  )}
-                  <CustomTableCell sx={{ whiteSpace: "nowrap" }}>
-                    <strong>
-                      {Array.isArray(row.telefonWlasciciela) &&
-                      row.telefonWlasciciela.length > 0 ? (
-                        row.telefonWlasciciela.map((value, index) =>
-                          value !== "" ? (
-                            <div
-                              key={index}
-                              style={{
-                                display: "flex",
-                                alignItems: "center",
-                                gap: "4px",
-                              }}
-                            >
-                              <span style={{ whiteSpace: "nowrap" }}>
-                                {value.includes("@")
-                                  ? value
-                                  : formatPhoneNumber(value)}{" "}
-                              </span>
-
-                              <Tooltip title="Skopiuj">
-                                <IconButton
-                                  onClick={() => copyToClipboard(value)}
-                                  sx={{ padding: "6px" }}
+                  {offerColumnConfig
+                    .filter((column) => column.isVisible)
+                    .map((column) => (
+                      <CustomTableCell key={column.id}>
+                        {(() => {
+                          const value = row[column.id];
+                          switch (column.id) {
+                            case "linkOferta":
+                              return value ? (
+                                <Link href={value} target="_blank">
+                                  <Tooltip title={value}>
+                                    <Language sx={{ color: "#FC8721" }} />
+                                  </Tooltip>
+                                </Link>
+                              ) : (
+                                ""
+                              );
+                            case "dataUtworzenia":
+                            case "dataNastepnegoKontaktu":
+                            case "dataKontaktu":
+                              return value ? (
+                                <>
+                                  {new Date(value).toLocaleDateString("pl-PL", {
+                                    year: "numeric",
+                                    month: "2-digit",
+                                    day: "2-digit",
+                                  })}
+                                  <strong>
+                                    <br />
+                                    {new Date(value).toLocaleTimeString(
+                                      "pl-PL",
+                                      {
+                                        hour: "2-digit",
+                                        minute: "2-digit",
+                                      },
+                                    )}
+                                  </strong>
+                                </>
+                              ) : (
+                                ""
+                              );
+                            case "status":
+                              return (
+                                <span
+                                  style={{
+                                    color:
+                                      statusesConfig.find(
+                                        (status) =>
+                                          status.value === row.statusOferty,
+                                      )?.color || "black",
+                                    fontSize: "13px",
+                                  }}
                                 >
-                                  <FileCopy />
-                                </IconButton>
-                              </Tooltip>
-                            </div>
-                          ) : (
-                            <span key={index}>Brak</span>
-                          ),
-                        )
-                      ) : (
-                        <span>Brak</span>
-                      )}
-                    </strong>
-                  </CustomTableCell>
-
-                  {readConfig === 1 && (
-                    <CustomTableCell>
-                      {formatNumber(row.zlM2) || ""}
-                    </CustomTableCell>
-                  )}
-                  <CustomTableCell>
-                    {formatNumber(row.cena) || ""}
-                  </CustomTableCell>
-                  {readConfig === 1 && (
-                    <CustomTableCell>
-                      {formatNumber(row.powDzialki) || ""}
-                    </CustomTableCell>
-                  )}
-                  <CustomTableCell>
-                    {formatNumber(row.metraz) || ""}
-                  </CustomTableCell>
-                  <CustomTableCell>{row.iloscPokoi || ""}</CustomTableCell>
-                  <CustomTableCell>
-                    <strong>{getShortType(row.typInwestycji)}</strong>
-                  </CustomTableCell>
-                  {readConfig === 1 && (
-                    <CustomTableCell>
-                      {getShortType(row.rynek) || ""}
-                    </CustomTableCell>
-                  )}
-                  {readConfig === 1 && (
-                    <CustomTableCell>{row.miasto || ""}</CustomTableCell>
-                  )}
-                  <CustomTableCell>
-                    <strong>{row.dzielnica || ""}</strong>
-                  </CustomTableCell>
-                  {readConfig === 1 && (
-                    <CustomTableCell>{row.poddzielnica || ""}</CustomTableCell>
-                  )}
-                  <CustomTableCell>
-                    <strong>{row.ulica || ""}</strong>
-                  </CustomTableCell>
+                                  <strong>{row.statusOferty}</strong>
+                                </span>
+                              );
+                            case "agent":
+                              return <strong>{row.agent || ""}</strong>;
+                            case "komentarz":
+                              return value && value.length > 50 ? (
+                                <Tooltip title={value}>
+                                  <span>{value.slice(0, 50)} ...</span>
+                                </Tooltip>
+                              ) : (
+                                value || ""
+                              );
+                            case "daneWlasciciela":
+                              return value || "";
+                            case "telefonDoWlasciciela":
+                            case "telefonWlasciciela":
+                              return (
+                                <strong>
+                                  {Array.isArray(row.telefonWlasciciela) &&
+                                  row.telefonWlasciciela.length > 0 ? (
+                                    row.telefonWlasciciela.map((val, idx) =>
+                                      val !== "" ? (
+                                        <div
+                                          key={idx}
+                                          style={{
+                                            display: "flex",
+                                            alignItems: "center",
+                                            gap: "4px",
+                                          }}
+                                        >
+                                          <span
+                                            style={{ whiteSpace: "nowrap" }}
+                                          >
+                                            {val.includes("@")
+                                              ? val
+                                              : formatPhoneNumber(val)}{" "}
+                                          </span>
+                                          <Tooltip title="Skopiuj">
+                                            <IconButton
+                                              onClick={() =>
+                                                copyToClipboard(val)
+                                              }
+                                              sx={{ padding: "6px" }}
+                                            >
+                                              <FileCopy />
+                                            </IconButton>
+                                          </Tooltip>
+                                        </div>
+                                      ) : (
+                                        <span key={idx}>Brak</span>
+                                      ),
+                                    )
+                                  ) : (
+                                    <span>Brak</span>
+                                  )}
+                                </strong>
+                              );
+                            case "zlM2":
+                            case "cena":
+                            case "powDzialki":
+                            case "metraz":
+                              return formatNumber(value) || "";
+                            case "iloscPokoi":
+                              return value || "";
+                            case "typInwestycji":
+                            case "rynek":
+                              return <strong>{getShortType(value)}</strong>;
+                            case "miasto":
+                            case "dzielnica":
+                            case "poddzielnica":
+                            case "ulica":
+                              return <strong>{value || ""}</strong>;
+                            default:
+                              return value || "";
+                          }
+                        })()}
+                      </CustomTableCell>
+                    ))}
                 </TableRow>
               ))
             ) : (

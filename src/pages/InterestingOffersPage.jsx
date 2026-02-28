@@ -77,6 +77,7 @@ function InterestingOffersPage() {
   ] = useState(false);
 
   const columns = useMemo(() => columnsOffersConfig, []);
+  const [offerColumnConfig, setOfferColumnConfig] = useState([]);
 
   const handleCancelAddOfferClick = () => {
     setOpenDialogConfirmCancelAddOffer(!openDialogConfirmCancelAddOffer);
@@ -224,6 +225,16 @@ function InterestingOffersPage() {
         },
       });
       const usersList = response.data["users"];
+
+      const matchedUser = usersList.find(
+        (user) => user.imie + " " + user.nazwisko === userInformation,
+      );
+      const offersConfig = (matchedUser?.listingsColumns || []).map((col) => {
+        const full = columnsOffersConfig.find((c) => c.id === col.id);
+        return full ? { ...full, ...col } : col;
+      });
+      setOfferColumnConfig(offersConfig);
+
       const agents = usersList.map((user) => user.imie + " " + user.nazwisko);
       if (userRole === "admin") setUsers(agents);
       else {
@@ -573,6 +584,7 @@ function InterestingOffersPage() {
           itemsPerPage={itemsPerPage}
           orderBy={orderBy}
           order={order}
+          offerColumnConfig={offerColumnConfig}
         />
         <Alerts
           message={alertMessage}

@@ -30,12 +30,12 @@ const columnsClientsConfig = [
     shortLabel: "Tel.",
   },
   {
-    id: "adresEmail",
+    id: "email",
     label: "Adres e-mail",
     shortLabel: "Email",
   },
   {
-    id: "komentarzData",
+    id: "komentarzDataList",
     label: "Ostatni komentarz dot. następnego kontaktu",
     shortLabel: "Ostat. kom. nast. k.",
   },
