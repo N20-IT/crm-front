@@ -13,8 +13,6 @@ import {
   FormControl,
   InputLabel,
   Select,
-  ToggleButton,
-  ToggleButtonGroup,
   Tooltip,
   OutlinedInput,
   ListItemText,
@@ -24,14 +22,7 @@ import {
   ThemeProvider,
 } from "@mui/material";
 import { customTooltip } from "../styles/CustomTooltip";
-import {
-  Person,
-  Delete,
-  Star,
-  ViewList,
-  ViewModule,
-  Clear,
-} from "@mui/icons-material";
+import { Person, Delete, Star, Clear } from "@mui/icons-material";
 import { KeyboardArrowDown } from "@mui/icons-material";
 import CustomTextField from "./CustomTextField";
 import { useChangeColumnConfig, useReadConfig } from "../config/columnConfig";
@@ -498,32 +489,6 @@ function TableControls({
               },
             }}
           />
-          <ToggleButtonGroup
-            value={columnConfig}
-            exclusive
-            onChange={handleViewChange}
-            aria-label="view selection"
-            sx={{ height: "40px" }}
-          >
-            <Tooltip title="Widok podstawowy">
-              <ToggleButton value={0} aria-label="basic view">
-                <ViewList
-                  sx={{
-                    color: columnConfig === 0 ? "#FC8721" : "default",
-                  }}
-                />
-              </ToggleButton>
-            </Tooltip>
-            <Tooltip title="Widok rozszerzony">
-              <ToggleButton value={1} aria-label="expanded view">
-                <ViewModule
-                  sx={{
-                    color: columnConfig === 1 ? "#FC8721" : "default",
-                  }}
-                />
-              </ToggleButton>
-            </Tooltip>
-          </ToggleButtonGroup>
         </Stack>
 
         <Drawer
