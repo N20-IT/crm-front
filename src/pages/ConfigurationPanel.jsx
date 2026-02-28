@@ -131,7 +131,7 @@ function ConfigurationPanel() {
   const handleToggleVisibility = (id) => {
     const config = getCurrentConfig();
     const newConfig = config.map((item) =>
-      item.id === id ? { ...item, visible: !item.visible } : item,
+      item.id === id ? { ...item, isVisible: !item.isVisible } : item,
     );
     setCurrentConfig(newConfig);
   };
@@ -252,7 +252,7 @@ function ConfigurationPanel() {
                     minWidth: 32,
                     height: 32,
                     borderRadius: "50%",
-                    backgroundColor: column.visible ? "#FC8721" : "#6d727f",
+                    backgroundColor: column.isVisible ? "#FC8721" : "#6d727f",
                     color: "white",
                     fontWeight: "bold",
                     fontSize: "0.875rem",
@@ -273,13 +273,13 @@ function ConfigurationPanel() {
                 </Box>
 
                 <Box className="flex items-center gap-2">
-                  {column.visible ? (
+                  {column.isVisible ? (
                     <Visibility sx={{ color: "#6d727f" }} />
                   ) : (
                     <VisibilityOff sx={{ color: "#6d727f" }} />
                   )}
                   <Switch
-                    checked={column.visible}
+                    checked={column.isVisible}
                     onChange={() => handleToggleVisibility(column.id)}
                     sx={{
                       "& .MuiSwitch-switchBase.Mui-checked": {
