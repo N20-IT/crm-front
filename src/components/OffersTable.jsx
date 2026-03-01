@@ -24,6 +24,7 @@ import CustomTableCell from "./CustomTableCell";
 import statusesConfig from "../config/statusesConfig";
 import { useClientFiltersStore } from "../store/clientFilterStore";
 import { useNavigate } from "react-router-dom";
+import { formatPhoneNumberForDisplay } from "../utils/formatPhoneNumber";
 
 function OffersTable({
   rows,
@@ -143,9 +144,7 @@ function OffersTable({
     }
   };
 
-  const formatPhoneNumber = (number) => {
-    return number.replace(/(\d{3})(?=\d)/g, "$1 ");
-  };
+  const formatPhoneNumber = (number) => formatPhoneNumberForDisplay(number);
 
   const copyToClipboard = (value) => {
     const isEmail = value.includes("@");

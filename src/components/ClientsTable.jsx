@@ -25,6 +25,7 @@ import clientStatuesConfig from "../config/clientStatuesConfig";
 import clientStandardConfig from "../config/clientStandardConfig";
 import { useNavigate } from "react-router-dom";
 import { useFiltersStore } from "../store/filtersStore";
+import { formatPhoneNumberForDisplay } from "../utils/formatPhoneNumber";
 
 function ClientsTable({
   rows,
@@ -123,9 +124,7 @@ function ClientsTable({
     }
   };
 
-  const formatPhoneNumber = (number) => {
-    return String(number).replace(/(\d{3})(?=\d)/g, "$1 ");
-  };
+  const formatPhoneNumber = (number) => formatPhoneNumberForDisplay(number);
 
   const copyToClipboard = (number) => {
     const formattedNumber = String(number).replace(/\D/g, "");
