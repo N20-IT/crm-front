@@ -487,13 +487,13 @@ export default function ClientFilters({ onFilterApply, allUsers }) {
           },
         }}
       >
-        <InputLabel>Typ inwestycji</InputLabel>
+        <InputLabel>Rodzaj nieruchomości</InputLabel>
         <Select
-          value={localFilters?.typInwestycji}
+          value={localFilters?.rodzajNieruchomosci}
           onChange={(e) =>
-            handleLocalFilterChange("typInwestycji", e.target.value)
+            handleLocalFilterChange("rodzajNieruchomosci", e.target.value)
           }
-          label="Typ inwestycji"
+          label="Rodzaj nieruchomości"
         >
           <MenuItem
             value=""

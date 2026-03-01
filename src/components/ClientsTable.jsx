@@ -114,6 +114,10 @@ function ClientsTable({
         return "P";
       case "Wtórny":
         return "W";
+      case "Bliźniak":
+        return "B";
+      case "Szeregowy":
+        return "Sz";
       default:
         return type;
     }
