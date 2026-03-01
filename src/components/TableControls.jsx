@@ -434,7 +434,7 @@ function TableControls({
               onClick={() => {
                 const updatedFilters = {
                   ...localFilters,
-                  agent: userInformation,
+                  agent: localFilters.agent === userInformation ? "" : userInformation,
                 };
                 setLocalFilters(updatedFilters);
                 setFilters(updatedFilters);
