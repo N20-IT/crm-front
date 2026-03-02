@@ -108,14 +108,65 @@ const EditOfferPanel = ({ offerData, onSave, onCancel, users }) => {
     setFormData((prevData) => ({
       ...prevData,
       telefonWlasciciela: prevData.telefonWlasciciela.filter(
-        (_, i) => i !== index
+        (_, i) => i !== index,
       ),
     }));
   };
 
+  const handleCommentsChange = (index, value) => {
+    setFormData((prevData) => {
+      const newComments = [...prevData.komentarz];
+
+      newComments[index] = {
+        ...newComments[index],
+        tekst: value,
+        data: new Date().toISOString(),
+      };
+
+      return {
+        ...prevData,
+        komentarz: newComments,
+      };
+    });
+  };
+
+  const addCommentField = () => {
+    setFormData((prevData) => ({
+      ...prevData,
+      komentarz: [
+        ...prevData.komentarz,
+        {
+          tekst: "",
+          data: new Date().toISOString(),
+        },
+      ],
+    }));
+  };
+
+  const removeCommentField = (index) => {
+    setFormData((prevData) => ({
+      ...prevData,
+      komentarz: prevData.komentarz.filter((_, i) => i !== index),
+    }));
+  };
+
+  // useEffect(() => {
+  //   const handleKeyDown = (e) => {
+  //     if (e.key === "Escape") onCancel();
+  //   };
+  //   document.addEventListener("keydown", handleKeyDown);
+  //   return () => document.removeEventListener("keydown", handleKeyDown);
+  // }, [onCancel]);
+
   return (
-    <div className=" fixed inset-0 bg-light-grey bg-opacity-75 flex items-center justify-center z-50">
-      <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md md:max-w-lg lg:max-w-xl max-h-[95%] overflow-auto">
+    <div
+      className=" fixed inset-0 bg-light-grey bg-opacity-75 flex items-center justify-center z-50"
+      // onClick={onCancel}
+    >
+      <div
+        className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md md:max-w-lg lg:max-w-xl max-h-[95%] overflow-auto"
+        // onClick={(e) => e.stopPropagation()}
+      >
         <h2 className=" text-4xl font-bold mb-4 font-poppins">Edytuj ofertę</h2>
         <form>
           <div className="flex justify-end space-x-2">
@@ -512,6 +563,38 @@ const EditOfferPanel = ({ offerData, onSave, onCancel, users }) => {
               <AddCircle sx={{ color: "#FC8721" }} />
             </IconButton>
           </div>
+          {/* <div className="flex flex-col">
+            {formData.komentarz.map((komentarz, index) => (
+              <div key={index} className="flex items-start space-x-2">
+                <CustomTextField
+                  label={`Komentarz do daty następnego spotkania ${index + 1}`}
+                  value={komentarz.tekst}
+                  onChange={(e) => handleCommentsChange(index, e.target.value)}
+                  variant="outlined"
+                  fullWidth
+                  margin="dense"
+                  multiline
+                  maxRows={4}
+                />
+
+                <IconButton
+                  onClick={() => removeCommentField(index)}
+                  disabled={formData.komentarz.length === 1}
+                  sx={{ marginTop: "8px" }}
+                >
+                  <RemoveCircle
+                    color={
+                      formData.komentarz.length === 1 ? "disabled" : "error"
+                    }
+                  />
+                </IconButton>
+              </div>
+            ))}
+
+            <IconButton onClick={addCommentField}>
+              <AddCircle sx={{ color: "#FC8721" }} />
+            </IconButton>
+          </div> */}
           <CustomTextField
             label="Komentarz"
             name="komentarz"
@@ -531,7 +614,7 @@ const EditOfferPanel = ({ offerData, onSave, onCancel, users }) => {
               value={
                 formData.dataKontaktu
                   ? new Date(formData.dataKontaktu).toLocaleDateString(
-                      "en-CA"
+                      "en-CA",
                     ) +
                     "T" +
                     new Date(formData.dataKontaktu)
@@ -552,7 +635,7 @@ const EditOfferPanel = ({ offerData, onSave, onCancel, users }) => {
               value={
                 formData.dataNastepnegoKontaktu
                   ? new Date(
-                      formData.dataNastepnegoKontaktu
+                      formData.dataNastepnegoKontaktu,
                     ).toLocaleDateString("en-CA") +
                     "T" +
                     new Date(formData.dataNastepnegoKontaktu)

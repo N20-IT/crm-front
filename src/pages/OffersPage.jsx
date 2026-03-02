@@ -84,6 +84,7 @@ function OffersPage() {
   const [clients, setClients] = useState([]);
   const columns = useMemo(() => columnsOffersConfig, []);
   const logout = useLogout();
+  const [offerColumnConfig, setOfferColumnConfig] = useState([]);
 
   const handleOpenOfferDetailsPanel = (offerId) => {
     setOfferDetailsId(offerId);
@@ -237,7 +238,18 @@ function OffersPage() {
           Authorization: `Bearer ${token}`,
         },
       });
+
       const usersList = response.data["users"];
+
+      const matchedUser = usersList.find(
+        (user) => user.imie + " " + user.nazwisko === userInformation,
+      );
+      const offersConfig = (matchedUser?.listingsColumns || []).map((col) => {
+        const full = columnsOffersConfig.find((c) => c.id === col.id);
+        return full ? { ...full, ...col } : col;
+      });
+      setOfferColumnConfig(offersConfig);
+
       const agents = usersList.map((user) => user.imie + " " + user.nazwisko);
       if (userRole === "admin") setUsers(agents);
       else {
@@ -284,6 +296,10 @@ function OffersPage() {
               poddzielnica: params.poddzielnica
                 ? params.poddzielnica.join(",")
                 : undefined,
+              typInwestycji: params.typInwestycji
+                ? params.typInwestycji.join(",")
+                : undefined,
+              rynek: params.rynek ? params.rynek.join(",") : undefined,
             };
             return qs.stringify(serializedParams, { arrayFormat: "repeat" });
           },
@@ -647,6 +663,7 @@ function OffersPage() {
           itemsPerPage={itemsPerPage}
           orderBy={orderBy}
           order={order}
+          offerColumnConfig={offerColumnConfig}
         />
         <Alerts
           message={alertMessage}

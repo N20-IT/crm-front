@@ -145,7 +145,10 @@ function ClientTableControls({
         <Tooltip title="Moje rekordy">
           <IconButton
             onClick={() => {
-              const updatedFilters = { ...filters, agent: userInformation };
+              const updatedFilters = {
+                ...filters,
+                agent: filters.agent === userInformation ? "" : userInformation,
+              };
               useClientFiltersStore.getState().setFilters(updatedFilters);
               onSearchFilterApply(searchValue, updatedFilters);
             }}

@@ -23,7 +23,7 @@ function UsersPage() {
   const isAuthenticated = useAuth();
   const [rowsPerPage, setRowsPerPage] = useState(25);
   const [orderBy, setOrderBy] = useState("imie");
-  const [order, setOrder] = useState("desc");
+  const [order, setOrder] = useState("asc");
   const [page, setPage] = useState(0);
   const [alertMessage, setAlertMessage] = useState("");
   const [alertSeverity, setAlertSeverity] = useState("");

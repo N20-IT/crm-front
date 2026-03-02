@@ -23,7 +23,7 @@ function UsersTable({
   page,
   onSortApply,
 }) {
-  const [order, setOrder] = useState("desc");
+  const [order, setOrder] = useState("asc");
   const [orderBy, setOrderBy] = useState("imie");
 
   const handleSortRequest = (columnId) => {
@@ -131,7 +131,11 @@ function UsersTable({
                 {columns.map((column) => (
                   <CustomTableCell
                     key={column.id}
-                    sx={{ textAlign: "center", fontFamily: "Poppins", whiteSpace: "nowrap" }}
+                    sx={{
+                      textAlign: "center",
+                      fontFamily: "Poppins",
+                      whiteSpace: "nowrap",
+                    }}
                   >
                     {user[column.id] === "admin"
                       ? "Administrator"

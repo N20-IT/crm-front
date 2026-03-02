@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import {
   Autocomplete,
-  createFilterOptions, 
+  createFilterOptions,
   TextField,
   MenuItem,
   Button,
@@ -13,8 +13,6 @@ import {
   FormControl,
   InputLabel,
   Select,
-  ToggleButton,
-  ToggleButtonGroup,
   Tooltip,
   OutlinedInput,
   ListItemText,
@@ -24,7 +22,7 @@ import {
   ThemeProvider,
 } from "@mui/material";
 import { customTooltip } from "../styles/CustomTooltip";
-import { Person, Delete, Star, ViewList, ViewModule, Clear } from "@mui/icons-material";
+import { Person, Delete, Star, Clear } from "@mui/icons-material";
 import { KeyboardArrowDown } from "@mui/icons-material";
 import CustomTextField from "./CustomTextField";
 import { useChangeColumnConfig, useReadConfig } from "../config/columnConfig";
@@ -41,7 +39,7 @@ function TableControls({
   onFilterApply,
   allUsers,
   clients,
-  userInformation
+  userInformation,
 }) {
   const {
     filters: appliedFilters,
@@ -111,25 +109,15 @@ function TableControls({
 
   const validateDates = () => {
     const contactDateInvalid =
-      localFilters.dataKontaktuOd &&
-      localFilters.dataKontaktuDo &&
-      new Date(localFilters.dataKontaktuOd) >
-        new Date(localFilters.dataKontaktuDo);
-    const followUpDateInvalid =
-      localFilters.dataNastepnegoKontaktuOd &&
-      localFilters.dataNastepnegoKontaktuDo &&
-      new Date(localFilters.dataNastepnegoKontaktuOd) >
-        new Date(localFilters.dataNastepnegoKontaktuDo);
+      localFilters.dataUtworzeniaOd &&
+      localFilters.dataUtworzeniaDo &&
+      new Date(localFilters.dataUtworzeniaOd) >
+        new Date(localFilters.dataUtworzeniaDo);
     setDateError({
       contactDate: contactDateInvalid,
-      followUpDate: followUpDateInvalid,
     });
   };
   const handleContactDateBlur = () => {
-    validateDates();
-  };
-
-  const handleFollowUpDateBlur = () => {
     validateDates();
   };
 
@@ -309,10 +297,8 @@ function TableControls({
     maxPrice: "",
     agent: "",
     statusOferty: "",
-    dataKontaktuOd: "",
-    dataKontaktuDo: "",
-    dataNastepnegoKontaktuOd: "",
-    dataNastepnegoKontaktuDo: "",
+    dataUtworzeniaOd: "",
+    dataUtworzeniaDo: "",
     clientId: "",
   };
 
@@ -448,16 +434,20 @@ function TableControls({
               onClick={() => {
                 const updatedFilters = {
                   ...localFilters,
-                  agent: userInformation,
+                  agent: localFilters.agent === userInformation ? "" : userInformation,
                 };
                 setLocalFilters(updatedFilters);
                 setFilters(updatedFilters);
                 onFilterApply(searchValue, updatedFilters, columnConfig);
               }}
               sx={{
-                color: localFilters.agent === userInformation ? "#009900" : "#6D727F",
+                color:
+                  localFilters.agent === userInformation
+                    ? "#009900"
+                    : "#6D727F",
                 border: "1px solid",
-                borderColor: localFilters.agent === userInformation ? "#009900" : "black",
+                borderColor:
+                  localFilters.agent === userInformation ? "#009900" : "black",
                 borderRadius: "4px",
                 height: "40px",
                 width: "40px",
@@ -499,32 +489,6 @@ function TableControls({
               },
             }}
           />
-          <ToggleButtonGroup
-            value={columnConfig}
-            exclusive
-            onChange={handleViewChange}
-            aria-label="view selection"
-            sx={{ height: "40px" }}
-          >
-            <Tooltip title="Widok podstawowy">
-              <ToggleButton value={0} aria-label="basic view">
-                <ViewList
-                  sx={{
-                    color: columnConfig === 0 ? "#FC8721" : "default",
-                  }}
-                />
-              </ToggleButton>
-            </Tooltip>
-            <Tooltip title="Widok rozszerzony">
-              <ToggleButton value={1} aria-label="expanded view">
-                <ViewModule
-                  sx={{
-                    color: columnConfig === 1 ? "#FC8721" : "default",
-                  }}
-                />
-              </ToggleButton>
-            </Tooltip>
-          </ToggleButtonGroup>
         </Stack>
 
         <Drawer
@@ -765,30 +729,54 @@ function TableControls({
             >
               <InputLabel>Typ inwestycji</InputLabel>
               <Select
-                value={localFilters?.typInwestycji}
+                value={localFilters?.typInwestycji || []}
                 onChange={(e) =>
                   handleLocalFilterChange("typInwestycji", e.target.value)
                 }
-                label="Typ inwestycji"
+                multiple
+                renderValue={(selected) =>
+                  Array.isArray(selected) ? selected.join(", ") : ""
+                }
+                input={
+                  <OutlinedInput
+                    sx={{
+                      "& .MuiOutlinedInput-notchedOutline": {
+                        borderColor: "#535968",
+                      },
+                      "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                        borderColor: "#535968",
+                      },
+                    }}
+                    label="Typ inwestycji"
+                  />
+                }
               >
-                <MenuItem
-                  value=""
-                  sx={{
-                    fontStyle: "italic",
-                    color: "gray",
-                    fontWeight: "bold",
-                  }}
-                >
-                  Wszystko
-                </MenuItem>
-                <MenuItem value="Dom">Dom</MenuItem>
-                <MenuItem value="Mieszkanie">Mieszkanie</MenuItem>
-                <MenuItem value="Lokal">Lokal</MenuItem>
-                <MenuItem value="Działka">Działka</MenuItem>
-                <MenuItem value="Bliźniak">Bliźniak</MenuItem>
-                <MenuItem value="Szeregowy">Szeregowy</MenuItem>
+                {[
+                  "Dom",
+                  "Mieszkanie",
+                  "Lokal",
+                  "Działka",
+                  "Bliźniak",
+                  "Szeregowy",
+                ].map((typ) => (
+                  <MenuItem
+                    key={typ}
+                    value={typ}
+                    sx={{
+                      "& .Mui-checked": { color: "#FC8721" },
+                    }}
+                  >
+                    <Checkbox
+                      checked={(localFilters?.typInwestycji || []).includes(
+                        typ,
+                      )}
+                    />
+                    <ListItemText primary={typ} />
+                  </MenuItem>
+                ))}
               </Select>
             </FormControl>
+
             <FormControl
               fullWidth
               sx={{
@@ -832,24 +820,42 @@ function TableControls({
             >
               <InputLabel>Rynek</InputLabel>
               <Select
-                value={localFilters?.rynek}
+                value={localFilters?.rynek || []}
                 onChange={(e) =>
                   handleLocalFilterChange("rynek", e.target.value)
                 }
-                label="Rynek"
+                multiple
+                renderValue={(selected) =>
+                  Array.isArray(selected) ? selected.join(", ") : ""
+                }
+                input={
+                  <OutlinedInput
+                    sx={{
+                      "& .MuiOutlinedInput-notchedOutline": {
+                        borderColor: "#535968",
+                      },
+                      "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                        borderColor: "#535968",
+                      },
+                    }}
+                    label="Rynek"
+                  />
+                }
               >
-                <MenuItem
-                  value=""
-                  sx={{
-                    fontStyle: "italic",
-                    color: "gray",
-                    fontWeight: "bold",
-                  }}
-                >
-                  Wszystko
-                </MenuItem>
-                <MenuItem value="Pierwotny">Pierwotny</MenuItem>
-                <MenuItem value="Wtórny">Wtórny</MenuItem>
+                {["Pierwotny", "Wtórny"].map((rynek) => (
+                  <MenuItem
+                    key={rynek}
+                    value={rynek}
+                    sx={{
+                      "& .Mui-checked": { color: "#FC8721" },
+                    }}
+                  >
+                    <Checkbox
+                      checked={(localFilters?.rynek || []).includes(rynek)}
+                    />
+                    <ListItemText primary={rynek} />
+                  </MenuItem>
+                ))}
               </Select>
             </FormControl>
           </div>
@@ -1127,12 +1133,12 @@ function TableControls({
           </div>
           <div className="flex justify-end space-x-4 mt-3">
             <CustomTextField
-              label="Kontakt od"
-              name="dataKontaktuOd"
+              label="Data utworzenia od"
+              name="dataUtworzeniaOd"
               type="date"
-              value={localFilters?.dataKontaktuOd}
+              value={localFilters?.dataUtworzeniaOd}
               onChange={(e) =>
-                handleLocalFilterChange("dataKontaktuOd", e.target.value)
+                handleLocalFilterChange("dataUtworzeniaOd", e.target.value)
               }
               variant="outlined"
               fullWidth
@@ -1140,17 +1146,17 @@ function TableControls({
               onBlur={handleContactDateBlur}
               error={
                 dateError.contactDate &&
-                new Date(localFilters.dataKontaktuOd) >
-                  new Date(localFilters.dataKontaktuDo)
+                new Date(localFilters.dataUtworzeniaOd) >
+                  new Date(localFilters.dataUtworzeniaDo)
               }
             />
             <CustomTextField
-              label="Kontakt do"
-              name="dataKontaktuDo"
+              label="Data utworzenia do"
+              name="dataUtworzeniaDo"
               type="date"
-              value={localFilters?.dataKontaktuDo}
+              value={localFilters?.dataUtworzeniaDo}
               onChange={(e) =>
-                handleLocalFilterChange("dataKontaktuDo", e.target.value)
+                handleLocalFilterChange("dataUtworzeniaDo", e.target.value)
               }
               variant="outlined"
               fullWidth
@@ -1158,52 +1164,8 @@ function TableControls({
               onBlur={handleContactDateBlur}
               error={
                 dateError.contactDate &&
-                new Date(localFilters.dataKontaktuOd) >
-                  new Date(localFilters.dataKontaktuDo)
-              }
-            />
-          </div>
-          <div className="flex justify-end space-x-4 mt-3">
-            <CustomTextField
-              label="Następny od"
-              name="dataNastepnegoKontaktuOd"
-              type="date"
-              value={localFilters?.dataNastepnegoKontaktuOd}
-              onChange={(e) =>
-                handleLocalFilterChange(
-                  "dataNastepnegoKontaktuOd",
-                  e.target.value,
-                )
-              }
-              variant="outlined"
-              fullWidth
-              InputLabelProps={{ shrink: true }}
-              onBlur={handleFollowUpDateBlur}
-              error={
-                dateError.followUpDate &&
-                new Date(localFilters.dataNastepnegoKontaktuOd) >
-                  new Date(localFilters.dataNastepnegoKontaktuDo)
-              }
-            />
-            <CustomTextField
-              label="Następny do"
-              name="dataNastepnegoKontaktuDo"
-              type="date"
-              value={localFilters?.dataNastepnegoKontaktuDo}
-              onChange={(e) =>
-                handleLocalFilterChange(
-                  "dataNastepnegoKontaktuDo",
-                  e.target.value,
-                )
-              }
-              variant="outlined"
-              fullWidth
-              InputLabelProps={{ shrink: true }}
-              onBlur={handleFollowUpDateBlur}
-              error={
-                dateError.followUpDate &&
-                new Date(localFilters.dataNastepnegoKontaktuOd) >
-                  new Date(localFilters.dataNastepnegoKontaktuDo)
+                new Date(localFilters.dataUtworzeniaOd) >
+                  new Date(localFilters.dataUtworzeniaDo)
               }
             />
           </div>
@@ -1211,7 +1173,9 @@ function TableControls({
             <Autocomplete
               options={clients || []}
               getOptionLabel={(option) => option.daneKlienta}
-              value={clients?.find(c => c._id === localFilters?.clientId) || null}
+              value={
+                clients?.find((c) => c._id === localFilters?.clientId) || null
+              }
               onChange={(event, newValue) =>
                 handleLocalFilterChange("clientId", newValue?._id || "")
               }

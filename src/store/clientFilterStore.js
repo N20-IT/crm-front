@@ -19,6 +19,7 @@ export const useClientFiltersStore = create((set, get) => ({
     ostatniKontaktDo: "",
     dataNastepnegoKontaktuOd: "",
     dataNastepnegoKontaktuDo: "",
+    offerId: "",
   },
 
   setFilters: (newFilters) =>
@@ -51,6 +52,7 @@ export const useClientFiltersStore = create((set, get) => ({
         ostatniKontaktDo: "",
         dataNastepnegoKontaktuOd: "",
         dataNastepnegoKontaktuDo: "",
+        offerId: "",
       },
     }),
 
@@ -62,4 +64,9 @@ export const useClientFiltersStore = create((set, get) => ({
     set((state) => ({
       filterPanel: { isOpen: !state.filterPanel.isOpen },
     })),
+
+  setOfferId: (offerId) =>
+    set({
+      filters: { ...get().filters, offerId },
+    }),
 }));
