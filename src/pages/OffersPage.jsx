@@ -205,8 +205,24 @@ function OffersPage() {
   };
 
   const handleAddToCalendar = (row) => {
-    const eventTitle = row.daneWlasciciela + " - " + row.telefonWlasciciela;
-    const eventDescription = row.linkOferta;
+    // Formatowanie tytułu z wszystkimi parametrami
+    const titleParts = [];
+    if (row.typInwestycji) titleParts.push(row.typInwestycji);
+    if (row.ulica) titleParts.push(row.ulica);
+    if (row.iloscPokoi) titleParts.push(`${row.iloscPokoi} pok.`);
+    if (row.metraz) titleParts.push(`${row.metraz}m²`);
+    if (row.cena) titleParts.push(`${row.cena} zł`);
+    if (row.daneWlasciciela) titleParts.push(row.daneWlasciciela);
+    if (row.telefonWlasciciela) {
+      const telefon = Array.isArray(row.telefonWlasciciela) 
+        ? row.telefonWlasciciela[0] 
+        : row.telefonWlasciciela;
+      titleParts.push(telefon);
+    }
+    const eventTitle = titleParts.join(", ") || "Oferta";
+
+    // Opis - tylko link do oferty
+    const eventDescription = row.linkOferta || "";
 
     const startDate = new Date(row.dataNastepnegoKontaktu);
     const endDate = new Date(startDate);
