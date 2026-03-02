@@ -18,7 +18,11 @@ const EditOfferPanel = ({ offerData, onSave, onCancel, users }) => {
   const [formData, setFormData] = useState(offerData);
 
   useEffect(() => {
-    setFormData(offerData);
+    const updatedData = {
+      ...offerData,
+      statusOferty: offerData.statusOferty || "Zajęty",
+    };
+    setFormData(updatedData);
   }, [offerData]);
 
   const [isSubdistrictDisabled, setIsSubdistrictDisabled] = useState(false);
@@ -792,7 +796,9 @@ const EditOfferPanel = ({ offerData, onSave, onCancel, users }) => {
                 }
                 label="Status"
               >
-                {statusesConfig.map((status) => (
+                {statusesConfig
+                  .filter((status) => status.value !== "Wszystko")
+                  .map((status) => (
                   <MenuItem
                     key={status.value}
                     value={status.value === "Brak" ? "" : status.value}

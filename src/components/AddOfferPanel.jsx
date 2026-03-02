@@ -41,7 +41,7 @@ function AddOfferPanel({ onSave, onCancel, users, userInformation }) {
     // ],
     komentarz: "",
     agent: userInformation,
-    statusOferty: "",
+    statusOferty: "Zajęty",
   });
   const [isSubdistrictDisabled, setIsSubdistrictDisabled] = useState(true);
   const [errors, setErrors] = useState({});
@@ -888,7 +888,9 @@ function AddOfferPanel({ onSave, onCancel, users, userInformation }) {
                 }
                 label="Status"
               >
-                {statusesConfig.map((status) => (
+                {statusesConfig
+                  .filter((status) => status.value !== "Wszystko")
+                  .map((status) => (
                   <MenuItem
                     key={status.value}
                     value={status.value === "Brak" ? "" : status.value}
