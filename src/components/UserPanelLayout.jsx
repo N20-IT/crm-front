@@ -2,22 +2,22 @@ import { Button } from "@mui/material";
 import { useEffect } from "react";
 
 function UserPanelLayout({ title, children, onSave, onCancel }) {
-  useEffect(() => {
-    const handleKeyDown = (e) => {
-      if (e.key === "Escape") onCancel();
-    };
-    document.addEventListener("keydown", handleKeyDown);
-    return () => document.removeEventListener("keydown", handleKeyDown);
-  }, [onCancel]);
+  // useEffect(() => {
+  //   const handleKeyDown = (e) => {
+  //     if (e.key === "Escape") onCancel();
+  //   };
+  //   document.addEventListener("keydown", handleKeyDown);
+  //   return () => document.removeEventListener("keydown", handleKeyDown);
+  // }, [onCancel]);
 
   return (
     <div
       className="fixed inset-0 bg-light-grey bg-opacity-75 flex items-center justify-center z-50"
-      onClick={onCancel}
+      // onClick={onCancel}
     >
       <div
         className="bg-white p-6 rounded-lg shadow-lg w-1/3"
-        onClick={(e) => e.stopPropagation()}
+        // onClick={(e) => e.stopPropagation()}
       >
         {/* HEADER */}
         <div className="sticky top-0 bg-white pt-6 pb-2 px-2 z-20">

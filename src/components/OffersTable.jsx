@@ -244,7 +244,7 @@ function OffersTable({
                       />
                     </TableCell>
                   )}
-                  <TableCell
+                  {/* <TableCell
                     key="nrOfertyLink"
                     sx={{
                       color: "white",
@@ -258,7 +258,7 @@ function OffersTable({
                     <Tooltip arrow title="Wybrane oferty">
                       <span>Klienci</span>
                     </Tooltip>
-                  </TableCell>
+                  </TableCell> */}
                   <TableCell
                     key="narzedzia"
                     sx={{
@@ -368,7 +368,7 @@ function OffersTable({
                     </TableCell>
                   )}
 
-                  <CustomTableCell style={{ whiteSpace: "nowrap" }}>
+                  {/* <CustomTableCell style={{ whiteSpace: "nowrap" }}>
                     <Tooltip arrow title={"Dobierz klientów"}>
                       <IconButton onClick={() => handleMatchOffer(row._id)}>
                         <Badge
@@ -386,7 +386,7 @@ function OffersTable({
                         </Badge>
                       </IconButton>
                     </Tooltip>
-                  </CustomTableCell>
+                  </CustomTableCell> */}
                   <OfferActions
                     row={row}
                     userRole={userRole}

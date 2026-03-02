@@ -33,12 +33,13 @@ function AddOfferPanel({ onSave, onCancel, users, userInformation }) {
     daneWlasciciela: "",
     telefonWlasciciela: [""],
     linkOferta: "",
-    komentarz: [
-      {
-        tekst: "",
-        data: new Date().toISOString(),
-      },
-    ],
+    // komentarz: [
+    //   {
+    //     tekst: "",
+    //     data: new Date().toISOString(),
+    //   },
+    // ],
+    komentarz: "",
     agent: userInformation,
     statusOferty: "",
   });
@@ -205,59 +206,59 @@ function AddOfferPanel({ onSave, onCancel, users, userInformation }) {
     setPhoneExistsInfo((prevInfo) => prevInfo.filter((_, i) => i !== index));
   };
 
-  const handleCommentsChange = (index, value) => {
-    setFormData((prevData) => {
-      const newComments = [...prevData.komentarz];
+  // const handleCommentsChange = (index, value) => {
+  //   setFormData((prevData) => {
+  //     const newComments = [...prevData.komentarz];
 
-      newComments[index] = {
-        ...newComments[index],
-        tekst: value,
-        data: new Date().toISOString(),
-      };
+  //     newComments[index] = {
+  //       ...newComments[index],
+  //       tekst: value,
+  //       data: new Date().toISOString(),
+  //     };
 
-      return {
-        ...prevData,
-        komentarz: newComments,
-      };
-    });
-  };
+  //     return {
+  //       ...prevData,
+  //       komentarz: newComments,
+  //     };
+  //   });
+  // };
 
-  const addCommentField = () => {
-    setFormData((prevData) => ({
-      ...prevData,
-      komentarz: [
-        ...prevData.komentarz,
-        {
-          tekst: "",
-          data: new Date().toISOString(),
-        },
-      ],
-    }));
-  };
+  // const addCommentField = () => {
+  //   setFormData((prevData) => ({
+  //     ...prevData,
+  //     komentarz: [
+  //       ...prevData.komentarz,
+  //       {
+  //         tekst: "",
+  //         data: new Date().toISOString(),
+  //       },
+  //     ],
+  //   }));
+  // };
 
-  const removeCommentField = (index) => {
-    setFormData((prevData) => ({
-      ...prevData,
-      komentarz: prevData.komentarz.filter((_, i) => i !== index),
-    }));
-  };
+  // const removeCommentField = (index) => {
+  //   setFormData((prevData) => ({
+  //     ...prevData,
+  //     komentarz: prevData.komentarz.filter((_, i) => i !== index),
+  //   }));
+  // };
 
-  useEffect(() => {
-    const handleKeyDown = (e) => {
-      if (e.key === "Escape") onCancel();
-    };
-    document.addEventListener("keydown", handleKeyDown);
-    return () => document.removeEventListener("keydown", handleKeyDown);
-  }, [onCancel]);
+  // useEffect(() => {
+  //   const handleKeyDown = (e) => {
+  //     if (e.key === "Escape") onCancel();
+  //   };
+  //   document.addEventListener("keydown", handleKeyDown);
+  //   return () => document.removeEventListener("keydown", handleKeyDown);
+  // }, [onCancel]);
 
   return (
     <div
       className=" fixed inset-0 bg-light-grey bg-opacity-75 flex items-center justify-center z-50"
-      onClick={onCancel}
+      // onClick={onCancel}
     >
       <div
         className="bg-white px-6 rounded-lg shadow-lg w-full max-w-md md:max-w-lg lg:max-w-xl max-h-[95%] overflow-auto"
-        onClick={(e) => e.stopPropagation()}
+        // onClick={(e) => e.stopPropagation()}
       >
         <div className="sticky top-0 bg-white pt-6 pb-2 px-2 z-20">
           <h2 className="text-4xl font-bold mb-4 font-poppins">
@@ -636,7 +637,7 @@ function AddOfferPanel({ onSave, onCancel, users, userInformation }) {
             fullWidth
             margin="dense"
           />
-          <div className="flex flex-col">
+          {/* <div className="flex flex-col">
             {formData.komentarz.map((komentarz, index) => (
               <div key={index} className="flex items-start space-x-2">
                 <CustomTextField
@@ -667,8 +668,8 @@ function AddOfferPanel({ onSave, onCancel, users, userInformation }) {
             <IconButton onClick={addCommentField}>
               <AddCircle sx={{ color: "#FC8721" }} />
             </IconButton>
-          </div>
-          {/* <CustomTextField
+          </div> */}
+          <CustomTextField
             label="Komentarz"
             name="komentarz"
             value={formData.komentarz}
@@ -680,7 +681,7 @@ function AddOfferPanel({ onSave, onCancel, users, userInformation }) {
             helperText={errors.komentarz}
             multiline
             maxRows={4}
-          /> */}
+          />
           <div className="flex flex-col">
             {formData.telefonWlasciciela.map((phone, index) => (
               <div key={index} className="flex flex-col">

@@ -150,22 +150,22 @@ const EditOfferPanel = ({ offerData, onSave, onCancel, users }) => {
     }));
   };
 
-  useEffect(() => {
-    const handleKeyDown = (e) => {
-      if (e.key === "Escape") onCancel();
-    };
-    document.addEventListener("keydown", handleKeyDown);
-    return () => document.removeEventListener("keydown", handleKeyDown);
-  }, [onCancel]);
+  // useEffect(() => {
+  //   const handleKeyDown = (e) => {
+  //     if (e.key === "Escape") onCancel();
+  //   };
+  //   document.addEventListener("keydown", handleKeyDown);
+  //   return () => document.removeEventListener("keydown", handleKeyDown);
+  // }, [onCancel]);
 
   return (
     <div
       className=" fixed inset-0 bg-light-grey bg-opacity-75 flex items-center justify-center z-50"
-      onClick={onCancel}
+      // onClick={onCancel}
     >
       <div
         className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md md:max-w-lg lg:max-w-xl max-h-[95%] overflow-auto"
-        onClick={(e) => e.stopPropagation()}
+        // onClick={(e) => e.stopPropagation()}
       >
         <h2 className=" text-4xl font-bold mb-4 font-poppins">Edytuj ofertę</h2>
         <form>
@@ -563,7 +563,7 @@ const EditOfferPanel = ({ offerData, onSave, onCancel, users }) => {
               <AddCircle sx={{ color: "#FC8721" }} />
             </IconButton>
           </div>
-          <div className="flex flex-col">
+          {/* <div className="flex flex-col">
             {formData.komentarz.map((komentarz, index) => (
               <div key={index} className="flex items-start space-x-2">
                 <CustomTextField
@@ -594,8 +594,8 @@ const EditOfferPanel = ({ offerData, onSave, onCancel, users }) => {
             <IconButton onClick={addCommentField}>
               <AddCircle sx={{ color: "#FC8721" }} />
             </IconButton>
-          </div>
-          {/* <CustomTextField
+          </div> */}
+          <CustomTextField
             label="Komentarz"
             name="komentarz"
             value={formData.komentarz ?? ""}
@@ -605,7 +605,7 @@ const EditOfferPanel = ({ offerData, onSave, onCancel, users }) => {
             margin="dense"
             multiline
             maxRows={4}
-          /> */}
+          />
           <div className="flex justify-end space-x-2">
             <CustomTextField
               label="Data kontaktu"
