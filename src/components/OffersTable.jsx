@@ -186,7 +186,7 @@ function OffersTable({
               backgroundColor: "#272F3E",
               position: "sticky",
               top: 0,
-              zIndex: 1,
+              zIndex: 1100,
             }}
           >
             <TableRow>
@@ -240,6 +240,8 @@ function OffersTable({
                           padding: "0px",
                           paddingLeft: "5px",
                           paddingRight: "5px",
+                          position: "relative",
+                          zIndex: 1100,
                         }}
                       />
                     </TableCell>
