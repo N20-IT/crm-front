@@ -708,7 +708,7 @@ function ClientDetails({
                             },
                             width: "100%",
                             background:
-                              row.noweOfertyLiczba > 0
+                              row.listings.length > 0
                                 ? "#E6FFD7"
                                 : index % 2 === 1
                                 ? "#f5f5f5"

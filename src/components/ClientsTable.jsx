@@ -331,7 +331,7 @@ function ClientsTable({
                     },
                     width: "100%",
                     background:
-                      row.noweOfertyLiczba > 0
+                      row.listings.length > 0
                         ? "#E6FFD7"
                         : index % 2 === 1
                         ? "#f5f5f5"
@@ -342,7 +342,7 @@ function ClientsTable({
                     <Tooltip arrow title={"Dobierz oferty"}>
                       <IconButton onClick={() => handleMatchClient(row._id)}>
                         <Badge
-                          badgeContent={row.noweOfertyLiczba}
+                          badgeContent={row.listings.length}
                           max={10000}
                           sx={{
                             "& .MuiBadge-badge": {
