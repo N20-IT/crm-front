@@ -36,6 +36,8 @@ function DeletedClientsPage() {
   const [order, setOrder] = useState("desc");
   const [openDialogDelete, setopenDialogDelete] = useState(false);
   const [clientIdToDelete, setClientIdToDelete] = useState(null);
+  const [openDialogPermanentDelete, setOpenDialogPermanentDelete] = useState(false);
+  const [clientIdToPermanentDelete, setClientIdToPermanentDelete] = useState(null);
   const [isAddClientPanelOpen, setIsAddClientPanelOpen] = useState(false);
   const [isEditClientPanelOpen, setIsEditClientPanelOpen] = useState(false);
   const [isClientDetailsPanelOpen, setIsClientDetailsPanelOpen] = useState(
@@ -97,6 +99,22 @@ function DeletedClientsPage() {
   };
 
   const handleOpenCloseDialog = () => setopenDialogDelete(!openDialogDelete);
+
+  const handleOpenClosePermanentDeleteDialog = () =>
+    setOpenDialogPermanentDelete(!openDialogPermanentDelete);
+
+  const handlePermanentDeleteClientClick = (clientId) => {
+    setClientIdToPermanentDelete(clientId);
+    setOpenDialogPermanentDelete(true);
+  };
+
+  const handleConfirmPermanentDelete = async () => {
+    if (clientIdToPermanentDelete) {
+      await handlePermanentDeleteClient(clientIdToPermanentDelete);
+      setClientIdToPermanentDelete(null);
+    }
+    setOpenDialogPermanentDelete(false);
+  };
 
   const handleCloseClientDetailsPanel = () => {
     setIsClientDetailsPanelOpen(!isClientDetailsPanelOpen);
@@ -186,34 +204,31 @@ function DeletedClientsPage() {
     [backendServer, token],
   );
 
-  // const handleDeleteClient = useCallback(
-  //   async (clientId) => {
-  //     setLoading(true);
-  //     try {
-  //       const response = await axios.delete(
-  //         `${backendServer}/clients/${clientId}`,
-  //         {
-  //           headers: {
-  //             Authorization: `Bearer ${token}`,
-  //           },
-  //         }
-  //       );
-  //       setAlertOpen(true);
-  //       setAlertMessage("Pomyślnie usunięto klienta");
-  //       setAlertSeverity("success");
-  //       if (isClientDetailsPanelOpen) setIsClientDetailsPanelOpen(false);
-  //       await fetchData();
-  //       setSelected([]);
-  //     } catch (error) {
-  //       setAlertOpen(true);
-  //       setAlertMessage("Błąd podczas usuwania ofert: " + error.message);
-  //       setAlertSeverity("error");
-  //     } finally {
-  //       setLoading(false);
-  //     }
-  //   },
-  //   [backendServer, token, fetchData]
-  // );
+  const handlePermanentDeleteClient = useCallback(
+    async (clientId) => {
+      setLoading(true);
+      try {
+        await axios.delete(`${backendServer}/clients/${clientId}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        setAlertOpen(true);
+        setAlertMessage("Pomyślnie trwale usunięto klienta");
+        setAlertSeverity("success");
+        if (isClientDetailsPanelOpen) setIsClientDetailsPanelOpen(false);
+        await fetchData();
+        setSelected([]);
+      } catch (error) {
+        setAlertOpen(true);
+        setAlertMessage("Błąd podczas usuwania klienta: " + error.message);
+        setAlertSeverity("error");
+      } finally {
+        setLoading(false);
+      }
+    },
+    [backendServer, token, fetchData, isClientDetailsPanelOpen],
+  );
 
   const handleRestoreClient = useCallback(async (updatedClientDate) => {
     setLoading(true);
@@ -342,7 +357,7 @@ function DeletedClientsPage() {
   );
 
   useEffect(() => {
-    if (!isAuthenticated || userRole !== "admin") navigate("/");
+    if (!isAuthenticated || (userRole !== "admin" && userRole !== "user")) navigate("/");
 
     if (id !== undefined) {
       setIsClientDetailsPanelOpen(true);
@@ -366,6 +381,7 @@ function DeletedClientsPage() {
         onPaginationApply={handlePagination}
         onSortApply={handleSort}
         handleDeleteClientClick={handleDeleteClientClick}
+        handlePermanentDeleteClientClick={handlePermanentDeleteClientClick}
         handleEditClientClick={handleEditClientClick}
         loading={loading}
         handleGoToClientDetails={handleOpenClientDetailsPanel}
@@ -390,6 +406,15 @@ function DeletedClientsPage() {
         dialogTitle={"Potwierdzenie przywrócenia klienta"}
         dialogContent={"Czy na pewno chcesz przywrócić tego klienta?"}
         buttonText={"Usuń"}
+        buttonColor={"error"}
+      />
+      <ConfirmDialog
+        open={openDialogPermanentDelete}
+        onClose={handleOpenClosePermanentDeleteDialog}
+        onConfirm={handleConfirmPermanentDelete}
+        dialogTitle={"Trwałe usunięcie klienta"}
+        dialogContent={"Czy na pewno chcesz trwale usunąć tego klienta? Tej operacji nie można cofnąć."}
+        buttonText={"Usuń trwale"}
         buttonColor={"error"}
       />
       {isAddClientPanelOpen && (

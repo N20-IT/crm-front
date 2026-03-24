@@ -36,6 +36,7 @@ function ClientsTable({
   onPaginationApply,
   onSortApply,
   handleDeleteClientClick,
+  handlePermanentDeleteClientClick,
   handleEditClientClick,
   loading,
   handleGoToClientDetails,
@@ -360,6 +361,7 @@ function ClientsTable({
                   <ClientAction
                     row={row}
                     handleDeleteClientClick={handleDeleteClientClick}
+                    handlePermanentDeleteClientClick={handlePermanentDeleteClientClick}
                     handleEditClientClick={handleEditClientClick}
                     handleGoToClientDetails={handleGoToClientDetails}
                     showDetailsIcon={true}

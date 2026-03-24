@@ -1,6 +1,7 @@
 import {
   CalendarMonth,
   Delete,
+  DeleteForever,
   Edit,
   Info,
   Print,
@@ -13,6 +14,7 @@ import { useLocation } from "react-router-dom";
 function ClientAction({
   row,
   handleDeleteClientClick,
+  handlePermanentDeleteClientClick,
   handleEditClientClick,
   showDetailsIcon,
   handleGoToClientDetails,
@@ -31,7 +33,7 @@ function ClientAction({
         fontFamily: "Poppins",
       }}
     >
-      {userRole === "admin" &&
+      {(userRole === "admin" || userRole === "user") &&
         (location.pathname === "/klienci" ? (
           <Tooltip title="Usuń">
             <IconButton
@@ -57,6 +59,20 @@ function ClientAction({
             </IconButton>
           </Tooltip>
         ))}
+
+      {userRole === "admin" && location.pathname !== "/klienci" && (
+        <Tooltip title="Usuń trwale">
+          <IconButton
+            onClick={() => handlePermanentDeleteClientClick(row._id)}
+            sx={{
+              padding: "4px",
+              color: "#6b0000",
+            }}
+          >
+            <DeleteForever />
+          </IconButton>
+        </Tooltip>
+      )}
 
       <Tooltip title="Edytuj">
         <IconButton
